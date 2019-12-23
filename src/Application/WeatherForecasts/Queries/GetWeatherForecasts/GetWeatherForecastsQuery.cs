@@ -20,7 +20,7 @@ namespace CleanArchitecture.Application.WeatherForecasts.Queries.GetWeatherForec
             {
                 var rng = new Random();
 
-                var vm = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+                var vm = Enumerable.Range(1, 10).Select(index => new WeatherForecast
                 {
                     Date = DateTime.Now.AddDays(index),
                     TemperatureC = rng.Next(-20, 55),
