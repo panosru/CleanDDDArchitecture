@@ -4,11 +4,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
+using CleanArchitecture.Application.Common.Events;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.WebUI.Filters
 {
     public class ApiExceptionFilter : ExceptionFilterAttribute
     {
+        private IMediator _mediator;
+
+        protected IMediator Mediator => _mediator ??= (new ControllerContext()).HttpContext.RequestServices.GetService<IMediator>();
 
         private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
 
@@ -24,6 +30,11 @@ namespace CleanArchitecture.WebUI.Filters
 
         public override void OnException(ExceptionContext context)
         {
+            Console.WriteLine("###########");
+            Console.WriteLine(context.Exception);
+            Console.WriteLine("###########");
+            _mediator.Send(new ExceptionRaised(context.Exception.Message.ToString()));
+            
             HandleException(context);
 
             base.OnException(context);
