@@ -1,14 +1,14 @@
-﻿using CleanArchitecture.Application.Common.Exceptions;
+﻿using System;
+using System.Collections.Generic;
+using CleanArchitecture.Application.Common.Events;
+using CleanArchitecture.Application.Common.Exceptions;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System;
-using System.Collections.Generic;
-using CleanArchitecture.Application.Common.Events;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CleanArchitecture.WebUI.Filters
+namespace CleanArchitecture.API.Filters
 {
     public class ApiExceptionFilter : ExceptionFilterAttribute
     {

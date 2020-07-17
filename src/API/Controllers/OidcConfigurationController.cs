@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace CleanArchitecture.WebUI.Controllers
+namespace CleanArchitecture.API.Controllers
 {
     [ApiExplorerSettings(IgnoreApi = true)]
     public class OidcConfigurationController : Controller

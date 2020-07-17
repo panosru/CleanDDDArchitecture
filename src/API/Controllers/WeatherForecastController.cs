@@ -1,9 +1,9 @@
-﻿using CleanArchitecture.Application.WeatherForecasts.Queries.GetWeatherForecasts;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using CleanArchitecture.Application.WeatherForecasts.Queries.GetWeatherForecasts;
+using Microsoft.AspNetCore.Mvc;
 
-namespace CleanArchitecture.WebUI.Controllers
+namespace CleanArchitecture.API.Controllers
 {
     public class WeatherForecastController : ApiController
     {
