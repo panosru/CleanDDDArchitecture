@@ -3,14 +3,14 @@ using System.Threading.Tasks;
 using CleanArchitecture.Application.WeatherForecasts.Queries.GetWeatherForecasts;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CleanArchitecture.API.Controllers
+namespace CleanArchitecture.API.Controllers.V1_1
 {
     public class WeatherForecastController : ApiController
     {
         [HttpGet]
         public async Task<IEnumerable<WeatherForecast>> Get()
         {
-            return await Mediator.Send(new GetWeatherForecastsQuery());
+            return await Mediator.Send(new GetWeatherForecastsQueryNew());
         }
     }
 }

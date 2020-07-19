@@ -1,3 +1,4 @@
+using System;
 using CleanArchitecture.Application;
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Infrastructure;
@@ -10,9 +11,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NSwag;
-using NSwag.Generation.Processors.Security;
 using System.Linq;
+using System.Text;
+using CleanArchitecture.API.Controllers;
+using CleanArchitecture.API.Utils.Swagger;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace CleanArchitecture.API
 {
@@ -23,49 +32,56 @@ namespace CleanArchitecture.API
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplication();
-            services.AddInfrastructure(Configuration);
+            services.AddSingleton(Configuration);
+            
+            services.Configure<SwaggerSettings>(Configuration.GetSection(nameof(SwaggerSettings)));
+            
+            services
+                .AddApplication()
+                .AddInfrastructure(Configuration);
 
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                    };
+                });
+
+            services
+                .AddApiVersionWithExplorer()
+                .AddSwaggerOptions()
+                .AddSwaggerGen();
+            
             services.AddScoped<ICurrentUserService, CurrentUserService>();
 
             services.AddHttpContextAccessor();
 
-            services.AddHealthChecks()
+            services
+                .AddHealthChecks()
                 .AddDbContextCheck<ApplicationDbContext>();
 
-            services.AddControllersWithViews(options => 
-                options.Filters.Add(new ApiExceptionFilter()));
+            // services.AddControllersWithViews(options => 
+            //     options.Filters.Add(new ApiExceptionFilter()));
 
             services.AddRazorPages();
-
-            // Customise default API behaviour
-            services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-            });
-
-            services.AddOpenApiDocument(configure =>
-            {
-                configure.Title = "CleanArchitecture API";
-                configure.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
-                {
-                    Type = OpenApiSecuritySchemeType.ApiKey,
-                    Name = "Authorization",
-                    In = OpenApiSecurityApiKeyLocation.Header,
-                    Description = "Type into the textbox: Bearer {your JWT token}."
-                });
-
-                configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
             {
@@ -80,14 +96,16 @@ namespace CleanArchitecture.API
             }
 
             app.UseHealthChecks("/health");
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            
+            app.UseSwaggerDocuments();
 
-            app.UseSwaggerUi3(settings =>
+            app.UseHttpsRedirection();
+            app.UseStaticFiles(new StaticFileOptions
             {
-                settings.Path = "/api";
-                settings.DocumentPath = "/api/specification.json";
+                ServeUnknownFileTypes = true,
+                DefaultContentType = "application/yaml"
             });
+
 
             app.UseRouting();
 
