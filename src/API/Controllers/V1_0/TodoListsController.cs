@@ -7,7 +7,7 @@ using CleanArchitecture.Application.TodoLists.Queries.GetTodos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CleanArchitecture.API.Controllers
+namespace CleanArchitecture.API.Controllers.V1_0
 {
     [Authorize]
     public class TodoListsController : ApiController

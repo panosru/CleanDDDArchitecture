@@ -6,7 +6,7 @@ using CleanArchitecture.Application.TodoItems.Commands.UpdateTodoItemDetail;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CleanArchitecture.API.Controllers
+namespace CleanArchitecture.API.Controllers.V1_0
 {
     [Authorize]
     public class TodoItemsController : ApiController
