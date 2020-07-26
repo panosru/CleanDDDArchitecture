@@ -73,50 +73,6 @@ info:
       userInfo: ''
 servers: []
 paths:
-  /api/Login:
-    operations:
-      Post:
-        tags:
-        - name: Login
-        parameters: []
-        requestBody:
-          content:
-            application/json:
-              schema: &o2
-                allOf: []
-                oneOf: []
-                anyOf: []
-                required: []
-                properties: {}
-                additionalPropertiesAllowed: true
-                enum: []
-                reference:
-                  type: Schema
-                  id: UserModel
-                  isLocal: true
-                  referenceV3: '#/components/schemas/UserModel'
-                  referenceV2: '#/definitions/UserModel'
-              examples: {}
-              encoding: {}
-            text/json:
-              schema: *o2
-              examples: {}
-              encoding: {}
-            application/*+json:
-              schema: *o2
-              examples: {}
-              encoding: {}
-        responses:
-          200:
-            description: Success
-            headers: {}
-            content: {}
-            links: {}
-        callbacks: {}
-        security: []
-        servers: []
-    servers: []
-    parameters: []
   /api/v1/TodoItems:
     operations:
       Post:
@@ -126,7 +82,7 @@ paths:
         requestBody:
           content:
             application/json:
-              schema: &o3
+              schema: &o2
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -143,11 +99,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o3
+              schema: *o2
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o3
+              schema: *o2
               examples: {}
               encoding: {}
         responses:
@@ -224,7 +180,7 @@ paths:
         requestBody:
           content:
             application/json:
-              schema: &o4
+              schema: &o3
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -241,11 +197,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o4
+              schema: *o3
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o4
+              schema: *o3
               examples: {}
               encoding: {}
         responses:
@@ -310,7 +266,7 @@ paths:
         requestBody:
           content:
             application/json:
-              schema: &o5
+              schema: &o4
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -327,11 +283,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o5
+              schema: *o4
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o5
+              schema: *o4
               examples: {}
               encoding: {}
         responses:
@@ -418,7 +374,7 @@ paths:
         requestBody:
           content:
             application/json:
-              schema: &o6
+              schema: &o5
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -435,11 +391,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o6
+              schema: *o5
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o6
+              schema: *o5
               examples: {}
               encoding: {}
         responses:
@@ -544,7 +500,7 @@ paths:
         requestBody:
           content:
             application/json:
-              schema: &o7
+              schema: &o6
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -561,11 +517,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o7
+              schema: *o6
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o7
+              schema: *o6
               examples: {}
               encoding: {}
         responses:
@@ -596,6 +552,50 @@ paths:
             enum: []
           examples: {}
           content: {}
+        responses:
+          200:
+            description: Success
+            headers: {}
+            content: {}
+            links: {}
+        callbacks: {}
+        security: []
+        servers: []
+    servers: []
+    parameters: []
+  /api/User/authenticate:
+    operations:
+      Post:
+        tags:
+        - name: User
+        parameters: []
+        requestBody:
+          content:
+            application/json:
+              schema: &o7
+                allOf: []
+                oneOf: []
+                anyOf: []
+                required: []
+                properties: {}
+                additionalPropertiesAllowed: true
+                enum: []
+                reference:
+                  type: Schema
+                  id: AuthenticateCommand
+                  isLocal: true
+                  referenceV3: '#/components/schemas/AuthenticateCommand'
+                  referenceV2: '#/definitions/AuthenticateCommand'
+              examples: {}
+              encoding: {}
+            text/json:
+              schema: *o7
+              examples: {}
+              encoding: {}
+            application/*+json:
+              schema: *o7
+              examples: {}
+              encoding: {}
         responses:
           200:
             description: Success
@@ -705,54 +705,6 @@ paths:
     parameters: []
 components:
   schemas:
-    UserModel:
-      type: object
-      allOf: []
-      oneOf: []
-      anyOf: []
-      required: []
-      properties:
-        username:
-          type: string
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-          nullable: true
-        password:
-          type: string
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-          nullable: true
-        emailAddress:
-          type: string
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-          nullable: true
-        dateOfJoing:
-          type: string
-          format: date-time
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-      enum: []
     CreateTodoItemCommand:
       type: object
       allOf: []
@@ -1123,6 +1075,34 @@ components:
           additionalPropertiesAllowed: true
           enum: []
         title:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+      enum: []
+    AuthenticateCommand:
+      type: object
+      allOf: []
+      oneOf: []
+      anyOf: []
+      required: []
+      properties:
+        userName:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        password:
           type: string
           allOf: []
           oneOf: []
