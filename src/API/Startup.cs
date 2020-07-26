@@ -16,6 +16,7 @@ using System.Text;
 using CleanArchitecture.API.Controllers;
 using CleanArchitecture.API.Utils.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
@@ -40,12 +41,14 @@ namespace CleanArchitecture.API
             services.AddSingleton(Configuration);
             
             services.Configure<SwaggerSettings>(Configuration.GetSection(nameof(SwaggerSettings)));
-            
-            services
-                .AddApplication()
-                .AddInfrastructure(Configuration);
 
             services
+                .AddInfrastructure(Configuration)
+                .AddApplication()
+                .AddRazorPages();
+
+            services
+                .AddAuthorization()
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -57,7 +60,8 @@ namespace CleanArchitecture.API
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = Configuration["Jwt:Issuer"],
                         ValidAudience = Configuration["Jwt:Issuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
+                        ClockSkew = TimeSpan.Zero
                     };
                 });
 
@@ -76,8 +80,6 @@ namespace CleanArchitecture.API
 
             // services.AddControllersWithViews(options => 
             //     options.Filters.Add(new ApiExceptionFilter()));
-
-            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -110,14 +112,13 @@ namespace CleanArchitecture.API
             app.UseRouting();
 
             app.UseAuthentication();
-            app.UseIdentityServer();
             app.UseAuthorization();
+            
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
+                endpoints
+                    .MapDefaultControllerRoute()
+                    .RequireAuthorization();
             });
         }
     }
