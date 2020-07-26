@@ -6,6 +6,9 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
+using CleanArchitecture.Application.Users.Commands.Authenticate;
+using MediatR;
 
 namespace CleanArchitecture.API.Controllers
 {
@@ -13,63 +16,20 @@ namespace CleanArchitecture.API.Controllers
     [ApiVersion("1.0")]
     [ApiVersion("1.1")]
     [ApiController]
-    public class LoginController : Controller
+    public class UserController : ApiController
     {
-        private IConfiguration _config;
-
-        public LoginController(IConfiguration config)
-        {
-            _config = config;
-        }
-
         [AllowAnonymous]
-        [HttpPost]
-        public IActionResult Login([FromBody] UserModel login)
+        [HttpPost("authenticate")]
+        public async Task<ActionResult<object>> Authenticate(AuthenticateCommand command)
         {
-            IActionResult response = Unauthorized();
-            var user = AuthenticateUser(login);
+            var result = await Mediator.Send(command);
 
-            if (user != null)
+            if (null != result)
             {
-                var toketnString = GenerateJSONWebToken(user);
-                response = Ok(new {token = toketnString});
+                return Ok(result);
             }
 
-            return response;
-        }
-
-        private string GenerateJSONWebToken(UserModel userInfo)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[] {
-                new Claim(JwtRegisteredClaimNames.Sub, userInfo.Username),
-                new Claim(JwtRegisteredClaimNames.Email, userInfo.EmailAddress),
-                new Claim("DateOfJoing", userInfo.DateOfJoing.ToString("yyyy-MM-dd")),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
-
-            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-                _config["Jwt:Issuer"],
-                claims,
-                expires: DateTime.Now.AddMinutes(120),
-                signingCredentials: credentials);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-        
-        private UserModel AuthenticateUser(UserModel login)    
-        {
-            UserModel user = null;    
-    
-            //Validate the User Credentials    
-            //Demo Purpose, I have Passed HardCoded User Information    
-            if (login.Username == "administrator@localhost")    
-            {
-                user = new UserModel { Username = "administrator@localhost", EmailAddress = "test.btest@gmail.com" };    
-            }    
-            return user;    
+            return Unauthorized();
         }
     }
 }
