@@ -33,7 +33,7 @@ namespace CleanArchitecture.API.Filters
             Console.WriteLine("###########");
             Console.WriteLine(context.Exception);
             Console.WriteLine("###########");
-            _mediator.Send(new ExceptionRaised(context.Exception.Message.ToString()));
+            _mediator.Send(new ExceptionRaised(context.Exception.Message));
             
             HandleException(context);
 
