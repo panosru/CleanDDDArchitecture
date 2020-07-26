@@ -60,24 +60,16 @@ namespace CleanArchitecture.API.Controllers
         }
         
         private UserModel AuthenticateUser(UserModel login)    
-        {    
+        {
             UserModel user = null;    
     
             //Validate the User Credentials    
             //Demo Purpose, I have Passed HardCoded User Information    
-            if (login.Username == "Jignesh")    
-            {    
-                user = new UserModel { Username = "Jignesh Trivedi", EmailAddress = "test.btest@gmail.com" };    
+            if (login.Username == "administrator@localhost")    
+            {
+                user = new UserModel { Username = "administrator@localhost", EmailAddress = "test.btest@gmail.com" };    
             }    
             return user;    
         }
-    }
-
-    public class UserModel
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string EmailAddress { get; set; }
-        public DateTime DateOfJoing { get; set; }
     }
 }
