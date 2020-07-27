@@ -1092,7 +1092,7 @@ components:
       anyOf: []
       required: []
       properties:
-        userName:
+        username:
           type: string
           allOf: []
           oneOf: []

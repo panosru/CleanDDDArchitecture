@@ -15,9 +15,11 @@ using System.Linq;
 using System.Text;
 using CleanArchitecture.API.Controllers;
 using CleanArchitecture.API.Utils.Swagger;
+using CleanArchitecture.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
 using Microsoft.IdentityModel.Tokens;
@@ -45,7 +47,9 @@ namespace CleanArchitecture.API
             services
                 .AddInfrastructure(Configuration)
                 .AddApplication()
-                .AddRazorPages();
+                .AddRazorPages()
+                .AddMvcOptions(options =>
+                    options.Filters.Add(new AuthorizeFilter()));
 
             services
                 .AddAuthorization()
@@ -79,7 +83,7 @@ namespace CleanArchitecture.API
                 .AddDbContextCheck<ApplicationDbContext>();
 
             // services.AddControllersWithViews(options => 
-            //     options.Filters.Add(new ApiExceptionFilter()));
+                // options.Filters.Add(new AuthorizeFilter()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
