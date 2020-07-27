@@ -35,13 +35,33 @@ namespace CleanArchitecture.Infrastructure.Identity
             var user = await _userManager.Users.FirstOrDefaultAsync(u =>
                 u.UserName == username);
         
+            // Check if the user exists
+            if (user is null) return null;
+            
+            // Check if the user is locked out
+            if (_userManager.SupportsUserLockout && await _userManager.IsLockedOutAsync(user))
+                return new { error = "User is locked" };
+            
             // Check if the provided password is correct
-            if (null != user && await _userManager.CheckPasswordAsync(user, password))
+            if (!await _userManager.CheckPasswordAsync(user, password))
             {
-                return new { token = GenerateJwtToken(user) };
+                // Lock user
+                if (_userManager.SupportsUserLockout && await _userManager.GetLockoutEnabledAsync(user))
+                {
+                    await _userManager.AccessFailedAsync(user);
+                }
+                
+                return new {error = "Invalid credentials"};
             }
+
+            // Reset user count
+            if (_userManager.SupportsUserLockout && 0 < await _userManager.GetAccessFailedCountAsync(user))
+            {
+                await _userManager.ResetAccessFailedCountAsync(user);
+            }
+
+            return new { token = GenerateJwtToken(user) };
         
-            return null;
         }
 
         public async Task<string> GetUserNameAsync(string userId)
@@ -51,12 +71,12 @@ namespace CleanArchitecture.Infrastructure.Identity
             return user.UserName;
         }
         
-        public async Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password)
+        public async Task<(Result Result, string UserId)> CreateUserAsync(string username, string password)
         {
             var user = new ApplicationUser
             {
-                UserName = userName,
-                Email = userName,
+                UserName = username,
+                Email = username,
             };
 
             var result = await _userManager.CreateAsync(user, password);

@@ -568,8 +568,10 @@ paths:
       Post:
         tags:
         - name: User
+        summary: ''
         parameters: []
         requestBody:
+          description: ''
           content:
             application/json:
               schema: &o7
