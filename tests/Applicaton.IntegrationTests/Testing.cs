@@ -14,6 +14,7 @@ using Respawn;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using CleanArchitecture.API;
 
 [SetUpFixture]
 public class Testing
@@ -39,7 +40,7 @@ public class Testing
 
         services.AddSingleton(Mock.Of<IWebHostEnvironment>(w =>
             w.EnvironmentName == "Development" &&
-            w.ApplicationName == "CleanArchitecture.WebUI"));
+            w.ApplicationName == "CleanArchitecture.API"));
 
         services.AddLogging();
 
