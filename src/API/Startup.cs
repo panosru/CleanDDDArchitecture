@@ -74,7 +74,7 @@ namespace CleanArchitecture.API
                 .AddSwaggerOptions()
                 .AddSwaggerGen();
             
-            services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
             services.AddHttpContextAccessor();
 
