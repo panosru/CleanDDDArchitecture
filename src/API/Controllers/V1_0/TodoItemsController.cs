@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitecture.API.Controllers.V1_0
 {
-    [Authorize]
     public class TodoItemsController : ApiController
     {
         [HttpPost]
