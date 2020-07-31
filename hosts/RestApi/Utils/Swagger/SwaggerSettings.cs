@@ -1,6 +1,6 @@
 ﻿using Microsoft.OpenApi.Models;
 
-namespace CleanArchitecture.REST.Utils.Swagger
+namespace CleanArchitecture.RestApi.Utils.Swagger
 {
     /// <summary>
     /// Swagger Configuration
@@ -12,11 +12,11 @@ namespace CleanArchitecture.REST.Utils.Swagger
         /// </summary>
         public SwaggerSettings()
         {
-            Name = "REST API Example";
+            Name = "RestApi API Example";
             Info = new OpenApiInfo
             {
-                Title = "REST API Example",
-                Description = "REST API Versions"                
+                Title = "RestApi API Example",
+                Description = "RestApi API Versions"                
             };
         }
 

@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace CleanArchitecture.REST.Utils.Swagger
+namespace CleanArchitecture.RestApi.Utils.Swagger
 {
     /// <inheritdoc />
     /// <summary>
