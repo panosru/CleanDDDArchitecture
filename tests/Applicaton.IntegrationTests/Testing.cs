@@ -14,7 +14,7 @@ using Respawn;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using CleanArchitecture.REST;
+using CleanArchitecture.RestApi;
 
 [SetUpFixture]
 public class Testing

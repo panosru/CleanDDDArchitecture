@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CleanArchitecture.REST.Pages
+namespace CleanArchitecture.RestApi.Pages
 {
     public class login : PageModel
     {

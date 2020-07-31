@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
 
-namespace CleanArchitecture.REST.Utils.Swagger
+namespace CleanArchitecture.RestApi.Utils.Swagger
 {
     /// <inheritdoc />
     public sealed class ConfigureSwaggerOptions : IConfigureOptions<SwaggerOptions>

@@ -2,7 +2,7 @@
 using CleanArchitecture.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Http;
 
-namespace CleanArchitecture.REST.Services
+namespace CleanArchitecture.RestApi.Services
 {
     public class CurrentUserService : ICurrentUserService
     {

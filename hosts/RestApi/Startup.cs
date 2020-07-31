@@ -3,21 +3,21 @@ using CleanArchitecture.Application;
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Infrastructure;
 using CleanArchitecture.Infrastructure.Persistence;
-using CleanArchitecture.REST.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Text;
-using CleanArchitecture.API;
-using CleanArchitecture.REST.Utils.Swagger;
+using CleanArchitecture.RestApi.Services;
+using CleanArchitecture.RestApi.Utils.Swagger;
+using CleanArchitecture.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
 
-namespace CleanArchitecture.REST
+namespace CleanArchitecture.RestApi
 {
     public class Startup
     {
@@ -38,7 +38,7 @@ namespace CleanArchitecture.REST
             services
                 .AddInfrastructure(Configuration)
                 .AddApplication()
-                .AddAPI()
+                .AddServices()
                 .AddRazorPages()
                 .AddMvcOptions(options =>
                     options.Filters.Add(new AuthorizeFilter()));

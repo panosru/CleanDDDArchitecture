@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>CleanArchitecture.REST</RootNamespace>
-    <AssemblyName>CleanArchitecture.REST</AssemblyName>
+    <RootNamespace>CleanArchitecture.RestApi</RootNamespace>
+    <AssemblyName>CleanArchitecture.RestApi</AssemblyName>
     
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
@@ -31,9 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Application\Application.csproj" />
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-    <ProjectReference Include="..\Services\Services.csproj" />
+    <ProjectReference Include="..\..\src\Application\Application.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Services\Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -54,7 +54,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\CleanArchitecture.REST.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\CleanArchitecture.RestApi.xml</DocumentationFile>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 

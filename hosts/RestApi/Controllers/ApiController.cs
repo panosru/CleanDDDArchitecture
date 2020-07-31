@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CleanArchitecture.REST.Controllers
+namespace CleanArchitecture.RestApi.Controllers
 {
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
