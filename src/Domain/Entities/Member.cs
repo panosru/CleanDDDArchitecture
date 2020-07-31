@@ -3,8 +3,10 @@ using CleanArchitecture.Domain.Common;
 
 namespace CleanArchitecture.Domain.Entities
 {
-    public class User : AuditableEntity
+    public class Member : AuditableEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
+        
+        public Guid UserId { get; set; }
     }
 }
