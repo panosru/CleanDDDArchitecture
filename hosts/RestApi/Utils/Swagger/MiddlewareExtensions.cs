@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 
-namespace CleanArchitecture.REST.Utils.Swagger
+namespace CleanArchitecture.RestApi.Utils.Swagger
 {
     /// <summary>
     /// Extending Swagger services

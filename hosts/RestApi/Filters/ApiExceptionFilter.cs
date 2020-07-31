@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CleanArchitecture.REST.Filters
+namespace CleanArchitecture.RestApi.Filters
 {
     public class ApiExceptionFilter : ExceptionFilterAttribute
     {
