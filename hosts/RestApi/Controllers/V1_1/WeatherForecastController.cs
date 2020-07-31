@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using CleanArchitecture.Application.WeatherForecasts.Queries.GetWeatherForecasts;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CleanArchitecture.REST.Controllers.V1_1
+namespace CleanArchitecture.RestApi.Controllers.V1_1
 {
     public class WeatherForecastController : ApiController
     {

@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using CleanArchitecture.API.v1_0;
-using CleanArchitecture.API.v1_0.Interfaces;
 using CleanArchitecture.Application.WeatherForecasts.Queries.GetWeatherForecasts;
+using CleanArchitecture.Services.v1_0.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CleanArchitecture.REST.Controllers.V1_0
+namespace CleanArchitecture.RestApi.Controllers.V1_0
 {
     /// <summary>
     /// 

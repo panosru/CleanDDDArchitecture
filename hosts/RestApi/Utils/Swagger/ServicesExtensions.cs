@@ -7,7 +7,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
-namespace CleanArchitecture.REST.Utils.Swagger
+namespace CleanArchitecture.RestApi.Utils.Swagger
 {
 
     /// <summary>

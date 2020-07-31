@@ -9,7 +9,7 @@ using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using YamlDotNet.Serialization.TypeInspectors;
 
-namespace CleanArchitecture.REST.Utils.Swagger
+namespace CleanArchitecture.RestApi.Utils.Swagger
 {
     /// <summary>
     /// To use YAML serializer to generate YAML

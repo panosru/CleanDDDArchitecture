@@ -5,7 +5,7 @@ using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Application.Users.Commands.Authenticate;
 using CleanArchitecture.Application.Users.Commands.ConfirmEmail;
 
-namespace CleanArchitecture.REST.Controllers
+namespace CleanArchitecture.RestApi.Controllers
 {
     /// <summary>
     /// 
