@@ -6,4 +6,13 @@
     <AssemblyName>CleanArchitecture.Domain</AssemblyName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="AggregateRoots" />
+    <Folder Include="Events" />
+    <Folder Include="Guards" />
+    <Folder Include="Interfaces" />
+    <Folder Include="Services" />
+    <Folder Include="Specifications" />
+  </ItemGroup>
+
 </Project>

@@ -59,13 +59,39 @@ namespace CleanArchitecture.Infrastructure.Identity
             {
                 await _userManager.ResetAccessFailedCountAsync(user);
             }
-
+            
+            // Check if email has been confirmed
+            if (!user.EmailConfirmed)
+                return new
+                {
+                    error = "Confirm your email first",
+                    confirm_token = Convert.ToBase64String(Encoding.UTF8.GetBytes(
+                        await _userManager.GenerateEmailConfirmationTokenAsync(user)))
+                };
+            
             return new { token = GenerateJwtToken(user) };
         
         }
 
+        public async Task<Result> ConfirmEmail(string token, string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user is null)
+                return Result.Failure(new string[] { "Invalid" });
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+
+            if (!result.Succeeded)
+                return Result.Failure(new string[] { result.Errors.First().Description });
+
+            return Result.Success();
+        }
+
         public async Task<string> GetUserNameAsync(string userId)
         {
+            Console.WriteLine(userId);
+            
             var user = await _userManager.Users.FirstAsync(u => u.UserName == userId);
 
             return user.UserName;

@@ -7,6 +7,8 @@ namespace CleanArchitecture.Application.Common.Interfaces
     {
         Task<object> Authenticate(string username, string password);
 
+        Task<Result> ConfirmEmail(string toekn, string email);
+
         Task<string> GetUserNameAsync(string userId);
 
         Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password);
