@@ -2,12 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ValidationException = Aviant.DDD.Application.Exception.Validation;
 using FluentValidation;
 using MediatR;
 
 namespace Aviant.DDD.Application.Behaviour.Request
 {
-    public class Validation<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public abstract class Validation<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : ICommand<TResponse>
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
