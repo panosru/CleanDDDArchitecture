@@ -1,7 +1,6 @@
 namespace Aviant.DDD.Domain
 {
-    public class Dto
+    public interface IEto
     {
-        
     }
 }
