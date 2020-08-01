@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Aviant.DDD.Domain;
+using ApplicationException = Aviant.DDD.Domain.Exception.Create;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -22,7 +22,7 @@ namespace Aviant.DDD.Application.Behaviour
             {
                 return await next();
             }
-            catch (Exception ex)
+            catch (ApplicationException ex)
             {
                 var requestName = typeof(TRequest).Name;
 
