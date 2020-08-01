@@ -240,15 +240,15 @@ namespace Aviant.DDD.Domain.Validators
                 bool isValid = false;
 
                 isValid = IsSatisfiedBy(IsStringNotNullOrWhiteSpace(guid, 
-                    new Notification.Notification(stringIsEmptyMessage)));
+                    new Notification.Create(stringIsEmptyMessage)));
 
                 if (!isValid) return false;
 
                 Guid.TryParse(guid, out Guid parsed);
 
                 isValid = IsSatisfiedBy(
-                    IsGuidNotNull(parsed, new Notification.Notification(guidIsInvalidMessage)),
-                    IsGuidNotEmpty(parsed, new Notification.Notification(guidIsEmptyMessage)));
+                    IsGuidNotNull(parsed, new Notification.Create(guidIsInvalidMessage)),
+                    IsGuidNotEmpty(parsed, new Notification.Create(guidIsEmptyMessage)));
 
                 return isValid;
             };
