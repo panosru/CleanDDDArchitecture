@@ -23,7 +23,7 @@ namespace Aviant.DDD.Domain.Notification
         public static void SetNotificationsContainer(INotifications mockContainer)
         {
             if (_fromTesting == false)
-                throw new Exception(@"For SetNotificationsContainer to work properly SetTestingEnvironment() should be called first. 
+                throw new Exception.Create(@"For SetNotificationsContainer to work properly SetTestingEnvironment() should be called first. 
                                       This method should be used only for testing purpose");
             _mockContainer = mockContainer;
         }
