@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Application.Common.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using SignInResult = Microsoft.AspNetCore.Mvc.SignInResult;
-
-namespace CleanArchitecture.Infrastructure.Identity
+﻿namespace CleanArchitecture.Infrastructure.Identity
 {
+    using System;
+    using System.IdentityModel.Tokens.Jwt;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Aviant.DDD.Application;
+    using IIdentityService = Aviant.DDD.Application.Identity.IService;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.IdentityModel.Tokens;
+
     public class IdentityService : IIdentityService
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -88,16 +85,16 @@ namespace CleanArchitecture.Infrastructure.Identity
             return Result.Success();
         }
 
-        public async Task<string> GetUserNameAsync(string userId)
+        public async Task<string> GetUserNameAsync(Guid userId)
         {
             Console.WriteLine(userId);
             
-            var user = await _userManager.Users.FirstAsync(u => u.UserName == userId);
+            var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
 
             return user.UserName;
         }
         
-        public async Task<(Result Result, string UserId)> CreateUserAsync(string username, string password)
+        public async Task<(Result Result, Guid UserId)> CreateUserAsync(string username, string password)
         {
             var user = new ApplicationUser
             {
@@ -110,7 +107,7 @@ namespace CleanArchitecture.Infrastructure.Identity
             return (result.ToApplicationResult(), user.Id);
         }
 
-        public async Task<Result> DeleteUserAsync(string userId)
+        public async Task<Result> DeleteUserAsync(Guid userId)
         {
             var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
 

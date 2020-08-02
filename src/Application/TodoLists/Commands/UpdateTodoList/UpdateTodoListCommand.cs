@@ -1,20 +1,21 @@
-﻿using CleanArchitecture.Application.Common.Exceptions;
-using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Domain.Entities;
-using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace CleanArchitecture.Application.TodoLists.Commands.UpdateTodoList
+﻿namespace CleanArchitecture.Application.TodoLists.Commands.UpdateTodoList
 {
-    public class UpdateTodoListCommand : IRequest
+    using Common.Exceptions;
+    using Common.Interfaces;
+    using Domain.Entities;
+    using MediatR;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Aviant.DDD.Application.Command;
+    
+    public class UpdateTodoListCommand : Base
     {
         public int Id { get; set; }
 
         public string Title { get; set; }
     }
 
-    public class UpdateTodoListCommandHandler : IRequestHandler<UpdateTodoListCommand>
+    public class UpdateTodoListCommandHandler : Handler<UpdateTodoListCommand>
     {
         private readonly IApplicationDbContext _context;
 
@@ -23,7 +24,7 @@ namespace CleanArchitecture.Application.TodoLists.Commands.UpdateTodoList
             _context = context;
         }
 
-        public async Task<Unit> Handle(UpdateTodoListCommand request, CancellationToken cancellationToken)
+        public override async Task<Unit> Handle(UpdateTodoListCommand request, CancellationToken cancellationToken)
         {
             var entity = await _context.TodoLists.FindAsync(request.Id);
 

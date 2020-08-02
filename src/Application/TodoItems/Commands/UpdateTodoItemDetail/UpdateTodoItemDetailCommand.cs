@@ -1,14 +1,15 @@
-﻿using CleanArchitecture.Application.Common.Exceptions;
-using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Domain.Entities;
-using CleanArchitecture.Domain.Enums;
-using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace CleanArchitecture.Application.TodoItems.Commands.UpdateTodoItemDetail
+﻿namespace CleanArchitecture.Application.TodoItems.Commands.UpdateTodoItemDetail
 {
-    public class UpdateTodoItemDetailCommand : IRequest
+    using Common.Exceptions;
+    using Common.Interfaces;
+    using Domain.Entities;
+    using Domain.Enums;
+    using MediatR;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Aviant.DDD.Application.Command;
+    
+    public class UpdateTodoItemDetailCommand : Base
     {
         public int Id { get; set; }
 
@@ -19,7 +20,7 @@ namespace CleanArchitecture.Application.TodoItems.Commands.UpdateTodoItemDetail
         public string Note { get; set; }
     }
 
-    public class UpdateTodoItemDetailCommandHandler : IRequestHandler<UpdateTodoItemDetailCommand>
+    public class UpdateTodoItemDetailCommandHandler : Handler<UpdateTodoItemDetailCommand>
     {
         private readonly IApplicationDbContext _context;
 
@@ -28,7 +29,7 @@ namespace CleanArchitecture.Application.TodoItems.Commands.UpdateTodoItemDetail
             _context = context;
         }
 
-        public async Task<Unit> Handle(UpdateTodoItemDetailCommand request, CancellationToken cancellationToken)
+        public override async Task<Unit> Handle(UpdateTodoItemDetailCommand request, CancellationToken cancellationToken)
         {
             var entity = await _context.TodoItems.FindAsync(request.Id);
 

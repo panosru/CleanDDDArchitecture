@@ -1,9 +1,10 @@
-﻿using CleanArchitecture.Application.Common.Mappings;
-using CleanArchitecture.Domain.Entities;
-using System.Collections.Generic;
-
+﻿
 namespace CleanArchitecture.Application.TodoLists.Queries.GetTodos
 {
+    using Domain.Entities;
+    using System.Collections.Generic;
+    using Aviant.DDD.Application.Mappings;
+
     public class TodoListDto : IMapFrom<TodoList>
 {
     public TodoListDto()
