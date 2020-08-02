@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using System.Threading;
 using System.Threading.Tasks;
+using Aviant.DDD.Application.Identity;
 
 namespace CleanArchitecture.Application.UnitTests.Common.Behaviours
 {
