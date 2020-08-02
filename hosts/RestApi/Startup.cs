@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Text;
+using Aviant.DDD.Application.Identity;
 using CleanArchitecture.RestApi.Services;
 using CleanArchitecture.RestApi.Utils.Swagger;
 using CleanArchitecture.Services;
@@ -39,9 +40,9 @@ namespace CleanArchitecture.RestApi
                 .AddInfrastructure(Configuration)
                 .AddApplication()
                 .AddServices()
-                .AddRazorPages()
-                .AddMvcOptions(options =>
-                    options.Filters.Add(new AuthorizeFilter()));
+                .AddRazorPages();
+                // .AddMvcOptions(options =>
+                //     options.Filters.Add(new AuthorizeFilter()));
 
             services
                 .AddAuthorization()
@@ -117,8 +118,8 @@ namespace CleanArchitecture.RestApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints
-                    .MapDefaultControllerRoute()
-                    .RequireAuthorization();
+                    .MapDefaultControllerRoute();
+                    // .RequireAuthorization();
             });
         }
     }
