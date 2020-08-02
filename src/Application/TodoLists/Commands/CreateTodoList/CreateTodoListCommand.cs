@@ -1,17 +1,17 @@
-﻿using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Domain.Entities;
-using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace CleanArchitecture.Application.TodoLists.Commands.CreateTodoList
+﻿namespace CleanArchitecture.Application.TodoLists.Commands.CreateTodoList
 {
-    public partial class CreateTodoListCommand : IRequest<int>
+    using Common.Interfaces;
+    using Domain.Entities;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Aviant.DDD.Application.Command;
+
+    public partial class CreateTodoListCommand : Base<int>
     {
         public string Title { get; set; }
     }
 
-    public class CreateTodoListCommandHandler : IRequestHandler<CreateTodoListCommand, int>
+    public class CreateTodoListCommandHandler : Handler<CreateTodoListCommand, int>
     {
         private readonly IApplicationDbContext _context;
 
@@ -20,7 +20,7 @@ namespace CleanArchitecture.Application.TodoLists.Commands.CreateTodoList
             _context = context;
         }
 
-        public async Task<int> Handle(CreateTodoListCommand request, CancellationToken cancellationToken)
+        public override async Task<int> Handle(CreateTodoListCommand request, CancellationToken cancellationToken)
         {
             var entity = new TodoList();
 

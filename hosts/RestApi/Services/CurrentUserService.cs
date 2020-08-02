@@ -1,9 +1,10 @@
-﻿using System.Security.Claims;
-using CleanArchitecture.Application.Common.Interfaces;
-using Microsoft.AspNetCore.Http;
-
-namespace CleanArchitecture.RestApi.Services
+﻿namespace CleanArchitecture.RestApi.Services
 {
+    using System;
+    using System.Security.Claims;
+    using Aviant.DDD.Application.Identity;
+    using Microsoft.AspNetCore.Http;
+    
     public class CurrentUserService : ICurrentUserService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -13,7 +14,15 @@ namespace CleanArchitecture.RestApi.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public string UserId => _httpContextAccessor.HttpContext?.User?
-            .FindFirstValue(ClaimTypes.NameIdentifier);
+        public Guid UserId
+        {
+            get
+            {
+                var id = _httpContextAccessor.HttpContext?.User?
+                    .FindFirstValue(ClaimTypes.NameIdentifier);
+
+                return id is null ? Guid.Empty : Guid.Parse(id);
+            }
+        }
     }
 }

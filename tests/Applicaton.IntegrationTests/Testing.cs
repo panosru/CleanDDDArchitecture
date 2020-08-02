@@ -14,6 +14,7 @@ using Respawn;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Aviant.DDD.Application.Identity;
 using CleanArchitecture.RestApi;
 
 [SetUpFixture]

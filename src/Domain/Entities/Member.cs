@@ -1,9 +1,9 @@
-using System;
-using CleanArchitecture.Domain.Common;
-
 namespace CleanArchitecture.Domain.Entities
 {
-    public class Member : AuditableEntity
+    using System;
+    using Aviant.DDD.Domain.Entity;
+
+    public class Member : Auditable
     {
         public int Id { get; set; }
         
