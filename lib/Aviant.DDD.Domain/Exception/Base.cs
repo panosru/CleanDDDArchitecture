@@ -1,6 +1,6 @@
 namespace Aviant.DDD.Domain.Exception
 {
-    public abstract class Base : System.Exception
+    public abstract class Base : System.Exception, IException
     {
         public Base(string errorMessage) : base(errorMessage, null) {}
         

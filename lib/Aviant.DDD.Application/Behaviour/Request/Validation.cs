@@ -8,7 +8,7 @@ using MediatR;
 
 namespace Aviant.DDD.Application.Behaviour.Request
 {
-    public abstract class Validation<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class Validation<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : ICommand<TResponse>
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
@@ -18,7 +18,9 @@ namespace Aviant.DDD.Application.Behaviour.Request
             _validators = validators;
         }
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
+        public async Task<TResponse> Handle(
+            TRequest request, 
+            CancellationToken cancellationToken,
             RequestHandlerDelegate<TResponse> next)
         {
             if (_validators.Any())

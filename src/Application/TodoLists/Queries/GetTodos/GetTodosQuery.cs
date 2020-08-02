@@ -8,14 +8,15 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Aviant.DDD.Application.Command;
 
 namespace CleanArchitecture.Application.TodoLists.Queries.GetTodos
 {
-    public class GetTodosQuery : IRequest<TodosVm>
+    public class GetTodosQuery : Base<TodosVm>
     {
     }
 
-    public class GetTodosQueryHandler : IRequestHandler<GetTodosQuery, TodosVm>
+    public class GetTodosQueryHandler : Handler<GetTodosQuery, TodosVm>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -26,7 +27,7 @@ namespace CleanArchitecture.Application.TodoLists.Queries.GetTodos
             _mapper = mapper;
         }
 
-        public async Task<TodosVm> Handle(GetTodosQuery request, CancellationToken cancellationToken)
+        public override async Task<TodosVm> Handle(GetTodosQuery request, CancellationToken cancellationToken)
         {
             return new TodosVm
             {

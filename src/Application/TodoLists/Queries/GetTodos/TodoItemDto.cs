@@ -1,9 +1,8 @@
-﻿using AutoMapper;
-using CleanArchitecture.Application.Common.Mappings;
-using CleanArchitecture.Domain.Entities;
-
-namespace CleanArchitecture.Application.TodoLists.Queries.GetTodos
+﻿namespace CleanArchitecture.Application.TodoLists.Queries.GetTodos
 {
+    using Aviant.DDD.Application.Mappings;
+    using Domain.Entities;
+
     public class TodoItemDto : IMapFrom<TodoItem>
     {
         public int Id { get; set; }

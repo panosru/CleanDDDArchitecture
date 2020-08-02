@@ -1,12 +1,13 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Aviant.DDD.Application.Identity;
-using MediatR.Pipeline;
-using Microsoft.Extensions.Logging;
-
 namespace Aviant.DDD.Application.Behaviour.Request
 {
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Identity;
+    using IIdentityService = Identity.IService;
+    using MediatR.Pipeline;
+    using Microsoft.Extensions.Logging;
+    
     public abstract class Logger<TRequest> : IRequestPreProcessor<TRequest>
     {
         private readonly ILogger _logger;

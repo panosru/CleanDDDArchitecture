@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using AutoMapper;
-using CleanArchitecture.Services.v1_0;
-using CleanArchitecture.Services.v1_0.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
-using NetCore.AutoRegisterDi;
-
 namespace CleanArchitecture.Services
 {
+    using System.Collections.Generic;
+    using System.Reflection;
+    using Microsoft.Extensions.DependencyInjection;
+    using NetCore.AutoRegisterDi;
+    
     public static class DependencyInjection
     {
         private static List<Assembly> _assemblies { get; set; }
@@ -18,17 +13,12 @@ namespace CleanArchitecture.Services
         {
             // services.AddScoped<IWeatherForcast, WeatherForcast>();
 
-            
-            Console.WriteLine("@£$@£%@£$@%@%£");
-
             services.RegisterAssemblyPublicNonGenericClasses(
                     Assembly.GetExecutingAssembly())
                 .Where(x =>
                     x.Name.EndsWith("Service"))
                     //typeof(IService).IsAssignableFrom(x))
                 .AsPublicImplementedInterfaces(ServiceLifetime.Scoped);
-
-            Console.WriteLine("@£$@£%@£$@%@%£");
 
             // services.AddTransient(typeof(IWeatherForcast), typeof(WeatherForcast));
             

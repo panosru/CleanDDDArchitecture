@@ -1,33 +1,35 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using CleanArchitecture.Application.Common.Interfaces;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace CleanArchitecture.Application.TodoLists.Queries.ExportTodos
+﻿namespace CleanArchitecture.Application.TodoLists.Queries.ExportTodos
 {
-    public class ExportTodosQuery : IRequest<ExportTodosVm>
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
+    using Common.Interfaces;
+    using Microsoft.EntityFrameworkCore;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Aviant.DDD.Application;
+    using Aviant.DDD.Application.Command;
+    
+    public class ExportTodosQuery : Base<ExportTodosVm>
     {
         public int ListId { get; set; }
     }
 
-    public class ExportTodosQueryHandler : IRequestHandler<ExportTodosQuery, ExportTodosVm>
+    public class ExportTodosQueryHandler : Handler<ExportTodosQuery, ExportTodosVm>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly ICsvFileBuilder _fileBuilder;
+        private readonly ICsvFileBuilder<TodoItemRecord> _fileBuilder;
 
-        public ExportTodosQueryHandler(IApplicationDbContext context, IMapper mapper, ICsvFileBuilder fileBuilder)
+        public ExportTodosQueryHandler(IApplicationDbContext context, IMapper mapper,
+            ICsvFileBuilder<TodoItemRecord> fileBuilder)
         {
             _context = context;
             _mapper = mapper;
             _fileBuilder = fileBuilder;
         }
 
-        public async Task<ExportTodosVm> Handle(ExportTodosQuery request, CancellationToken cancellationToken)
+        public override async Task<ExportTodosVm> Handle(ExportTodosQuery request, CancellationToken cancellationToken)
         {
             var vm = new ExportTodosVm();
 

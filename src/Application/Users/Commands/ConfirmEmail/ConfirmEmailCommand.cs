@@ -1,12 +1,11 @@
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
-using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Application.Common.Models;
-using MediatR;
-
 namespace CleanArchitecture.Application.Users.Commands.ConfirmEmail
 {
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Aviant.DDD.Application;
+    using IIdentityService = Aviant.DDD.Application.Identity.IService;
+    using MediatR;
+    
     public class ConfirmEmailCommand : IRequest<Result>
     {
         public string Token { get; set; }

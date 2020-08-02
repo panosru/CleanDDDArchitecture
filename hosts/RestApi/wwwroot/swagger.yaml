@@ -1222,6 +1222,7 @@ components:
       properties:
         succeeded:
           type: boolean
+          readOnly: true
           allOf: []
           oneOf: []
           anyOf: []
@@ -1231,6 +1232,7 @@ components:
           enum: []
         errors:
           type: array
+          readOnly: true
           allOf: []
           oneOf: []
           anyOf: []

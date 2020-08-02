@@ -1,7 +1,7 @@
-﻿using FluentValidation;
-
-namespace CleanArchitecture.Application.TodoItems.Commands.CreateTodoItem
+﻿namespace CleanArchitecture.Application.TodoItems.Commands.CreateTodoItem
 {
+    using FluentValidation;
+    
     public class CreateTodoItemCommandValidator : AbstractValidator<CreateTodoItemCommand>
     {
         public CreateTodoItemCommandValidator()
