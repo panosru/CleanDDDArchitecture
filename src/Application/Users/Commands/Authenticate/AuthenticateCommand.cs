@@ -1,19 +1,18 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using CleanArchitecture.Application.Common.Interfaces;
-using MediatR;
-
 namespace CleanArchitecture.Application.Users.Commands.Authenticate
 {
-    public class AuthenticateCommand : IRequest<object>
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Aviant.DDD.Application.Command;
+    using IIdentityService = Aviant.DDD.Application.Identity.IService;
+    
+    public class AuthenticateCommand : Base<object>
     {
         public string Username { get; set; }
         
         public string Password { get; set; }
     }
 
-    public class AuthenticateCommandHandler : IRequestHandler<AuthenticateCommand, object>
+    public class AuthenticateCommandHandler : Handler<AuthenticateCommand, object>
     {
         private readonly IIdentityService _identityService;
 
@@ -22,7 +21,7 @@ namespace CleanArchitecture.Application.Users.Commands.Authenticate
             _identityService = identityService;
         }
 
-        public async Task<object> Handle(AuthenticateCommand request, CancellationToken cancellationToken)
+        public override async Task<object> Handle(AuthenticateCommand request, CancellationToken cancellationToken)
         {
             return await _identityService.Authenticate(request.Username, request.Password);
         }

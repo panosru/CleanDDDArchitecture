@@ -1,16 +1,21 @@
-﻿using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Infrastructure.Files;
-using CleanArchitecture.Infrastructure.Identity;
-using CleanArchitecture.Infrastructure.Persistence;
-using CleanArchitecture.Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace CleanArchitecture.Infrastructure
+﻿namespace CleanArchitecture.Infrastructure
 {
+    using Application.Common.Interfaces;
+    using Aviant.DDD.Infrastructure.Files;
+    using Aviant.DDD.Infrastructure.Service;
+    using Files.Maps;
+    using Aviant.DDD.Application;
+    using Aviant.DDD.Application.Persistance;
+    using Application.TodoLists.Queries.ExportTodos;
+    using Identity;
+    using Persistence;
+    using Microsoft.AspNetCore.Authentication;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using IDateTime = Aviant.DDD.Application.IDateTime;
+    using IIdentityService = Aviant.DDD.Application.Identity.IService;
+
     public static class DependencyInjection
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
@@ -31,14 +36,15 @@ namespace CleanArchitecture.Infrastructure
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
 
             services.AddDefaultIdentity<ApplicationUser>()
+                .AddRoles<ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             
             services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
-            services.AddTransient<IDateTime, DateTimeService>();
+            services.AddTransient<IDateTime, DateTime>();
             services.AddTransient<IIdentityService, IdentityService>();
-            services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
+            services.AddTransient<ICsvFileBuilder<TodoItemRecord>, CsvFileBuilder<TodoItemRecord, TodoItemRecordMap>>();
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();

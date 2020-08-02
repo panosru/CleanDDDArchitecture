@@ -1,18 +1,19 @@
-﻿using CleanArchitecture.Application.Common.Exceptions;
-using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Domain.Entities;
-using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace CleanArchitecture.Application.TodoItems.Commands.DeleteTodoItem
+﻿namespace CleanArchitecture.Application.TodoItems.Commands.DeleteTodoItem
 {
-    public class DeleteTodoItemCommand : IRequest
+    using Common.Exceptions;
+    using Common.Interfaces;
+    using Domain.Entities;
+    using MediatR;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Aviant.DDD.Application.Command;
+    
+    public class DeleteTodoItemCommand : Base
     {
         public int Id { get; set; }
     }
 
-    public class DeleteTodoItemCommandHandler : IRequestHandler<DeleteTodoItemCommand>
+    public class DeleteTodoItemCommandHandler : Handler<DeleteTodoItemCommand>
     {
         private readonly IApplicationDbContext _context;
 
@@ -21,7 +22,7 @@ namespace CleanArchitecture.Application.TodoItems.Commands.DeleteTodoItem
             _context = context;
         }
 
-        public async Task<Unit> Handle(DeleteTodoItemCommand request, CancellationToken cancellationToken)
+        public override async Task<Unit> Handle(DeleteTodoItemCommand request, CancellationToken cancellationToken)
         {
             var entity = await _context.TodoItems.FindAsync(request.Id);
 

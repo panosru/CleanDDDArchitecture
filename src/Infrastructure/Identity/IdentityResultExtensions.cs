@@ -1,9 +1,9 @@
-﻿using CleanArchitecture.Application.Common.Models;
-using Microsoft.AspNetCore.Identity;
-using System.Linq;
-
-namespace CleanArchitecture.Infrastructure.Identity
+﻿namespace CleanArchitecture.Infrastructure.Identity
 {
+    using Microsoft.AspNetCore.Identity;
+    using System.Linq;
+    using Aviant.DDD.Application;
+
     public static class IdentityResultExtensions
     {
         public static Result ToApplicationResult(this IdentityResult result)

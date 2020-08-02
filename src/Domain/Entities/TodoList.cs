@@ -1,9 +1,9 @@
-﻿using CleanArchitecture.Domain.Common;
-using System.Collections.Generic;
-
-namespace CleanArchitecture.Domain.Entities
+﻿namespace CleanArchitecture.Domain.Entities
 {
-    public class TodoList : AuditableEntity
+    using System.Collections.Generic;
+    using Aviant.DDD.Domain.Entity;
+
+    public class TodoList : Auditable
     {
         public TodoList()
         {

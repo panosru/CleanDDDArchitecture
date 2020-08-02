@@ -1,10 +1,10 @@
-﻿using CleanArchitecture.Domain.Common;
-using CleanArchitecture.Domain.Enums;
-using System;
-
-namespace CleanArchitecture.Domain.Entities
+﻿namespace CleanArchitecture.Domain.Entities
 {
-    public class TodoItem : AuditableEntity
+    using Enums;
+    using System;
+    using Aviant.DDD.Domain.Entity;
+
+    public class TodoItem : Auditable
     {
         public int Id { get; set; }
 
