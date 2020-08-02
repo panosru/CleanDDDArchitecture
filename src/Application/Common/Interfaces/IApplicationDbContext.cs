@@ -1,11 +1,12 @@
-﻿using CleanArchitecture.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace CleanArchitecture.Application.Common.Interfaces
+﻿namespace CleanArchitecture.Application.Common.Interfaces
 {
-    public interface IApplicationDbContext
+    using Domain.Entities;
+    using Microsoft.EntityFrameworkCore;
+    using System.Threading;
+    using System.Threading.Tasks;
+    //using IApplicationDbContextBase = Aviant.DDD.Application.Persistance.IApplicationDbContext;
+    
+    public interface IApplicationDbContext// : IApplicationDbContextBase
     {
         DbSet<TodoList> TodoLists { get; set; }
 

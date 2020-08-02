@@ -17,11 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\lib\Aviant.DDD.Infrastructure\Aviant.DDD.Infrastructure.csproj" />
     <ProjectReference Include="..\Application\Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces" />
     <Folder Include="Persistence\Migrations" />
     <Folder Include="Repositories" />
   </ItemGroup>

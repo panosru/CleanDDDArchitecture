@@ -1,12 +1,12 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using CleanArchitecture.Application.Common.Models;
-using CleanArchitecture.Application.Users.Commands.Authenticate;
-using CleanArchitecture.Application.Users.Commands.ConfirmEmail;
-
 namespace CleanArchitecture.RestApi.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using System.Threading.Tasks;
+    using Application.Users.Commands.Authenticate;
+    using Application.Users.Commands.ConfirmEmail;
+    using Aviant.DDD.Application;
+
     /// <summary>
     /// 
     /// </summary>

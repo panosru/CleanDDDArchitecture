@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace CleanArchitecture.Infrastructure.Identity
+﻿namespace CleanArchitecture.Infrastructure.Identity
 {
-    public class ApplicationUser : IdentityUser
+    using System;
+    using Microsoft.AspNetCore.Identity;
+    using ApplicationUserBase = Aviant.DDD.Application.Identity.ApplicationUser;
+    
+    public class ApplicationUser : ApplicationUserBase
     {
     }
 }

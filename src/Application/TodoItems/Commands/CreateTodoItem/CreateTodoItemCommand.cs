@@ -1,28 +1,30 @@
-﻿using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Domain.Entities;
-using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace CleanArchitecture.Application.TodoItems.Commands.CreateTodoItem
+﻿namespace CleanArchitecture.Application.TodoItems.Commands.CreateTodoItem
 {
-    public class CreateTodoItemCommand : IRequest<int>
+    using Common.Interfaces;
+    using Domain.Entities;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Aviant.DDD.Application.Command;
+    
+    public class CreateTodoItemCommand : Base<int>
     {
         public int ListId { get; set; }
 
         public string Title { get; set; }
     }
 
-    public class CreateTodoItemCommandHandler : IRequestHandler<CreateTodoItemCommand, int>
+    public class CreateTodoItemCommandHandler : Handler<CreateTodoItemCommand, int>
     {
         private readonly IApplicationDbContext _context;
 
         public CreateTodoItemCommandHandler(IApplicationDbContext context)
         {
+            
+            
             _context = context;
         }
 
-        public async Task<int> Handle(CreateTodoItemCommand request, CancellationToken cancellationToken)
+        public override async Task<int> Handle(CreateTodoItemCommand request, CancellationToken cancellationToken)
         {
             var entity = new TodoItem
             {

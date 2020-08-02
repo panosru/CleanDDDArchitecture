@@ -1,19 +1,23 @@
-﻿using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Domain.Common;
-using CleanArchitecture.Domain.Entities;
-using CleanArchitecture.Infrastructure.Identity;
-using IdentityServer4.EntityFramework.Options;
-using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.Options;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace CleanArchitecture.Infrastructure.Persistence
+﻿namespace CleanArchitecture.Infrastructure.Persistence
 {
-    public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, IApplicationDbContext
+    using System;
+    using Domain.Entities;
+    using IdentityServer4.EntityFramework.Options;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Options;
+    using System.Reflection;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Application.Common.Interfaces;
+    using Aviant.DDD.Application.Identity;
+    using Aviant.DDD.Domain.Entity;
+    using Aviant.DDD.Infrastructure;
+    using ApplicationUser = Identity.ApplicationUser;
+    using ApplicationRole = Identity.ApplicationRole;
+    using IDateTime = Aviant.DDD.Application.IDateTime;
+
+    public class ApplicationDbContext : 
+        ApiAuthorizationDbContext<ApplicationUser, ApplicationRole, Guid>, IApplicationDbContext
     {
         private readonly ICurrentUserService _currentUserService;
         private readonly IDateTime _dateTime;
@@ -34,7 +38,7 @@ namespace CleanArchitecture.Infrastructure.Persistence
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
+            foreach (var entry in ChangeTracker.Entries<Auditable>())
             {
                 switch (entry.State)
                 {
@@ -46,6 +50,10 @@ namespace CleanArchitecture.Infrastructure.Persistence
                         entry.Entity.LastModifiedBy = _currentUserService.UserId;
                         entry.Entity.LastModified = _dateTime.Now;
                         break;
+                    case EntityState.Deleted:
+                        entry.Entity.DeletedBy = _currentUserService.UserId;
+                        entry.Entity.Deleted = _dateTime.Now;
+                        break;
                 }
             }
 
@@ -55,6 +63,8 @@ namespace CleanArchitecture.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            // builder.Entity<ApplicationUser>(entity => { entity.ToTable(name: "User"); });
+            // builder.Entity<ApplicationRole>(entity => { entity.ToTable(name: "Role"); });
 
             base.OnModelCreating(builder);
         }
