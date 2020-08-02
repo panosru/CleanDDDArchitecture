@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Aviant.DDD.Application.Persistance
 {
-    public interface IApplicationDbContext
+    public interface IApplicationDbContextTMP
     {
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
