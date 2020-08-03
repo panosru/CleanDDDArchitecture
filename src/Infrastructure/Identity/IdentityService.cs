@@ -6,11 +6,13 @@
     using System.Security.Claims;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Web;
     using Aviant.DDD.Application;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.IdentityModel.Tokens;
+    using DateTime = System.DateTime;
     using IIdentityService = Aviant.DDD.Application.Identity.IService;
 
     public class IdentityService : IIdentityService
@@ -58,8 +60,8 @@
                 return new
                 {
                     error = "Confirm your email first",
-                    confirm_token = Convert.ToBase64String(Encoding.UTF8.GetBytes(
-                        await _userManager.GenerateEmailConfirmationTokenAsync(user)))
+                    confirm_token = HttpUtility.UrlEncode(Convert.ToBase64String(Encoding.UTF8.GetBytes(
+                        await _userManager.GenerateEmailConfirmationTokenAsync(user))))
                 };
 
             return new {token = GenerateJwtToken(user)};
@@ -126,7 +128,8 @@
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.NameId, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 // new Claim("DateOfJoing", userInfo.DateOfJoing.ToString("yyyy-MM-dd")),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())

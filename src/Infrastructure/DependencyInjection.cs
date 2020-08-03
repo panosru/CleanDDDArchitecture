@@ -1,5 +1,6 @@
 ﻿namespace CleanArchitecture.Infrastructure
 {
+    using System.IdentityModel.Tokens.Jwt;
     using Application.Common.Interfaces;
     using Application.TodoLists.Queries.ExportTodos;
     using Aviant.DDD.Application;
@@ -19,6 +20,11 @@
         public static IServiceCollection AddInfrastructure(this IServiceCollection services,
             IConfiguration configuration)
         {
+            // By default, Microsoft has some legacy claim mapping that converts
+            // standard JWT claims into proprietary ones. This removes those mappings.
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+            
             if (configuration.GetValue<bool>("UseInMemoryDatabase"))
                 services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseInMemoryDatabase("CleanArchitectureDb"));

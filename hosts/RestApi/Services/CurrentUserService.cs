@@ -4,6 +4,7 @@
     using System.Security.Claims;
     using Aviant.DDD.Application.Identity;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.IdentityModel.JsonWebTokens;
 
     public class CurrentUserService : ICurrentUserService
     {
@@ -19,7 +20,7 @@
             get
             {
                 var id = _httpContextAccessor.HttpContext?.User?
-                    .FindFirstValue(ClaimTypes.NameIdentifier);
+                    .FindFirstValue(JwtRegisteredClaimNames.Sub);
 
                 return id is null ? Guid.Empty : Guid.Parse(id);
             }
