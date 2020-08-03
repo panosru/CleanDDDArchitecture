@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-
 namespace Aviant.DDD.Application
 {
+    using System.Collections.Generic;
+
     public interface ICsvFileBuilder<in TRecord>
         where TRecord : class
     {

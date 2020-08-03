@@ -1,14 +1,14 @@
-using MediatR;
-
 namespace CleanArchitecture.Services
 {
+    using MediatR;
+
     public class BaseService
     {
-        protected IMediator _mediator { get; set; }
-
         protected BaseService(IMediator mediator)
         {
             _mediator = mediator;
         }
+
+        protected IMediator _mediator { get; set; }
     }
 }

@@ -1,22 +1,22 @@
 ﻿namespace CleanArchitecture.Infrastructure.Persistence
 {
     using System;
-    using Domain.Entities;
-    using IdentityServer4.EntityFramework.Options;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Options;
     using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
     using Application.Common.Interfaces;
+    using Aviant.DDD.Application;
     using Aviant.DDD.Application.Identity;
     using Aviant.DDD.Domain.Entity;
     using Aviant.DDD.Infrastructure;
-    using ApplicationUser = Identity.ApplicationUser;
+    using Domain.Entities;
+    using IdentityServer4.EntityFramework.Options;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Options;
     using ApplicationRole = Identity.ApplicationRole;
-    using IDateTime = Aviant.DDD.Application.IDateTime;
+    using ApplicationUser = Identity.ApplicationUser;
 
-    public class ApplicationDbContext : 
+    public class ApplicationDbContext :
         ApiAuthorizationDbContext<ApplicationUser, ApplicationRole, Guid>, IApplicationDbContext
     {
         private readonly ICurrentUserService _currentUserService;
@@ -39,7 +39,6 @@
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             foreach (var entry in ChangeTracker.Entries<Auditable>())
-            {
                 switch (entry.State)
                 {
                     case EntityState.Added:
@@ -55,7 +54,6 @@
                         entry.Entity.Deleted = _dateTime.Now;
                         break;
                 }
-            }
 
             return base.SaveChangesAsync(cancellationToken);
         }

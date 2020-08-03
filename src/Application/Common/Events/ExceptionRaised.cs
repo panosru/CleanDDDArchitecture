@@ -1,11 +1,11 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
-
 namespace CleanArchitecture.Application.Common.Events
 {
-    public partial class ExceptionRaised : IRequest
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using MediatR;
+
+    public class ExceptionRaised : IRequest
     {
         public readonly string _error;
 
@@ -22,7 +22,7 @@ namespace CleanArchitecture.Application.Common.Events
             Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%");
             Console.WriteLine(request._error);
             Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%");
-            
+
             return Task.FromResult(Unit.Value);
         }
     }

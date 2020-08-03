@@ -1,11 +1,11 @@
 ﻿namespace CleanArchitecture.Application.TodoLists.Commands.CreateTodoList
 {
+    using System.Threading;
+    using System.Threading.Tasks;
     using Common.Interfaces;
     using FluentValidation;
     using Microsoft.EntityFrameworkCore;
-    using System.Threading;
-    using System.Threading.Tasks;
-    
+
     public class CreateTodoListCommandValidator : AbstractValidator<CreateTodoListCommand>
     {
         private readonly IApplicationDbContext _context;

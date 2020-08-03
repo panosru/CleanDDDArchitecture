@@ -1,18 +1,18 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
-
-namespace CleanArchitecture.RestApi.Utils.Swagger
+﻿namespace CleanArchitecture.RestApi.Utils.Swagger
 {
+    using System;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Reflection;
+    using Microsoft.AspNetCore.Mvc.ApiExplorer;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Options;
+    using Microsoft.OpenApi.Models;
+    using Swashbuckle.AspNetCore.SwaggerGen;
+
     /// <inheritdoc />
     /// <summary>
-    /// Implementation of IConfigureOptions&lt;SwaggerGenOptions&gt;
+    ///     Implementation of IConfigureOptions&lt;SwaggerGenOptions&gt;
     /// </summary>
     public sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
     {
@@ -20,18 +20,18 @@ namespace CleanArchitecture.RestApi.Utils.Swagger
         private readonly SwaggerSettings settings;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConfigureSwaggerGenOptions"/> class.
+        ///     Initializes a new instance of the <see cref="ConfigureSwaggerGenOptions" /> class.
         /// </summary>
         /// <param name="versionDescriptionProvider">IApiVersionDescriptionProvider</param>
         /// <param name="swaggerSettings">App Settings for Swagger</param>
         public ConfigureSwaggerGenOptions(IApiVersionDescriptionProvider versionDescriptionProvider,
-                                          IOptions<SwaggerSettings> swaggerSettings)
+            IOptions<SwaggerSettings> swaggerSettings)
         {
             Debug.Assert(versionDescriptionProvider != null, $"{nameof(versionDescriptionProvider)} != null");
             Debug.Assert(swaggerSettings != null, $"{nameof(swaggerSettings)} != null");
 
-            this.provider = versionDescriptionProvider;
-            this.settings = swaggerSettings.Value ?? new SwaggerSettings();
+            provider = versionDescriptionProvider;
+            settings = swaggerSettings.Value ?? new SwaggerSettings();
         }
 
         /// <inheritdoc />
@@ -39,11 +39,11 @@ namespace CleanArchitecture.RestApi.Utils.Swagger
         {
             options.DocumentFilter<YamlDocumentFilter>();
             options.OperationFilter<SwaggerDefaultValues>();
-            
+
             //options.DescribeAllEnumsAsStrings();
             options.IgnoreObsoleteActions();
             options.IgnoreObsoleteProperties();
-            
+
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,
@@ -51,19 +51,20 @@ namespace CleanArchitecture.RestApi.Utils.Swagger
                 Name = "Authorization",
                 Type = SecuritySchemeType.ApiKey
             });
-                    
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement {
-                { 
-                    new OpenApiSecurityScheme 
-                    { 
-                        Reference = new OpenApiReference 
-                        { 
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
                             Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer" 
-                        } 
+                            Id = "Bearer"
+                        }
                     },
-                    new string[] { } 
-                } 
+                    new string[] { }
+                }
             });
 
             AddSwaggerDocumentForEachDiscoveredApiVersion(options);
@@ -76,10 +77,7 @@ namespace CleanArchitecture.RestApi.Utils.Swagger
             {
                 settings.Info.Version = description.ApiVersion.ToString();
 
-                if (description.IsDeprecated)
-                {
-                    settings.Info.Description += " - DEPRECATED";
-                }
+                if (description.IsDeprecated) settings.Info.Description += " - DEPRECATED";
 
                 options.SwaggerDoc(description.GroupName, settings.Info);
             }

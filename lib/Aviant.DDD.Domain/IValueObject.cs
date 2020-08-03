@@ -1,8 +1,10 @@
 namespace Aviant.DDD.Domain
 {
+    using ValueObject;
+
     public interface IValueObject
     {
-        public bool Equals(ValueObject.Base obj);
+        public bool Equals(Base obj);
 
         public int GetHashCode();
 

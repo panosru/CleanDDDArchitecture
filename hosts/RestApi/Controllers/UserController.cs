@@ -1,14 +1,13 @@
 namespace CleanArchitecture.RestApi.Controllers
 {
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
     using Application.Users.Commands.Authenticate;
     using Application.Users.Commands.ConfirmEmail;
     using Aviant.DDD.Application;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
-    /// 
     /// </summary>
     [Route("api/[controller]")]
     [ApiVersion("1.0")]
@@ -17,7 +16,6 @@ namespace CleanArchitecture.RestApi.Controllers
     public class UserController : ApiController
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
@@ -27,10 +25,7 @@ namespace CleanArchitecture.RestApi.Controllers
         {
             var result = await Mediator.Send(command);
 
-            if (null != result)
-            {
-                return Ok(result);
-            }
+            if (null != result) return Ok(result);
 
             return Unauthorized();
         }
@@ -40,12 +35,9 @@ namespace CleanArchitecture.RestApi.Controllers
         public async Task<ActionResult<Result>> Confirm([FromRoute] ConfirmEmailCommand command)
         {
             var result = await Mediator.Send(command);
-            
-            if (result.Succeeded)
-            {
-                return Ok(result);
-            }
-            
+
+            if (result.Succeeded) return Ok(result);
+
             return Forbid();
         }
     }

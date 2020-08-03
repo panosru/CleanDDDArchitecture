@@ -1,9 +1,9 @@
-using System.Collections.Generic;
-
 namespace Aviant.DDD.Domain.Event
 {
+    using System.Collections.Generic;
+
     public abstract class HaveEvents
     {
-        public List<Event.Base> Events = new List<Event.Base>();
+        public List<Base> Events = new List<Base>();
     }
 }

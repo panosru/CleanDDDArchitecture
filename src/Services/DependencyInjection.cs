@@ -4,11 +4,11 @@ namespace CleanArchitecture.Services
     using System.Reflection;
     using Microsoft.Extensions.DependencyInjection;
     using NetCore.AutoRegisterDi;
-    
+
     public static class DependencyInjection
     {
         private static List<Assembly> _assemblies { get; set; }
-        
+
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             // services.AddScoped<IWeatherForcast, WeatherForcast>();
@@ -17,11 +17,11 @@ namespace CleanArchitecture.Services
                     Assembly.GetExecutingAssembly())
                 .Where(x =>
                     x.Name.EndsWith("Service"))
-                    //typeof(IService).IsAssignableFrom(x))
+                //typeof(IService).IsAssignableFrom(x))
                 .AsPublicImplementedInterfaces(ServiceLifetime.Scoped);
 
             // services.AddTransient(typeof(IWeatherForcast), typeof(WeatherForcast));
-            
+
             return services;
         }
     }

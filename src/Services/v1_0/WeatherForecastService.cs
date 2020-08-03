@@ -1,14 +1,14 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using CleanArchitecture.Services.v1_0.Interfaces;
-using CleanArchitecture.Application.WeatherForecasts.Queries.GetWeatherForecasts;
-using MediatR;
-
 namespace CleanArchitecture.Services.v1_0
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Application.WeatherForecasts.Queries.GetWeatherForecasts;
+    using Interfaces;
+    using MediatR;
+
     public class WeatherForecastService : BaseService, IWeatherForecastService
     {
-        public WeatherForecastService(IMediator mediator) 
+        public WeatherForecastService(IMediator mediator)
             : base(mediator)
         {
         }
