@@ -45,13 +45,13 @@ namespace Aviant.DDD.Application.Behaviour.Request
 
             var elapsedMilliseconds = _timer.ElapsedMilliseconds;
 
-            if (500 < elapsedMilliseconds)
+            if (500 > elapsedMilliseconds)
             {
                 string requestName = typeof(TRequest).Name;
                 var userId = _currentUserService?.UserId ?? Guid.Empty;
                 string username = string.Empty;
 
-                if (Guid.Empty == userId) username = await _identityService.GetUserNameAsync(userId);
+                if (Guid.Empty != userId) username = await _identityService.GetUserNameAsync(userId);
 
                 _logger.LogWarning(
                     "Long Running Request detected: {Name} ({ElapsedMilliseconds} milliseconds), UserId: {@UserId}, Username: {@username}, Request: {@Request}",
