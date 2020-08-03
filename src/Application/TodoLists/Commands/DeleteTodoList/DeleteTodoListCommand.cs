@@ -1,14 +1,14 @@
 ﻿namespace CleanArchitecture.Application.TodoLists.Commands.DeleteTodoList
 {
-    using Common.Exceptions;
-    using Common.Interfaces;
-    using Domain.Entities;
-    using Microsoft.EntityFrameworkCore;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Command;
+    using Common.Exceptions;
+    using Common.Interfaces;
+    using Domain.Entities;
     using MediatR;
+    using Microsoft.EntityFrameworkCore;
 
     public class DeleteTodoListCommand : Base
     {
@@ -30,10 +30,7 @@
                 .Where(l => l.Id == request.Id)
                 .SingleOrDefaultAsync(cancellationToken);
 
-            if (entity == null)
-            {
-                throw new NotFoundException(nameof(TodoList), request.Id);
-            }
+            if (entity == null) throw new NotFoundException(nameof(TodoList), request.Id);
 
             _context.TodoLists.Remove(entity);
 

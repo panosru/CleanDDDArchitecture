@@ -1,25 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
-using YamlDotNet.Serialization.TypeInspectors;
-
-namespace CleanArchitecture.RestApi.Utils.Swagger
+﻿namespace CleanArchitecture.RestApi.Utils.Swagger
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.OpenApi.Models;
+    using Swashbuckle.AspNetCore.SwaggerGen;
+    using YamlDotNet.Serialization;
+    using YamlDotNet.Serialization.NamingConventions;
+    using YamlDotNet.Serialization.TypeInspectors;
+
     /// <summary>
-    /// To use YAML serializer to generate YAML
+    ///     To use YAML serializer to generate YAML
     /// </summary>
     public sealed class YamlDocumentFilter : IDocumentFilter
     {
         private readonly IWebHostEnvironment hostingEnvironment;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="YamlDocumentFilter"/> class.
+        ///     Initializes a new instance of the <see cref="YamlDocumentFilter" /> class.
         /// </summary>
         /// <param name="hostingEnvironment">IHostingEnvironment</param>
         public YamlDocumentFilter(IWebHostEnvironment hostingEnvironment)
@@ -28,7 +28,7 @@ namespace CleanArchitecture.RestApi.Utils.Swagger
         }
 
         /// <summary>
-        /// Apply YAML Serializer
+        ///     Apply YAML Serializer
         /// </summary>
         /// <param name="swaggerDoc">SwaggerDocument</param>
         /// <param name="context">DocumentFilterContext</param>
@@ -74,7 +74,8 @@ namespace CleanArchitecture.RestApi.Utils.Swagger
 
             public override IEnumerable<IPropertyDescriptor> GetProperties(Type type, object container)
             {
-                return typeInspector.GetProperties(type, container).Where(p => p.Name != "extensions" && p.Name != "operation-id");
+                return typeInspector.GetProperties(type, container)
+                    .Where(p => p.Name != "extensions" && p.Name != "operation-id");
             }
         }
     }

@@ -1,23 +1,22 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Aviant.DDD.Domain.Event;
-using Aviant.DDD.Domain.TransferObject;
-using MediatR;
-using INotification = Aviant.DDD.Domain.INotification;
-
 namespace Aviant.DDD.Application.Event
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Domain.Event;
+    using MediatR;
+    using INotification = Domain.INotification;
+
     public abstract class DispatcherBase : IDispatcher
     {
         private readonly IMediator _mediator;
-        
-        private List<INotification> PreCommitEvents { get; set; } = new List<INotification>();
-        private List<INotification> PostCommitEvents { get; set; } = new List<INotification>();
 
         public DispatcherBase(IMediator mediator)
         {
             _mediator = mediator;
         }
+
+        private List<INotification> PreCommitEvents { get; } = new List<INotification>();
+        private List<INotification> PostCommitEvents { get; } = new List<INotification>();
 
         public void AddPreCommitEvent(INotification evnt)
         {

@@ -1,9 +1,9 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace CleanArchitecture.RestApi.Controllers
+﻿namespace CleanArchitecture.RestApi.Controllers
 {
+    using MediatR;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.DependencyInjection;
+
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     public abstract class ApiController : ControllerBase

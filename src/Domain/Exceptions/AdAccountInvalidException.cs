@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace CleanArchitecture.Domain.Exceptions
+﻿namespace CleanArchitecture.Domain.Exceptions
 {
+    using System;
+
     public class AdAccountInvalidException : Exception
     {
         public AdAccountInvalidException(string adAccount, Exception ex)

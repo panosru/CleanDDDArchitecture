@@ -1,21 +1,19 @@
-﻿using CleanArchitecture.Domain.Entities;
-using CleanArchitecture.Infrastructure.Identity;
-using Microsoft.AspNetCore.Identity;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace CleanArchitecture.Infrastructure.Persistence
+﻿namespace CleanArchitecture.Infrastructure.Persistence
 {
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Domain.Entities;
+    using Identity;
+    using Microsoft.AspNetCore.Identity;
+
     public static class ApplicationDbContextSeed
     {
         public static async Task SeedDefaultUserAsync(UserManager<ApplicationUser> userManager)
         {
-            var defaultUser = new ApplicationUser { UserName = "administrator", Email = "administrator@localhost" };
+            var defaultUser = new ApplicationUser {UserName = "administrator", Email = "administrator@localhost"};
 
             if (userManager.Users.All(u => u.UserName != defaultUser.UserName))
-            {
                 await userManager.CreateAsync(defaultUser, "Administrator1!");
-            }
         }
 
         public static async Task SeedSampleDataAsync(ApplicationDbContext context)
@@ -28,14 +26,14 @@ namespace CleanArchitecture.Infrastructure.Persistence
                     Title = "Shopping",
                     Items =
                     {
-                        new TodoItem { Title = "Apples", Done = true },
-                        new TodoItem { Title = "Milk", Done = true },
-                        new TodoItem { Title = "Bread", Done = true },
-                        new TodoItem { Title = "Toilet paper" },
-                        new TodoItem { Title = "Pasta" },
-                        new TodoItem { Title = "Tissues" },
-                        new TodoItem { Title = "Tuna" },
-                        new TodoItem { Title = "Water" }
+                        new TodoItem {Title = "Apples", Done = true},
+                        new TodoItem {Title = "Milk", Done = true},
+                        new TodoItem {Title = "Bread", Done = true},
+                        new TodoItem {Title = "Toilet paper"},
+                        new TodoItem {Title = "Pasta"},
+                        new TodoItem {Title = "Tissues"},
+                        new TodoItem {Title = "Tuna"},
+                        new TodoItem {Title = "Water"}
                     }
                 });
 

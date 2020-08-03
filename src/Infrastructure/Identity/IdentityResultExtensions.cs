@@ -1,8 +1,8 @@
 ﻿namespace CleanArchitecture.Infrastructure.Identity
 {
-    using Microsoft.AspNetCore.Identity;
     using System.Linq;
     using Aviant.DDD.Application;
+    using Microsoft.AspNetCore.Identity;
 
     public static class IdentityResultExtensions
     {

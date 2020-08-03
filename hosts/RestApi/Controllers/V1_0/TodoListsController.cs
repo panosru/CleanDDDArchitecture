@@ -1,15 +1,14 @@
-﻿using System.Threading.Tasks;
-using CleanArchitecture.Services.v1_0.Interfaces;
-using CleanArchitecture.Application.TodoLists.Commands.CreateTodoList;
-using CleanArchitecture.Application.TodoLists.Commands.DeleteTodoList;
-using CleanArchitecture.Application.TodoLists.Commands.UpdateTodoList;
-using CleanArchitecture.Application.TodoLists.Queries.ExportTodos;
-using CleanArchitecture.Application.TodoLists.Queries.GetTodos;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-namespace CleanArchitecture.RestApi.Controllers.V1_0
+﻿namespace CleanArchitecture.RestApi.Controllers.V1_0
 {
+    using System.Threading.Tasks;
+    using Application.TodoLists.Commands.CreateTodoList;
+    using Application.TodoLists.Commands.DeleteTodoList;
+    using Application.TodoLists.Commands.UpdateTodoList;
+    using Application.TodoLists.Queries.ExportTodos;
+    using Application.TodoLists.Queries.GetTodos;
+    using CleanArchitecture.Services.v1_0.Interfaces;
+    using Microsoft.AspNetCore.Mvc;
+
     public class TodoListsController : ApiController
     {
         private readonly ITodoListsService _todoListsService;
@@ -28,7 +27,7 @@ namespace CleanArchitecture.RestApi.Controllers.V1_0
         [HttpGet("{id}")]
         public async Task<FileResult> Get(int id)
         {
-            var vm = await Mediator.Send(new ExportTodosQuery { ListId = id });
+            var vm = await Mediator.Send(new ExportTodosQuery {ListId = id});
             //
             return File(vm.Content, vm.ContentType, vm.FileName);
             // return await _todoListsService.Get(id);
@@ -43,10 +42,7 @@ namespace CleanArchitecture.RestApi.Controllers.V1_0
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, UpdateTodoListCommand command)
         {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
+            if (id != command.Id) return BadRequest();
 
             await Mediator.Send(command);
 
@@ -56,7 +52,7 @@ namespace CleanArchitecture.RestApi.Controllers.V1_0
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            await Mediator.Send(new DeleteTodoListCommand { Id = id });
+            await Mediator.Send(new DeleteTodoListCommand {Id = id});
 
             return NoContent();
         }

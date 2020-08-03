@@ -1,14 +1,14 @@
-﻿using Microsoft.OpenApi.Models;
-
-namespace CleanArchitecture.RestApi.Utils.Swagger
+﻿namespace CleanArchitecture.RestApi.Utils.Swagger
 {
+    using Microsoft.OpenApi.Models;
+
     /// <summary>
-    /// Swagger Configuration
+    ///     Swagger Configuration
     /// </summary>
     public class SwaggerSettings
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SwaggerSettings"/> class.
+        ///     Initializes a new instance of the <see cref="SwaggerSettings" /> class.
         /// </summary>
         public SwaggerSettings()
         {
@@ -16,27 +16,27 @@ namespace CleanArchitecture.RestApi.Utils.Swagger
             Info = new OpenApiInfo
             {
                 Title = "RestApi API Example",
-                Description = "RestApi API Versions"                
+                Description = "RestApi API Versions"
             };
         }
 
         /// <summary>
-        /// Gets or sets document Name.
+        ///     Gets or sets document Name.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets swagger Info.
+        ///     Gets or sets swagger Info.
         /// </summary>
         public OpenApiInfo Info { get; set; }
 
         /// <summary>
-        /// Gets or sets RoutePrefix.
+        ///     Gets or sets RoutePrefix.
         /// </summary>
         public string RoutePrefix { get; set; }
 
         /// <summary>
-        /// Gets Route Prefix with tailing slash.
+        ///     Gets Route Prefix with tailing slash.
         /// </summary>
         public string RoutePrefixWithSlash =>
             string.IsNullOrWhiteSpace(RoutePrefix)

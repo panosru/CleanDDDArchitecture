@@ -1,8 +1,8 @@
 ﻿namespace CleanArchitecture.Domain.Entities
 {
-    using Enums;
     using System;
     using Aviant.DDD.Domain.Entity;
+    using Enums;
 
     public class TodoItem : Auditable
     {

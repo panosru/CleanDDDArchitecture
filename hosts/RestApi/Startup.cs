@@ -1,25 +1,23 @@
-using System;
-using CleanArchitecture.Application;
-using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Infrastructure;
-using CleanArchitecture.Infrastructure.Persistence;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System.Text;
-using Aviant.DDD.Application.Identity;
-using CleanArchitecture.RestApi.Services;
-using CleanArchitecture.RestApi.Utils.Swagger;
-using CleanArchitecture.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.IdentityModel.Tokens;
-
 namespace CleanArchitecture.RestApi
 {
+    using System;
+    using System.Text;
+    using Application;
+    using Aviant.DDD.Application.Identity;
+    using CleanArchitecture.Services;
+    using Infrastructure;
+    using Infrastructure.Persistence;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc.ApiExplorer;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.IdentityModel.Tokens;
+    using Services;
+    using Utils.Swagger;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -33,7 +31,7 @@ namespace CleanArchitecture.RestApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(Configuration);
-            
+
             services.Configure<SwaggerSettings>(Configuration.GetSection(nameof(SwaggerSettings)));
 
             services
@@ -41,8 +39,8 @@ namespace CleanArchitecture.RestApi
                 .AddApplication()
                 .AddServices()
                 .AddRazorPages();
-                // .AddMvcOptions(options =>
-                //     options.Filters.Add(new AuthorizeFilter()));
+            // .AddMvcOptions(options =>
+            //     options.Filters.Add(new AuthorizeFilter()));
 
             services
                 .AddAuthorization()
@@ -66,7 +64,7 @@ namespace CleanArchitecture.RestApi
                 .AddApiVersionWithExplorer()
                 .AddSwaggerOptions()
                 .AddSwaggerGen();
-            
+
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
             services.AddHttpContextAccessor();
@@ -76,13 +74,13 @@ namespace CleanArchitecture.RestApi
                 .AddDbContextCheck<ApplicationDbContext>();
 
             // services.AddControllersWithViews(options => 
-                // options.Filters.Add(new AuthorizeFilter()));
+            // options.Filters.Add(new AuthorizeFilter()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(
-            IApplicationBuilder app, 
-            IWebHostEnvironment env, 
+            IApplicationBuilder app,
+            IWebHostEnvironment env,
             IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
@@ -99,7 +97,7 @@ namespace CleanArchitecture.RestApi
             }
 
             app.UseHealthChecks("/health");
-            
+
             app.UseSwaggerDocuments();
 
             app.UseHttpsRedirection();
@@ -114,12 +112,12 @@ namespace CleanArchitecture.RestApi
 
             app.UseAuthentication();
             app.UseAuthorization();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints
                     .MapDefaultControllerRoute();
-                    // .RequireAuthorization();
+                // .RequireAuthorization();
             });
         }
     }

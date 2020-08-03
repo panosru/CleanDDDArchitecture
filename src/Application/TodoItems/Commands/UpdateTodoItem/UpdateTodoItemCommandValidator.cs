@@ -1,7 +1,7 @@
 ﻿namespace CleanArchitecture.Application.TodoItems.Commands.UpdateTodoItem
 {
     using FluentValidation;
-    
+
     public class UpdateTodoItemCommandValidator : AbstractValidator<UpdateTodoItemCommand>
     {
         public UpdateTodoItemCommandValidator()

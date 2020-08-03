@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-
 namespace Aviant.DDD.Domain
 {
+    using System.Collections.Generic;
+
     public interface INotifications
     {
         void AddNotification(INotification notification);

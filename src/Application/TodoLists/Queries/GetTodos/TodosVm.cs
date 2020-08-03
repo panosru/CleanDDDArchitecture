@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace CleanArchitecture.Application.TodoLists.Queries.GetTodos
+﻿namespace CleanArchitecture.Application.TodoLists.Queries.GetTodos
 {
+    using System.Collections.Generic;
+
     public class TodosVm
     {
         public IList<PriorityLevelDto> PriorityLevels { get; set; }

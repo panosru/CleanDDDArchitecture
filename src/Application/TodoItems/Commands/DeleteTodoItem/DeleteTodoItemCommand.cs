@@ -1,13 +1,13 @@
 ﻿namespace CleanArchitecture.Application.TodoItems.Commands.DeleteTodoItem
 {
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Aviant.DDD.Application.Command;
     using Common.Exceptions;
     using Common.Interfaces;
     using Domain.Entities;
     using MediatR;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Aviant.DDD.Application.Command;
-    
+
     public class DeleteTodoItemCommand : Base
     {
         public int Id { get; set; }
@@ -26,10 +26,7 @@
         {
             var entity = await _context.TodoItems.FindAsync(request.Id);
 
-            if (entity == null)
-            {
-                throw new NotFoundException(nameof(TodoItem), request.Id);
-            }
+            if (entity == null) throw new NotFoundException(nameof(TodoItem), request.Id);
 
             _context.TodoItems.Remove(entity);
 

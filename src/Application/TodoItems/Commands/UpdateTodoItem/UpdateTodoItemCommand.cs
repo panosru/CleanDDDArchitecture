@@ -1,14 +1,14 @@
 ﻿namespace CleanArchitecture.Application.TodoItems.Commands.UpdateTodoItem
 {
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Aviant.DDD.Application.Command;
     using Common.Exceptions;
     using Common.Interfaces;
     using Domain.Entities;
     using MediatR;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Aviant.DDD.Application.Command;
-    
-    public partial class UpdateTodoItemCommand : Base
+
+    public class UpdateTodoItemCommand : Base
     {
         public int Id { get; set; }
 
@@ -30,10 +30,7 @@
         {
             var entity = await _context.TodoItems.FindAsync(request.Id);
 
-            if (entity == null)
-            {
-                throw new NotFoundException(nameof(TodoItem), request.Id);
-            }
+            if (entity == null) throw new NotFoundException(nameof(TodoItem), request.Id);
 
             entity.Title = request.Title;
             entity.Done = request.Done;

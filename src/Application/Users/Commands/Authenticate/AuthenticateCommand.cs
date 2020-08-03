@@ -4,11 +4,11 @@ namespace CleanArchitecture.Application.Users.Commands.Authenticate
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Command;
     using IIdentityService = Aviant.DDD.Application.Identity.IService;
-    
+
     public class AuthenticateCommand : Base<object>
     {
         public string Username { get; set; }
-        
+
         public string Password { get; set; }
     }
 

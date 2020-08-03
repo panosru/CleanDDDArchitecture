@@ -1,7 +1,7 @@
-using System;
-
 namespace Aviant.DDD.Domain.Entity
 {
+    using System;
+
     public interface IAudited
     {
     }

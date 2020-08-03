@@ -1,24 +1,22 @@
-using System;
-using Aviant.DDD.Domain;
-
 namespace Aviant.DDD.Domain.Validators
 {
+    using System;
+    using Notification;
+
     public static class AssertionsConcern
     {
         public static bool HasNotifications()
         {
-            return Notification.Facade.HasNotifications();
+            return Facade.HasNotifications();
         }
 
         public static bool IsSatisfiedBy(params Func<bool>[] asserts)
         {
-            bool isSatisfied = true;
+            var isSatisfied = true;
 
             foreach (var assert in asserts)
-            {
                 if (!assert())
                     isSatisfied = false;
-            }
 
             return isSatisfied;
         }
@@ -28,8 +26,8 @@ namespace Aviant.DDD.Domain.Validators
             return delegate
             {
                 if (left == right) return true;
-                
-                Notification.Facade.AddNotification(message);
+
+                Facade.AddNotification(message);
                 return false;
             };
         }
@@ -40,40 +38,40 @@ namespace Aviant.DDD.Domain.Validators
             {
                 if (left.Date != right.Date) return true;
 
-                Notification.Facade.AddNotification(message);
+                Facade.AddNotification(message);
                 return false;
             };
         }
 
         public static Func<bool> IsLowerThan(int? left, int right, INotification message)
         {
-            return delegate()
+            return delegate
             {
                 if (left > right) return true;
-                
-                Notification.Facade.AddNotification(message);
+
+                Facade.AddNotification(message);
                 return false;
             };
         }
-        
+
         public static Func<bool> IsLowerThan(decimal? left, decimal right, INotification message)
         {
-            return delegate()
+            return delegate
             {
                 if (left > right) return true;
-                
-                Notification.Facade.AddNotification(message);
+
+                Facade.AddNotification(message);
                 return false;
             };
         }
-        
+
         public static Func<bool> IsLowerThan(DateTime? left, DateTime right, INotification message)
         {
-            return delegate()
+            return delegate
             {
                 if (left > right) return true;
-                
-                Notification.Facade.AddNotification(message);
+
+                Facade.AddNotification(message);
                 return false;
             };
         }
@@ -84,29 +82,29 @@ namespace Aviant.DDD.Domain.Validators
             {
                 if (left >= right) return true;
 
-                Notification.Facade.AddNotification(message);
+                Facade.AddNotification(message);
                 return false;
             };
         }
-        
+
         public static Func<bool> IsLowerThanOrEqual(decimal? left, decimal right, INotification message)
         {
             return delegate
             {
                 if (left >= right) return true;
 
-                Notification.Facade.AddNotification(message);
+                Facade.AddNotification(message);
                 return false;
             };
         }
-        
+
         public static Func<bool> IsLowerThanOrEqual(DateTime? left, DateTime right, INotification message)
         {
             return delegate
             {
                 if (left >= right) return true;
 
-                Notification.Facade.AddNotification(message);
+                Facade.AddNotification(message);
                 return false;
             };
         }
@@ -116,30 +114,30 @@ namespace Aviant.DDD.Domain.Validators
             return delegate
             {
                 if (left > right) return true;
-                
-                Notification.Facade.AddNotification(message);
+
+                Facade.AddNotification(message);
                 return false;
             };
         }
-        
+
         public static Func<bool> IsGreaterThan(decimal? left, decimal right, INotification message)
         {
             return delegate
             {
                 if (left > right) return true;
-                
-                Notification.Facade.AddNotification(message);
+
+                Facade.AddNotification(message);
                 return false;
             };
         }
-        
+
         public static Func<bool> IsGreaterThan(DateTime? left, DateTime right, INotification message)
         {
             return delegate
             {
                 if (left > right) return true;
-                
-                Notification.Facade.AddNotification(message);
+
+                Facade.AddNotification(message);
                 return false;
             };
         }
@@ -149,30 +147,30 @@ namespace Aviant.DDD.Domain.Validators
             return delegate
             {
                 if (left <= right) return true;
-                
-                Notification.Facade.AddNotification(message);
+
+                Facade.AddNotification(message);
                 return false;
             };
         }
-        
+
         public static Func<bool> IsGreaterThanOrEqual(decimal? left, decimal right, INotification message)
         {
             return delegate
             {
                 if (left <= right) return true;
-                
-                Notification.Facade.AddNotification(message);
+
+                Facade.AddNotification(message);
                 return false;
             };
         }
-        
+
         public static Func<bool> IsGreaterThanOrEqual(DateTime? left, DateTime right, INotification message)
         {
             return delegate
             {
                 if (left <= right) return true;
-                
-                Notification.Facade.AddNotification(message);
+
+                Facade.AddNotification(message);
                 return false;
             };
         }
@@ -183,7 +181,7 @@ namespace Aviant.DDD.Domain.Validators
             {
                 if (!string.IsNullOrWhiteSpace(value)) return true;
 
-                Notification.Facade.AddNotification(message);
+                Facade.AddNotification(message);
                 return false;
             };
         }
@@ -193,8 +191,8 @@ namespace Aviant.DDD.Domain.Validators
             return delegate
             {
                 if (value.Length > minLength) return true;
-                
-                Notification.Facade.AddNotification(message);
+
+                Facade.AddNotification(message);
                 return false;
             };
         }
@@ -204,8 +202,8 @@ namespace Aviant.DDD.Domain.Validators
             return delegate
             {
                 if (value?.Length == Length) return true;
-                
-                Notification.Facade.AddNotification(message);
+
+                Facade.AddNotification(message);
                 return false;
             };
         }
@@ -215,8 +213,8 @@ namespace Aviant.DDD.Domain.Validators
             return delegate
             {
                 if (Guid.Empty != guid) return true;
-                
-                Notification.Facade.AddNotification(message);
+
+                Facade.AddNotification(message);
                 return false;
             };
         }
@@ -226,8 +224,8 @@ namespace Aviant.DDD.Domain.Validators
             return delegate
             {
                 if (guid != null) return true;
-                
-                Notification.Facade.AddNotification(message);
+
+                Facade.AddNotification(message);
                 return false;
             };
         }
@@ -237,18 +235,18 @@ namespace Aviant.DDD.Domain.Validators
         {
             return delegate
             {
-                bool isValid = false;
+                var isValid = false;
 
-                isValid = IsSatisfiedBy(IsStringNotNullOrWhiteSpace(guid, 
-                    new Notification.Create(stringIsEmptyMessage)));
+                isValid = IsSatisfiedBy(IsStringNotNullOrWhiteSpace(guid,
+                    new Create(stringIsEmptyMessage)));
 
                 if (!isValid) return false;
 
-                Guid.TryParse(guid, out Guid parsed);
+                Guid.TryParse(guid, out var parsed);
 
                 isValid = IsSatisfiedBy(
-                    IsGuidNotNull(parsed, new Notification.Create(guidIsInvalidMessage)),
-                    IsGuidNotEmpty(parsed, new Notification.Create(guidIsEmptyMessage)));
+                    IsGuidNotNull(parsed, new Create(guidIsInvalidMessage)),
+                    IsGuidNotEmpty(parsed, new Create(guidIsEmptyMessage)));
 
                 return isValid;
             };
@@ -260,7 +258,7 @@ namespace Aviant.DDD.Domain.Validators
             {
                 if (null != obj) return true;
 
-                Notification.Facade.AddNotification(message);
+                Facade.AddNotification(message);
                 return false;
             };
         }
@@ -270,8 +268,8 @@ namespace Aviant.DDD.Domain.Validators
             return delegate
             {
                 if (obj is null) return true;
-                
-                Notification.Facade.AddNotification(message);
+
+                Facade.AddNotification(message);
                 return false;
             };
         }

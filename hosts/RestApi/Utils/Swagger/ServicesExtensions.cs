@@ -1,22 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Versioning;
-using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using Swashbuckle.AspNetCore.SwaggerUI;
-
-namespace CleanArchitecture.RestApi.Utils.Swagger
+﻿namespace CleanArchitecture.RestApi.Utils.Swagger
 {
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Versioning;
+    using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Options;
+    using Swashbuckle.AspNetCore.Swagger;
+    using Swashbuckle.AspNetCore.SwaggerGen;
+    using Swashbuckle.AspNetCore.SwaggerUI;
 
     /// <summary>
-    /// Service Collection(IServiceCollection) Extensions
+    ///     Service Collection(IServiceCollection) Extensions
     /// </summary>
     public static class ServicesExtensions
     {
         /// <summary>
-        /// Add AddVersionedApiExplorer and AddApiVersioning middlewares
+        ///     Add AddVersionedApiExplorer and AddApiVersioning middlewares
         /// </summary>
         /// <param name="services"></param>
         /// <returns>IServiceCollection</returns>
@@ -39,9 +38,9 @@ namespace CleanArchitecture.RestApi.Utils.Swagger
         }
 
         /// <summary>
-        /// Add swagger services
+        ///     Add swagger services
         /// </summary>
-        /// <param name="services"><see cref="IServiceCollection"/>/></param>
+        /// <param name="services"><see cref="IServiceCollection" />/></param>
         /// <returns>IServiceCollection</returns>
         public static IServiceCollection AddSwaggerOptions(this IServiceCollection services)
         {
@@ -51,5 +50,4 @@ namespace CleanArchitecture.RestApi.Utils.Swagger
                 .AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();
         }
     }
-    
 }

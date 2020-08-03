@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-
 namespace Aviant.DDD.Domain.Notification
 {
+    using System.Collections.Generic;
+
     public abstract class BaseCollection : INotifications
     {
         private List<INotification> _notifications;

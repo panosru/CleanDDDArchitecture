@@ -1,13 +1,12 @@
-using System.Collections.Generic;
-using System.Linq;
-using FluentValidation.Results;
-
 namespace Aviant.DDD.Application.Exception
 {
-    public class Validation : Aviant.DDD.Domain.Exception.Base
+    using System.Collections.Generic;
+    using System.Linq;
+    using Domain.Exception;
+    using FluentValidation.Results;
+
+    public class Validation : Base
     {
-        public IDictionary<string, string[]> Failures { get; }
-        
         public Validation() : base("One or more validation failures have occurred.")
         {
             Failures = new Dictionary<string, string[]>();
@@ -26,5 +25,7 @@ namespace Aviant.DDD.Application.Exception
                 Failures.Add(propertyName, propertyFailures);
             }
         }
+
+        public IDictionary<string, string[]> Failures { get; }
     }
 }

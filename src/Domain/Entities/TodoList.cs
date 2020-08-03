@@ -16,6 +16,6 @@
 
         public string Colour { get; set; }
 
-        public IList<TodoItem> Items { get; private set; }
+        public IList<TodoItem> Items { get; }
     }
 }

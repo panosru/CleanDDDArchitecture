@@ -1,11 +1,10 @@
-﻿using System;
-
-namespace CleanArchitecture.Application.Common.Exceptions
+﻿namespace CleanArchitecture.Application.Common.Exceptions
 {
+    using System;
+
     public class NotFoundException : Exception
     {
         public NotFoundException()
-            : base()
         {
         }
 

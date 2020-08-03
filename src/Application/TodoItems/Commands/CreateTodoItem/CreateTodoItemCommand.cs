@@ -1,11 +1,11 @@
 ﻿namespace CleanArchitecture.Application.TodoItems.Commands.CreateTodoItem
 {
-    using Common.Interfaces;
-    using Domain.Entities;
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Command;
-    
+    using Common.Interfaces;
+    using Domain.Entities;
+
     public class CreateTodoItemCommand : Base<int>
     {
         public int ListId { get; set; }
@@ -19,8 +19,6 @@
 
         public CreateTodoItemCommandHandler(IApplicationDbContext context)
         {
-            
-            
             _context = context;
         }
 

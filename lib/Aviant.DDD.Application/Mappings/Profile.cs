@@ -5,7 +5,7 @@ namespace Aviant.DDD.Application.Mappings
     using System.Linq;
     using System.Reflection;
     using AutoMapperProfile = AutoMapper.Profile;
-    
+
     public class Profile : AutoMapperProfile
     {
         public Profile()

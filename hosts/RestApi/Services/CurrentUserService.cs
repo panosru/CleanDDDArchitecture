@@ -4,7 +4,7 @@
     using System.Security.Claims;
     using Aviant.DDD.Application.Identity;
     using Microsoft.AspNetCore.Http;
-    
+
     public class CurrentUserService : ICurrentUserService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
