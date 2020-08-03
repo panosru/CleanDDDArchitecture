@@ -1,13 +1,13 @@
 ﻿namespace CleanArchitecture.Application.TodoLists.Commands.UpdateTodoList
 {
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Aviant.DDD.Application.Command;
     using Common.Exceptions;
     using Common.Interfaces;
     using Domain.Entities;
     using MediatR;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Aviant.DDD.Application.Command;
-    
+
     public class UpdateTodoListCommand : Base
     {
         public int Id { get; set; }
@@ -28,10 +28,7 @@
         {
             var entity = await _context.TodoLists.FindAsync(request.Id);
 
-            if (entity == null)
-            {
-                throw new NotFoundException(nameof(TodoList), request.Id);
-            }
+            if (entity == null) throw new NotFoundException(nameof(TodoList), request.Id);
 
             entity.Title = request.Title;
 

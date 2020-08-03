@@ -1,12 +1,12 @@
 ﻿namespace CleanArchitecture.Application.TodoLists.Commands.CreateTodoList
 {
-    using Common.Interfaces;
-    using Domain.Entities;
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Command;
+    using Common.Interfaces;
+    using Domain.Entities;
 
-    public partial class CreateTodoListCommand : Base<int>
+    public class CreateTodoListCommand : Base<int>
     {
         public string Title { get; set; }
     }

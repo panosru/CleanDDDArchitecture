@@ -1,13 +1,12 @@
-﻿using System.Threading.Tasks;
-using CleanArchitecture.Application.TodoItems.Commands.CreateTodoItem;
-using CleanArchitecture.Application.TodoItems.Commands.DeleteTodoItem;
-using CleanArchitecture.Application.TodoItems.Commands.UpdateTodoItem;
-using CleanArchitecture.Application.TodoItems.Commands.UpdateTodoItemDetail;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-namespace CleanArchitecture.RestApi.Controllers.V1_0
+﻿namespace CleanArchitecture.RestApi.Controllers.V1_0
 {
+    using System.Threading.Tasks;
+    using Application.TodoItems.Commands.CreateTodoItem;
+    using Application.TodoItems.Commands.DeleteTodoItem;
+    using Application.TodoItems.Commands.UpdateTodoItem;
+    using Application.TodoItems.Commands.UpdateTodoItemDetail;
+    using Microsoft.AspNetCore.Mvc;
+
     public class TodoItemsController : ApiController
     {
         [HttpPost]
@@ -19,10 +18,7 @@ namespace CleanArchitecture.RestApi.Controllers.V1_0
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, UpdateTodoItemCommand command)
         {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
+            if (id != command.Id) return BadRequest();
 
             await Mediator.Send(command);
 
@@ -32,10 +28,7 @@ namespace CleanArchitecture.RestApi.Controllers.V1_0
         [HttpPut("[action]")]
         public async Task<ActionResult> UpdateItemDetails(int id, UpdateTodoItemDetailCommand command)
         {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
+            if (id != command.Id) return BadRequest();
 
             await Mediator.Send(command);
 
@@ -45,7 +38,7 @@ namespace CleanArchitecture.RestApi.Controllers.V1_0
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            await Mediator.Send(new DeleteTodoItemCommand { Id = id });
+            await Mediator.Send(new DeleteTodoItemCommand {Id = id});
 
             return NoContent();
         }

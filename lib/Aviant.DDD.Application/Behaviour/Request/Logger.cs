@@ -4,17 +4,16 @@ namespace Aviant.DDD.Application.Behaviour.Request
     using System.Threading;
     using System.Threading.Tasks;
     using Identity;
-    using IIdentityService = Identity.IService;
     using MediatR.Pipeline;
     using Microsoft.Extensions.Logging;
-    
+    using IIdentityService = Identity.IService;
+
     public abstract class Logger<TRequest> : IRequestPreProcessor<TRequest>
     {
-        private readonly ILogger _logger;
-
         private readonly ICurrentUserService _currentUserService;
 
         private readonly IIdentityService _identityService;
+        private readonly ILogger _logger;
 
         public Logger(
             ILogger<TRequest> logger,
@@ -29,14 +28,11 @@ namespace Aviant.DDD.Application.Behaviour.Request
         public async Task Process(TRequest request, CancellationToken cancellationToken)
         {
             string requestName = typeof(TRequest).Name;
-            Guid userId = _currentUserService?.UserId ?? Guid.Empty;
+            var userId = _currentUserService?.UserId ?? Guid.Empty;
             string username = string.Empty;
 
-            if (Guid.Empty != userId)
-            {
-                username = await _identityService.GetUserNameAsync(userId);
-            }
-            
+            if (Guid.Empty != userId) username = await _identityService.GetUserNameAsync(userId);
+
             _logger.LogInformation("CleanArchitecture Request: {Name} {@UserId} {@UserName} {@Request}",
                 requestName, userId, username, request);
 

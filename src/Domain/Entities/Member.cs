@@ -6,7 +6,7 @@ namespace CleanArchitecture.Domain.Entities
     public class Member : Auditable
     {
         public int Id { get; set; }
-        
+
         public Guid UserId { get; set; }
     }
 }

@@ -1,16 +1,16 @@
-using System;
-using System.Threading.Tasks;
-using CleanArchitecture.Infrastructure.Identity;
-using CleanArchitecture.Infrastructure.Persistence;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-
 namespace CleanArchitecture.RestApi
 {
+    using System;
+    using System.Threading.Tasks;
+    using Infrastructure.Identity;
+    using Infrastructure.Persistence;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
+
     public class Program
     {
         public static async Task Main(string[] args)
@@ -25,10 +25,7 @@ namespace CleanArchitecture.RestApi
                 {
                     var context = services.GetRequiredService<ApplicationDbContext>();
 
-                    if (context.Database.IsNpgsql())
-                    {
-                        await context.Database.MigrateAsync();
-                    }                   
+                    if (context.Database.IsNpgsql()) await context.Database.MigrateAsync();
 
                     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
@@ -48,11 +45,10 @@ namespace CleanArchitecture.RestApi
             await host.RunAsync();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+        }
     }
 }

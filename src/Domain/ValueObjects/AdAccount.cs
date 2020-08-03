@@ -1,15 +1,19 @@
-﻿using CleanArchitecture.Domain.Common;
-using CleanArchitecture.Domain.Exceptions;
-using System;
-using System.Collections.Generic;
-
-namespace CleanArchitecture.Domain.ValueObjects
+﻿namespace CleanArchitecture.Domain.ValueObjects
 {
+    using System;
+    using System.Collections.Generic;
+    using Common;
+    using Exceptions;
+
     public class AdAccount : ValueObject
     {
         private AdAccount()
         {
         }
+
+        public string Domain { get; private set; }
+
+        public string Name { get; private set; }
 
         public static AdAccount For(string accountString)
         {
@@ -28,10 +32,6 @@ namespace CleanArchitecture.Domain.ValueObjects
 
             return account;
         }
-
-        public string Domain { get; private set; }
-
-        public string Name { get; private set; }
 
         public static implicit operator string(AdAccount account)
         {

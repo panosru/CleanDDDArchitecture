@@ -1,10 +1,10 @@
 namespace Aviant.DDD.Infrastructure.Files
 {
-    using CsvHelper;
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
     using Application;
+    using CsvHelper;
     using CsvHelper.Configuration;
 
     public class CsvFileBuilder<TRecrod, TMap> : ICsvFileBuilder<TRecrod>

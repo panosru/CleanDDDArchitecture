@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using FluentValidation.Results;
-
-namespace CleanArchitecture.Application.Common.Exceptions
+﻿namespace CleanArchitecture.Application.Common.Exceptions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using FluentValidation.Results;
+
     public class ValidationException : Exception
     {
         public ValidationException()

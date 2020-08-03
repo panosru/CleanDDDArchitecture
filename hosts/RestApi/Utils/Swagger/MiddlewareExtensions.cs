@@ -1,24 +1,21 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
-
-namespace CleanArchitecture.RestApi.Utils.Swagger
+﻿namespace CleanArchitecture.RestApi.Utils.Swagger
 {
+    using System;
+    using Microsoft.AspNetCore.Builder;
+
     /// <summary>
-    /// Extending Swagger services
+    ///     Extending Swagger services
     /// </summary>
     public static class MiddlewareExtensions
     {
         /// <summary>
-        /// Enabling Swagger UI.
-        /// Excluding from test environment
+        ///     Enabling Swagger UI.
+        ///     Excluding from test environment
         /// </summary>
         /// <param name="app">IApplicationBuilder</param>
         public static void UseSwaggerDocuments(this IApplicationBuilder app)
         {
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "TEST")
-            {
-                return;
-            }
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "TEST") return;
 
             app.UseSwagger();
 

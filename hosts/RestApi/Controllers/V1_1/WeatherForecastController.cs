@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using CleanArchitecture.Application.WeatherForecasts.Queries.GetWeatherForecasts;
-using Microsoft.AspNetCore.Mvc;
-
-namespace CleanArchitecture.RestApi.Controllers.V1_1
+﻿namespace CleanArchitecture.RestApi.Controllers.V1_1
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Application.WeatherForecasts.Queries.GetWeatherForecasts;
+    using Microsoft.AspNetCore.Mvc;
+
     public class WeatherForecastController : ApiController
     {
         [HttpGet]

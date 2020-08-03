@@ -1,16 +1,13 @@
-using System.IO;
-using System.Threading.Tasks;
-using CleanArchitecture.Services.v1_0.Interfaces;
-using CleanArchitecture.Application.TodoLists.Queries.ExportTodos;
-using CleanArchitecture.Application.TodoLists.Queries.GetTodos;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-
 namespace CleanArchitecture.Services.v1_0
 {
+    using System.Threading.Tasks;
+    using Application.TodoLists.Queries.GetTodos;
+    using Interfaces;
+    using MediatR;
+    using Microsoft.AspNetCore.Mvc;
+
     public class TodoListsService : BaseService, ITodoListsService
     {
-
         public TodoListsService(IMediator mediator)
             : base(mediator)
         {

@@ -1,17 +1,16 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using CleanArchitecture.Application.Common.Interfaces;
-using CleanArchitecture.Domain.Enums;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Aviant.DDD.Application.Command;
-
-namespace CleanArchitecture.Application.TodoLists.Queries.GetTodos
+﻿namespace CleanArchitecture.Application.TodoLists.Queries.GetTodos
 {
+    using System;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
+    using Aviant.DDD.Application.Command;
+    using Common.Interfaces;
+    using Domain.Enums;
+    using Microsoft.EntityFrameworkCore;
+
     public class GetTodosQuery : Base<TodosVm>
     {
     }
@@ -33,7 +32,7 @@ namespace CleanArchitecture.Application.TodoLists.Queries.GetTodos
             {
                 PriorityLevels = Enum.GetValues(typeof(PriorityLevel))
                     .Cast<PriorityLevel>()
-                    .Select(p => new PriorityLevelDto { Value = (int)p, Name = p.ToString() })
+                    .Select(p => new PriorityLevelDto {Value = (int) p, Name = p.ToString()})
                     .ToList(),
 
                 Lists = await _context.TodoLists

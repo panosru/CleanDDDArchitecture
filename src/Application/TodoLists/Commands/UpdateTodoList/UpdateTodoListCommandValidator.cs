@@ -1,11 +1,12 @@
 ﻿namespace CleanArchitecture.Application.TodoLists.Commands.UpdateTodoList
 {
-    using Common.Interfaces;
-    using FluentValidation;
-    using Microsoft.EntityFrameworkCore;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Common.Interfaces;
+    using FluentValidation;
+    using Microsoft.EntityFrameworkCore;
+
     public class UpdateTodoListCommandValidator : AbstractValidator<UpdateTodoListCommand>
     {
         private readonly IApplicationDbContext _context;
@@ -20,7 +21,8 @@
                 .MustAsync(BeUniqueTitle).WithMessage("The specified title already exists.");
         }
 
-        public async Task<bool> BeUniqueTitle(UpdateTodoListCommand model, string title, CancellationToken cancellationToken)
+        public async Task<bool> BeUniqueTitle(UpdateTodoListCommand model, string title,
+            CancellationToken cancellationToken)
         {
             return await _context.TodoLists
                 .Where(l => l.Id != model.Id)

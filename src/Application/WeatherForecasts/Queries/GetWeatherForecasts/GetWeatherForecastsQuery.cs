@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Aviant.DDD.Application.Command;
-
-namespace CleanArchitecture.Application.WeatherForecasts.Queries.GetWeatherForecasts
+﻿namespace CleanArchitecture.Application.WeatherForecasts.Queries.GetWeatherForecasts
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Aviant.DDD.Application.Command;
+
     public class GetWeatherForecastsQuery : Base<IEnumerable<WeatherForecast>>
     {
     }
 
-    public class GetWeatherForecastsQueryHandler : 
+    public class GetWeatherForecastsQueryHandler :
         Handler<GetWeatherForecastsQuery, IEnumerable<WeatherForecast>>
     {
-        private static readonly string[] Summaries = new[]
+        private static readonly string[] Summaries =
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
