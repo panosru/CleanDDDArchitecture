@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Infrastructure.Persistence
+﻿namespace CleanDDDArchitecture.Infrastructure.Persistence
 {
     using System;
     using System.Reflection;

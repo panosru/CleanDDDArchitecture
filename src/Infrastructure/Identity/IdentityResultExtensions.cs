@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Infrastructure.Identity
+﻿namespace CleanDDDArchitecture.Infrastructure.Identity
 {
     using System.Linq;
     using Aviant.DDD.Application;

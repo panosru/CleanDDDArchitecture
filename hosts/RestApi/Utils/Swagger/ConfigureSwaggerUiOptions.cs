@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.RestApi.Utils.Swagger
+﻿namespace CleanDDDArchitecture.RestApi.Utils.Swagger
 {
     using System.Diagnostics;
     using System.Linq;
@@ -8,21 +8,20 @@
     using Swashbuckle.AspNetCore.SwaggerUI;
 
     /// <inheritdoc cref="SwaggerUIOptions" />
-    /// >
     public sealed class ConfigureSwaggerUiOptions : IConfigureOptions<SwaggerUIOptions>
     {
-        private readonly IApiVersionDescriptionProvider provider;
-        private readonly SwaggerSettings settings;
+        private readonly IApiVersionDescriptionProvider _provider;
+        private readonly SwaggerSettings _settings;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ConfigureSwaggerUiOptions" />
         public ConfigureSwaggerUiOptions(IApiVersionDescriptionProvider versionDescriptionProvider,
             IOptions<SwaggerSettings> settings)
         {
             Debug.Assert(versionDescriptionProvider != null, $"{nameof(versionDescriptionProvider)} != null");
             Debug.Assert(settings != null, $"{nameof(versionDescriptionProvider)} != null");
 
-            provider = versionDescriptionProvider;
-            this.settings = settings?.Value ?? new SwaggerSettings();
+            _provider = versionDescriptionProvider;
+            this._settings = settings?.Value ?? new SwaggerSettings();
         }
 
         /// <summary>
@@ -31,16 +30,16 @@
         /// <param name="options"></param>
         public void Configure(SwaggerUIOptions options)
         {
-            provider
+            _provider
                 .ApiVersionDescriptions
                 .ToList()
                 .ForEach(description =>
                 {
                     options.SwaggerEndpoint(
-                        $"/{settings.RoutePrefixWithSlash}{description.GroupName}/swagger.json",
+                        $"/{_settings.RoutePrefixWithSlash}{description.GroupName}/swagger.json",
                         description.GroupName.ToUpperInvariant());
 
-                    options.RoutePrefix = settings.RoutePrefix;
+                    options.RoutePrefix = _settings.RoutePrefix;
                 });
         }
     }

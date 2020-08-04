@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Application.TodoItems.Commands.CreateTodoItem
+﻿namespace CleanDDDArchitecture.Application.TodoItems.Commands.CreateTodoItem
 {
     using FluentValidation;
 

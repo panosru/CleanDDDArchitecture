@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.RestApi.Utils.Swagger
+﻿namespace CleanDDDArchitecture.RestApi.Utils.Swagger
 {
     using Microsoft.Extensions.Options;
     using Swashbuckle.AspNetCore.Swagger;
@@ -6,18 +6,21 @@
     /// <inheritdoc />
     public sealed class ConfigureSwaggerOptions : IConfigureOptions<SwaggerOptions>
     {
-        private readonly SwaggerSettings settings;
+        private readonly SwaggerSettings _settings;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="settings"></param>
         public ConfigureSwaggerOptions(IOptions<SwaggerSettings> settings)
         {
-            this.settings = settings?.Value ?? new SwaggerSettings();
+            this._settings = settings?.Value ?? new SwaggerSettings();
         }
 
         /// <inheritdoc />
         public void Configure(SwaggerOptions options)
         {
-            options.RouteTemplate = settings.RoutePrefixWithSlash + "{documentName}/swagger.json";
+            options.RouteTemplate = _settings.RoutePrefixWithSlash + "{documentName}/swagger.json";
         }
     }
 }

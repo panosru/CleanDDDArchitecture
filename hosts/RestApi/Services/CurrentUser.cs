@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.RestApi.Services
+﻿namespace CleanDDDArchitecture.RestApi.Services
 {
     using System;
     using System.Security.Claims;
@@ -6,15 +6,25 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.IdentityModel.JsonWebTokens;
 
-    public class CurrentUserService : ICurrentUserService
+    /// <summary>
+    /// 
+    /// </summary>
+    public class CurrentUser : ICurrentUserService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CurrentUserService(IHttpContextAccessor httpContextAccessor)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="httpContextAccessor"></param>
+        public CurrentUser(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Guid UserId
         {
             get

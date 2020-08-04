@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Application.TodoItems.Commands.DeleteTodoItem
+﻿namespace CleanDDDArchitecture.Application.TodoItems.Commands.DeleteTodoItem
 {
     using System.Threading;
     using System.Threading.Tasks;
@@ -28,7 +28,9 @@
 
             if (entity == null) throw new NotFoundException(nameof(TodoItem), request.Id);
 
-            _context.TodoItems.Remove(entity);
+            //_context.TodoItems.Remove(entity);
+
+            entity.Title = "To esvisa";
 
             await _context.SaveChangesAsync(cancellationToken);
 

@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Application.TodoLists.Queries.GetTodos
+﻿namespace CleanDDDArchitecture.Application.TodoLists.Queries.GetTodos
 {
     using System.Collections.Generic;
 

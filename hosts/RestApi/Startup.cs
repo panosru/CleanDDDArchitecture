@@ -1,10 +1,10 @@
-namespace CleanArchitecture.RestApi
+namespace CleanDDDArchitecture.RestApi
 {
     using System;
     using System.Text;
     using Application;
     using Aviant.DDD.Application.Identity;
-    using CleanArchitecture.Services;
+    using CleanDDDArchitecture.Services;
     using Infrastructure;
     using Infrastructure.Persistence;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -18,8 +18,15 @@ namespace CleanArchitecture.RestApi
     using Services;
     using Utils.Swagger;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configuration"></param>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,7 +34,10 @@ namespace CleanArchitecture.RestApi
 
         private IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(Configuration);
@@ -65,7 +75,7 @@ namespace CleanArchitecture.RestApi
                 .AddSwaggerOptions()
                 .AddSwaggerGen();
 
-            services.AddSingleton<ICurrentUserService, CurrentUserService>();
+            services.AddSingleton<ICurrentUserService, CurrentUser>();
 
             services.AddHttpContextAccessor();
 
@@ -77,7 +87,12 @@ namespace CleanArchitecture.RestApi
             // options.Filters.Add(new AuthorizeFilter()));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
+        /// <param name="provider"></param>
         public void Configure(
             IApplicationBuilder app,
             IWebHostEnvironment env,

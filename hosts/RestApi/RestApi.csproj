@@ -2,12 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>CleanArchitecture.RestApi</RootNamespace>
-    <AssemblyName>CleanArchitecture.RestApi</AssemblyName>
-    
-    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
-    <!--<IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>-->
+    <RootNamespace>CleanDDDArchitecture.RestApi</RootNamespace>
+    <AssemblyName>CleanDDDArchitecture.RestApi</AssemblyName>
+    <!-- <NoWarn>$(NoWarn);CS1591</NoWarn> -->
+    <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
     <!--<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -22,6 +20,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.5.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.5.1" />
@@ -54,7 +54,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\CleanArchitecture.RestApi.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\CleanDDDArchitecture.RestApi.xml</DocumentationFile>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 

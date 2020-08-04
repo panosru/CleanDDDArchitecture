@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Services
+namespace CleanDDDArchitecture.Services
 {
     using System.Collections.Generic;
     using System.Reflection;

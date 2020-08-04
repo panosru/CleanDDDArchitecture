@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Services
+namespace CleanDDDArchitecture.Services
 {
     public interface IService
     {
