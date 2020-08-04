@@ -5,9 +5,9 @@ namespace CleanDDDArchitecture.Infrastructure.Repositories
     using Identity;
     using Persistence;
 
-    public class TodoItemRead : BaseReadOnly<ApplicationDbContext, ApplicationUser, ApplicationRole, TodoItem, int>
+    public class TodoItemWrite : BaseWriteOnly<ApplicationDbContext, ApplicationUser, ApplicationRole, TodoItem, int>
     {
-        public TodoItemRead(ApplicationDbContext context) : base(context)
+        public TodoItemWrite(ApplicationDbContext context) : base(context)
         {
         }
     }

@@ -8,8 +8,8 @@ namespace Aviant.DDD.Domain.ValueObject
     // source: https://github.com/jhewlett/ValueObject
     public abstract class Base : IValueObject
     {
-        private List<FieldInfo> _fields;
-        private List<PropertyInfo> _properties;
+        private List<FieldInfo>? _fields;
+        private List<PropertyInfo>? _properties;
 
         public bool Equals(Base obj)
         {
@@ -56,7 +56,7 @@ namespace Aviant.DDD.Domain.ValueObject
             return !(left == right);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj == null || obj.GetType() != GetType()) return false;
 
