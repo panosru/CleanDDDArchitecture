@@ -2,18 +2,39 @@ namespace Aviant.DDD.Domain.Entity
 {
     using System;
 
-    public abstract class Auditable : ICreationAudited, IModificationAudited, IDeletionAudited
+    public interface IAudited
+    {
+    }
+
+    public interface IHasCreationTime : IAudited
+    {
+        public DateTime Created { get; set; }
+    }
+
+    public interface ICreationAudited : IHasCreationTime
     {
         public Guid CreatedBy { get; set; }
+    }
 
-        public DateTime Created { get; set; }
 
-        public DateTime? Deleted { get; set; }
-
-        public Guid? DeletedBy { get; set; }
-
-        public Guid? LastModifiedBy { get; set; }
-
+    public interface IHasModificationTime : IAudited
+    {
         public DateTime? LastModified { get; set; }
+    }
+
+    public interface IModificationAudited : IHasModificationTime
+    {
+        public Guid? LastModifiedBy { get; set; }
+    }
+
+
+    public interface IHasDeletionTime : IAudited
+    {
+        DateTime? Deleted { get; set; }
+    }
+
+    public interface IDeletionAudited : IHasDeletionTime
+    {
+        Guid? DeletedBy { get; set; }
     }
 }

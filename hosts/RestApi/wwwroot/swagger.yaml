@@ -229,7 +229,63 @@ paths:
               examples: {}
               encoding: {}
         responses:
-          200:
+          400:
+            description: Bad Request
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
+          204:
             description: Success
             headers: {}
             content: {}
@@ -260,7 +316,7 @@ paths:
           examples: {}
           content: {}
         responses:
-          200:
+          204:
             description: Success
             headers: {}
             content: {}
@@ -322,7 +378,63 @@ paths:
               examples: {}
               encoding: {}
         responses:
-          200:
+          400:
+            description: Bad Request
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
+          204:
             description: Success
             headers: {}
             content: {}
@@ -566,7 +678,63 @@ paths:
               examples: {}
               encoding: {}
         responses:
-          200:
+          400:
+            description: Bad Request
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
+          204:
             description: Success
             headers: {}
             content: {}
@@ -597,7 +765,7 @@ paths:
           examples: {}
           content: {}
         responses:
-          200:
+          204:
             description: Success
             headers: {}
             content: {}
@@ -643,6 +811,62 @@ paths:
               examples: {}
               encoding: {}
         responses:
+          401:
+            description: Unauthorized
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
           200:
             description: Success
             headers: {}
@@ -914,6 +1138,74 @@ components:
           properties: {}
           additionalPropertiesAllowed: true
           enum: []
+      enum: []
+    ProblemDetails:
+      type: object
+      allOf: []
+      oneOf: []
+      anyOf: []
+      required: []
+      properties:
+        type:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        title:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        detail:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        instance:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+      additionalPropertiesAllowed: true
+      additionalProperties:
+        type: object
+        allOf: []
+        oneOf: []
+        anyOf: []
+        required: []
+        properties: {}
+        enum: []
       enum: []
     PriorityLevel:
       type: integer

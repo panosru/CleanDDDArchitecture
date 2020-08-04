@@ -9,7 +9,7 @@ namespace Aviant.DDD.Domain.Exception
         }
 
         public Create(string errorMessage, Exception exception) :
-            base(errorMessage, exception)
+            base($"The following error occurred \"{errorMessage}\"", exception)
         {
         }
     }
