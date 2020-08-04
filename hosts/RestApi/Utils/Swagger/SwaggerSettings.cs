@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.RestApi.Utils.Swagger
+﻿namespace CleanDDDArchitecture.RestApi.Utils.Swagger
 {
     using Microsoft.OpenApi.Models;
 
@@ -33,7 +33,7 @@
         /// <summary>
         ///     Gets or sets RoutePrefix.
         /// </summary>
-        public string RoutePrefix { get; set; }
+        public string? RoutePrefix { get; set; }
 
         /// <summary>
         ///     Gets Route Prefix with tailing slash.

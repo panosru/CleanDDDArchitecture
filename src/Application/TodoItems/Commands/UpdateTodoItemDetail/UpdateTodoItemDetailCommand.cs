@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Application.TodoItems.Commands.UpdateTodoItemDetail
+﻿namespace CleanDDDArchitecture.Application.TodoItems.Commands.UpdateTodoItemDetail
 {
     using System.Threading;
     using System.Threading.Tasks;

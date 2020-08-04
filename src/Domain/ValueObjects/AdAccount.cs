@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Domain.ValueObjects
+﻿namespace CleanDDDArchitecture.Domain.ValueObjects
 {
     using System;
     using System.Collections.Generic;

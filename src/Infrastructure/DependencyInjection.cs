@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Infrastructure
+﻿namespace CleanDDDArchitecture.Infrastructure
 {
     using System.IdentityModel.Tokens.Jwt;
     using Application.Common.Interfaces;
@@ -27,7 +27,7 @@
             
             if (configuration.GetValue<bool>("UseInMemoryDatabase"))
                 services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseInMemoryDatabase("CleanArchitectureDb"));
+                    options.UseInMemoryDatabase("CleanDDDArchitectureDb"));
             else
                 services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseNpgsql(

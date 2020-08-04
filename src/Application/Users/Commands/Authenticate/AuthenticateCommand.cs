@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Application.Users.Commands.Authenticate
+namespace CleanDDDArchitecture.Application.Users.Commands.Authenticate
 {
     using System.Threading;
     using System.Threading.Tasks;

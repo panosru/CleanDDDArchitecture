@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>CleanArchitecture.Application</RootNamespace>
-    <AssemblyName>CleanArchitecture.Application</AssemblyName>
+    <RootNamespace>CleanDDDArchitecture.Application</RootNamespace>
+    <AssemblyName>CleanDDDArchitecture.Application</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

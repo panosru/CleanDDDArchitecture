@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Application.TodoLists.Commands.UpdateTodoList
+﻿namespace CleanDDDArchitecture.Application.TodoLists.Commands.UpdateTodoList
 {
     using System.Linq;
     using System.Threading;

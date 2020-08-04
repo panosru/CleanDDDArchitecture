@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Application.WeatherForecasts.Queries.GetWeatherForecasts
+﻿namespace CleanDDDArchitecture.Application.WeatherForecasts.Queries.GetWeatherForecasts
 {
     using System;
 

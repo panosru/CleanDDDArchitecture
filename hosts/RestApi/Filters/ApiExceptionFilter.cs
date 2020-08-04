@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.RestApi.Filters
+﻿namespace CleanDDDArchitecture.RestApi.Filters
 {
     using System;
     using System.Collections.Generic;
@@ -10,11 +10,17 @@
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.DependencyInjection;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class ApiExceptionFilter : ExceptionFilterAttribute
     {
         private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
-        private IMediator _mediator;
+        private IMediator? _mediator;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ApiExceptionFilter()
         {
             // Register known exception types and handlers.
@@ -25,15 +31,22 @@
             };
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected IMediator Mediator =>
             _mediator ??= new ControllerContext().HttpContext.RequestServices.GetService<IMediator>();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
         public override void OnException(ExceptionContext context)
         {
             Console.WriteLine("###########");
             Console.WriteLine(context.Exception);
             Console.WriteLine("###########");
-            _mediator.Send(new ExceptionRaised(context.Exception.Message));
+            _mediator?.Send(new ExceptionRaised(context.Exception.Message));
 
             HandleException(context);
 
@@ -73,7 +86,7 @@
         {
             var exception = context.Exception as ValidationException;
 
-            var details = new ValidationProblemDetails(exception.Errors)
+            var details = new ValidationProblemDetails(exception?.Errors)
             {
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
             };
@@ -91,7 +104,7 @@
             {
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
                 Title = "The specified resource was not found.",
-                Detail = exception.Message
+                Detail = exception?.Message
             };
 
             context.Result = new NotFoundObjectResult(details);

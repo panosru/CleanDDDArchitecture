@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Domain.Entities
+﻿namespace CleanDDDArchitecture.Domain.Entities
 {
     using System;
     using Aviant.DDD.Domain.Entity;

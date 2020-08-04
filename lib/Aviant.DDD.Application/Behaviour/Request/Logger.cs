@@ -33,7 +33,7 @@ namespace Aviant.DDD.Application.Behaviour.Request
 
             if (Guid.Empty != userId) username = await _identityService.GetUserNameAsync(userId);
 
-            _logger.LogInformation("CleanArchitecture Request: {Name} {@UserId} {@UserName} {@Request}",
+            _logger.LogInformation("CleanDDDArchitecture Request: {Name} {@UserId} {@UserName} {@Request}",
                 requestName, userId, username, request);
 
             await Task.CompletedTask;

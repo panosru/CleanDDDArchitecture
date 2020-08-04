@@ -73,13 +73,33 @@ info:
       userInfo: ''
 servers: []
 paths:
+  /metal:
+    operations:
+      Get:
+        tags:
+        - name: Metal
+        summary: ''
+        parameters: []
+        responses:
+          200:
+            description: Success
+            headers: {}
+            content: {}
+            links: {}
+        callbacks: {}
+        security: []
+        servers: []
+    servers: []
+    parameters: []
   /api/v1/TodoItems:
     operations:
       Post:
         tags:
         - name: TodoItems
+        summary: ''
         parameters: []
         requestBody:
+          description: ''
           content:
             application/json:
               schema: &o2
@@ -161,13 +181,16 @@ paths:
       Put:
         tags:
         - name: TodoItems
+        summary: ''
         parameters:
         - name: id
           in: Path
+          description: ''
           required: true
           schema:
             type: integer
             format: int32
+            description: ''
             allOf: []
             oneOf: []
             anyOf: []
@@ -178,6 +201,7 @@ paths:
           examples: {}
           content: {}
         requestBody:
+          description: ''
           content:
             application/json:
               schema: &o3
@@ -216,13 +240,16 @@ paths:
       Delete:
         tags:
         - name: TodoItems
+        summary: ''
         parameters:
         - name: id
           in: Path
+          description: ''
           required: true
           schema:
             type: integer
             format: int32
+            description: ''
             allOf: []
             oneOf: []
             anyOf: []
@@ -248,12 +275,15 @@ paths:
       Put:
         tags:
         - name: TodoItems
+        summary: ''
         parameters:
         - name: id
           in: Query
+          description: ''
           schema:
             type: integer
             format: int32
+            description: ''
             allOf: []
             oneOf: []
             anyOf: []
@@ -264,6 +294,7 @@ paths:
           examples: {}
           content: {}
         requestBody:
+          description: ''
           content:
             application/json:
               schema: &o4
@@ -306,6 +337,7 @@ paths:
       Get:
         tags:
         - name: TodoLists
+        summary: ''
         parameters: []
         responses:
           200:
@@ -370,8 +402,10 @@ paths:
       Post:
         tags:
         - name: TodoLists
+        summary: ''
         parameters: []
         requestBody:
+          description: ''
           content:
             application/json:
               schema: &o5
@@ -453,13 +487,16 @@ paths:
       Get:
         tags:
         - name: TodoLists
+        summary: ''
         parameters:
         - name: id
           in: Path
+          description: ''
           required: true
           schema:
             type: integer
             format: int32
+            description: ''
             allOf: []
             oneOf: []
             anyOf: []
@@ -481,13 +518,16 @@ paths:
       Put:
         tags:
         - name: TodoLists
+        summary: ''
         parameters:
         - name: id
           in: Path
+          description: ''
           required: true
           schema:
             type: integer
             format: int32
+            description: ''
             allOf: []
             oneOf: []
             anyOf: []
@@ -498,6 +538,7 @@ paths:
           examples: {}
           content: {}
         requestBody:
+          description: ''
           content:
             application/json:
               schema: &o6
@@ -536,13 +577,16 @@ paths:
       Delete:
         tags:
         - name: TodoLists
+        summary: ''
         parameters:
         - name: id
           in: Path
+          description: ''
           required: true
           schema:
             type: integer
             format: int32
+            description: ''
             allOf: []
             oneOf: []
             anyOf: []
@@ -614,6 +658,7 @@ paths:
       Get:
         tags:
         - name: User
+        summary: ''
         parameters:
         - name: Token
           in: Path

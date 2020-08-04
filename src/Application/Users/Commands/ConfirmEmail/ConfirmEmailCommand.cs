@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Application.Users.Commands.ConfirmEmail
+namespace CleanDDDArchitecture.Application.Users.Commands.ConfirmEmail
 {
     using System;
     using System.Text;

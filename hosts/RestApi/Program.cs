@@ -1,4 +1,4 @@
-namespace CleanArchitecture.RestApi
+namespace CleanDDDArchitecture.RestApi
 {
     using System;
     using System.Threading.Tasks;
@@ -7,12 +7,22 @@ namespace CleanArchitecture.RestApi
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
+    using Serilog;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
@@ -45,10 +55,35 @@ namespace CleanArchitecture.RestApi
             await host.RunAsync();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                    webBuilder.ConfigureAppConfiguration(SetupConfiguration);
+                    webBuilder.ConfigureLogging(SetupLogging);
+                });
+        }
+
+        private static void SetupConfiguration(WebHostBuilderContext hostBuilderContext,
+            IConfigurationBuilder configurationBuilder)
+        {
+            var configuration = configurationBuilder.Build();
+
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
+        }
+
+        private static void SetupLogging(WebHostBuilderContext hostBuilderContext, ILoggingBuilder loggingBuilder)
+        {
+            loggingBuilder.AddSerilog();
         }
     }
 }

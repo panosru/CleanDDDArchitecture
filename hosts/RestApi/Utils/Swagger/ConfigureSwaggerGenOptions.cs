@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.RestApi.Utils.Swagger
+﻿namespace CleanDDDArchitecture.RestApi.Utils.Swagger
 {
     using System;
     using System.Diagnostics;
@@ -16,8 +16,8 @@
     /// </summary>
     public sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
     {
-        private readonly IApiVersionDescriptionProvider provider;
-        private readonly SwaggerSettings settings;
+        private readonly IApiVersionDescriptionProvider _provider;
+        private readonly SwaggerSettings _settings;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ConfigureSwaggerGenOptions" /> class.
@@ -30,8 +30,8 @@
             Debug.Assert(versionDescriptionProvider != null, $"{nameof(versionDescriptionProvider)} != null");
             Debug.Assert(swaggerSettings != null, $"{nameof(swaggerSettings)} != null");
 
-            provider = versionDescriptionProvider;
-            settings = swaggerSettings.Value ?? new SwaggerSettings();
+            _provider = versionDescriptionProvider;
+            _settings = swaggerSettings.Value ?? new SwaggerSettings();
         }
 
         /// <inheritdoc />
@@ -73,13 +73,13 @@
 
         private void AddSwaggerDocumentForEachDiscoveredApiVersion(SwaggerGenOptions options)
         {
-            foreach (var description in provider.ApiVersionDescriptions)
+            foreach (var description in _provider.ApiVersionDescriptions)
             {
-                settings.Info.Version = description.ApiVersion.ToString();
+                _settings.Info.Version = description.ApiVersion.ToString();
 
-                if (description.IsDeprecated) settings.Info.Description += " - DEPRECATED";
+                if (description.IsDeprecated) _settings.Info.Description += " - DEPRECATED";
 
-                options.SwaggerDoc(description.GroupName, settings.Info);
+                options.SwaggerDoc(description.GroupName, _settings.Info);
             }
         }
 

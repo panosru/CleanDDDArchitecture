@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Application.TodoLists.Commands.DeleteTodoList
+﻿namespace CleanDDDArchitecture.Application.TodoLists.Commands.DeleteTodoList
 {
     using System.Linq;
     using System.Threading;

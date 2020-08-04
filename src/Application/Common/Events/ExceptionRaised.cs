@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Application.Common.Events
+namespace CleanDDDArchitecture.Application.Common.Events
 {
     using System;
     using System.Threading;

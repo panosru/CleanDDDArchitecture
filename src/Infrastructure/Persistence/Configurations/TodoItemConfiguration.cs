@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Infrastructure.Persistence.Configurations
+﻿namespace CleanDDDArchitecture.Infrastructure.Persistence.Configurations
 {
     using Domain.Entities;
     using Microsoft.EntityFrameworkCore;

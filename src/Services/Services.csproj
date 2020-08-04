@@ -2,8 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>CleanArchitecture.Services</RootNamespace>
-        <AssemblyName>CleanArchitecture.Services</AssemblyName>
+        <RootNamespace>CleanDDDArchitecture.Services</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Services</AssemblyName>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 

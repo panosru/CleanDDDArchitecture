@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.RestApi.Utils.Swagger
+﻿namespace CleanDDDArchitecture.RestApi.Utils.Swagger
 {
     using System;
     using System.Collections.Generic;
@@ -16,7 +16,7 @@
     /// </summary>
     public sealed class YamlDocumentFilter : IDocumentFilter
     {
-        private readonly IWebHostEnvironment hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="YamlDocumentFilter" /> class.
@@ -24,7 +24,7 @@
         /// <param name="hostingEnvironment">IHostingEnvironment</param>
         public YamlDocumentFilter(IWebHostEnvironment hostingEnvironment)
         {
-            this.hostingEnvironment = hostingEnvironment;
+            this._hostingEnvironment = hostingEnvironment;
         }
 
         /// <summary>
@@ -46,7 +46,7 @@
                 {
                     serializer.Serialize(writer, swaggerDoc);
 
-                    var file = Path.Combine(hostingEnvironment.WebRootPath, "swagger.yaml");
+                    var file = Path.Combine(_hostingEnvironment.WebRootPath, "swagger.yaml");
                     using (var stream = new StreamWriter(file))
                     {
                         var result = writer.ToString();
@@ -65,16 +65,16 @@
 
         private class PropertiesIgnoreTypeInspector : TypeInspectorSkeleton
         {
-            private readonly ITypeInspector typeInspector;
+            private readonly ITypeInspector _typeInspector;
 
             public PropertiesIgnoreTypeInspector(ITypeInspector typeInspector)
             {
-                this.typeInspector = typeInspector;
+                this._typeInspector = typeInspector;
             }
 
             public override IEnumerable<IPropertyDescriptor> GetProperties(Type type, object container)
             {
-                return typeInspector.GetProperties(type, container)
+                return _typeInspector.GetProperties(type, container)
                     .Where(p => p.Name != "extensions" && p.Name != "operation-id");
             }
         }
