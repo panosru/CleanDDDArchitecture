@@ -39,10 +39,6 @@ namespace Aviant.DDD.Application.Behaviour.Request
             var response = await next();
             _timer.Stop();
 
-            Console.WriteLine("£@$!@!£!$!!$!@");
-            Console.WriteLine(_timer.ElapsedMilliseconds);
-            Console.WriteLine("£@$!@!£!$!!$!@");
-
             var elapsedMilliseconds = _timer.ElapsedMilliseconds;
 
             if (500 < elapsedMilliseconds)
