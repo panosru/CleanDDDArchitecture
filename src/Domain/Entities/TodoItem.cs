@@ -4,7 +4,7 @@
     using Aviant.DDD.Domain.Entity;
     using Enums;
 
-    public class TodoItem : Auditable
+    public class TodoItem : Base<int>, ICreationAudited, IModificationAudited, IDeletionAudited, ISoftDelete
     {
         public int Id { get; set; }
 
@@ -22,5 +22,13 @@
 
 
         public TodoList List { get; set; }
+        
+        public DateTime Created { get; set; }
+        public Guid CreatedBy { get; set; }
+        public DateTime? LastModified { get; set; }
+        public Guid? LastModifiedBy { get; set; }
+        public DateTime? Deleted { get; set; }
+        public Guid? DeletedBy { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
