@@ -1,12 +1,11 @@
 ﻿namespace CleanDDDArchitecture.Infrastructure.Persistence.Configurations
 {
-    using Domain.Entities;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-    public class TodoListConfiguration : IEntityTypeConfiguration<TodoList>
+    public class TodoList : IEntityTypeConfiguration<Domain.Entities.TodoList>
     {
-        public void Configure(EntityTypeBuilder<TodoList> builder)
+        public void Configure(EntityTypeBuilder<Domain.Entities.TodoList> builder)
         {
             builder.Property(t => t.Title)
                 .HasMaxLength(200)

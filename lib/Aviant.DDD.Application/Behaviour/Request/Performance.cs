@@ -45,7 +45,7 @@ namespace Aviant.DDD.Application.Behaviour.Request
 
             var elapsedMilliseconds = _timer.ElapsedMilliseconds;
 
-            if (500 > elapsedMilliseconds)
+            if (500 < elapsedMilliseconds)
             {
                 string requestName = typeof(TRequest).Name;
                 var userId = _currentUserService?.UserId ?? Guid.Empty;

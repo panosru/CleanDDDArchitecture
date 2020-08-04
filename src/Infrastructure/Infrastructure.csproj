@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Persistence\Migrations" />
-    <Folder Include="Repositories" />
   </ItemGroup>
 
 </Project>
