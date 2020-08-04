@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Infrastructure.Persistence.Migrations
+﻿namespace CleanDDDArchitecture.Infrastructure.Persistence.Migrations
 {
     using System;
     using Microsoft.EntityFrameworkCore.Migrations;

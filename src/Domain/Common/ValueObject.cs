@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Domain.Common
+﻿namespace CleanDDDArchitecture.Domain.Common
 {
     using System.Collections.Generic;
     using System.Linq;

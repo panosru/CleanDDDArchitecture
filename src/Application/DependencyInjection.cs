@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Application
+﻿namespace CleanDDDArchitecture.Application
 {
     using System.Reflection;
     using AutoMapper;

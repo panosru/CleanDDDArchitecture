@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Application.Common.Exceptions
+﻿namespace CleanDDDArchitecture.Application.Common.Exceptions
 {
     using System;
 

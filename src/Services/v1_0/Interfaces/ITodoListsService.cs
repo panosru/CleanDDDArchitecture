@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Services.v1_0.Interfaces
+namespace CleanDDDArchitecture.Services.v1_0.Interfaces
 {
     using System.Threading.Tasks;
     using Application.TodoLists.Queries.GetTodos;

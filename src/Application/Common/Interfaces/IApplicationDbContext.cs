@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Application.Common.Interfaces
+﻿namespace CleanDDDArchitecture.Application.Common.Interfaces
 {
     using System.Threading;
     using System.Threading.Tasks;
