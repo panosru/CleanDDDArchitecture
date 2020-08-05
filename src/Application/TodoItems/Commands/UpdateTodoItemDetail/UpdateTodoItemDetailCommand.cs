@@ -3,10 +3,10 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Command;
+    using Aviant.DDD.Domain.Enum;
     using Common.Exceptions;
     using Common.Interfaces;
     using Domain.Entities;
-    using Domain.Enums;
     using MediatR;
 
     public class UpdateTodoItemDetailCommand : Base
