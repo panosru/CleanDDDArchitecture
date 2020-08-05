@@ -2,10 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-    using Common;
+    using Aviant.DDD.Domain.ValueObject;
     using Exceptions;
 
-    public class AdAccount : ValueObject
+    public class AdAccount : Base
     {
         private AdAccount()
         {
@@ -46,12 +46,6 @@
         public override string ToString()
         {
             return $"{Domain}\\{Name}";
-        }
-
-        protected override IEnumerable<object> GetAtomicValues()
-        {
-            yield return Domain;
-            yield return Name;
         }
     }
 }
