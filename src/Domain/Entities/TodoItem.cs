@@ -2,12 +2,10 @@
 {
     using System;
     using Aviant.DDD.Domain.Entity;
-    using Enums;
+    using Aviant.DDD.Domain.Enum;
 
     public class TodoItem : Base<int>, ICreationAudited, IModificationAudited, IDeletionAudited, ISoftDelete
     {
-        public int Id { get; set; }
-
         public int ListId { get; set; }
 
         public string Title { get; set; }
