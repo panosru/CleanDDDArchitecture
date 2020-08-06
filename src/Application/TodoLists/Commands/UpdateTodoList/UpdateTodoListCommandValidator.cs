@@ -3,9 +3,9 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Common.Interfaces;
     using FluentValidation;
     using Microsoft.EntityFrameworkCore;
+    using Persistence;
 
     public class UpdateTodoListCommandValidator : AbstractValidator<UpdateTodoListCommand>
     {

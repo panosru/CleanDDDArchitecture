@@ -8,15 +8,17 @@
 
   <ItemGroup>
     <Folder Include="AggregateRoots" />
-    <Folder Include="Events" />
     <Folder Include="Guards" />
-    <Folder Include="Interfaces" />
     <Folder Include="Services" />
     <Folder Include="Specifications" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\lib\Aviant.DDD.Domain\Aviant.DDD.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
   </ItemGroup>
 
 </Project>

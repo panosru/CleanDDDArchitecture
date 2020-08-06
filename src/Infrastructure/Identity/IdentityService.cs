@@ -73,6 +73,9 @@
 
             if (user is null)
                 return Result.Failure(new[] {"Invalid"});
+            
+            if (user.EmailConfirmed)
+                return Result.Failure(new [] {"Email already confirmed"});
 
             var result = await _userManager.ConfirmEmailAsync(user, token);
 

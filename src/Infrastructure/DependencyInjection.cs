@@ -1,7 +1,8 @@
 ﻿namespace CleanDDDArchitecture.Infrastructure
 {
     using System.IdentityModel.Tokens.Jwt;
-    using Application.Common.Interfaces;
+    using Application.Persistence;
+    using Application.Repositories;
     using Application.TodoLists.Queries.ExportTodos;
     using Aviant.DDD.Application;
     using Aviant.DDD.Infrastructure.Files;
@@ -13,6 +14,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Persistence;
+    using Repositories;
     using IIdentityService = Aviant.DDD.Application.Identity.IService;
 
     public static class DependencyInjection
@@ -36,6 +38,12 @@
 
             services.AddScoped<IApplicationDbContext>(provider => 
                 provider.GetService<ApplicationDbContext>());
+
+            services.AddScoped<ITodoItemWrite>(provider =>
+                provider.GetService<TodoItemWrite>());
+            
+            services.AddScoped<ITodoItemRead>(provider =>
+                provider.GetService<TodoItemRead>());
 
             services.AddDefaultIdentity<ApplicationUser>()
                 .AddRoles<ApplicationRole>()
