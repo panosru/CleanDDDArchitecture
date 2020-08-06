@@ -6,7 +6,7 @@
     using Common.Exceptions;
     using Domain.Entities;
     using MediatR;
-    using Persistence;
+    using Repositories;
 
     public class DeleteTodoItemCommand : Base
     {
@@ -15,22 +15,26 @@
 
     public class DeleteTodoItemCommandHandler : Handler<DeleteTodoItemCommand>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly ITodoItemRead _todoItemReadRepository;
+        private readonly ITodoItemWrite _todoItemWriteRepository;
 
-        public DeleteTodoItemCommandHandler(IApplicationDbContext context)
+        public DeleteTodoItemCommandHandler(
+            ITodoItemRead todoItemReadRepository,
+            ITodoItemWrite todoItemWriteRepository)
         {
-            _context = context;
+            _todoItemReadRepository = todoItemReadRepository;
+            _todoItemWriteRepository = todoItemWriteRepository;
         }
 
         public override async Task<Unit> Handle(DeleteTodoItemCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.TodoItems.FindAsync(request.Id);
+            var entity = await _todoItemReadRepository.Find(request.Id);
 
             if (entity == null) throw new NotFoundException(nameof(TodoItem), request.Id);
 
-            _context.TodoItems.Remove(entity);
+            await _todoItemWriteRepository.Delete(entity);
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await _todoItemWriteRepository.Commit(cancellationToken);
 
             return Unit.Value;
         }

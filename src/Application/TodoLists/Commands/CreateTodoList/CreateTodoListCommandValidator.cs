@@ -3,16 +3,15 @@
     using System.Threading;
     using System.Threading.Tasks;
     using FluentValidation;
-    using Microsoft.EntityFrameworkCore;
-    using Persistence;
+    using Repositories;
 
     public class CreateTodoListCommandValidator : AbstractValidator<CreateTodoListCommand>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly ITodoListRead _todoListRead;
 
-        public CreateTodoListCommandValidator(IApplicationDbContext context)
+        public CreateTodoListCommandValidator(ITodoListRead todoListRead)
         {
-            _context = context;
+            _todoListRead = todoListRead;
 
             RuleFor(v => v.Title)
                 .NotEmpty().WithMessage("Title is required.")
@@ -22,8 +21,7 @@
 
         public async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)
         {
-            return await _context.TodoLists
-                .AllAsync(l => l.Title != title);
+            return await _todoListRead.All(l => l.Title != title);
         }
     }
 }

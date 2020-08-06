@@ -30,6 +30,6 @@
 
         public DbSet<TodoItem> TodoItems { get; set; }
         
-        public DbSet<Member> Members { get; set; }
+        public DbSet<Account> Members { get; set; }
     }
 }

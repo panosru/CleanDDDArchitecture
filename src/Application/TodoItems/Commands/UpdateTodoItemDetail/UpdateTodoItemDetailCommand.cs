@@ -7,7 +7,7 @@
     using Common.Exceptions;
     using Domain.Entities;
     using MediatR;
-    using Persistence;
+    using Repositories;
 
     public class UpdateTodoItemDetailCommand : Base
     {
@@ -22,17 +22,21 @@
 
     public class UpdateTodoItemDetailCommandHandler : Handler<UpdateTodoItemDetailCommand>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly ITodoItemRead _todoItemReadRepository;
+        private readonly ITodoItemWrite _todoItemWriteRepository;
 
-        public UpdateTodoItemDetailCommandHandler(IApplicationDbContext context)
+        public UpdateTodoItemDetailCommandHandler(
+            ITodoItemRead todoItemReadRepository,
+            ITodoItemWrite todoItemWriteRepository)
         {
-            _context = context;
+            _todoItemReadRepository = todoItemReadRepository;
+            _todoItemWriteRepository = todoItemWriteRepository;
         }
 
         public override async Task<Unit> Handle(UpdateTodoItemDetailCommand request,
             CancellationToken cancellationToken)
         {
-            var entity = await _context.TodoItems.FindAsync(request.Id);
+            var entity = await _todoItemReadRepository.Find(request.Id);
 
             if (entity == null) throw new NotFoundException(nameof(TodoItem), request.Id);
 
@@ -40,7 +44,9 @@
             entity.Priority = request.Priority;
             entity.Note = request.Note;
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await _todoItemWriteRepository.Update(entity);
+            
+            await _todoItemWriteRepository.Commit(cancellationToken);
 
             return Unit.Value;
         }

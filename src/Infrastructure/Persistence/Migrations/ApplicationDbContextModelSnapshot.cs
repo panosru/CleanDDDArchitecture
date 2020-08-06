@@ -19,7 +19,7 @@ namespace CleanDDDArchitecture.Infrastructure.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("CleanDDDArchitecture.Domain.Entities.Member", b =>
+            modelBuilder.Entity("CleanDDDArchitecture.Domain.Entities.Account", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
