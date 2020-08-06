@@ -3,7 +3,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Command;
-    using Common.Exceptions;
+    using Aviant.DDD.Application.Exception;
     using Domain.Entities;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
@@ -33,7 +33,7 @@
                 .FindBy(l => l.Id == request.Id)
                 .SingleOrDefaultAsync(cancellationToken);
                 
-            if (entity == null) throw new NotFoundException(nameof(TodoList), request.Id);
+            if (entity == null) throw new NotFound(nameof(TodoList), request.Id);
 
             await _todoListWrite.Delete(entity);
 

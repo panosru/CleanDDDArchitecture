@@ -3,8 +3,8 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Command;
+    using Aviant.DDD.Application.Exception;
     using Aviant.DDD.Domain.Enum;
-    using Common.Exceptions;
     using Domain.Entities;
     using MediatR;
     using Repositories;
@@ -38,7 +38,7 @@
         {
             var entity = await _todoItemReadRepository.Find(request.Id);
 
-            if (entity == null) throw new NotFoundException(nameof(TodoItem), request.Id);
+            if (entity == null) throw new NotFound(nameof(TodoItem), request.Id);
 
             entity.ListId = request.ListId;
             entity.Priority = request.Priority;

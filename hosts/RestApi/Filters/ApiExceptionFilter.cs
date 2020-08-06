@@ -3,12 +3,13 @@
     using System;
     using System.Collections.Generic;
     using Application.Common.Events;
-    using Application.Common.Exceptions;
     using MediatR;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.DependencyInjection;
+    using ValidationException = Aviant.DDD.Application.Exception.Validation;
+    using NotFoundException = Aviant.DDD.Application.Exception.NotFound;
 
     /// <summary>
     /// 
@@ -86,7 +87,7 @@
         {
             var exception = context.Exception as ValidationException;
 
-            var details = new ValidationProblemDetails(exception?.Errors)
+            var details = new ValidationProblemDetails(exception?.Failures)
             {
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
             };
