@@ -15,11 +15,11 @@
 
     public class CreateTodoItemCommandHandler : Handler<CreateTodoItemCommand, int>
     {
-        private readonly ITodoItemWrite _todoItemWriteRepository;
+        private readonly ITodoItemWrite _todoItemWrite;
 
-        public CreateTodoItemCommandHandler(ITodoItemWrite todoItemWriteRepository)
+        public CreateTodoItemCommandHandler(ITodoItemWrite todoItemWrite)
         {
-            _todoItemWriteRepository = todoItemWriteRepository;
+            _todoItemWrite = todoItemWrite;
         }
 
         public override async Task<int> Handle(CreateTodoItemCommand request, CancellationToken cancellationToken)
@@ -31,9 +31,9 @@
                 Done = false
             };
 
-            await _todoItemWriteRepository.Add(entity);
+            await _todoItemWrite.Add(entity);
 
-            await _todoItemWriteRepository.Commit(cancellationToken);
+            await _todoItemWrite.Commit(cancellationToken);
 
             return entity.Id;
         }
