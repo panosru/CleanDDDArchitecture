@@ -15,26 +15,26 @@
 
     public class DeleteTodoItemCommandHandler : Handler<DeleteTodoItemCommand>
     {
-        private readonly ITodoItemRead _todoItemReadRepository;
-        private readonly ITodoItemWrite _todoItemWriteRepository;
+        private readonly ITodoItemRead _todoItemRead;
+        private readonly ITodoItemWrite _todoItemWrite;
 
         public DeleteTodoItemCommandHandler(
-            ITodoItemRead todoItemReadRepository,
-            ITodoItemWrite todoItemWriteRepository)
+            ITodoItemRead todoItemRead,
+            ITodoItemWrite todoItemWrite)
         {
-            _todoItemReadRepository = todoItemReadRepository;
-            _todoItemWriteRepository = todoItemWriteRepository;
+            _todoItemRead = todoItemRead;
+            _todoItemWrite = todoItemWrite;
         }
 
         public override async Task<Unit> Handle(DeleteTodoItemCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _todoItemReadRepository.Find(request.Id);
+            var entity = await _todoItemRead.Find(request.Id);
 
             if (entity == null) throw new NotFound(nameof(TodoItem), request.Id);
 
-            await _todoItemWriteRepository.Delete(entity);
+            await _todoItemWrite.Delete(entity);
 
-            await _todoItemWriteRepository.Commit(cancellationToken);
+            await _todoItemWrite.Commit(cancellationToken);
 
             return Unit.Value;
         }
