@@ -16,7 +16,7 @@
     {
         [Route("{Id}")]
         [HttpGet]
-        public async Task<ActionResult<string>> Get(GetTodoItemQuery query)
+        public async Task<ActionResult<string>> Get([FromRoute] GetTodoItemQuery query)
         {
             return await Mediator.Send(query);
         }

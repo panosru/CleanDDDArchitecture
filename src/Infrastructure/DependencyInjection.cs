@@ -1,6 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Infrastructure
 {
     using System.IdentityModel.Tokens.Jwt;
+    using Application;
     using Application.Persistence;
     using Application.Repositories;
     using Application.TodoLists.Queries.ExportTodos;
@@ -39,11 +40,9 @@
             services.AddScoped<IApplicationDbContext>(provider => 
                 provider.GetService<ApplicationDbContext>());
 
-            services.AddScoped<ITodoItemWrite>(provider =>
-                provider.GetService<TodoItemWrite>());
-            
-            services.AddScoped<ITodoItemRead>(provider =>
-                provider.GetService<TodoItemRead>());
+            services.AddScoped<ITodoItemWrite, TodoItemWrite>();
+
+            services.AddScoped<ITodoItemRead, TodoItemRead>();
 
             services.AddDefaultIdentity<ApplicationUser>()
                 .AddRoles<ApplicationRole>()
