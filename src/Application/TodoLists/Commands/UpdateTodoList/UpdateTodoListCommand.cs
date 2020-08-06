@@ -6,7 +6,7 @@
     using Common.Exceptions;
     using Domain.Entities;
     using MediatR;
-    using Persistence;
+    using Repositories;
 
     public class UpdateTodoListCommand : Base
     {
@@ -17,22 +17,28 @@
 
     public class UpdateTodoListCommandHandler : Handler<UpdateTodoListCommand>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly ITodoListRead _todoListRead;
+        private readonly ITodoListWrite _todoListWrite;
 
-        public UpdateTodoListCommandHandler(IApplicationDbContext context)
+        public UpdateTodoListCommandHandler(
+            ITodoListRead todoListRead,
+            ITodoListWrite todoListWrite)
         {
-            _context = context;
+            _todoListRead = todoListRead;
+            _todoListWrite = todoListWrite;
         }
 
         public override async Task<Unit> Handle(UpdateTodoListCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.TodoLists.FindAsync(request.Id);
+            var entity = await _todoListRead.Find(request.Id);
 
             if (entity == null) throw new NotFoundException(nameof(TodoList), request.Id);
 
             entity.Title = request.Title;
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await _todoListWrite.Update(entity);
+
+            await _todoListWrite.Commit(cancellationToken);
 
             return Unit.Value;
         }

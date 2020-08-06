@@ -40,9 +40,21 @@
             services.AddScoped<IApplicationDbContext>(provider => 
                 provider.GetService<ApplicationDbContext>());
 
-            services.AddScoped<ITodoItemWrite, TodoItemWrite>();
+            #region Read Repositories
 
             services.AddScoped<ITodoItemRead, TodoItemRead>();
+            services.AddScoped<ITodoListRead, TodoListRead>();
+            services.AddScoped<IAccountRead, AccountRead>();
+
+            #endregion
+
+            #region Write Repositories
+
+            services.AddScoped<ITodoItemWrite, TodoItemWrite>();
+            services.AddScoped<ITodoListWrite, TodoListWrite>();
+            services.AddScoped<IAccountWrite, AccountWrite>();
+
+            #endregion
 
             services.AddDefaultIdentity<ApplicationUser>()
                 .AddRoles<ApplicationRole>()

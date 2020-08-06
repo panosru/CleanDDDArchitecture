@@ -10,6 +10,6 @@
 
         DbSet<TodoItem> TodoItems { get; set; }
         
-        DbSet<Member> Members { get; set; }
+        DbSet<Account> Members { get; set; }
     }
 }

@@ -15,7 +15,6 @@
 
     public class CreateTodoItemCommandHandler : Handler<CreateTodoItemCommand, int>
     {
-        // private readonly IApplicationDbContext _context;
         private readonly ITodoItemWrite _todoItemWriteRepository;
 
         public CreateTodoItemCommandHandler(ITodoItemWrite todoItemWriteRepository)

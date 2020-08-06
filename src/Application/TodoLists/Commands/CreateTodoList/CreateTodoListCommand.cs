@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Command;
     using Domain.Entities;
-    using Persistence;
+    using Repositories;
 
     public class CreateTodoListCommand : Base<int>
     {
@@ -13,11 +13,11 @@
 
     public class CreateTodoListCommandHandler : Handler<CreateTodoListCommand, int>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly ITodoListWrite _todoListWrite;
 
-        public CreateTodoListCommandHandler(IApplicationDbContext context)
+        public CreateTodoListCommandHandler(ITodoListWrite todoListWrite)
         {
-            _context = context;
+            _todoListWrite = todoListWrite;
         }
 
         public override async Task<int> Handle(CreateTodoListCommand request, CancellationToken cancellationToken)
@@ -26,9 +26,9 @@
 
             entity.Title = request.Title;
 
-            _context.TodoLists.Add(entity);
-
-            await _context.SaveChangesAsync(cancellationToken);
+            await _todoListWrite.Add(entity);
+            
+            await _todoListWrite.Commit(cancellationToken);
 
             return entity.Id;
         }
