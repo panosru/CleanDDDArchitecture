@@ -14,8 +14,7 @@
     /// </summary>
     public class TodoItems : ApiController
     {
-        [Route("{Id}")]
-        [HttpGet]
+        [HttpGet("{Id}")]
         public async Task<ActionResult<string>> Get([FromRoute] GetTodoItemQuery query)
         {
             return await Mediator.Send(query);
