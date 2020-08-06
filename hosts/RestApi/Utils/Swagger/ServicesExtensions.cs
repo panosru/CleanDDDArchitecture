@@ -32,7 +32,7 @@
                     options.AssumeDefaultVersionWhenUnspecified = true;
                     options.ReportApiVersions = true;
                     options.DefaultApiVersion = new ApiVersion(1, 0);
-                    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+                    options.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
                     options.Conventions.Add(new VersionByNamespaceConvention());
                 });
         }
