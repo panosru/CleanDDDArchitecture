@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
     using Application.TodoItems.Commands.CreateTodoItem;
     using Application.TodoItems.Commands.DeleteTodoItem;
+    using Application.TodoItems.Commands.GetTodoItem;
     using Application.TodoItems.Commands.UpdateTodoItem;
     using Application.TodoItems.Commands.UpdateTodoItemDetail;
     using Microsoft.AspNetCore.Http;
@@ -13,6 +14,13 @@
     /// </summary>
     public class TodoItems : ApiController
     {
+        [Route("{Id}")]
+        [HttpGet]
+        public async Task<ActionResult<string>> Get(GetTodoItemQuery query)
+        {
+            return await Mediator.Send(query);
+        }
+        
         /// <summary>
         /// 
         /// </summary>

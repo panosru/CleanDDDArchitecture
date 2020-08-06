@@ -3,8 +3,10 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Command;
-    using Common.Interfaces;
+    using Aviant.DDD.Domain.Persistence;
+    using Domain;
     using Domain.Entities;
+    using Repositories;
 
     public class CreateTodoItemCommand : Base<int>
     {
@@ -15,11 +17,12 @@
 
     public class CreateTodoItemCommandHandler : Handler<CreateTodoItemCommand, int>
     {
-        private readonly IApplicationDbContext _context;
+        // private readonly IApplicationDbContext _context;
+        private readonly ITodoItemWrite _todoItemWriteRepository;
 
-        public CreateTodoItemCommandHandler(IApplicationDbContext context)
+        public CreateTodoItemCommandHandler(ITodoItemWrite todoItemWriteRepository)
         {
-            _context = context;
+            _todoItemWriteRepository = todoItemWriteRepository;
         }
 
         public override async Task<int> Handle(CreateTodoItemCommand request, CancellationToken cancellationToken)
@@ -31,9 +34,9 @@
                 Done = false
             };
 
-            _context.TodoItems.Add(entity);
+            await _todoItemWriteRepository.Add(entity);
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await _todoItemWriteRepository.Commit(cancellationToken);
 
             return entity.Id;
         }

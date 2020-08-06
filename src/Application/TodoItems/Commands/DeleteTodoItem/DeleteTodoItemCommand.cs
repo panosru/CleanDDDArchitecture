@@ -4,9 +4,9 @@
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Command;
     using Common.Exceptions;
-    using Common.Interfaces;
     using Domain.Entities;
     using MediatR;
+    using Persistence;
 
     public class DeleteTodoItemCommand : Base
     {
@@ -28,9 +28,7 @@
 
             if (entity == null) throw new NotFoundException(nameof(TodoItem), request.Id);
 
-            //_context.TodoItems.Remove(entity);
-
-            entity.Title = "To esvisa";
+            _context.TodoItems.Remove(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
 

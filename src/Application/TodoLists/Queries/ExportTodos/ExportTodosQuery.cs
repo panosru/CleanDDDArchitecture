@@ -7,8 +7,8 @@
     using AutoMapper.QueryableExtensions;
     using Aviant.DDD.Application;
     using Aviant.DDD.Application.Command;
-    using Common.Interfaces;
     using Microsoft.EntityFrameworkCore;
+    using Persistence;
 
     public class ExportTodosQuery : Base<ExportTodosVm>
     {

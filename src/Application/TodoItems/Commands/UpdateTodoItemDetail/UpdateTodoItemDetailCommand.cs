@@ -5,9 +5,9 @@
     using Aviant.DDD.Application.Command;
     using Aviant.DDD.Domain.Enum;
     using Common.Exceptions;
-    using Common.Interfaces;
     using Domain.Entities;
     using MediatR;
+    using Persistence;
 
     public class UpdateTodoItemDetailCommand : Base
     {

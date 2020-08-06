@@ -1,14 +1,8 @@
 ﻿namespace CleanDDDArchitecture.Infrastructure.Persistence
 {
-    using System;
-    using System.Reflection;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Application.Common.Interfaces;
+    using Application.Persistence;
     using Aviant.DDD.Application;
     using Aviant.DDD.Application.Identity;
-    using Aviant.DDD.Domain.Entity;
-    using Aviant.DDD.Infrastructure;
     using Aviant.DDD.Infrastructure.Persistance;
     using Domain.Entities;
     using IdentityServer4.EntityFramework.Options;
@@ -35,5 +29,7 @@
         public DbSet<TodoList> TodoLists { get; set; }
 
         public DbSet<TodoItem> TodoItems { get; set; }
+        
+        public DbSet<Member> Members { get; set; }
     }
 }

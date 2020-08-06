@@ -3,8 +3,8 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Command;
-    using Common.Interfaces;
     using Domain.Entities;
+    using Persistence;
 
     public class CreateTodoListCommand : Base<int>
     {

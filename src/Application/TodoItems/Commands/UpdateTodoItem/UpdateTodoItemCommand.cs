@@ -4,9 +4,9 @@
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Command;
     using Common.Exceptions;
-    using Common.Interfaces;
     using Domain.Entities;
     using MediatR;
+    using Persistence;
 
     public class UpdateTodoItemCommand : Base
     {

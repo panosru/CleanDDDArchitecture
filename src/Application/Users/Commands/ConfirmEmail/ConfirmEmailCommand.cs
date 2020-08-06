@@ -27,11 +27,18 @@ namespace CleanDDDArchitecture.Application.Users.Commands.ConfirmEmail
 
         public override async Task<Result> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
         {
-            var token = Encoding.UTF8.GetString(
-                Convert.FromBase64String(HttpUtility.UrlDecode(request.Token)));
+            try
+            {
+                var token = Encoding.UTF8.GetString(
+                    Convert.FromBase64String(HttpUtility.UrlDecode(request.Token)));
 
-            return await _identityService.ConfirmEmail(
-                token, request.Email);
+                return await _identityService.ConfirmEmail(
+                    token, request.Email);
+            }
+            catch (Exception e)
+            {
+                return Result.Failure(new []{e.Message});
+            }
         }
     }
 }
