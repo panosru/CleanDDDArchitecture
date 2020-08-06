@@ -8,7 +8,7 @@
     /// 
     /// </summary>
     [ApiController]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/[controller]")]
     public abstract class ApiController : ControllerBase
     {
         private IMediator? _mediator;

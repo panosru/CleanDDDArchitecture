@@ -79,7 +79,21 @@ paths:
         tags:
         - name: Metal
         summary: ''
-        parameters: []
+        parameters:
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
         responses:
           200:
             description: Success
@@ -91,7 +105,7 @@ paths:
         servers: []
     servers: []
     parameters: []
-  /api/v1/TodoItems/{Id}:
+  /api/TodoItems/{Id}:
     operations:
       Get:
         tags:
@@ -103,6 +117,20 @@ paths:
           schema:
             type: integer
             format: int32
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
             allOf: []
             oneOf: []
             anyOf: []
@@ -159,13 +187,27 @@ paths:
         servers: []
     servers: []
     parameters: []
-  /api/v1/TodoItems:
+  /api/TodoItems:
     operations:
       Post:
         tags:
         - name: TodoItems
         summary: ''
-        parameters: []
+        parameters:
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
         requestBody:
           description: ''
           content:
@@ -244,7 +286,7 @@ paths:
         servers: []
     servers: []
     parameters: []
-  /api/v1/TodoItems/{id}:
+  /api/TodoItems/{id}:
     operations:
       Put:
         tags:
@@ -259,6 +301,20 @@ paths:
             type: integer
             format: int32
             description: ''
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
             allOf: []
             oneOf: []
             anyOf: []
@@ -383,6 +439,20 @@ paths:
             enum: []
           examples: {}
           content: {}
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
         responses:
           204:
             description: Success
@@ -394,7 +464,7 @@ paths:
         servers: []
     servers: []
     parameters: []
-  /api/v1/TodoItems/UpdateItemDetails:
+  /api/TodoItems/UpdateItemDetails:
     operations:
       Put:
         tags:
@@ -408,6 +478,20 @@ paths:
             type: integer
             format: int32
             description: ''
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
             allOf: []
             oneOf: []
             anyOf: []
@@ -512,13 +596,27 @@ paths:
         servers: []
     servers: []
     parameters: []
-  /api/v1/TodoLists:
+  /api/TodoLists:
     operations:
       Get:
         tags:
         - name: TodoLists
         summary: ''
-        parameters: []
+        parameters:
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
         responses:
           200:
             description: Success
@@ -583,7 +681,21 @@ paths:
         tags:
         - name: TodoLists
         summary: ''
-        parameters: []
+        parameters:
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
         requestBody:
           description: ''
           content:
@@ -662,7 +774,7 @@ paths:
         servers: []
     servers: []
     parameters: []
-  /api/v1/TodoLists/{id}:
+  /api/TodoLists/{id}:
     operations:
       Get:
         tags:
@@ -677,6 +789,20 @@ paths:
             type: integer
             format: int32
             description: ''
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
             allOf: []
             oneOf: []
             anyOf: []
@@ -708,6 +834,20 @@ paths:
             type: integer
             format: int32
             description: ''
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
             allOf: []
             oneOf: []
             anyOf: []
@@ -832,6 +972,20 @@ paths:
             enum: []
           examples: {}
           content: {}
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
         responses:
           204:
             description: Success
@@ -849,7 +1003,21 @@ paths:
         tags:
         - name: User
         summary: ''
-        parameters: []
+        parameters:
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
         requestBody:
           description: ''
           content:
@@ -982,6 +1150,20 @@ paths:
             nullable: true
           examples: {}
           content: {}
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
         responses:
           200:
             description: Success
@@ -1100,13 +1282,27 @@ paths:
         servers: []
     servers: []
     parameters: []
-  /api/v1/WeatherForecast:
+  /api/WeatherForecast:
     operations:
       Get:
         tags:
         - name: WeatherForecast
         summary: Get weather
-        parameters: []
+        parameters:
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
         responses:
           200:
             description: Success
