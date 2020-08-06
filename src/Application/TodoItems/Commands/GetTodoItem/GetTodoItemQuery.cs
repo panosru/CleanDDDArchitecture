@@ -3,7 +3,6 @@ namespace CleanDDDArchitecture.Application.TodoItems.Commands.GetTodoItem
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Command;
-    using Microsoft.AspNetCore.Mvc;
     using Repositories;
 
     public class GetTodoItemQuery : Base<string>

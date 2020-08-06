@@ -6,14 +6,15 @@
     using FluentValidation;
     using Microsoft.EntityFrameworkCore;
     using Persistence;
+    using Repositories;
 
     public class UpdateTodoListCommandValidator : AbstractValidator<UpdateTodoListCommand>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly ITodoListRead _todoListRead;
 
-        public UpdateTodoListCommandValidator(IApplicationDbContext context)
+        public UpdateTodoListCommandValidator(ITodoListRead todoListRead)
         {
-            _context = context;
+            _todoListRead = todoListRead;
 
             RuleFor(v => v.Title)
                 .NotEmpty().WithMessage("Title is required.")
@@ -24,9 +25,16 @@
         public async Task<bool> BeUniqueTitle(UpdateTodoListCommand model, string title,
             CancellationToken cancellationToken)
         {
-            return await _context.TodoLists
-                .Where(l => l.Id != model.Id)
-                .AllAsync(l => l.Title != title);
+            bool result = false;
+
+            await Task.Run(() =>
+            {
+                result = _todoListRead
+                    .FindBy(l => l.Id != model.Id)
+                    .All(l => l.Title != title);
+            });
+
+            return result;
         }
     }
 }
