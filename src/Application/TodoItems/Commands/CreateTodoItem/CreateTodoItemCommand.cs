@@ -3,8 +3,6 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Command;
-    using Aviant.DDD.Domain.Persistence;
-    using Domain;
     using Domain.Entities;
     using Repositories;
 

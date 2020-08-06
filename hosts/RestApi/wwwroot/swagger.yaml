@@ -101,7 +101,8 @@ paths:
           in: Path
           required: true
           schema:
-            type: string
+            type: integer
+            format: int32
             allOf: []
             oneOf: []
             anyOf: []
@@ -111,33 +112,6 @@ paths:
             enum: []
           examples: {}
           content: {}
-        requestBody:
-          content:
-            application/json:
-              schema: &o2
-                allOf: []
-                oneOf: []
-                anyOf: []
-                required: []
-                properties: {}
-                additionalPropertiesAllowed: true
-                enum: []
-                reference:
-                  type: Schema
-                  id: GetTodoItemQuery
-                  isLocal: true
-                  referenceV3: '#/components/schemas/GetTodoItemQuery'
-                  referenceV2: '#/definitions/GetTodoItemQuery'
-              examples: {}
-              encoding: {}
-            text/json:
-              schema: *o2
-              examples: {}
-              encoding: {}
-            application/*+json:
-              schema: *o2
-              examples: {}
-              encoding: {}
         responses:
           200:
             description: Success
@@ -196,7 +170,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o3
+              schema: &o2
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -213,11 +187,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o3
+              schema: *o2
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o3
+              schema: *o2
               examples: {}
               encoding: {}
         responses:
@@ -298,7 +272,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o4
+              schema: &o3
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -315,11 +289,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o4
+              schema: *o3
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o4
+              schema: *o3
               examples: {}
               encoding: {}
         responses:
@@ -447,7 +421,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o5
+              schema: &o4
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -464,11 +438,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o5
+              schema: *o4
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o5
+              schema: *o4
               examples: {}
               encoding: {}
         responses:
@@ -614,7 +588,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o6
+              schema: &o5
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -631,11 +605,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o6
+              schema: *o5
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o6
+              schema: *o5
               examples: {}
               encoding: {}
         responses:
@@ -747,7 +721,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o7
+              schema: &o6
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -764,11 +738,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o7
+              schema: *o6
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o7
+              schema: *o6
               examples: {}
               encoding: {}
         responses:
@@ -880,7 +854,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o8
+              schema: &o7
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -897,11 +871,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o8
+              schema: *o7
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o8
+              schema: *o7
               examples: {}
               encoding: {}
         responses:
@@ -1065,6 +1039,62 @@ paths:
                 examples: {}
                 encoding: {}
             links: {}
+          400:
+            description: Bad Request
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
         callbacks: {}
         security: []
         servers: []
@@ -1168,24 +1198,6 @@ paths:
     parameters: []
 components:
   schemas:
-    GetTodoItemQuery:
-      type: object
-      allOf: []
-      oneOf: []
-      anyOf: []
-      required: []
-      properties:
-        id:
-          type: integer
-          format: int32
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-      enum: []
     CreateTodoItemCommand:
       type: object
       allOf: []
