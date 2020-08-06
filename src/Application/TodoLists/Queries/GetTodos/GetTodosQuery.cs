@@ -8,8 +8,8 @@
     using AutoMapper.QueryableExtensions;
     using Aviant.DDD.Application.Command;
     using Aviant.DDD.Domain.Enum;
-    using Common.Interfaces;
     using Microsoft.EntityFrameworkCore;
+    using Persistence;
 
     public class GetTodosQuery : Base<TodosVm>
     {

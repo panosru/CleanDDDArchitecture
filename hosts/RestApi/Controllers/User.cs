@@ -38,15 +38,16 @@ namespace CleanDDDArchitecture.RestApi.Controllers
         /// <param name="command"></param>
         /// <returns></returns>
         [AllowAnonymous]
-        [HttpGet("confirm/{token}/{email}")]
+        [HttpGet("confirm/{Token}/{Email}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Result>> Confirm([FromRoute] ConfirmEmailCommand command)
         {
             var result = await Mediator.Send(command);
 
             if (result.Succeeded) return Ok(result);
 
-            return Forbid();
+            return BadRequest(result);
         }
     }
 }

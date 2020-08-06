@@ -3,6 +3,7 @@
     using System;
     using Aviant.DDD.Domain.Entity;
     using Aviant.DDD.Domain.Enum;
+    using Events;
 
     public class TodoItem : Base<int>, ICreationAudited, IModificationAudited, IDeletionAudited, ISoftDelete
     {
@@ -16,9 +17,6 @@
 
         public DateTime? Reminder { get; set; }
 
-        public PriorityLevel Priority { get; set; }
-
-
         public TodoList List { get; set; }
         
         public DateTime Created { get; set; }
@@ -28,5 +26,22 @@
         public DateTime? Deleted { get; set; }
         public Guid? DeletedBy { get; set; }
         public bool IsDeleted { get; set; }
+        
+        public bool IsCompleted { get;  private set; }
+
+        public PriorityLevel Priority { get; set; } = PriorityLevel.Medium;
+
+        public State State { get; set; } = State.Active;
+        
+        public void MarkComplete()
+        {
+            IsCompleted = true;
+            Events.Add(new TodoCompleted(this));
+        }
+
+        public void MarkUnComplete()
+        {
+            IsCompleted = false;
+        }
     }
 }

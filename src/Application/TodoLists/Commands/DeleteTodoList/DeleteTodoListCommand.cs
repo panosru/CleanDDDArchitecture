@@ -5,10 +5,10 @@
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Command;
     using Common.Exceptions;
-    using Common.Interfaces;
     using Domain.Entities;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
+    using Persistence;
 
     public class DeleteTodoListCommand : Base
     {
