@@ -19,6 +19,21 @@ namespace CleanDDDArchitecture.Infrastructure.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            modelBuilder.Entity("CleanDDDArchitecture.Domain.Entities.Member", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Members");
+                });
+
             modelBuilder.Entity("CleanDDDArchitecture.Domain.Entities.TodoItem", b =>
                 {
                     b.Property<int>("Id")
@@ -41,6 +56,9 @@ namespace CleanDDDArchitecture.Infrastructure.Persistence.Migrations
                     b.Property<bool>("Done")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
@@ -56,11 +74,14 @@ namespace CleanDDDArchitecture.Infrastructure.Persistence.Migrations
                     b.Property<string>("Note")
                         .HasColumnType("text");
 
-                    b.Property<int>("Priority")
-                        .HasColumnType("integer");
+                    b.Property<byte>("Priority")
+                        .HasColumnType("smallint");
 
                     b.Property<DateTime?>("Reminder")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<byte>("State")
+                        .HasColumnType("smallint");
 
                     b.Property<string>("Title")
                         .HasColumnType("text");

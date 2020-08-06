@@ -65,6 +65,19 @@ namespace CleanDDDArchitecture.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Members",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Members", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PersistedGrants",
                 columns: table => new
                 {
@@ -219,14 +232,16 @@ namespace CleanDDDArchitecture.Infrastructure.Persistence.Migrations
                     Note = table.Column<string>(nullable: true),
                     Done = table.Column<bool>(nullable: false),
                     Reminder = table.Column<DateTime>(nullable: true),
-                    Priority = table.Column<int>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
                     CreatedBy = table.Column<Guid>(nullable: false),
                     LastModified = table.Column<DateTime>(nullable: true),
                     LastModifiedBy = table.Column<Guid>(nullable: true),
                     Deleted = table.Column<DateTime>(nullable: true),
                     DeletedBy = table.Column<Guid>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false)
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    IsCompleted = table.Column<bool>(nullable: false),
+                    Priority = table.Column<byte>(nullable: false),
+                    State = table.Column<byte>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -322,6 +337,9 @@ namespace CleanDDDArchitecture.Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "DeviceCodes");
+
+            migrationBuilder.DropTable(
+                name: "Members");
 
             migrationBuilder.DropTable(
                 name: "PersistedGrants");
