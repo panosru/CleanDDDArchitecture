@@ -8,7 +8,6 @@ namespace CleanDDDArchitecture.Application.TodoItems.Commands.GetTodoItem
 
     public class GetTodoItemQuery : Base<string>
     {
-        [FromRoute]
         public int Id { get; set; }
     }
 
