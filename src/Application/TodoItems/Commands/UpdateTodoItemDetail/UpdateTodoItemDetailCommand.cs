@@ -22,21 +22,21 @@
 
     public class UpdateTodoItemDetailCommandHandler : Handler<UpdateTodoItemDetailCommand>
     {
-        private readonly ITodoItemRead _todoItemReadRepository;
-        private readonly ITodoItemWrite _todoItemWriteRepository;
+        private readonly ITodoItemRead _todoItemRead;
+        private readonly ITodoItemWrite _todoItemWrite;
 
         public UpdateTodoItemDetailCommandHandler(
-            ITodoItemRead todoItemReadRepository,
-            ITodoItemWrite todoItemWriteRepository)
+            ITodoItemRead todoItemRead,
+            ITodoItemWrite todoItemWrite)
         {
-            _todoItemReadRepository = todoItemReadRepository;
-            _todoItemWriteRepository = todoItemWriteRepository;
+            _todoItemRead = todoItemRead;
+            _todoItemWrite = todoItemWrite;
         }
 
         public override async Task<Unit> Handle(UpdateTodoItemDetailCommand request,
             CancellationToken cancellationToken)
         {
-            var entity = await _todoItemReadRepository.Find(request.Id);
+            var entity = await _todoItemRead.Find(request.Id);
 
             if (entity == null) throw new NotFound(nameof(TodoItem), request.Id);
 
@@ -44,9 +44,9 @@
             entity.Priority = request.Priority;
             entity.Note = request.Note;
 
-            await _todoItemWriteRepository.Update(entity);
+            await _todoItemWrite.Update(entity);
             
-            await _todoItemWriteRepository.Commit(cancellationToken);
+            await _todoItemWrite.Commit(cancellationToken);
 
             return Unit.Value;
         }

@@ -13,16 +13,16 @@ namespace CleanDDDArchitecture.Application.TodoItems.Commands.GetTodoItem
     public class GetTodoItemQueryHandler :
         Handler<GetTodoItemQuery, string>
     {
-        private readonly ITodoItemRead _todoItemReadRepository;
+        private readonly ITodoItemRead _todoItemRead;
 
-        public GetTodoItemQueryHandler(ITodoItemRead todoItemReadRepository)
+        public GetTodoItemQueryHandler(ITodoItemRead todoItemRead)
         {
-            _todoItemReadRepository = todoItemReadRepository;
+            _todoItemRead = todoItemRead;
         }
 
         public override Task<string> Handle(GetTodoItemQuery request, CancellationToken cancellationToken)
         {
-            var todoName = _todoItemReadRepository.GetFirst(request.Id)?.Result.Title;
+            var todoName = _todoItemRead.GetFirst(request.Id)?.Result.Title;
 
             return Task.FromResult(todoName);
         }
