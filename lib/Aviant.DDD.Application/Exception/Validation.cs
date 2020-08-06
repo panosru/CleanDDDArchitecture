@@ -7,12 +7,14 @@ namespace Aviant.DDD.Application.Exception
 
     public class Validation : Base
     {
-        public Validation() : base("One or more validation failures have occurred.")
+        public Validation() : 
+            base("One or more validation failures have occurred.")
         {
             Failures = new Dictionary<string, string[]>();
         }
 
-        public Validation(IEnumerable<ValidationFailure> failures) : this()
+        public Validation(IEnumerable<ValidationFailure> failures) : 
+            this()
         {
             var failureGroups = failures
                 .GroupBy(e => e.PropertyName, e => e.ErrorMessage);

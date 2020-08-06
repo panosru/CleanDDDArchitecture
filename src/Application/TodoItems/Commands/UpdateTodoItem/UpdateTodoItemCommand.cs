@@ -3,7 +3,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Command;
-    using Common.Exceptions;
+    using Aviant.DDD.Application.Exception;
     using Domain.Entities;
     using MediatR;
     using Repositories;
@@ -34,7 +34,7 @@
         {
             var entity = await _todoItemReadRepository.Find(request.Id);
 
-            if (entity == null) throw new NotFoundException(nameof(TodoItem), request.Id);
+            if (entity == null) throw new NotFound(nameof(TodoItem), request.Id);
 
             entity.Title = request.Title;
             entity.Done = request.Done;

@@ -1,5 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Application.TodoLists.Queries.GetTodos
 {
+    using AutoMapper;
     using Aviant.DDD.Application.Mappings;
     using Domain.Entities;
 
