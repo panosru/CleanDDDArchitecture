@@ -3,7 +3,7 @@ namespace CleanDDDArchitecture.RestApi.Middlewares
     using System;
     using System.Net;
     using System.Threading.Tasks;
-    using Aviant.DDD.Application.Exception;
+    using Aviant.DDD.Application.Exceptions;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Newtonsoft.Json;

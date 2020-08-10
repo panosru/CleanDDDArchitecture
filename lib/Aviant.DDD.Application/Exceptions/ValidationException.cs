@@ -1,11 +1,10 @@
-namespace Aviant.DDD.Application.Exception
+namespace Aviant.DDD.Application.Exceptions
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Domain.Exceptions;
     using FluentValidation.Results;
 
-    public class ValidationException : ExceptionBase
+    public class ValidationException : ApplicationException
     {
         public ValidationException() : 
             base("One or more validation failures have occurred.")

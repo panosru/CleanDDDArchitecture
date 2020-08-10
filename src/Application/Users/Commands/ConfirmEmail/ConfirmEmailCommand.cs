@@ -16,11 +16,11 @@ namespace CleanDDDArchitecture.Application.Users.Commands.ConfirmEmail
         public string Email { get; set; }
     }
 
-    public class ConfirmEmailCommandCommandHandler : CommandHandler<ConfirmEmailCommand, IdentityResult>
+    public class ConfirmEmailCommandCommandCommandCommandHandler : CommandCommandHandler<ConfirmEmailCommand, IdentityResult>
     {
         private readonly IIdentityService _identityIdentityService;
 
-        public ConfirmEmailCommandCommandHandler(IIdentityService identityIdentityService)
+        public ConfirmEmailCommandCommandCommandCommandHandler(IIdentityService identityIdentityService)
         {
             _identityIdentityService = identityIdentityService;
         }

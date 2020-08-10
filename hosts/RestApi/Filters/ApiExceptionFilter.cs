@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Application.Common.Events;
-    using Aviant.DDD.Application.Exception;
+    using Aviant.DDD.Application.Exceptions;
     using MediatR;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;

@@ -1,6 +1,9 @@
 namespace Aviant.DDD.Domain.Events
 {
-    public interface IEventHandler
+    using MediatR;
+
+    public interface IEventHandler<in TEvent> : INotificationHandler<TEvent>
+        where TEvent : IEvent
     {
     }
 }

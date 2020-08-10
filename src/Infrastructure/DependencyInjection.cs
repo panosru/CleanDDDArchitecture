@@ -1,12 +1,12 @@
 ﻿namespace CleanDDDArchitecture.Infrastructure
 {
     using System.IdentityModel.Tokens.Jwt;
-    using Application;
     using Application.Persistence;
     using Application.Repositories;
     using Application.TodoLists.Queries.ExportTodos;
     using Aviant.DDD.Application;
     using Aviant.DDD.Application.Identity;
+    using Aviant.DDD.Application.Services;
     using Aviant.DDD.Infrastructure.Files;
     using Aviant.DDD.Infrastructure.Service;
     using Files.Maps;
@@ -27,7 +27,7 @@
             // standard JWT claims into proprietary ones. This removes those mappings.
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
-            
+
             if (configuration.GetValue<bool>("UseInMemoryDatabase"))
                 services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseInMemoryDatabase("CleanDDDArchitectureDb"));
@@ -35,9 +35,10 @@
                 services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseNpgsql(
                         configuration.GetConnectionString("DefaultConnection"),
-                        b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+                        b => 
+                            b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
-            services.AddScoped<IApplicationDbContext>(provider => 
+            services.AddScoped<IApplicationDbContext>(provider =>
                 provider.GetService<ApplicationDbContext>());
 
             #region Read Repositories

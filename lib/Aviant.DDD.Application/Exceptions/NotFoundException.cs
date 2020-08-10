@@ -1,9 +1,8 @@
-namespace Aviant.DDD.Application.Exception
+namespace Aviant.DDD.Application.Exceptions
 {
     using System;
-    using Domain.Exceptions;
 
-    public class NotFoundException : ExceptionBase
+    public class NotFoundException : ApplicationException
     {
         public NotFoundException(string message) :
             base(message)

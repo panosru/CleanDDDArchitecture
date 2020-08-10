@@ -1,4 +1,4 @@
-namespace Aviant.DDD.Application.Behaviour
+namespace Aviant.DDD.Application.Behaviours
 {
     using System;
     using System.Threading;
