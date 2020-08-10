@@ -4,6 +4,7 @@ namespace Aviant.DDD.Infrastructure.Files
     using System.Globalization;
     using System.IO;
     using Application;
+    using Application.Services;
     using CsvHelper;
     using CsvHelper.Configuration;
 

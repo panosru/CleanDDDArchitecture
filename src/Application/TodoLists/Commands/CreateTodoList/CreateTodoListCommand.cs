@@ -11,11 +11,11 @@
         public string Title { get; set; }
     }
 
-    public class CreateTodoListCommandCommandHandler : CommandHandler<CreateTodoListCommand, int>
+    public class CreateTodoListCommandCommandCommandCommandHandler : CommandCommandHandler<CreateTodoListCommand, int>
     {
         private readonly ITodoListWriteRepository _todoListWriteRepository;
 
-        public CreateTodoListCommandCommandHandler(ITodoListWriteRepository todoListWriteRepository)
+        public CreateTodoListCommandCommandCommandCommandHandler(ITodoListWriteRepository todoListWriteRepository)
         {
             _todoListWriteRepository = todoListWriteRepository;
         }

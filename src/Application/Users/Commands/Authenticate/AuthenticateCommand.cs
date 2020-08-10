@@ -12,11 +12,11 @@ namespace CleanDDDArchitecture.Application.Users.Commands.Authenticate
         public string Password { get; set; }
     }
 
-    public class AuthenticateCommandCommandHandler : CommandHandler<AuthenticateCommand, object>
+    public class AuthenticateCommandCommandCommandCommandHandler : CommandCommandHandler<AuthenticateCommand, object>
     {
         private readonly IIdentityService _identityIdentityService;
 
-        public AuthenticateCommandCommandHandler(IIdentityService identityIdentityService)
+        public AuthenticateCommandCommandCommandCommandHandler(IIdentityService identityIdentityService)
         {
             _identityIdentityService = identityIdentityService;
         }

@@ -1,4 +1,4 @@
-namespace Aviant.DDD.Application.Behaviour.Request
+namespace Aviant.DDD.Application.Behaviours.Requests
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -7,6 +7,7 @@ namespace Aviant.DDD.Application.Behaviour.Request
     using Commands;
     using FluentValidation;
     using MediatR;
+    using ValidationException = Exceptions.ValidationException;
 
     public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : ICommand<TResponse>
@@ -34,7 +35,7 @@ namespace Aviant.DDD.Application.Behaviour.Request
                     .Where(f => f != null).ToList();
 
                 if (0 != failures.Count)
-                    throw new Exception.ValidationException(failures);
+                    throw new ValidationException(failures);
             }
 
             return await next();

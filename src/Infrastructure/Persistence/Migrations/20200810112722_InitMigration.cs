@@ -230,7 +230,6 @@ namespace CleanDDDArchitecture.Infrastructure.Persistence.Migrations
                     ListId = table.Column<int>(nullable: false),
                     Title = table.Column<string>(nullable: true),
                     Note = table.Column<string>(nullable: true),
-                    Done = table.Column<bool>(nullable: false),
                     Reminder = table.Column<DateTime>(nullable: true),
                     ListEntityId = table.Column<int>(nullable: true),
                     Created = table.Column<DateTime>(nullable: false),

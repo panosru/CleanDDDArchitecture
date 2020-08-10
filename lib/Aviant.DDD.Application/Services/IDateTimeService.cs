@@ -1,4 +1,4 @@
-namespace Aviant.DDD.Application
+namespace Aviant.DDD.Application.Services
 {
     using System;
 

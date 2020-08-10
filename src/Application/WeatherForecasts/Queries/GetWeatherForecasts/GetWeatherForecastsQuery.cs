@@ -11,8 +11,8 @@
     {
     }
 
-    public class GetWeatherForecastsQueryCommandHandler :
-        CommandHandler<GetWeatherForecastsQuery, IEnumerable<WeatherForecast>>
+    public class GetWeatherForecastsQueryCommandCommandHandler :
+        CommandCommandHandler<GetWeatherForecastsQuery, IEnumerable<WeatherForecast>>
     {
         private static readonly string[] Summaries =
         {

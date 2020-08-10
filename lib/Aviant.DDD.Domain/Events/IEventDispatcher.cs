@@ -2,17 +2,16 @@ namespace Aviant.DDD.Domain.Events
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Notifications;
 
     public interface IEventDispatcher
     {
         #region Pre Commit Events
 
-        List<INotification> GetPreCommitEvents();
+        List<IEvent> GetPreCommitEvents();
 
-        void AddPreCommitEvent(INotification evnt);
+        void AddPreCommitEvent(IEvent @event);
 
-        void RemovePreCommitEvent(INotification evnt);
+        void RemovePreCommitEvent(IEvent @event);
 
         Task FirePreCommitEvents();
 
@@ -20,11 +19,11 @@ namespace Aviant.DDD.Domain.Events
 
         #region Post Commit Events
 
-        List<INotification> GetPostCommitEvents();
+        List<IEvent> GetPostCommitEvents();
 
-        void AddPostCommitEvent(INotification evnt);
+        void AddPostCommitEvent(IEvent @event);
 
-        void RemovePostCommitEvent(INotification evnt);
+        void RemovePostCommitEvent(IEvent @event);
 
         Task FirePostCommitEvents();
 
