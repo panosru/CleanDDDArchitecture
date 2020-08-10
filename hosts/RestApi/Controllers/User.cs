@@ -3,7 +3,6 @@ namespace CleanDDDArchitecture.RestApi.Controllers
     using System.Threading.Tasks;
     using Application.Users.Commands.Authenticate;
     using Application.Users.Commands.ConfirmEmail;
-    using Aviant.DDD.Application;
     using Aviant.DDD.Application.Identity;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
@@ -34,7 +33,6 @@ namespace CleanDDDArchitecture.RestApi.Controllers
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>

@@ -9,14 +9,12 @@ namespace CleanDDDArchitecture.RestApi.Middlewares
     using Newtonsoft.Json;
 
     /// <summary>
-    /// 
     /// </summary>
     public class CustomExceptionHandler
     {
         private readonly RequestDelegate _next;
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="next"></param>
         public CustomExceptionHandler(RequestDelegate next)
@@ -25,7 +23,6 @@ namespace CleanDDDArchitecture.RestApi.Middlewares
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
@@ -59,24 +56,19 @@ namespace CleanDDDArchitecture.RestApi.Middlewares
             }
 
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)code;
+            context.Response.StatusCode = (int) code;
 
-            if (string.IsNullOrEmpty(result))
-            {
-                result = JsonConvert.SerializeObject(new { error = exception.Message });
-            }
+            if (string.IsNullOrEmpty(result)) result = JsonConvert.SerializeObject(new {error = exception.Message});
 
             return context.Response.WriteAsync(result);
         }
     }
 
     /// <summary>
-    /// 
     /// </summary>
     public static class CustomExceptionHandlerExtensions
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>

@@ -19,12 +19,10 @@ namespace CleanDDDArchitecture.RestApi
     using Utils.Swagger;
 
     /// <summary>
-    /// 
     /// </summary>
     public class Startup
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="configuration"></param>
         public Startup(IConfiguration configuration)
@@ -35,7 +33,7 @@ namespace CleanDDDArchitecture.RestApi
         private IConfiguration Configuration { get; }
 
         /// <summary>
-        /// This method gets called by the runtime. Use this method to add services to the container.
+        ///     This method gets called by the runtime. Use this method to add services to the container.
         /// </summary>
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
@@ -55,20 +53,22 @@ namespace CleanDDDArchitecture.RestApi
             services
                 .AddAuthorization()
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
+                .AddJwtBearer(
+                    options =>
                     {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = Configuration["Jwt:Issuer"],
-                        ValidAudience = Configuration["Jwt:Issuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
-                        ClockSkew = TimeSpan.Zero
-                    };
-                });
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+                            ValidIssuer = Configuration["Jwt:Issuer"],
+                            ValidAudience = Configuration["Jwt:Issuer"],
+                            IssuerSigningKey =
+                                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
+                            ClockSkew = TimeSpan.Zero
+                        };
+                    });
 
             services
                 .AddApiVersionWithExplorer()
@@ -88,7 +88,7 @@ namespace CleanDDDArchitecture.RestApi
         }
 
         /// <summary>
-        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        ///     This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
@@ -116,11 +116,12 @@ namespace CleanDDDArchitecture.RestApi
             app.UseSwaggerDocuments();
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                ServeUnknownFileTypes = true,
-                DefaultContentType = "application/yaml"
-            });
+            app.UseStaticFiles(
+                new StaticFileOptions
+                {
+                    ServeUnknownFileTypes = true,
+                    DefaultContentType = "application/yaml"
+                });
 
 
             app.UseRouting();
@@ -128,12 +129,13 @@ namespace CleanDDDArchitecture.RestApi
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints
-                    .MapDefaultControllerRoute();
-                // .RequireAuthorization();
-            });
+            app.UseEndpoints(
+                endpoints =>
+                {
+                    endpoints
+                        .MapDefaultControllerRoute();
+                    // .RequireAuthorization();
+                });
         }
     }
 }

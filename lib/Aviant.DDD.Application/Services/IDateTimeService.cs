@@ -5,7 +5,7 @@ namespace Aviant.DDD.Application.Services
     public interface IDateTimeService
     {
         DateTime Now { get; }
-        
+
         DateTime UtcNow { get; }
     }
 }

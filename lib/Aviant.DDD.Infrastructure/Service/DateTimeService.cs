@@ -1,12 +1,12 @@
 namespace Aviant.DDD.Infrastructure.Service
 {
-    using Application;
+    using System;
     using Application.Services;
 
     public class DateTimeService : IDateTimeService
     {
-        public System.DateTime Now { get; } = System.DateTime.Now;
+        public DateTime Now { get; } = DateTime.Now;
 
-        public System.DateTime UtcNow { get; } = System.DateTime.UtcNow;
+        public DateTime UtcNow { get; } = DateTime.UtcNow;
     }
 }

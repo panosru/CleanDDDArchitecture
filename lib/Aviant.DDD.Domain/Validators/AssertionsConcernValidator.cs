@@ -230,15 +230,20 @@ namespace Aviant.DDD.Domain.Validators
             };
         }
 
-        public static Func<bool> ValidateGuidFromString(string guid, string stringIsEmptyMessage,
-            string guidIsEmptyMessage, string guidIsInvalidMessage)
+        public static Func<bool> ValidateGuidFromString(
+            string guid,
+            string stringIsEmptyMessage,
+            string guidIsEmptyMessage,
+            string guidIsInvalidMessage)
         {
             return delegate
             {
                 var isValid = false;
 
-                isValid = IsSatisfiedBy(IsStringNotNullOrWhiteSpace(guid,
-                    new DomainEvent(stringIsEmptyMessage)));
+                isValid = IsSatisfiedBy(
+                    IsStringNotNullOrWhiteSpace(
+                        guid,
+                        new DomainEvent(stringIsEmptyMessage)));
 
                 if (!isValid) return false;
 

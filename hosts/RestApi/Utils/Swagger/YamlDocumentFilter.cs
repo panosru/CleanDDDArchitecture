@@ -24,7 +24,7 @@
         /// <param name="hostingEnvironment">IHostingEnvironment</param>
         public YamlDocumentFilter(IWebHostEnvironment hostingEnvironment)
         {
-            this._hostingEnvironment = hostingEnvironment;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         /// <summary>
@@ -51,9 +51,10 @@
                     {
                         var result = writer.ToString();
                         stream
-                            .WriteLine(result
-                                .Replace("2.0", "\"2.0\"", StringComparison.OrdinalIgnoreCase)
-                                .Replace("ref:", "$ref:", StringComparison.OrdinalIgnoreCase));
+                            .WriteLine(
+                                result
+                                    .Replace("2.0", "\"2.0\"", StringComparison.OrdinalIgnoreCase)
+                                    .Replace("ref:", "$ref:", StringComparison.OrdinalIgnoreCase));
                     }
                 }
             }
@@ -69,7 +70,7 @@
 
             public PropertiesIgnoreTypeInspector(ITypeInspector typeInspector)
             {
-                this._typeInspector = typeInspector;
+                _typeInspector = typeInspector;
             }
 
             public override IEnumerable<IPropertyDescriptor> GetProperties(Type type, object container)

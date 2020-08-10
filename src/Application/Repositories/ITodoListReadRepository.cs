@@ -5,6 +5,5 @@ namespace CleanDDDArchitecture.Application.Repositories
 
     public interface ITodoListReadRepository : IRepositoryRead<TodoListEntity, int>
     {
-        
     }
 }

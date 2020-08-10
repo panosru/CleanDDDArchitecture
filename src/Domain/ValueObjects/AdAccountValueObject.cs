@@ -1,7 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Domain.ValueObjects
 {
     using System;
-    using System.Collections.Generic;
     using Aviant.DDD.Domain.ValueObjects;
     using Exceptions;
 

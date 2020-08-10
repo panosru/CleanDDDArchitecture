@@ -6,7 +6,6 @@
     using Microsoft.Extensions.Logging;
 
     /// <summary>
-    /// 
     /// </summary>
     [ApiExplorerSettings(IgnoreApi = true)]
     public class OidcConfiguration : Controller
@@ -14,11 +13,11 @@
         private readonly ILogger<OidcConfiguration> _logger;
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="clientRequestParametersProvider"></param>
         /// <param name="logger"></param>
-        public OidcConfiguration(IClientRequestParametersProvider clientRequestParametersProvider,
+        public OidcConfiguration(
+            IClientRequestParametersProvider clientRequestParametersProvider,
             ILogger<OidcConfiguration> logger)
         {
             ClientRequestParametersProvider = clientRequestParametersProvider;
@@ -26,12 +25,10 @@
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public IClientRequestParametersProvider ClientRequestParametersProvider { get; }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="clientId"></param>
         /// <returns></returns>

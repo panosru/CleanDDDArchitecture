@@ -6,7 +6,6 @@ namespace CleanDDDArchitecture.RestApi.Pages
     using Microsoft.Extensions.Logging;
 
     /// <summary>
-    /// 
     /// </summary>
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public class ErrorModel : PageModel
@@ -14,7 +13,6 @@ namespace CleanDDDArchitecture.RestApi.Pages
         private readonly ILogger<ErrorModel> _logger;
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="logger"></param>
         public ErrorModel(ILogger<ErrorModel> logger)
@@ -23,18 +21,15 @@ namespace CleanDDDArchitecture.RestApi.Pages
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public string? RequestId { get; set; }
 
-        
+
         /// <summary>
-        /// 
         /// </summary>
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
         /// <summary>
-        /// 
         /// </summary>
         public void OnGet()
         {

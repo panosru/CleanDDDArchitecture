@@ -20,7 +20,8 @@
         public string Note { get; set; }
     }
 
-    public class UpdateTodoItemDetailCommandCommandCommandCommandHandler : CommandCommandHandler<UpdateTodoItemDetailCommand>
+    public class UpdateTodoItemDetailCommandCommandCommandCommandHandler
+        : CommandCommandHandler<UpdateTodoItemDetailCommand>
     {
         private readonly ITodoItemReadRepository _todoItemReadRepository;
         private readonly ITodoItemWriteRepository _todoItemWriteRepository;
@@ -33,7 +34,8 @@
             _todoItemWriteRepository = todoItemWriteRepository;
         }
 
-        public override async Task<Unit> Handle(UpdateTodoItemDetailCommand request,
+        public override async Task<Unit> Handle(
+            UpdateTodoItemDetailCommand request,
             CancellationToken cancellationToken)
         {
             var entity = await _todoItemReadRepository.Find(request.Id);
@@ -45,7 +47,7 @@
             entity.Note = request.Note;
 
             await _todoItemWriteRepository.Update(entity);
-            
+
             await _todoItemWriteRepository.Commit(cancellationToken);
 
             return Unit.Value;

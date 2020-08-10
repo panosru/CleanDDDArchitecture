@@ -2,8 +2,7 @@ namespace Aviant.DDD.Domain.Events
 {
     using System.Collections.Generic;
 
-    public abstract class EventsBase :
-        IEvents
+    public abstract class EventsBase : IEvents
     {
         private List<IEvent> _events;
 

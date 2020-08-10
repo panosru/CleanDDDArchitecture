@@ -5,12 +5,10 @@ namespace CleanDDDArchitecture.RestApi.Controllers
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
-    /// 
     /// </summary>
-    public class Metal :  ApiController
+    public class Metal : ApiController
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         [HttpGet("/metal")]
@@ -22,11 +20,12 @@ namespace CleanDDDArchitecture.RestApi.Controllers
             var creationDate = System.IO.File.GetCreationTime(assembly.Location);
             var version = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
 
-            return Ok(new
-            {
-                Version = version,
-                LastUdated = creationDate
-            });
+            return Ok(
+                new
+                {
+                    Version = version,
+                    LastUdated = creationDate
+                });
         }
     }
 }

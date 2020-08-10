@@ -8,8 +8,7 @@ namespace Aviant.DDD.Application.Behaviours.Requests
     using MediatR;
     using Microsoft.Extensions.Logging;
 
-    public class PerformanceBehaviour<TRequest, TResponse> :
-        IPipelineBehavior<TRequest, TResponse>
+    public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
         private readonly ICurrentUserService _currentUserService;
 
@@ -31,7 +30,9 @@ namespace Aviant.DDD.Application.Behaviours.Requests
             _identityIdentityService = identityIdentityService;
         }
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
+        public async Task<TResponse> Handle(
+            TRequest request,
+            CancellationToken cancellationToken,
             RequestHandlerDelegate<TResponse> next)
         {
             _timer.Start();
@@ -50,7 +51,11 @@ namespace Aviant.DDD.Application.Behaviours.Requests
 
                 _logger.LogWarning(
                     "Long Running Request detected: {Name} ({ElapsedMilliseconds} milliseconds), UserId: {@UserId}, Username: {@username}, Request: {@Request}",
-                    requestName, elapsedMilliseconds, userId, username, request);
+                    requestName,
+                    elapsedMilliseconds,
+                    userId,
+                    username,
+                    request);
             }
 
             return response;

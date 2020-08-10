@@ -7,14 +7,12 @@
     using Microsoft.IdentityModel.JsonWebTokens;
 
     /// <summary>
-    /// 
     /// </summary>
     public class CurrentUser : ICurrentUserService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="httpContextAccessor"></param>
         public CurrentUser(IHttpContextAccessor httpContextAccessor)
@@ -23,7 +21,6 @@
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public Guid UserId
         {
@@ -32,7 +29,9 @@
                 var id = _httpContextAccessor.HttpContext?.User?
                     .FindFirstValue(JwtRegisteredClaimNames.Sub);
 
-                return id is null ? Guid.Empty : Guid.Parse(id);
+                return id is null
+                    ? Guid.Empty
+                    : Guid.Parse(id);
             }
         }
     }

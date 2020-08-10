@@ -7,7 +7,7 @@ namespace Aviant.DDD.Domain.Persistence
     using System.Threading.Tasks;
     using Entities;
 
-    public interface IRepositoryRead<TEntity, in TPrimaryKey> : IDisposable 
+    public interface IRepositoryRead<TEntity, in TPrimaryKey> : IDisposable
         where TEntity : EntityBase<TPrimaryKey>
     {
         IQueryable<TEntity> GetAll();
@@ -26,7 +26,9 @@ namespace Aviant.DDD.Domain.Persistence
 
         Task<TEntity> GetFirst(Expression<Func<TEntity, bool>> predicate);
 
-        Task<TEntity> GetFirstIncluding(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties);
+        Task<TEntity> GetFirstIncluding(
+            Expression<Func<TEntity, bool>> predicate,
+            params Expression<Func<TEntity, object>>[] includeProperties);
 
         Task<TEntity> GetSingle(TPrimaryKey id);
 
@@ -34,11 +36,15 @@ namespace Aviant.DDD.Domain.Persistence
 
         Task<TEntity> GetSingle(Expression<Func<TEntity, bool>> predicate);
 
-        Task<TEntity> GetSingleIncluding(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties);
+        Task<TEntity> GetSingleIncluding(
+            Expression<Func<TEntity, bool>> predicate,
+            params Expression<Func<TEntity, object>>[] includeProperties);
 
         IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate);
 
-        IQueryable<TEntity> FindByIncluding(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties);
+        IQueryable<TEntity> FindByIncluding(
+            Expression<Func<TEntity, bool>> predicate,
+            params Expression<Func<TEntity, object>>[] includeProperties);
 
         Task<bool> Any(Expression<Func<TEntity, bool>> predicate);
 

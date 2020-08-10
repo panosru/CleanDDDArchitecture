@@ -10,7 +10,6 @@
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
-    /// 
     /// </summary>
     public class TodoItems : ApiController
     {
@@ -19,9 +18,8 @@
         {
             return await Mediator.Send(query);
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
@@ -32,7 +30,6 @@
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="id"></param>
         /// <param name="command"></param>
@@ -50,7 +47,6 @@
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="id"></param>
         /// <param name="command"></param>
@@ -68,7 +64,6 @@
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

@@ -5,7 +5,6 @@
     using System.Threading.Tasks;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
-    using Aviant.DDD.Application;
     using Aviant.DDD.Application.Commands;
     using Aviant.DDD.Application.Services;
     using Microsoft.EntityFrameworkCore;
@@ -22,7 +21,9 @@
         private readonly ICsvFileBuilder<TodoItemRecord> _fileBuilder;
         private readonly IMapper _mapper;
 
-        public ExportTodosQueryCommandCommandHandler(IApplicationDbContext context, IMapper mapper,
+        public ExportTodosQueryCommandCommandHandler(
+            IApplicationDbContext context,
+            IMapper mapper,
             ICsvFileBuilder<TodoItemRecord> fileBuilder)
         {
             _context = context;

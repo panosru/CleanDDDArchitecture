@@ -4,8 +4,6 @@
     using System.Threading;
     using System.Threading.Tasks;
     using FluentValidation;
-    using Microsoft.EntityFrameworkCore;
-    using Persistence;
     using Repositories;
 
     public class UpdateTodoListCommandValidator : AbstractValidator<UpdateTodoListCommand>
@@ -17,22 +15,28 @@
             _todoListReadRepository = todoListReadRepository;
 
             RuleFor(v => v.Title)
-                .NotEmpty().WithMessage("Title is required.")
-                .MaximumLength(200).WithMessage("Title must not exceed 200 characters.")
-                .MustAsync(BeUniqueTitle).WithMessage("The specified title already exists.");
+                .NotEmpty()
+                .WithMessage("Title is required.")
+                .MaximumLength(200)
+                .WithMessage("Title must not exceed 200 characters.")
+                .MustAsync(BeUniqueTitle)
+                .WithMessage("The specified title already exists.");
         }
 
-        public async Task<bool> BeUniqueTitle(UpdateTodoListCommand model, string title,
+        public async Task<bool> BeUniqueTitle(
+            UpdateTodoListCommand model,
+            string title,
             CancellationToken cancellationToken)
         {
-            bool result = false;
+            var result = false;
 
-            await Task.Run(() =>
-            {
-                result = _todoListReadRepository
-                    .FindBy(l => l.Id != model.Id)
-                    .All(l => l.Title != title);
-            });
+            await Task.Run(
+                () =>
+                {
+                    result = _todoListReadRepository
+                        .FindBy(l => l.Id != model.Id)
+                        .All(l => l.Title != title);
+                });
 
             return result;
         }

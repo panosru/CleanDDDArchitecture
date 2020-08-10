@@ -3,16 +3,14 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Application.WeatherForecasts.Queries.GetWeatherForecasts;
-    using WeatherForecastsQuery = Application.WeatherForecasts.Queries.GetWeatherForecasts.WeatherForecast;
     using Microsoft.AspNetCore.Mvc;
+    using WeatherForecastsQuery = Application.WeatherForecasts.Queries.GetWeatherForecasts.WeatherForecast;
 
     /// <summary>
-    /// 
     /// </summary>
     public class WeatherForecast : ApiController
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         [HttpGet]

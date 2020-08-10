@@ -11,14 +11,12 @@
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
-    /// 
     /// </summary>
     public class TodoLists : ApiController
     {
         private readonly ITodoListsService _todoListsService;
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="todoListsService"></param>
         public TodoLists(ITodoListsService todoListsService)
@@ -27,7 +25,6 @@
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -37,7 +34,6 @@
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -51,7 +47,6 @@
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
@@ -62,7 +57,6 @@
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="id"></param>
         /// <param name="command"></param>
@@ -80,7 +74,6 @@
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

@@ -10,21 +10,22 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
     using Domain.Persistence;
     using Microsoft.EntityFrameworkCore;
 
-    public abstract class RepositoryReadOnlyBase<TDbContext, TApplicationUser, TApplicationRole, TEntity, TPrimaryKey> : 
-        IRepositoryRead<TEntity, TPrimaryKey>
+    public abstract class RepositoryReadOnlyBase<TDbContext, TApplicationUser, TApplicationRole, TEntity, TPrimaryKey>
+        : IRepositoryRead<TEntity, TPrimaryKey>
         where TEntity : EntityBase<TPrimaryKey>
         where TApplicationUser : ApplicationUserBase
         where TApplicationRole : ApplicationRoleBase
         where TDbContext : ApplicationDbContextBase<TDbContext, TApplicationUser, TApplicationRole>
     {
         private readonly TDbContext _dbContext;
-        private DbSet<TEntity> Table => _dbContext.Set<TEntity>();
 
         public RepositoryReadOnlyBase(TDbContext context)
         {
             _dbContext = context;
         }
-        
+
+        private DbSet<TEntity> Table => _dbContext.Set<TEntity>();
+
         public IQueryable<TEntity> GetAll()
         {
             IQueryable<TEntity> query = Table;
@@ -61,7 +62,9 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
             return GetAll().FirstOrDefaultAsync(CreateEqualityExpressionForId(id));
         }
 
-        public Task<TEntity> GetFirstIncluding(TPrimaryKey id, params Expression<Func<TEntity, object>>[] includeProperties)
+        public Task<TEntity> GetFirstIncluding(
+            TPrimaryKey id,
+            params Expression<Func<TEntity, object>>[] includeProperties)
         {
             var query = GetAll();
             query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
@@ -73,7 +76,9 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
             return GetAll().FirstOrDefaultAsync(predicate);
         }
 
-        public Task<TEntity> GetFirstIncluding(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
+        public Task<TEntity> GetFirstIncluding(
+            Expression<Func<TEntity, bool>> predicate,
+            params Expression<Func<TEntity, object>>[] includeProperties)
         {
             var query = GetAll();
             query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
@@ -85,7 +90,9 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
             return GetAll().SingleOrDefaultAsync(CreateEqualityExpressionForId(id));
         }
 
-        public Task<TEntity> GetSingleIncluding(TPrimaryKey id, params Expression<Func<TEntity, object>>[] includeProperties)
+        public Task<TEntity> GetSingleIncluding(
+            TPrimaryKey id,
+            params Expression<Func<TEntity, object>>[] includeProperties)
         {
             var query = GetAll();
             query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
@@ -97,7 +104,9 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
             return GetAll().SingleOrDefaultAsync(predicate);
         }
 
-        public Task<TEntity> GetSingleIncluding(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
+        public Task<TEntity> GetSingleIncluding(
+            Expression<Func<TEntity, bool>> predicate,
+            params Expression<Func<TEntity, object>>[] includeProperties)
         {
             var query = GetAll();
             query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
@@ -109,7 +118,9 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
             return GetAll().Where(predicate);
         }
 
-        public IQueryable<TEntity> FindByIncluding(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
+        public IQueryable<TEntity> FindByIncluding(
+            Expression<Func<TEntity, bool>> predicate,
+            params Expression<Func<TEntity, object>>[] includeProperties)
         {
             var query = GetAll();
             query = includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
@@ -136,7 +147,14 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
             return Table.CountAsync(predicate);
         }
 
-        private static void BindIncludeProperties(IQueryable<TEntity> query, IEnumerable<Expression<Func<TEntity, object>>> includeProperties)
+        public void Dispose()
+        {
+            _dbContext?.Dispose();
+        }
+
+        private static void BindIncludeProperties(
+            IQueryable<TEntity> query,
+            IEnumerable<Expression<Func<TEntity, object>>> includeProperties)
         {
             includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
         }
@@ -148,14 +166,9 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
             var lambdaBody = Expression.Equal(
                 Expression.PropertyOrField(lambdaParam, "Id"),
                 Expression.Constant(id, typeof(TPrimaryKey))
-                );
+            );
 
             return Expression.Lambda<Func<TEntity, bool>>(lambdaBody, lambdaParam);
-        }
-
-        public void Dispose()
-        {
-            _dbContext?.Dispose();
         }
     }
 }

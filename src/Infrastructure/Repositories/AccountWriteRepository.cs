@@ -6,10 +6,12 @@ namespace CleanDDDArchitecture.Infrastructure.Repositories
     using Identity;
     using Persistence;
 
-    public class AccountWriteRepository :
-        RepositoryWriteOnlyBase<ApplicationDbContext, ApplicationUser, ApplicationRole, AccountEntity, int>, IAccountWriteRepository
+    public class AccountWriteRepository
+        : RepositoryWriteOnlyBase<ApplicationDbContext, ApplicationUser, ApplicationRole, AccountEntity, int>,
+            IAccountWriteRepository
     {
-        public AccountWriteRepository(ApplicationDbContext context) : base(context)
+        public AccountWriteRepository(ApplicationDbContext context)
+            : base(context)
         {
         }
     }
