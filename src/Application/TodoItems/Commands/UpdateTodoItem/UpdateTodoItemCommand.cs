@@ -2,13 +2,13 @@
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Aviant.DDD.Application.Command;
+    using Aviant.DDD.Application.Commands;
     using Aviant.DDD.Application.Exception;
     using Domain.Entities;
     using MediatR;
     using Repositories;
 
-    public class UpdateTodoItemCommand : Base
+    public class UpdateTodoItemCommand : CommandBase
     {
         public int Id { get; set; }
 
@@ -19,29 +19,29 @@
 
     public class UpdateTodoItemCommandHandler : Handler<UpdateTodoItemCommand>
     {
-        private readonly ITodoItemRead _todoItemRead;
-        private readonly ITodoItemWrite _todoItemWrite;
+        private readonly ITodoItemReadRepository _todoItemReadRepository;
+        private readonly ITodoItemWriteRepository _todoItemWriteRepository;
 
         public UpdateTodoItemCommandHandler(
-            ITodoItemRead todoItemRead,
-            ITodoItemWrite todoItemWrite)
+            ITodoItemReadRepository todoItemReadRepository,
+            ITodoItemWriteRepository todoItemWriteRepository)
         {
-            _todoItemRead = todoItemRead;
-            _todoItemWrite = todoItemWrite;
+            _todoItemReadRepository = todoItemReadRepository;
+            _todoItemWriteRepository = todoItemWriteRepository;
         }
 
         public override async Task<Unit> Handle(UpdateTodoItemCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _todoItemRead.Find(request.Id);
+            var entity = await _todoItemReadRepository.Find(request.Id);
 
-            if (entity == null) throw new NotFound(nameof(TodoItem), request.Id);
+            if (entity == null) throw new NotFoundException(nameof(TodoItemEntity), request.Id);
 
             entity.Title = request.Title;
             entity.Done = request.Done;
 
-            await _todoItemWrite.Update(entity);
+            await _todoItemWriteRepository.Update(entity);
 
-            await _todoItemWrite.Commit(cancellationToken);
+            await _todoItemWriteRepository.Commit(cancellationToken);
 
             return Unit.Value;
         }

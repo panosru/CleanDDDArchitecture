@@ -1180,10 +1180,10 @@ paths:
                   enum: []
                   reference:
                     type: Schema
-                    id: Result
+                    id: IdentityResult
                     isLocal: true
-                    referenceV3: '#/components/schemas/Result'
-                    referenceV2: '#/definitions/Result'
+                    referenceV3: '#/components/schemas/IdentityResult'
+                    referenceV2: '#/definitions/IdentityResult'
                 examples: {}
                 encoding: {}
               application/json:
@@ -1197,10 +1197,10 @@ paths:
                   enum: []
                   reference:
                     type: Schema
-                    id: Result
+                    id: IdentityResult
                     isLocal: true
-                    referenceV3: '#/components/schemas/Result'
-                    referenceV2: '#/definitions/Result'
+                    referenceV3: '#/components/schemas/IdentityResult'
+                    referenceV2: '#/definitions/IdentityResult'
                 examples: {}
                 encoding: {}
               text/json:
@@ -1214,10 +1214,10 @@ paths:
                   enum: []
                   reference:
                     type: Schema
-                    id: Result
+                    id: IdentityResult
                     isLocal: true
-                    referenceV3: '#/components/schemas/Result'
-                    referenceV2: '#/definitions/Result'
+                    referenceV3: '#/components/schemas/IdentityResult'
+                    referenceV2: '#/definitions/IdentityResult'
                 examples: {}
                 encoding: {}
             links: {}
@@ -1870,7 +1870,7 @@ components:
           enum: []
           nullable: true
       enum: []
-    Result:
+    IdentityResult:
       type: object
       allOf: []
       oneOf: []

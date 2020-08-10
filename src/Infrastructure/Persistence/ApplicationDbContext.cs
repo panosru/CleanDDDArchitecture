@@ -5,12 +5,11 @@
     using Aviant.DDD.Application.Identity;
     using Aviant.DDD.Infrastructure.Persistance;
     using Domain.Entities;
+    using Identity;
     using IdentityServer4.EntityFramework.Options;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
-    using ApplicationRole = Identity.ApplicationRole;
-    using ApplicationUser = Identity.ApplicationUser;
 
     public class ApplicationDbContext :
         ApplicationDbContextBase<ApplicationDbContext, ApplicationUser, ApplicationRole>, IApplicationDbContext
@@ -21,15 +20,15 @@
             IOptions<OperationalStoreOptions> operationalStoreOptions,
             ICurrentUserService currentUserService,
             IMediator mediator,
-            IDateTime dateTime) : base(options, operationalStoreOptions, currentUserService,
-                mediator, dateTime)
+            IDateTimeService dateTimeService) : base(options, operationalStoreOptions, currentUserService,
+                mediator, dateTimeService)
         {
         }
 
-        public DbSet<TodoList> TodoLists { get; set; }
+        public DbSet<TodoListEntity> TodoLists { get; set; }
 
-        public DbSet<TodoItem> TodoItems { get; set; }
+        public DbSet<TodoItemEntity> TodoItems { get; set; }
         
-        public DbSet<Account> Members { get; set; }
+        public DbSet<AccountEntity> Members { get; set; }
     }
 }

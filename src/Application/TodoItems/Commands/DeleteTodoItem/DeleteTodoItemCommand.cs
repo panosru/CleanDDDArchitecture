@@ -2,39 +2,39 @@
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Aviant.DDD.Application.Command;
+    using Aviant.DDD.Application.Commands;
     using Aviant.DDD.Application.Exception;
     using Domain.Entities;
     using MediatR;
     using Repositories;
 
-    public class DeleteTodoItemCommand : Base
+    public class DeleteTodoItemCommand : CommandBase
     {
         public int Id { get; set; }
     }
 
     public class DeleteTodoItemCommandHandler : Handler<DeleteTodoItemCommand>
     {
-        private readonly ITodoItemRead _todoItemRead;
-        private readonly ITodoItemWrite _todoItemWrite;
+        private readonly ITodoItemReadRepository _todoItemReadRepository;
+        private readonly ITodoItemWriteRepository _todoItemWriteRepository;
 
         public DeleteTodoItemCommandHandler(
-            ITodoItemRead todoItemRead,
-            ITodoItemWrite todoItemWrite)
+            ITodoItemReadRepository todoItemReadRepository,
+            ITodoItemWriteRepository todoItemWriteRepository)
         {
-            _todoItemRead = todoItemRead;
-            _todoItemWrite = todoItemWrite;
+            _todoItemReadRepository = todoItemReadRepository;
+            _todoItemWriteRepository = todoItemWriteRepository;
         }
 
         public override async Task<Unit> Handle(DeleteTodoItemCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _todoItemRead.Find(request.Id);
+            var entity = await _todoItemReadRepository.Find(request.Id);
 
-            if (entity == null) throw new NotFound(nameof(TodoItem), request.Id);
+            if (entity == null) throw new NotFoundException(nameof(TodoItemEntity), request.Id);
 
-            await _todoItemWrite.Delete(entity);
+            await _todoItemWriteRepository.Delete(entity);
 
-            await _todoItemWrite.Commit(cancellationToken);
+            await _todoItemWriteRepository.Commit(cancellationToken);
 
             return Unit.Value;
         }

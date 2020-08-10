@@ -2,15 +2,17 @@
 {
     using System.Linq;
     using Aviant.DDD.Application;
+    using Aviant.DDD.Application.Identity;
     using Microsoft.AspNetCore.Identity;
+    using IdentityResult = Aviant.DDD.Application.Identity.IdentityResult;
 
     public static class IdentityResultExtensions
     {
-        public static Result ToApplicationResult(this IdentityResult result)
+        public static IdentityResult ToApplicationResult(this Microsoft.AspNetCore.Identity.IdentityResult result)
         {
             return result.Succeeded
-                ? Result.Success()
-                : Result.Failure(result.Errors.Select(e => e.Description));
+                ? IdentityResult.Success()
+                : IdentityResult.Failure(result.Errors.Select(e => e.Description));
         }
     }
 }

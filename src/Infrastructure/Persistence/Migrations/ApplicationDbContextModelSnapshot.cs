@@ -19,7 +19,7 @@ namespace CleanDDDArchitecture.Infrastructure.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("CleanDDDArchitecture.Domain.Entities.Account", b =>
+            modelBuilder.Entity("CleanDDDArchitecture.Domain.Entities.AccountEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -34,7 +34,7 @@ namespace CleanDDDArchitecture.Infrastructure.Persistence.Migrations
                     b.ToTable("Members");
                 });
 
-            modelBuilder.Entity("CleanDDDArchitecture.Domain.Entities.TodoItem", b =>
+            modelBuilder.Entity("CleanDDDArchitecture.Domain.Entities.TodoItemEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -68,6 +68,9 @@ namespace CleanDDDArchitecture.Infrastructure.Persistence.Migrations
                     b.Property<Guid?>("LastModifiedBy")
                         .HasColumnType("uuid");
 
+                    b.Property<int?>("ListEntityId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("ListId")
                         .HasColumnType("integer");
 
@@ -88,12 +91,12 @@ namespace CleanDDDArchitecture.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ListId");
+                    b.HasIndex("ListEntityId");
 
                     b.ToTable("TodoItems");
                 });
 
-            modelBuilder.Entity("CleanDDDArchitecture.Domain.Entities.TodoList", b =>
+            modelBuilder.Entity("CleanDDDArchitecture.Domain.Entities.TodoListEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -411,13 +414,11 @@ namespace CleanDDDArchitecture.Infrastructure.Persistence.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("CleanDDDArchitecture.Domain.Entities.TodoItem", b =>
+            modelBuilder.Entity("CleanDDDArchitecture.Domain.Entities.TodoItemEntity", b =>
                 {
-                    b.HasOne("CleanDDDArchitecture.Domain.Entities.TodoList", "List")
+                    b.HasOne("CleanDDDArchitecture.Domain.Entities.TodoListEntity", "ListEntity")
                         .WithMany("Items")
-                        .HasForeignKey("ListId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ListEntityId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

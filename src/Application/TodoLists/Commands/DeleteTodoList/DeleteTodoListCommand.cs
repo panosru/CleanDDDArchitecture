@@ -2,42 +2,42 @@
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Aviant.DDD.Application.Command;
+    using Aviant.DDD.Application.Commands;
     using Aviant.DDD.Application.Exception;
     using Domain.Entities;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Repositories;
 
-    public class DeleteTodoListCommand : Base
+    public class DeleteTodoListCommand : CommandBase
     {
         public int Id { get; set; }
     }
 
     public class DeleteTodoListCommandHandler : Handler<DeleteTodoListCommand>
     {
-        private readonly ITodoListRead _todoListRead;
-        private readonly ITodoListWrite _todoListWrite;
+        private readonly ITodoListReadRepository _todoListReadRepository;
+        private readonly ITodoListWriteRepository _todoListWriteRepository;
 
         public DeleteTodoListCommandHandler(
-            ITodoListRead todoListRead,
-            ITodoListWrite todoListWrite)
+            ITodoListReadRepository todoListReadRepository,
+            ITodoListWriteRepository todoListWriteRepository)
         {
-            _todoListRead = todoListRead;
-            _todoListWrite = todoListWrite;
+            _todoListReadRepository = todoListReadRepository;
+            _todoListWriteRepository = todoListWriteRepository;
         }
 
         public override async Task<Unit> Handle(DeleteTodoListCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _todoListRead
+            var entity = await _todoListReadRepository
                 .FindBy(l => l.Id == request.Id)
                 .SingleOrDefaultAsync(cancellationToken);
                 
-            if (entity == null) throw new NotFound(nameof(TodoList), request.Id);
+            if (entity == null) throw new NotFoundException(nameof(TodoListEntity), request.Id);
 
-            await _todoListWrite.Delete(entity);
+            await _todoListWriteRepository.Delete(entity);
 
-            await _todoListWrite.Commit(cancellationToken);
+            await _todoListWriteRepository.Commit(cancellationToken);
 
             return Unit.Value;
         }

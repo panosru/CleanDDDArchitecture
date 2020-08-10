@@ -4,10 +4,10 @@ namespace Aviant.DDD.Domain.Persistence
     using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
-    using Entity;
+    using Entities;
 
     public interface IRepositoryWrite<TEntity, in TPrimaryKey> : IDisposable 
-        where TEntity : Base<TPrimaryKey>
+        where TEntity : EntityBase<TPrimaryKey>
     {
         Task Add(TEntity entity);
 

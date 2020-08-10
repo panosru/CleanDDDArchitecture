@@ -4,7 +4,7 @@
     using Aviant.DDD.Application.Mappings;
     using Domain.Entities;
 
-    public class TodoListDto : IMapFrom<TodoList>
+    public class TodoListDto : IMapFrom<TodoListEntity>
     {
         public TodoListDto()
         {

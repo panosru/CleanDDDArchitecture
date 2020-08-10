@@ -21,19 +21,19 @@
             // Seed, if necessary
             if (!context.TodoLists.Any())
             {
-                context.TodoLists.Add(new TodoList
+                context.TodoLists.Add(new TodoListEntity
                 {
                     Title = "Shopping",
                     Items =
                     {
-                        new TodoItem {Title = "Apples", Done = true},
-                        new TodoItem {Title = "Milk", Done = true},
-                        new TodoItem {Title = "Bread", Done = true},
-                        new TodoItem {Title = "Toilet paper"},
-                        new TodoItem {Title = "Pasta"},
-                        new TodoItem {Title = "Tissues"},
-                        new TodoItem {Title = "Tuna"},
-                        new TodoItem {Title = "Water"}
+                        new TodoItemEntity {Title = "Apples", Done = true},
+                        new TodoItemEntity {Title = "Milk", Done = true},
+                        new TodoItemEntity {Title = "Bread", Done = true},
+                        new TodoItemEntity {Title = "Toilet paper"},
+                        new TodoItemEntity {Title = "Pasta"},
+                        new TodoItemEntity {Title = "Tissues"},
+                        new TodoItemEntity {Title = "Tuna"},
+                        new TodoItemEntity {Title = "Water"}
                     }
                 });
 

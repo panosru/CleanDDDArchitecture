@@ -6,21 +6,21 @@
     using System.Threading.Tasks;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
-    using Aviant.DDD.Application.Command;
-    using Aviant.DDD.Domain.Enum;
+    using Aviant.DDD.Application.Commands;
+    using Aviant.DDD.Domain.Enums;
     using Microsoft.EntityFrameworkCore;
     using Persistence;
 
-    public class GetTodosQuery : Base<TodosVm>
+    public class GetTodosQuery : CommandBase<TodosVm>
     {
     }
 
-    public class GetTodosQueryHandler : Handler<GetTodosQuery, TodosVm>
+    public class GetTodosQueryCommandHandler : CommandHandler<GetTodosQuery, TodosVm>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public GetTodosQueryHandler(IApplicationDbContext context, IMapper mapper)
+        public GetTodosQueryCommandHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

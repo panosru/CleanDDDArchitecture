@@ -49,11 +49,11 @@ namespace CleanDDDArchitecture.RestApi.Middlewares
 
             switch (exception)
             {
-                case Validation validationException:
+                case ValidationException validationException:
                     code = HttpStatusCode.BadRequest;
                     result = JsonConvert.SerializeObject(validationException.Failures);
                     break;
-                case NotFound _:
+                case NotFoundException _:
                     code = HttpStatusCode.NotFound;
                     break;
             }

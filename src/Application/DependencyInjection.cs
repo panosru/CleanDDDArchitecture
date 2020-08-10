@@ -21,13 +21,13 @@
             services.AddMediatR(Assembly.GetExecutingAssembly());
             
             services.AddTransient(typeof(IPipelineBehavior<,>),
-                typeof(Performance<,>));
+                typeof(PerformanceBehaviour<,>));
 
             services.AddTransient(typeof(IPipelineBehavior<,>),
-                typeof(Validation<,>));
+                typeof(ValidationBehaviour<,>));
 
             services.AddTransient(typeof(IPipelineBehavior<,>),
-                typeof(UnhandledException<,>));
+                typeof(UnhandledExceptionBehaviour<,>));
 
             return services;
         }

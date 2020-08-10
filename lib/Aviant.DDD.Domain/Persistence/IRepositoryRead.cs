@@ -5,10 +5,10 @@ namespace Aviant.DDD.Domain.Persistence
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using Entity;
+    using Entities;
 
     public interface IRepositoryRead<TEntity, in TPrimaryKey> : IDisposable 
-        where TEntity : Base<TPrimaryKey>
+        where TEntity : EntityBase<TPrimaryKey>
     {
         IQueryable<TEntity> GetAll();
 

@@ -17,7 +17,7 @@ namespace CleanDDDArchitecture.Services
                     Assembly.GetExecutingAssembly())
                 .Where(x =>
                     x.Name.EndsWith("Service"))
-                //typeof(IService).IsAssignableFrom(x))
+                //typeof(IIdentityService).IsAssignableFrom(x))
                 .AsPublicImplementedInterfaces(ServiceLifetime.Scoped);
 
             // services.AddTransient(typeof(IWeatherForcast), typeof(WeatherForcast));

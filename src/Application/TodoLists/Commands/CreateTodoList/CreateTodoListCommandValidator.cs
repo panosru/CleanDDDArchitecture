@@ -7,11 +7,11 @@
 
     public class CreateTodoListCommandValidator : AbstractValidator<CreateTodoListCommand>
     {
-        private readonly ITodoListRead _todoListRead;
+        private readonly ITodoListReadRepository _todoListReadRepository;
 
-        public CreateTodoListCommandValidator(ITodoListRead todoListRead)
+        public CreateTodoListCommandValidator(ITodoListReadRepository todoListReadRepository)
         {
-            _todoListRead = todoListRead;
+            _todoListReadRepository = todoListReadRepository;
 
             RuleFor(v => v.Title)
                 .NotEmpty().WithMessage("Title is required.")
@@ -21,7 +21,7 @@
 
         public async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)
         {
-            return await _todoListRead.All(l => l.Title != title);
+            return await _todoListReadRepository.All(l => l.Title != title);
         }
     }
 }
