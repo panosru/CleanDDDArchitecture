@@ -13,11 +13,11 @@
         public string Title { get; set; }
     }
 
-    public class CreateTodoItemCommandCommandHandler : CommandHandler<CreateTodoItemCommand, int>
+    public class CreateTodoItemCommandCommandCommandCommandHandler : CommandCommandHandler<CreateTodoItemCommand, int>
     {
         private readonly ITodoItemWriteRepository _todoItemWriteRepository;
 
-        public CreateTodoItemCommandCommandHandler(ITodoItemWriteRepository todoItemWriteRepository)
+        public CreateTodoItemCommandCommandCommandCommandHandler(ITodoItemWriteRepository todoItemWriteRepository)
         {
             _todoItemWriteRepository = todoItemWriteRepository;
         }
@@ -27,8 +27,7 @@
             var entity = new TodoItemEntity
             {
                 ListId = request.ListId,
-                Title = request.Title,
-                Done = false
+                Title = request.Title
             };
 
             await _todoItemWriteRepository.Add(entity);

@@ -3,7 +3,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Commands;
-    using Aviant.DDD.Application.Exception;
+    using Aviant.DDD.Application.Exceptions;
     using Aviant.DDD.Domain.Enums;
     using Domain.Entities;
     using MediatR;
@@ -20,12 +20,12 @@
         public string Note { get; set; }
     }
 
-    public class UpdateTodoItemDetailCommandHandler : Handler<UpdateTodoItemDetailCommand>
+    public class UpdateTodoItemDetailCommandCommandCommandCommandHandler : CommandCommandHandler<UpdateTodoItemDetailCommand>
     {
         private readonly ITodoItemReadRepository _todoItemReadRepository;
         private readonly ITodoItemWriteRepository _todoItemWriteRepository;
 
-        public UpdateTodoItemDetailCommandHandler(
+        public UpdateTodoItemDetailCommandCommandCommandCommandHandler(
             ITodoItemReadRepository todoItemReadRepository,
             ITodoItemWriteRepository todoItemWriteRepository)
         {

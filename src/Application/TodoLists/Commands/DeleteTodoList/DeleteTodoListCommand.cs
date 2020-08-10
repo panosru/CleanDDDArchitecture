@@ -3,7 +3,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Commands;
-    using Aviant.DDD.Application.Exception;
+    using Aviant.DDD.Application.Exceptions;
     using Domain.Entities;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
@@ -14,12 +14,12 @@
         public int Id { get; set; }
     }
 
-    public class DeleteTodoListCommandHandler : Handler<DeleteTodoListCommand>
+    public class DeleteTodoListCommandCommandCommandCommandHandler : CommandCommandHandler<DeleteTodoListCommand>
     {
         private readonly ITodoListReadRepository _todoListReadRepository;
         private readonly ITodoListWriteRepository _todoListWriteRepository;
 
-        public DeleteTodoListCommandHandler(
+        public DeleteTodoListCommandCommandCommandCommandHandler(
             ITodoListReadRepository todoListReadRepository,
             ITodoListWriteRepository todoListWriteRepository)
         {

@@ -53,9 +53,6 @@ namespace CleanDDDArchitecture.Infrastructure.Persistence.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uuid");
 
-                    b.Property<bool>("Done")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("boolean");
 

@@ -2,8 +2,8 @@
 {
     using System.Reflection;
     using AutoMapper;
-    using Aviant.DDD.Application.Behaviour;
-    using Aviant.DDD.Application.Behaviour.Request;
+    using Aviant.DDD.Application.Behaviours;
+    using Aviant.DDD.Application.Behaviours.Requests;
     using FluentValidation;
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
@@ -12,8 +12,6 @@
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            //services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());

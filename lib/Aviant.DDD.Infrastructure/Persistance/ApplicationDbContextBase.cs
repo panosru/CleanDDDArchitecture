@@ -9,6 +9,7 @@ namespace Aviant.DDD.Infrastructure.Persistance
     using Application;
     using Application.Identity;
     using Application.Persistance;
+    using Application.Services;
     using Domain.Entities;
     using Domain.Events;
     using IdentityServer4.EntityFramework.Options;

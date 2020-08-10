@@ -15,12 +15,12 @@
     {
     }
 
-    public class GetTodosQueryCommandHandler : CommandHandler<GetTodosQuery, TodosVm>
+    public class GetTodosQueryCommandCommandHandler : CommandCommandHandler<GetTodosQuery, TodosVm>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public GetTodosQueryCommandHandler(IApplicationDbContext context, IMapper mapper)
+        public GetTodosQueryCommandCommandHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

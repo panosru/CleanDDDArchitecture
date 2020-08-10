@@ -3,7 +3,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Commands;
-    using Aviant.DDD.Application.Exception;
+    using Aviant.DDD.Application.Exceptions;
     using Domain.Entities;
     using MediatR;
     using Repositories;
@@ -15,12 +15,12 @@
         public string Title { get; set; }
     }
 
-    public class UpdateTodoListCommandHandler : Handler<UpdateTodoListCommand>
+    public class UpdateTodoListCommandCommandCommandCommandHandler : CommandCommandHandler<UpdateTodoListCommand>
     {
         private readonly ITodoListReadRepository _todoListReadRepository;
         private readonly ITodoListWriteRepository _todoListWriteRepository;
 
-        public UpdateTodoListCommandHandler(
+        public UpdateTodoListCommandCommandCommandCommandHandler(
             ITodoListReadRepository todoListReadRepository,
             ITodoListWriteRepository todoListWriteRepository)
         {

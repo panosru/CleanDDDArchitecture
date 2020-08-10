@@ -1,14 +1,17 @@
 ﻿namespace CleanDDDArchitecture.Application.TodoItems.Commands.UpdateTodoItem
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using AutoMapper;
     using Aviant.DDD.Application.Commands;
-    using Aviant.DDD.Application.Exception;
+    using Aviant.DDD.Application.Exceptions;
+    using Aviant.DDD.Application.Processors;
     using Domain.Entities;
-    using MediatR;
     using Repositories;
 
-    public class UpdateTodoItemCommand : CommandBase
+    public class UpdateTodoItemCommand : 
+        CommandBase<TodoItemEntity>
     {
         public int Id { get; set; }
 
@@ -17,33 +20,77 @@
         public bool Done { get; set; }
     }
 
-    public class UpdateTodoItemCommandHandler : Handler<UpdateTodoItemCommand>
+    public class UpdateTodoItemCommandCommandCommandCommandHandler : 
+        CommandCommandHandler<UpdateTodoItemCommand, TodoItemEntity>
     {
         private readonly ITodoItemReadRepository _todoItemReadRepository;
         private readonly ITodoItemWriteRepository _todoItemWriteRepository;
+        private readonly IMapper _mapper;
 
-        public UpdateTodoItemCommandHandler(
+        public UpdateTodoItemCommandCommandCommandCommandHandler(
             ITodoItemReadRepository todoItemReadRepository,
-            ITodoItemWriteRepository todoItemWriteRepository)
+            ITodoItemWriteRepository todoItemWriteRepository,
+            IMapper mapper)
         {
             _todoItemReadRepository = todoItemReadRepository;
             _todoItemWriteRepository = todoItemWriteRepository;
+            _mapper = mapper;
         }
 
-        public override async Task<Unit> Handle(UpdateTodoItemCommand request, CancellationToken cancellationToken)
+        public override async Task<TodoItemEntity> Handle(
+            UpdateTodoItemCommand request, 
+            CancellationToken cancellationToken)
         {
             var entity = await _todoItemReadRepository.Find(request.Id);
 
             if (entity == null) throw new NotFoundException(nameof(TodoItemEntity), request.Id);
 
             entity.Title = request.Title;
-            entity.Done = request.Done;
 
+            if (request.Done)
+                entity.IsCompleted = true;
+                
             await _todoItemWriteRepository.Update(entity);
 
-            await _todoItemWriteRepository.Commit(cancellationToken);
+            //return _mapper.Map<TodoItemDto>(entity);
+            return entity;
+        }
+    }
+    
+    // public class UserPreProcessor :
+    //     RequestPreProcessorBase<UpdateTodoItemCommand>
+    // {
+    //     public override Task Process(
+    //         UpdateTodoItemCommand request, 
+    //         CancellationToken cancellationToken)
+    //     {
+    //         Console.WriteLine($"Pre handle {request.Title} {request.Done} with ID {request.Id}");
+    //         return Task.CompletedTask;
+    //     }
+    // }
+    
+    public class UserPostProcessor :
+        RequestPostProcessorBase<UpdateTodoItemCommand, TodoItemEntity>
+    {
+        private readonly ITodoItemWriteRepository _todoItemWriteRepository;
 
-            return Unit.Value;
+        public UserPostProcessor(ITodoItemWriteRepository todoItemWriteRepository)
+        {
+            _todoItemWriteRepository = todoItemWriteRepository;
+        }
+
+        public override async Task Process(
+            UpdateTodoItemCommand request, 
+            TodoItemEntity response, 
+            CancellationToken cancellationToken)
+        {
+            if (response.IsCompleted)
+            {
+                Console.WriteLine("TodoCompletedEvent emitted");
+                response.Events.Add(new TodoCompletedEvent(response));
+            }
+            
+            await _todoItemWriteRepository.Commit(cancellationToken);
         }
     }
 }

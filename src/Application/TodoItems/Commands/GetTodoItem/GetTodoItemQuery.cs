@@ -10,12 +10,12 @@ namespace CleanDDDArchitecture.Application.TodoItems.Commands.GetTodoItem
         public int Id { get; set; }
     }
 
-    public class GetTodoItemQueryCommandHandler :
-        CommandHandler<GetTodoItemQuery, string>
+    public class GetTodoItemQueryCommandCommandHandler :
+        CommandCommandHandler<GetTodoItemQuery, string>
     {
         private readonly ITodoItemReadRepository _todoItemReadRepository;
 
-        public GetTodoItemQueryCommandHandler(ITodoItemReadRepository todoItemReadRepository)
+        public GetTodoItemQueryCommandCommandHandler(ITodoItemReadRepository todoItemReadRepository)
         {
             _todoItemReadRepository = todoItemReadRepository;
         }

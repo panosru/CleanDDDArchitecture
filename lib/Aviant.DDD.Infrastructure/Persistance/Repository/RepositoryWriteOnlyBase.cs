@@ -18,8 +18,8 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
         where TApplicationRole : ApplicationRoleBase
         where TDbContext : ApplicationDbContextBase<TDbContext, TApplicationUser, TApplicationRole>
     {
-        private readonly TDbContext _dbContext;
-        private DbSet<TEntity> Table => _dbContext.Set<TEntity>();
+        protected readonly TDbContext _dbContext;
+        protected DbSet<TEntity> Table => _dbContext.Set<TEntity>();
 
         public RepositoryWriteOnlyBase(TDbContext context)
         {
