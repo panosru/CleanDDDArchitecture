@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Infrastructure.Identity
 {
-    using ApplicationRoleBase = Aviant.DDD.Application.Identity.ApplicationRole;
+    using Aviant.DDD.Application.Identity;
 
     public class ApplicationRole : ApplicationRoleBase
     {

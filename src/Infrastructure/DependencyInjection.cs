@@ -6,6 +6,7 @@
     using Application.Repositories;
     using Application.TodoLists.Queries.ExportTodos;
     using Aviant.DDD.Application;
+    using Aviant.DDD.Application.Identity;
     using Aviant.DDD.Infrastructure.Files;
     using Aviant.DDD.Infrastructure.Service;
     using Files.Maps;
@@ -16,7 +17,6 @@
     using Microsoft.Extensions.DependencyInjection;
     using Persistence;
     using Repositories;
-    using IIdentityService = Aviant.DDD.Application.Identity.IService;
 
     public static class DependencyInjection
     {
@@ -42,17 +42,17 @@
 
             #region Read Repositories
 
-            services.AddScoped<ITodoItemRead, TodoItemRead>();
-            services.AddScoped<ITodoListRead, TodoListRead>();
-            services.AddScoped<IAccountRead, AccountRead>();
+            services.AddScoped<ITodoItemReadRepository, TodoItemReadRepository>();
+            services.AddScoped<ITodoListReadRepository, TodoListReadRepository>();
+            services.AddScoped<IAccountReadRepository, AccountReadRepository>();
 
             #endregion
 
             #region Write Repositories
 
-            services.AddScoped<ITodoItemWrite, TodoItemWrite>();
-            services.AddScoped<ITodoListWrite, TodoListWrite>();
-            services.AddScoped<IAccountWrite, AccountWrite>();
+            services.AddScoped<ITodoItemWriteRepository, TodoItemWriteRepository>();
+            services.AddScoped<ITodoListWriteRepository, TodoListWriteRepository>();
+            services.AddScoped<IAccountWriteRepository, AccountWriteRepository>();
 
             #endregion
 
@@ -63,7 +63,7 @@
             services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
-            services.AddTransient<IDateTime, DateTime>();
+            services.AddTransient<IDateTimeService, DateTimeService>();
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<ICsvFileBuilder<TodoItemRecord>, CsvFileBuilder<TodoItemRecord, TodoItemRecordMap>>();
 

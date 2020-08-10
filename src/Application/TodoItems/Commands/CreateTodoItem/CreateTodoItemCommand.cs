@@ -2,38 +2,38 @@
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Aviant.DDD.Application.Command;
+    using Aviant.DDD.Application.Commands;
     using Domain.Entities;
     using Repositories;
 
-    public class CreateTodoItemCommand : Base<int>
+    public class CreateTodoItemCommand : CommandBase<int>
     {
         public int ListId { get; set; }
 
         public string Title { get; set; }
     }
 
-    public class CreateTodoItemCommandHandler : Handler<CreateTodoItemCommand, int>
+    public class CreateTodoItemCommandCommandHandler : CommandHandler<CreateTodoItemCommand, int>
     {
-        private readonly ITodoItemWrite _todoItemWrite;
+        private readonly ITodoItemWriteRepository _todoItemWriteRepository;
 
-        public CreateTodoItemCommandHandler(ITodoItemWrite todoItemWrite)
+        public CreateTodoItemCommandCommandHandler(ITodoItemWriteRepository todoItemWriteRepository)
         {
-            _todoItemWrite = todoItemWrite;
+            _todoItemWriteRepository = todoItemWriteRepository;
         }
 
         public override async Task<int> Handle(CreateTodoItemCommand request, CancellationToken cancellationToken)
         {
-            var entity = new TodoItem
+            var entity = new TodoItemEntity
             {
                 ListId = request.ListId,
                 Title = request.Title,
                 Done = false
             };
 
-            await _todoItemWrite.Add(entity);
+            await _todoItemWriteRepository.Add(entity);
 
-            await _todoItemWrite.Commit(cancellationToken);
+            await _todoItemWriteRepository.Commit(cancellationToken);
 
             return entity.Id;
         }

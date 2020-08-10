@@ -4,7 +4,7 @@
     using Aviant.DDD.Application.Mappings;
     using Domain.Entities;
 
-    public class TodoItemDto : IMapFrom<TodoItem>
+    public class TodoItemDto : IMapFrom<TodoItemEntity>
     {
         public int Id { get; set; }
 
@@ -20,7 +20,7 @@
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<TodoItem, TodoItemDto>()
+            profile.CreateMap<TodoItemEntity, TodoItemDto>()
                 .ForMember(d => d.Priority, opt => opt.MapFrom(s => (int) s.Priority));
         }
     }

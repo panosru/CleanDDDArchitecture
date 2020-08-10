@@ -3,13 +3,12 @@
     using System;
     using System.Collections.Generic;
     using Application.Common.Events;
+    using Aviant.DDD.Application.Exception;
     using MediatR;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.DependencyInjection;
-    using ValidationException = Aviant.DDD.Application.Exception.Validation;
-    using NotFoundException = Aviant.DDD.Application.Exception.NotFound;
 
     /// <summary>
     /// 

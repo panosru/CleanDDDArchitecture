@@ -10,11 +10,11 @@
 
     public class UpdateTodoListCommandValidator : AbstractValidator<UpdateTodoListCommand>
     {
-        private readonly ITodoListRead _todoListRead;
+        private readonly ITodoListReadRepository _todoListReadRepository;
 
-        public UpdateTodoListCommandValidator(ITodoListRead todoListRead)
+        public UpdateTodoListCommandValidator(ITodoListReadRepository todoListReadRepository)
         {
-            _todoListRead = todoListRead;
+            _todoListReadRepository = todoListReadRepository;
 
             RuleFor(v => v.Title)
                 .NotEmpty().WithMessage("Title is required.")
@@ -29,7 +29,7 @@
 
             await Task.Run(() =>
             {
-                result = _todoListRead
+                result = _todoListReadRepository
                     .FindBy(l => l.Id != model.Id)
                     .All(l => l.Title != title);
             });

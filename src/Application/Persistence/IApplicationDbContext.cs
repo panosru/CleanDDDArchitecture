@@ -6,10 +6,10 @@
 
     public interface IApplicationDbContext : IApplicationDbContextBase
     {
-        DbSet<TodoList> TodoLists { get; set; }
+        DbSet<TodoListEntity> TodoLists { get; set; }
 
-        DbSet<TodoItem> TodoItems { get; set; }
+        DbSet<TodoItemEntity> TodoItems { get; set; }
         
-        DbSet<Account> Members { get; set; }
+        DbSet<AccountEntity> Members { get; set; }
     }
 }

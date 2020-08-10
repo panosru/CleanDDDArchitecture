@@ -4,6 +4,7 @@ namespace CleanDDDArchitecture.RestApi.Controllers
     using Application.Users.Commands.Authenticate;
     using Application.Users.Commands.ConfirmEmail;
     using Aviant.DDD.Application;
+    using Aviant.DDD.Application.Identity;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -41,7 +42,7 @@ namespace CleanDDDArchitecture.RestApi.Controllers
         [HttpGet("confirm/{Token}/{Email}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Result>> Confirm([FromRoute] ConfirmEmailCommand command)
+        public async Task<ActionResult<IdentityResult>> Confirm([FromRoute] ConfirmEmailCommand command)
         {
             var result = await Mediator.Send(command);
 
