@@ -5,7 +5,6 @@
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
-    /// 
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
@@ -14,7 +13,6 @@
         private IMediator? _mediator;
 
         /// <summary>
-        /// 
         /// </summary>
         protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
     }

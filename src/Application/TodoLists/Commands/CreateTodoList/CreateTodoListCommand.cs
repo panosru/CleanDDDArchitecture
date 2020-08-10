@@ -27,7 +27,7 @@
             entity.Title = request.Title;
 
             await _todoListWriteRepository.Add(entity);
-            
+
             await _todoListWriteRepository.Commit(cancellationToken);
 
             return entity.Id;

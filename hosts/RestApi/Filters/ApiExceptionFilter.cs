@@ -11,7 +11,6 @@
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
-    /// 
     /// </summary>
     public class ApiExceptionFilter : ExceptionFilterAttribute
     {
@@ -19,7 +18,6 @@
         private IMediator? _mediator;
 
         /// <summary>
-        /// 
         /// </summary>
         public ApiExceptionFilter()
         {
@@ -32,13 +30,11 @@
         }
 
         /// <summary>
-        /// 
         /// </summary>
         protected IMediator Mediator =>
             _mediator ??= new ControllerContext().HttpContext.RequestServices.GetService<IMediator>();
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="context"></param>
         public override void OnException(ExceptionContext context)

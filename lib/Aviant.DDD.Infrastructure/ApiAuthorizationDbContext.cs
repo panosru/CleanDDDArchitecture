@@ -19,8 +19,8 @@ namespace Aviant.DDD.Infrastructure
     /// <typeparam name="TUser"></typeparam>
     /// <typeparam name="TRole"></typeparam>
     /// <typeparam name="TKey">Key of the IdentityUser entity</typeparam>
-    public class ApiAuthorizationDbContext<TUser, TRole, TKey> :
-        IdentityDbContext<TUser, TRole, TKey>, IPersistedGrantDbContext
+    public class ApiAuthorizationDbContext<TUser, TRole, TKey>
+        : IdentityDbContext<TUser, TRole, TKey>, IPersistedGrantDbContext
         where TUser : IdentityUser<TKey>
         where TRole : IdentityRole<TKey>
         where TKey : IEquatable<TKey>

@@ -6,16 +6,17 @@ namespace CleanDDDArchitecture.Infrastructure.Repositories
     using Identity;
     using Persistence;
 
-    public class TodoItemWriteRepository :
-        RepositoryWriteOnlyBase<
-            ApplicationDbContext,
-            ApplicationUser,
-            ApplicationRole,
-            TodoItemEntity,
-            int>,
-        ITodoItemWriteRepository
+    public class TodoItemWriteRepository
+        : RepositoryWriteOnlyBase<
+                ApplicationDbContext,
+                ApplicationUser,
+                ApplicationRole,
+                TodoItemEntity,
+                int>,
+            ITodoItemWriteRepository
     {
-        public TodoItemWriteRepository(ApplicationDbContext context) :
+        public TodoItemWriteRepository(ApplicationDbContext context)
+            :
             base(context)
         {
         }

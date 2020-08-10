@@ -1,4 +1,4 @@
-namespace Aviant.DDD.Application.Behaviours
+namespace Aviant.DDD.Application.Behaviours.Exceptions
 {
     using System;
     using System.Threading;
@@ -16,14 +16,16 @@ namespace Aviant.DDD.Application.Behaviours
             _logger = logger;
         }
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
+        public async Task<TResponse> Handle(
+            TRequest request,
+            CancellationToken cancellationToken,
             RequestHandlerDelegate<TResponse> next)
         {
             Console.WriteLine("************");
             Console.WriteLine(typeof(TRequest).Name);
             Console.WriteLine(request.ToString());
             Console.WriteLine("************");
-            
+
             try
             {
                 return await next();
@@ -32,8 +34,11 @@ namespace Aviant.DDD.Application.Behaviours
             {
                 var requestName = typeof(TRequest).Name;
 
-                _logger.LogError(ex, "Unhandled Exception for Request {Name} {@Request}",
-                    requestName, request);
+                _logger.LogError(
+                    ex,
+                    "Unhandled Exception for Request {Name} {@Request}",
+                    requestName,
+                    request);
 
                 throw;
             }

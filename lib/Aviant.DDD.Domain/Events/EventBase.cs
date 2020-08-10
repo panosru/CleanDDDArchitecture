@@ -1,14 +1,9 @@
 namespace Aviant.DDD.Domain.Events
 {
     using System;
-    using TransferObjects;
 
     public abstract class EventBase : IEvent
     {
-        public DateTime Occured { get; protected set; } = DateTime.Now;
-        
-        public string? Message { get; }
-
         protected EventBase()
         {
             Message = null;
@@ -18,5 +13,9 @@ namespace Aviant.DDD.Domain.Events
         {
             Message = message;
         }
+
+        public DateTime Occured { get; protected set; } = DateTime.Now;
+
+        public string? Message { get; }
     }
 }

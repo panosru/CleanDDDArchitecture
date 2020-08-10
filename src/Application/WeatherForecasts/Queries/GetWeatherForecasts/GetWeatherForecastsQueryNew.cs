@@ -12,7 +12,8 @@
     }
 
     public class
-        GetWeatherForecastsQueryNewCommandCommandHandler : CommandCommandHandler<GetWeatherForecastsQueryNew, IEnumerable<WeatherForecast>>
+        GetWeatherForecastsQueryNewCommandCommandHandler
+        : CommandCommandHandler<GetWeatherForecastsQueryNew, IEnumerable<WeatherForecast>>
     {
         private static readonly string[] Summaries =
         {
@@ -20,17 +21,20 @@
             "Warm v1.1", "Balmy v1.1", "Hot v1.1", "Sweltering v1.1", "Scorching v1.1"
         };
 
-        public override Task<IEnumerable<WeatherForecast>> Handle(GetWeatherForecastsQueryNew request,
+        public override Task<IEnumerable<WeatherForecast>> Handle(
+            GetWeatherForecastsQueryNew request,
             CancellationToken cancellationToken)
         {
             var rng = new Random();
 
-            var vm = Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            });
+            var vm = Enumerable.Range(1, 5)
+                .Select(
+                    index => new WeatherForecast
+                    {
+                        Date = DateTime.Now.AddDays(index),
+                        TemperatureC = rng.Next(-20, 55),
+                        Summary = Summaries[rng.Next(Summaries.Length)]
+                    });
 
             return Task.FromResult(vm);
         }

@@ -24,7 +24,8 @@
         /// </summary>
         /// <param name="versionDescriptionProvider">IApiVersionDescriptionProvider</param>
         /// <param name="swaggerSettings">App Settings for Swagger</param>
-        public ConfigureSwaggerGenOptions(IApiVersionDescriptionProvider versionDescriptionProvider,
+        public ConfigureSwaggerGenOptions(
+            IApiVersionDescriptionProvider versionDescriptionProvider,
             IOptions<SwaggerSettings> swaggerSettings)
         {
             Debug.Assert(versionDescriptionProvider != null, $"{nameof(versionDescriptionProvider)} != null");
@@ -44,28 +45,31 @@
             options.IgnoreObsoleteActions();
             options.IgnoreObsoleteProperties();
 
-            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            {
-                In = ParameterLocation.Header,
-                Description = "Type into the textbox: Bearer {your JWT token}.",
-                Name = "Authorization",
-                Type = SecuritySchemeType.ApiKey
-            });
-
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
+            options.AddSecurityDefinition(
+                "Bearer",
+                new OpenApiSecurityScheme
                 {
-                    new OpenApiSecurityScheme
+                    In = ParameterLocation.Header,
+                    Description = "Type into the textbox: Bearer {your JWT token}.",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+
+            options.AddSecurityRequirement(
+                new OpenApiSecurityRequirement
+                {
                     {
-                        Reference = new OpenApiReference
+                        new OpenApiSecurityScheme
                         {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                    },
-                    new string[] { }
-                }
-            });
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] { }
+                    }
+                });
 
             AddSwaggerDocumentForEachDiscoveredApiVersion(options);
             SetCommentsPathForSwaggerJsonAndUi(options);

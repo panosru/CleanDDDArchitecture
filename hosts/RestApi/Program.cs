@@ -14,12 +14,10 @@ namespace CleanDDDArchitecture.RestApi
     using Serilog;
 
     /// <summary>
-    /// 
     /// </summary>
     public class Program
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
@@ -56,22 +54,23 @@ namespace CleanDDDArchitecture.RestApi
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                    webBuilder.ConfigureAppConfiguration(SetupConfiguration);
-                    webBuilder.ConfigureLogging(SetupLogging);
-                });
+                .ConfigureWebHostDefaults(
+                    webBuilder =>
+                    {
+                        webBuilder.UseStartup<Startup>();
+                        webBuilder.ConfigureAppConfiguration(SetupConfiguration);
+                        webBuilder.ConfigureLogging(SetupLogging);
+                    });
         }
 
-        private static void SetupConfiguration(WebHostBuilderContext hostBuilderContext,
+        private static void SetupConfiguration(
+            WebHostBuilderContext hostBuilderContext,
             IConfigurationBuilder configurationBuilder)
         {
             var configuration = configurationBuilder.Build();

@@ -4,8 +4,5 @@ namespace CleanDDDArchitecture.Application.Common.Mappings
 
     public class MappingProfile : MappingProfileBase
     {
-        public MappingProfile() : base()
-        {
-        }
     }
 }

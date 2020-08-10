@@ -2,12 +2,13 @@ namespace Aviant.DDD.Domain.Events
 {
     using System;
     using System.Collections.Generic;
-    using MediatR;
+    using Exceptions;
     using Services;
 
     public class EventsFacade
     {
-        [ThreadStatic] private static IEvents _mockContainer;
+        [ThreadStatic]
+        private static IEvents _mockContainer;
 
         private static bool _fromTesting;
 
@@ -25,7 +26,7 @@ namespace Aviant.DDD.Domain.Events
         public static void SetEventsContainer(IEvents mockContainer)
         {
             if (_fromTesting == false)
-                throw new Exceptions.DomainException(
+                throw new DomainException(
                     @"For SetNotificationsContainer to work properly SetTestingEnvironment() should be called first. 
                                       This method should be used only for testing purpose");
             _mockContainer = mockContainer;
@@ -35,7 +36,7 @@ namespace Aviant.DDD.Domain.Events
         {
             if (_fromTesting)
                 return _mockContainer;
-            
+
             return ServiceLocator.ServiceContainer.GetService<IEvents>(typeof(IEvents));
         }
 

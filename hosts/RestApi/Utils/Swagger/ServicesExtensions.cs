@@ -22,19 +22,21 @@
         public static IServiceCollection AddApiVersionWithExplorer(this IServiceCollection services)
         {
             return services
-                .AddVersionedApiExplorer(options =>
-                {
-                    options.GroupNameFormat = "'v'VVV";
-                    options.SubstituteApiVersionInUrl = true;
-                })
-                .AddApiVersioning(options =>
-                {
-                    options.AssumeDefaultVersionWhenUnspecified = true;
-                    options.ReportApiVersions = true;
-                    options.DefaultApiVersion = new ApiVersion(1, 0);
-                    options.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
-                    options.Conventions.Add(new VersionByNamespaceConvention());
-                });
+                .AddVersionedApiExplorer(
+                    options =>
+                    {
+                        options.GroupNameFormat = "'v'VVV";
+                        options.SubstituteApiVersionInUrl = true;
+                    })
+                .AddApiVersioning(
+                    options =>
+                    {
+                        options.AssumeDefaultVersionWhenUnspecified = true;
+                        options.ReportApiVersions = true;
+                        options.DefaultApiVersion = new ApiVersion(1, 0);
+                        options.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
+                        options.Conventions.Add(new VersionByNamespaceConvention());
+                    });
         }
 
         /// <summary>

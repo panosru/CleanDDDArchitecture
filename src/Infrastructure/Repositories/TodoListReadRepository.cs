@@ -6,10 +6,12 @@ namespace CleanDDDArchitecture.Infrastructure.Repositories
     using Identity;
     using Persistence;
 
-    public class TodoListReadRepository :
-        RepositoryReadOnlyBase<ApplicationDbContext, ApplicationUser, ApplicationRole, TodoListEntity, int>, ITodoListReadRepository
+    public class TodoListReadRepository
+        : RepositoryReadOnlyBase<ApplicationDbContext, ApplicationUser, ApplicationRole, TodoListEntity, int>,
+            ITodoListReadRepository
     {
-        public TodoListReadRepository(ApplicationDbContext context) : base(context)
+        public TodoListReadRepository(ApplicationDbContext context)
+            : base(context)
         {
         }
     }

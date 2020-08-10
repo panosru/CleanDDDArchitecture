@@ -10,8 +10,7 @@
     using Domain.Entities;
     using Repositories;
 
-    public class UpdateTodoItemCommand : 
-        CommandBase<TodoItemEntity>
+    public class UpdateTodoItemCommand : CommandBase<TodoItemEntity>
     {
         public int Id { get; set; }
 
@@ -20,12 +19,12 @@
         public bool Done { get; set; }
     }
 
-    public class UpdateTodoItemCommandCommandCommandCommandHandler : 
-        CommandCommandHandler<UpdateTodoItemCommand, TodoItemEntity>
+    public class UpdateTodoItemCommandCommandCommandCommandHandler
+        : CommandCommandHandler<UpdateTodoItemCommand, TodoItemEntity>
     {
+        private readonly IMapper _mapper;
         private readonly ITodoItemReadRepository _todoItemReadRepository;
         private readonly ITodoItemWriteRepository _todoItemWriteRepository;
-        private readonly IMapper _mapper;
 
         public UpdateTodoItemCommandCommandCommandCommandHandler(
             ITodoItemReadRepository todoItemReadRepository,
@@ -38,7 +37,7 @@
         }
 
         public override async Task<TodoItemEntity> Handle(
-            UpdateTodoItemCommand request, 
+            UpdateTodoItemCommand request,
             CancellationToken cancellationToken)
         {
             var entity = await _todoItemReadRepository.Find(request.Id);
@@ -49,14 +48,14 @@
 
             if (request.Done)
                 entity.IsCompleted = true;
-                
+
             await _todoItemWriteRepository.Update(entity);
 
             //return _mapper.Map<TodoItemDto>(entity);
             return entity;
         }
     }
-    
+
     // public class UserPreProcessor :
     //     RequestPreProcessorBase<UpdateTodoItemCommand>
     // {
@@ -68,9 +67,8 @@
     //         return Task.CompletedTask;
     //     }
     // }
-    
-    public class UserPostProcessor :
-        RequestPostProcessorBase<UpdateTodoItemCommand, TodoItemEntity>
+
+    public class UserPostProcessor : RequestPostProcessorBase<UpdateTodoItemCommand, TodoItemEntity>
     {
         private readonly ITodoItemWriteRepository _todoItemWriteRepository;
 
@@ -80,8 +78,8 @@
         }
 
         public override async Task Process(
-            UpdateTodoItemCommand request, 
-            TodoItemEntity response, 
+            UpdateTodoItemCommand request,
+            TodoItemEntity response,
             CancellationToken cancellationToken)
         {
             if (response.IsCompleted)
@@ -89,7 +87,7 @@
                 Console.WriteLine("TodoCompletedEvent emitted");
                 response.Events.Add(new TodoCompletedEvent(response));
             }
-            
+
             await _todoItemWriteRepository.Commit(cancellationToken);
         }
     }

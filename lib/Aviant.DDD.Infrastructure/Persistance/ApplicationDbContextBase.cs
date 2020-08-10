@@ -6,7 +6,6 @@ namespace Aviant.DDD.Infrastructure.Persistance
     using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
-    using Application;
     using Application.Identity;
     using Application.Persistance;
     using Application.Services;
@@ -19,8 +18,8 @@ namespace Aviant.DDD.Infrastructure.Persistance
     using Microsoft.EntityFrameworkCore.Metadata;
     using Microsoft.Extensions.Options;
 
-    public abstract class ApplicationDbContextBase<TDbContext, TApplicationUser, TApplicationRole> : 
-        ApiAuthorizationDbContext<TApplicationUser, TApplicationRole, Guid>, IApplicationDbContext
+    public abstract class ApplicationDbContextBase<TDbContext, TApplicationUser, TApplicationRole>
+        : ApiAuthorizationDbContext<TApplicationUser, TApplicationRole, Guid>, IApplicationDbContext
         where TDbContext : IApplicationDbContext
         where TApplicationUser : ApplicationUserBase
         where TApplicationRole : ApplicationRoleBase
@@ -29,15 +28,16 @@ namespace Aviant.DDD.Infrastructure.Persistance
             .GetMethod(nameof(ConfigureGlobalFilters), BindingFlags.Instance | BindingFlags.NonPublic);
 
         private readonly ICurrentUserService _currentUserService;
-        private readonly IMediator _mediator;
         private readonly IDateTimeService _dateTimeService;
+        private readonly IMediator _mediator;
 
         public ApplicationDbContextBase(
             DbContextOptions options,
             IOptions<OperationalStoreOptions> operationalStoreOptions,
             ICurrentUserService currentUserService,
             IMediator mediator,
-            IDateTimeService dateTimeService) : base(options, operationalStoreOptions)
+            IDateTimeService dateTimeService)
+            : base(options, operationalStoreOptions)
         {
             _currentUserService = currentUserService;
             _mediator = mediator;
@@ -47,7 +47,6 @@ namespace Aviant.DDD.Infrastructure.Persistance
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             foreach (var entry in ChangeTracker.Entries<IAuditedEntity>())
-            {
                 switch (entry.State)
                 {
                     case EntityState.Added:
@@ -61,14 +60,13 @@ namespace Aviant.DDD.Infrastructure.Persistance
                         SetDeletionAuditProperties(entry);
                         break;
                 }
-            }
 
-            int result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            var result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             // ignore events if no dispatcher provided
             if (_mediator is null)
                 return result;
-            
+
             // dispatch events only if save was successful
             var entitiesWithEvents = ChangeTracker.Entries<HasEvents>()
                 .Select(e => e.Entity)
@@ -80,14 +78,12 @@ namespace Aviant.DDD.Infrastructure.Persistance
                 var events = entity.Events.ToArray();
                 entity.Events.Clear();
                 foreach (var domainEvent in events)
-                {
                     await _mediator.Publish(domainEvent, cancellationToken).ConfigureAwait(false);
-                }
             }
 
             return result;
         }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -95,44 +91,39 @@ namespace Aviant.DDD.Infrastructure.Persistance
             base.OnModelCreating(modelBuilder);
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {
                 ConfigureGlobalFiltersMethodInfo?
                     .MakeGenericMethod(entityType.ClrType)
-                    .Invoke(this, new object[] { modelBuilder, entityType });
-            }
+                    .Invoke(this, new object[] {modelBuilder, entityType});
         }
-        
+
         #region Configure Global Filters
 
-        protected void ConfigureGlobalFilters<TEntity>(ModelBuilder modelBuilder, IMutableEntityType entityType) where TEntity : class
+        protected void ConfigureGlobalFilters<TEntity>(ModelBuilder modelBuilder, IMutableEntityType entityType)
+            where TEntity : class
         {
             if (ShouldFilterEntity<TEntity>(entityType))
             {
                 var filterExpression = CreateFilterExpression<TEntity>();
-                if (filterExpression != null)
-                {
-                    modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
-                }
+                if (filterExpression != null) modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
             }
         }
 
-        protected virtual bool ShouldFilterEntity<TEntity>(IMutableEntityType entityType) where TEntity : class
+        protected virtual bool ShouldFilterEntity<TEntity>(IMutableEntityType entityType)
+            where TEntity : class
         {
-            if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
-            {
-                return true;
-            }
+            if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity))) return true;
 
             return false;
         }
 
-        protected virtual Expression<Func<TEntity, bool>>? CreateFilterExpression<TEntity>() where TEntity : class
+        protected virtual Expression<Func<TEntity, bool>>? CreateFilterExpression<TEntity>()
+            where TEntity : class
         {
             Expression<Func<TEntity, bool>> expression = null;
 
             if (typeof(ISoftDelete).IsAssignableFrom(typeof(TEntity)))
             {
-                Expression<Func<TEntity, bool>> softDeleteFilter = e => !((ISoftDelete)e).IsDeleted;
+                Expression<Func<TEntity, bool>> softDeleteFilter = e => !((ISoftDelete) e).IsDeleted;
                 expression = softDeleteFilter;
             }
 
@@ -147,18 +138,13 @@ namespace Aviant.DDD.Infrastructure.Persistance
         {
             if (!(entry.Entity is IHasCreationTime hasCreationTimeEntity)) return;
 
-            if (hasCreationTimeEntity.Created == default)
-            {
-                hasCreationTimeEntity.Created = _dateTimeService.Now;
-            }
+            if (hasCreationTimeEntity.Created == default) hasCreationTimeEntity.Created = _dateTimeService.Now;
 
             if (!(entry.Entity is ICreationAudited creationAuditedEntity)) return;
 
             if (creationAuditedEntity.CreatedBy != Guid.Empty)
-            {
                 //CreatedUserId is already set
                 return;
-            }
 
             creationAuditedEntity.CreatedBy = _currentUserService.UserId;
         }
@@ -172,23 +158,17 @@ namespace Aviant.DDD.Infrastructure.Persistance
             if (!(entry.Entity is IModificationAudited modificationAuditedEntity)) return;
 
             if (modificationAuditedEntity.LastModifiedBy == _currentUserService.UserId)
-            {
                 //LastModifiedUserId is same as current user id
                 return;
-            }
 
             modificationAuditedEntity.LastModifiedBy = _currentUserService.UserId;
         }
 
         protected virtual void SetDeletionAuditProperties(EntityEntry entry)
         {
-
             if (!(entry.Entity is IHasDeletionTime hasDeletionTimeEntity)) return;
 
-            if (hasDeletionTimeEntity.Deleted == default)
-            {
-                hasDeletionTimeEntity.Deleted = _dateTimeService.Now;
-            }
+            if (hasDeletionTimeEntity.Deleted == default) hasDeletionTimeEntity.Deleted = _dateTimeService.Now;
 
             if (!(entry.Entity is IDeletionAudited deletionAuditedEntity)) return;
 
@@ -198,14 +178,11 @@ namespace Aviant.DDD.Infrastructure.Persistance
 
         protected virtual void CancelDeletionForSoftDelete(EntityEntry entry)
         {
-            if (!(entry.Entity is ISoftDelete))
-            {
-                return;
-            }
+            if (!(entry.Entity is ISoftDelete)) return;
 
             entry.Reload();
             entry.State = EntityState.Modified;
-            ((ISoftDelete)entry.Entity).IsDeleted = true;
+            ((ISoftDelete) entry.Entity).IsDeleted = true;
         }
 
         #endregion

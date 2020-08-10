@@ -4,6 +4,6 @@ namespace Aviant.DDD.Domain.Events
 
     public abstract class HasEvents
     {
-        public List<IEvent> Events = new List<IEvent>();
+        public List<EventBase> Events = new List<EventBase>();
     }
 }

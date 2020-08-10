@@ -14,14 +14,15 @@
         private readonly SwaggerSettings _settings;
 
         /// <inheritdoc cref="ConfigureSwaggerUiOptions" />
-        public ConfigureSwaggerUiOptions(IApiVersionDescriptionProvider versionDescriptionProvider,
+        public ConfigureSwaggerUiOptions(
+            IApiVersionDescriptionProvider versionDescriptionProvider,
             IOptions<SwaggerSettings> settings)
         {
             Debug.Assert(versionDescriptionProvider != null, $"{nameof(versionDescriptionProvider)} != null");
             Debug.Assert(settings != null, $"{nameof(versionDescriptionProvider)} != null");
 
             _provider = versionDescriptionProvider;
-            this._settings = settings?.Value ?? new SwaggerSettings();
+            _settings = settings?.Value ?? new SwaggerSettings();
         }
 
         /// <summary>
@@ -33,14 +34,15 @@
             _provider
                 .ApiVersionDescriptions
                 .ToList()
-                .ForEach(description =>
-                {
-                    options.SwaggerEndpoint(
-                        $"/{_settings.RoutePrefixWithSlash}{description.GroupName}/swagger.json",
-                        description.GroupName.ToUpperInvariant());
+                .ForEach(
+                    description =>
+                    {
+                        options.SwaggerEndpoint(
+                            $"/{_settings.RoutePrefixWithSlash}{description.GroupName}/swagger.json",
+                            description.GroupName.ToUpperInvariant());
 
-                    options.RoutePrefix = _settings.RoutePrefix;
-                });
+                        options.RoutePrefix = _settings.RoutePrefix;
+                    });
         }
     }
 }
