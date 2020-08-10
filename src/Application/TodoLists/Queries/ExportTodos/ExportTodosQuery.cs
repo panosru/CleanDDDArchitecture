@@ -6,22 +6,22 @@
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using Aviant.DDD.Application;
-    using Aviant.DDD.Application.Command;
+    using Aviant.DDD.Application.Commands;
     using Microsoft.EntityFrameworkCore;
     using Persistence;
 
-    public class ExportTodosQuery : Base<ExportTodosVm>
+    public class ExportTodosQuery : CommandBase<ExportTodosVm>
     {
         public int ListId { get; set; }
     }
 
-    public class ExportTodosQueryHandler : Handler<ExportTodosQuery, ExportTodosVm>
+    public class ExportTodosQueryCommandHandler : CommandHandler<ExportTodosQuery, ExportTodosVm>
     {
         private readonly IApplicationDbContext _context;
         private readonly ICsvFileBuilder<TodoItemRecord> _fileBuilder;
         private readonly IMapper _mapper;
 
-        public ExportTodosQueryHandler(IApplicationDbContext context, IMapper mapper,
+        public ExportTodosQueryCommandHandler(IApplicationDbContext context, IMapper mapper,
             ICsvFileBuilder<TodoItemRecord> fileBuilder)
         {
             _context = context;

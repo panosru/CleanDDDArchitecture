@@ -5,14 +5,14 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Aviant.DDD.Application.Command;
+    using Aviant.DDD.Application.Commands;
 
-    public class GetWeatherForecastsQueryNew : Base<IEnumerable<WeatherForecast>>
+    public class GetWeatherForecastsQueryNew : CommandBase<IEnumerable<WeatherForecast>>
     {
     }
 
     public class
-        GetWeatherForecastsQueryNewHandler : Handler<GetWeatherForecastsQueryNew, IEnumerable<WeatherForecast>>
+        GetWeatherForecastsQueryNewCommandHandler : CommandHandler<GetWeatherForecastsQueryNew, IEnumerable<WeatherForecast>>
     {
         private static readonly string[] Summaries =
         {

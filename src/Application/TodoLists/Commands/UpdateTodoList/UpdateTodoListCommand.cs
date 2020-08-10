@@ -2,13 +2,13 @@
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Aviant.DDD.Application.Command;
+    using Aviant.DDD.Application.Commands;
     using Aviant.DDD.Application.Exception;
     using Domain.Entities;
     using MediatR;
     using Repositories;
 
-    public class UpdateTodoListCommand : Base
+    public class UpdateTodoListCommand : CommandBase
     {
         public int Id { get; set; }
 
@@ -17,28 +17,28 @@
 
     public class UpdateTodoListCommandHandler : Handler<UpdateTodoListCommand>
     {
-        private readonly ITodoListRead _todoListRead;
-        private readonly ITodoListWrite _todoListWrite;
+        private readonly ITodoListReadRepository _todoListReadRepository;
+        private readonly ITodoListWriteRepository _todoListWriteRepository;
 
         public UpdateTodoListCommandHandler(
-            ITodoListRead todoListRead,
-            ITodoListWrite todoListWrite)
+            ITodoListReadRepository todoListReadRepository,
+            ITodoListWriteRepository todoListWriteRepository)
         {
-            _todoListRead = todoListRead;
-            _todoListWrite = todoListWrite;
+            _todoListReadRepository = todoListReadRepository;
+            _todoListWriteRepository = todoListWriteRepository;
         }
 
         public override async Task<Unit> Handle(UpdateTodoListCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _todoListRead.Find(request.Id);
+            var entity = await _todoListReadRepository.Find(request.Id);
 
-            if (entity == null) throw new NotFound(nameof(TodoList), request.Id);
+            if (entity == null) throw new NotFoundException(nameof(TodoListEntity), request.Id);
 
             entity.Title = request.Title;
 
-            await _todoListWrite.Update(entity);
+            await _todoListWriteRepository.Update(entity);
 
-            await _todoListWrite.Commit(cancellationToken);
+            await _todoListWriteRepository.Commit(cancellationToken);
 
             return Unit.Value;
         }

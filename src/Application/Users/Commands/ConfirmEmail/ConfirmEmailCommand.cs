@@ -6,38 +6,38 @@ namespace CleanDDDArchitecture.Application.Users.Commands.ConfirmEmail
     using System.Threading.Tasks;
     using System.Web;
     using Aviant.DDD.Application;
-    using Aviant.DDD.Application.Command;
-    using IIdentityService = Aviant.DDD.Application.Identity.IService;
+    using Aviant.DDD.Application.Commands;
+    using Aviant.DDD.Application.Identity;
 
-    public class ConfirmEmailCommand : Base<Result>
+    public class ConfirmEmailCommand : CommandBase<IdentityResult>
     {
         public string Token { get; set; }
 
         public string Email { get; set; }
     }
 
-    public class ConfirmEmailCommandHandler : Handler<ConfirmEmailCommand, Result>
+    public class ConfirmEmailCommandCommandHandler : CommandHandler<ConfirmEmailCommand, IdentityResult>
     {
-        private readonly IIdentityService _identityService;
+        private readonly IIdentityService _identityIdentityService;
 
-        public ConfirmEmailCommandHandler(IIdentityService identityService)
+        public ConfirmEmailCommandCommandHandler(IIdentityService identityIdentityService)
         {
-            _identityService = identityService;
+            _identityIdentityService = identityIdentityService;
         }
 
-        public override async Task<Result> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
+        public override async Task<IdentityResult> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
         {
             try
             {
                 var token = Encoding.UTF8.GetString(
                     Convert.FromBase64String(HttpUtility.UrlDecode(request.Token)));
 
-                return await _identityService.ConfirmEmail(
+                return await _identityIdentityService.ConfirmEmail(
                     token, request.Email);
             }
             catch (Exception e)
             {
-                return Result.Failure(new []{e.Message});
+                return IdentityResult.Failure(new []{e.Message});
             }
         }
     }

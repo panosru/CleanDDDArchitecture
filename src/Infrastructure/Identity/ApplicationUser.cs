@@ -1,6 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Infrastructure.Identity
 {
-    using ApplicationUserBase = Aviant.DDD.Application.Identity.ApplicationUser;
+    using Aviant.DDD.Application.Identity;
 
     public class ApplicationUser : ApplicationUserBase
     {

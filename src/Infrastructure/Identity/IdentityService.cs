@@ -7,13 +7,13 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web;
-    using Aviant.DDD.Application;
+    using Aviant.DDD.Application.Identity;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.IdentityModel.Tokens;
     using DateTime = System.DateTime;
-    using IIdentityService = Aviant.DDD.Application.Identity.IService;
+    using IdentityResult = Aviant.DDD.Application.Identity.IdentityResult;
 
     public class IdentityService : IIdentityService
     {
@@ -67,22 +67,22 @@
             return new {token = GenerateJwtToken(user)};
         }
 
-        public async Task<Result> ConfirmEmail(string token, string email)
+        public async Task<IdentityResult> ConfirmEmail(string token, string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user is null)
-                return Result.Failure(new[] {"Invalid"});
+                return IdentityResult.Failure(new[] {"Invalid"});
             
             if (user.EmailConfirmed)
-                return Result.Failure(new [] {"Email already confirmed"});
+                return IdentityResult.Failure(new [] {"Email already confirmed"});
 
             var result = await _userManager.ConfirmEmailAsync(user, token);
 
             if (!result.Succeeded)
-                return Result.Failure(new[] {result.Errors.First().Description});
+                return IdentityResult.Failure(new[] {result.Errors.First().Description});
 
-            return Result.Success();
+            return IdentityResult.Success();
         }
 
         public async Task<string> GetUserNameAsync(Guid userId)
@@ -94,7 +94,7 @@
             return user.UserName;
         }
 
-        public async Task<(Result Result, Guid UserId)> CreateUserAsync(string username, string password)
+        public async Task<(IdentityResult Result, Guid UserId)> CreateUserAsync(string username, string password)
         {
             var user = new ApplicationUser
             {
@@ -107,16 +107,16 @@
             return (result.ToApplicationResult(), user.Id);
         }
 
-        public async Task<Result> DeleteUserAsync(Guid userId)
+        public async Task<IdentityResult> DeleteUserAsync(Guid userId)
         {
             var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
 
             if (user != null) return await DeleteUserAsync(user);
 
-            return Result.Success();
+            return IdentityResult.Success();
         }
 
-        public async Task<Result> DeleteUserAsync(ApplicationUser user)
+        public async Task<IdentityResult> DeleteUserAsync(ApplicationUser user)
         {
             var result = await _userManager.DeleteAsync(user);
 

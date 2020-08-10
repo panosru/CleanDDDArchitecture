@@ -2,27 +2,27 @@ namespace CleanDDDArchitecture.Application.TodoItems.Commands.GetTodoItem
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Aviant.DDD.Application.Command;
+    using Aviant.DDD.Application.Commands;
     using Repositories;
 
-    public class GetTodoItemQuery : Base<string>
+    public class GetTodoItemQuery : CommandBase<string>
     {
         public int Id { get; set; }
     }
 
-    public class GetTodoItemQueryHandler :
-        Handler<GetTodoItemQuery, string>
+    public class GetTodoItemQueryCommandHandler :
+        CommandHandler<GetTodoItemQuery, string>
     {
-        private readonly ITodoItemRead _todoItemRead;
+        private readonly ITodoItemReadRepository _todoItemReadRepository;
 
-        public GetTodoItemQueryHandler(ITodoItemRead todoItemRead)
+        public GetTodoItemQueryCommandHandler(ITodoItemReadRepository todoItemReadRepository)
         {
-            _todoItemRead = todoItemRead;
+            _todoItemReadRepository = todoItemReadRepository;
         }
 
         public override Task<string> Handle(GetTodoItemQuery request, CancellationToken cancellationToken)
         {
-            var todoName = _todoItemRead.GetFirst(request.Id)?.Result.Title;
+            var todoName = _todoItemReadRepository.GetFirst(request.Id)?.Result.Title;
 
             return Task.FromResult(todoName);
         }

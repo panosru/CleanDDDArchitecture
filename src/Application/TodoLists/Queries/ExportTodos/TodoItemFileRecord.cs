@@ -3,7 +3,7 @@
     using Aviant.DDD.Application.Mappings;
     using Domain.Entities;
 
-    public class TodoItemRecord : IMapFrom<TodoItem>
+    public class TodoItemRecord : IMapFrom<TodoItemEntity>
     {
         public string Title { get; set; }
 

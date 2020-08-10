@@ -2,28 +2,28 @@ namespace CleanDDDArchitecture.Application.Users.Commands.Authenticate
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using Aviant.DDD.Application.Command;
-    using IIdentityService = Aviant.DDD.Application.Identity.IService;
+    using Aviant.DDD.Application.Commands;
+    using Aviant.DDD.Application.Identity;
 
-    public class AuthenticateCommand : Base<object>
+    public class AuthenticateCommand : CommandBase<object>
     {
         public string Username { get; set; }
 
         public string Password { get; set; }
     }
 
-    public class AuthenticateCommandHandler : Handler<AuthenticateCommand, object>
+    public class AuthenticateCommandCommandHandler : CommandHandler<AuthenticateCommand, object>
     {
-        private readonly IIdentityService _identityService;
+        private readonly IIdentityService _identityIdentityService;
 
-        public AuthenticateCommandHandler(IIdentityService identityService)
+        public AuthenticateCommandCommandHandler(IIdentityService identityIdentityService)
         {
-            _identityService = identityService;
+            _identityIdentityService = identityIdentityService;
         }
 
         public override async Task<object> Handle(AuthenticateCommand request, CancellationToken cancellationToken)
         {
-            return await _identityService.Authenticate(request.Username, request.Password);
+            return await _identityIdentityService.Authenticate(request.Username, request.Password);
         }
     }
 }
