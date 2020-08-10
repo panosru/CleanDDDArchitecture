@@ -2,10 +2,10 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using WeatherForecastQuery = Application.WeatherForecasts.Queries.GetWeatherForecasts.WeatherForecast;
     using CleanDDDArchitecture.Services.v1_0.Interfaces;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using WeatherForecastQuery = Application.WeatherForecasts.Queries.GetWeatherForecasts.WeatherForecast;
 
     /// <summary>
     /// </summary>

@@ -32,7 +32,7 @@
             var entity = await _todoListReadRepository
                 .FindBy(l => l.Id == request.Id)
                 .SingleOrDefaultAsync(cancellationToken);
-                
+
             if (entity == null) throw new NotFoundException(nameof(TodoListEntity), request.Id);
 
             await _todoListWriteRepository.Delete(entity);

@@ -11,21 +11,22 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
     using Domain.Persistence;
     using Microsoft.EntityFrameworkCore;
 
-    public abstract class RepositoryWriteOnlyBase<TDbContext, TApplicationUser, TApplicationRole, TEntity, TPrimaryKey> : 
-        IRepositoryWrite<TEntity, TPrimaryKey>
+    public abstract class RepositoryWriteOnlyBase<TDbContext, TApplicationUser, TApplicationRole, TEntity, TPrimaryKey>
+        : IRepositoryWrite<TEntity, TPrimaryKey>
         where TEntity : EntityBase<TPrimaryKey>
         where TApplicationUser : ApplicationUserBase
         where TApplicationRole : ApplicationRoleBase
         where TDbContext : ApplicationDbContextBase<TDbContext, TApplicationUser, TApplicationRole>
     {
         protected readonly TDbContext _dbContext;
-        protected DbSet<TEntity> Table => _dbContext.Set<TEntity>();
 
         public RepositoryWriteOnlyBase(TDbContext context)
         {
             _dbContext = context;
         }
-        
+
+        protected DbSet<TEntity> Table => _dbContext.Set<TEntity>();
+
         public async Task Add(TEntity entity)
         {
             await Table.AddAsync(entity);
@@ -45,10 +46,7 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
         {
             IEnumerable<TEntity> entities = Table.Where(predicate);
 
-            foreach (var entity in entities)
-            {
-                _dbContext.Entry(entity).State = EntityState.Deleted;
-            }
+            foreach (var entity in entities) _dbContext.Entry(entity).State = EntityState.Deleted;
         }
 
         public async Task Commit(CancellationToken cancellationToken = new CancellationToken())

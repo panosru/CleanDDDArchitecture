@@ -15,8 +15,9 @@ namespace CleanDDDArchitecture.Services
 
             services.RegisterAssemblyPublicNonGenericClasses(
                     Assembly.GetExecutingAssembly())
-                .Where(x =>
-                    x.Name.EndsWith("Service"))
+                .Where(
+                    x =>
+                        x.Name.EndsWith("Service"))
                 //typeof(IIdentityService).IsAssignableFrom(x))
                 .AsPublicImplementedInterfaces(ServiceLifetime.Scoped);
 

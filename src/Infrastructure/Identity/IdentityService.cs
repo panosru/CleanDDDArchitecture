@@ -12,7 +12,6 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.IdentityModel.Tokens;
-    using DateTime = System.DateTime;
     using IdentityResult = Aviant.DDD.Application.Identity.IdentityResult;
 
     public class IdentityService : IIdentityService
@@ -31,8 +30,9 @@
         public async Task<object> Authenticate(string username, string password)
         {
             // Check if user with that username exists
-            var user = await _userManager.Users.FirstOrDefaultAsync(u =>
-                u.UserName == username);
+            var user = await _userManager.Users.FirstOrDefaultAsync(
+                u =>
+                    u.UserName == username);
 
             // Check if the user exists
             if (user is null) return null;
@@ -60,8 +60,10 @@
                 return new
                 {
                     error = "Confirm your email first",
-                    confirm_token = HttpUtility.UrlEncode(Convert.ToBase64String(Encoding.UTF8.GetBytes(
-                        await _userManager.GenerateEmailConfirmationTokenAsync(user))))
+                    confirm_token = HttpUtility.UrlEncode(
+                        Convert.ToBase64String(
+                            Encoding.UTF8.GetBytes(
+                                await _userManager.GenerateEmailConfirmationTokenAsync(user))))
                 };
 
             return new {token = GenerateJwtToken(user)};
@@ -73,9 +75,9 @@
 
             if (user is null)
                 return IdentityResult.Failure(new[] {"Invalid"});
-            
+
             if (user.EmailConfirmed)
-                return IdentityResult.Failure(new [] {"Email already confirmed"});
+                return IdentityResult.Failure(new[] {"Email already confirmed"});
 
             var result = await _userManager.ConfirmEmailAsync(user, token);
 

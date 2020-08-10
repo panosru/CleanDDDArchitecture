@@ -7,7 +7,7 @@ namespace Aviant.DDD.Application.Behaviours.Requests
     using Commands;
     using FluentValidation;
     using MediatR;
-    using ValidationException = Exceptions.ValidationException;
+    using ValidationException = Application.Exceptions.ValidationException;
 
     public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : ICommand<TResponse>
@@ -32,7 +32,8 @@ namespace Aviant.DDD.Application.Behaviours.Requests
                     _validators.Select(v => v.ValidateAsync(context, cancellationToken)));
 
                 var failures = validationResults.SelectMany(r => r.Errors)
-                    .Where(f => f != null).ToList();
+                    .Where(f => f != null)
+                    .ToList();
 
                 if (0 != failures.Count)
                     throw new ValidationException(failures);

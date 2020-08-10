@@ -32,8 +32,12 @@ namespace Aviant.DDD.Application.Behaviours.Requests
 
             if (Guid.Empty != userId) username = await _identityIdentityService.GetUserNameAsync(userId);
 
-            _logger.LogInformation("Request: {Name} {@UserId} {@UserName} {@Request}",
-                requestName, userId, username, request);
+            _logger.LogInformation(
+                "Request: {Name} {@UserId} {@UserName} {@Request}",
+                requestName,
+                userId,
+                username,
+                request);
 
             await Task.CompletedTask;
         }

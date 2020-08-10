@@ -2,7 +2,7 @@
 {
     using System.Reflection;
     using AutoMapper;
-    using Aviant.DDD.Application.Behaviours;
+    using Aviant.DDD.Application.Behaviours.Exceptions;
     using Aviant.DDD.Application.Behaviours.Requests;
     using FluentValidation;
     using MediatR;
@@ -13,18 +13,21 @@
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            
+
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-            
+
             services.AddMediatR(Assembly.GetExecutingAssembly());
-            
-            services.AddTransient(typeof(IPipelineBehavior<,>),
+
+            services.AddTransient(
+                typeof(IPipelineBehavior<,>),
                 typeof(PerformanceBehaviour<,>));
 
-            services.AddTransient(typeof(IPipelineBehavior<,>),
+            services.AddTransient(
+                typeof(IPipelineBehavior<,>),
                 typeof(ValidationBehaviour<,>));
 
-            services.AddTransient(typeof(IPipelineBehavior<,>),
+            services.AddTransient(
+                typeof(IPipelineBehavior<,>),
                 typeof(UnhandledExceptionBehaviour<,>));
 
             return services;

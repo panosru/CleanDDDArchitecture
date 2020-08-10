@@ -4,9 +4,9 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-    public class TodoItem : IEntityTypeConfiguration<Domain.Entities.TodoItemEntity>
+    public class TodoListConfiguration : IEntityTypeConfiguration<TodoListEntity>
     {
-        public void Configure(EntityTypeBuilder<Domain.Entities.TodoItemEntity> builder)
+        public void Configure(EntityTypeBuilder<TodoListEntity> builder)
         {
             builder.Property(t => t.Title)
                 .HasMaxLength(200)

@@ -8,12 +8,12 @@ namespace CleanDDDArchitecture.Application.TodoItems.Commands.UpdateTodoItem
 
     public class TodoCompletedEvent : EventBase
     {
-        public TodoItemEntity CompletedTodo { get; private set; }
-
         public TodoCompletedEvent(TodoItemEntity completedTodo)
         {
             CompletedTodo = completedTodo;
         }
+
+        public TodoItemEntity CompletedTodo { get; }
     }
 
     public class TodoCompletedEventHandler : EventHandlerBase<TodoCompletedEvent>
@@ -21,7 +21,7 @@ namespace CleanDDDArchitecture.Application.TodoItems.Commands.UpdateTodoItem
         public override Task Handle(TodoCompletedEvent notification, CancellationToken cancellationToken)
         {
             Console.WriteLine("Todo Completed Event handled");
-            
+
             return Task.CompletedTask;
         }
     }

@@ -9,7 +9,7 @@
         DbSet<TodoListEntity> TodoLists { get; set; }
 
         DbSet<TodoItemEntity> TodoItems { get; set; }
-        
+
         DbSet<AccountEntity> Members { get; set; }
     }
 }

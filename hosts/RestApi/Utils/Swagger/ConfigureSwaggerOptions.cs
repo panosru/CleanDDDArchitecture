@@ -9,12 +9,11 @@
         private readonly SwaggerSettings _settings;
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="settings"></param>
         public ConfigureSwaggerOptions(IOptions<SwaggerSettings> settings)
         {
-            this._settings = settings?.Value ?? new SwaggerSettings();
+            _settings = settings?.Value ?? new SwaggerSettings();
         }
 
         /// <inheritdoc />
