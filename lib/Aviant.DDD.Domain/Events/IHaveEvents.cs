@@ -2,13 +2,13 @@ namespace Aviant.DDD.Domain.Events
 {
     using System.Collections.Generic;
 
-    public interface IEvents
+    public interface IHaveEvents 
     {
-        void AddEvent(IEvent @event);
+        void AddEvent(EventBase @event);
 
         bool HasEvents();
 
-        List<IEvent> GetAll();
+        List<EventBase> GetAll();
 
         void CleanEvents();
     }
