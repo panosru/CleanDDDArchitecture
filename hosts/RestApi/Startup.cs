@@ -5,6 +5,7 @@ namespace CleanDDDArchitecture.RestApi
     using Application;
     using Aviant.DDD.Application.Identity;
     using CleanDDDArchitecture.Services;
+    using Filters;
     using Infrastructure;
     using Infrastructure.Persistence;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -45,10 +46,7 @@ namespace CleanDDDArchitecture.RestApi
             services
                 .AddInfrastructure(Configuration)
                 .AddApplication()
-                .AddServices()
-                .AddRazorPages();
-            // .AddMvcOptions(options =>
-            //     options.Filters.Add(new AuthorizeFilter()));
+                .AddServices();
 
             services
                 .AddAuthorization()
@@ -83,8 +81,13 @@ namespace CleanDDDArchitecture.RestApi
                 .AddHealthChecks()
                 .AddDbContextCheck<ApplicationDbContext>();
 
-            // services.AddControllersWithViews(options => 
-            // options.Filters.Add(new AuthorizeFilter()));
+            services.AddControllersWithViews(
+                options =>
+                {
+                    options.Filters.Add(new ApiExceptionFilter());
+                    //options.Filters.Add(new AuthorizeFilter());
+                } 
+            );
         }
 
         /// <summary>
