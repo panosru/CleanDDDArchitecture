@@ -1,4 +1,4 @@
-namespace Aviant.DDD.Application.Behaviours.Requests
+namespace Aviant.DDD.Application.Behaviours
 {
     using System;
     using System.Diagnostics;
@@ -9,6 +9,7 @@ namespace Aviant.DDD.Application.Behaviours.Requests
     using Microsoft.Extensions.Logging;
 
     public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : notnull
     {
         private readonly ICurrentUserService _currentUserService;
 
