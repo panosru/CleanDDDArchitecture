@@ -13,6 +13,11 @@
     /// </summary>
     public class TodoItems : ApiController
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         [HttpGet("{Id}")]
         public async Task<ActionResult<string>> Get([FromRoute] GetTodoItemQuery query)
         {
