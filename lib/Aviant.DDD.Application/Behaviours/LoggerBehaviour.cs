@@ -1,4 +1,4 @@
-namespace Aviant.DDD.Application.Behaviours.Requests
+namespace Aviant.DDD.Application.Behaviours
 {
     using System;
     using System.Threading;
@@ -8,6 +8,7 @@ namespace Aviant.DDD.Application.Behaviours.Requests
     using Microsoft.Extensions.Logging;
 
     public abstract class LoggerBehaviour<TRequest> : IRequestPreProcessor<TRequest>
+        where TRequest : notnull
     {
         private readonly ICurrentUserService _currentUserService;
 
