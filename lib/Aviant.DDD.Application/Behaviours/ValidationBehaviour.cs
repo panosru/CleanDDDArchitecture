@@ -1,4 +1,4 @@
-namespace Aviant.DDD.Application.Behaviours.Requests
+namespace Aviant.DDD.Application.Behaviours
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -7,7 +7,7 @@ namespace Aviant.DDD.Application.Behaviours.Requests
     using Commands;
     using FluentValidation;
     using MediatR;
-    using ValidationException = Application.Exceptions.ValidationException;
+    using ValidationException = Exceptions.ValidationException;
 
     public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : ICommand<TResponse>

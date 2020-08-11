@@ -2,8 +2,7 @@
 {
     using System.Reflection;
     using AutoMapper;
-    using Aviant.DDD.Application.Behaviours.Exceptions;
-    using Aviant.DDD.Application.Behaviours.Requests;
+    using Aviant.DDD.Application.Behaviours;
     using FluentValidation;
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
