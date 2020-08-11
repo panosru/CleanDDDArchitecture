@@ -85,7 +85,7 @@
             if (response.IsCompleted)
             {
                 Console.WriteLine("TodoCompletedEvent emitted");
-                response.Events.Add(new TodoCompletedEvent(response));
+                response.AddEvent(new TodoCompletedEvent(response));
             }
 
             await _todoItemWriteRepository.Commit(cancellationToken);

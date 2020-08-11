@@ -2,16 +2,11 @@ namespace Aviant.DDD.Domain.Events
 {
     using System.Collections.Generic;
 
-    public abstract class EventsBase : IEvents
+    public abstract class HaveEvents : IHaveEvents
     {
-        private List<IEvent> _events;
-
-        public EventsBase()
-        {
-            _events = new List<IEvent>();
-        }
-
-        public void AddEvent(IEvent @event)
+        private List<EventBase> _events = new List<EventBase>();
+        
+        public void AddEvent(EventBase @event)
         {
             _events.Add(@event);
         }
@@ -21,14 +16,14 @@ namespace Aviant.DDD.Domain.Events
             return 0 < _events.Count;
         }
 
-        public List<IEvent> GetAll()
+        public List<EventBase> GetAll()
         {
             return _events;
         }
 
         public void CleanEvents()
         {
-            _events = new List<IEvent>();
+            _events = new List<EventBase>();
         }
     }
 }

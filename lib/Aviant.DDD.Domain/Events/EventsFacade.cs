@@ -5,10 +5,10 @@ namespace Aviant.DDD.Domain.Events
     using Exceptions;
     using Services;
 
-    public class EventsFacade
+    public static class EventsFacade //TODO: Revisit
     {
         [ThreadStatic]
-        private static IEvents _mockContainer;
+        private static IHaveEvents _mockContainer;
 
         private static bool _fromTesting;
 
@@ -23,7 +23,7 @@ namespace Aviant.DDD.Domain.Events
         /// </summary>
         /// <param name="mockContainer"></param>
         /// <exception cref="Exception"></exception>
-        public static void SetEventsContainer(IEvents mockContainer)
+        public static void SetEventsContainer(IHaveEvents mockContainer)
         {
             if (_fromTesting == false)
                 throw new DomainException(
@@ -32,21 +32,21 @@ namespace Aviant.DDD.Domain.Events
             _mockContainer = mockContainer;
         }
 
-        private static IEvents GetContainer()
+        private static IHaveEvents GetContainer()
         {
             if (_fromTesting)
                 return _mockContainer;
 
-            return ServiceLocator.ServiceContainer.GetService<IEvents>(typeof(IEvents));
+            return ServiceLocator.ServiceContainer.GetService<IHaveEvents>(typeof(IHaveEvents));
         }
 
-        public static void AddEvent(IEvent @event)
+        public static void AddEvent(EventBase @event)
         {
             var container = GetContainer();
             container.AddEvent(@event);
         }
 
-        public static List<IEvent> GetAll()
+        public static List<EventBase> GetAll()
         {
             return GetContainer().GetAll();
         }
