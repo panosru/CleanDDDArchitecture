@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="AggregateRoots" />
-    <Folder Include="Guards" />
-    <Folder Include="Services" />
-    <Folder Include="Specifications" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\lib\Aviant.DDD.Domain\Aviant.DDD.Domain.csproj" />
   </ItemGroup>
 
