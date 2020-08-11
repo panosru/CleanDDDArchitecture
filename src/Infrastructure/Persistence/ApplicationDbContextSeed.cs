@@ -6,13 +6,13 @@
     using Identity;
     using Microsoft.AspNetCore.Identity;
 
-    public static class ApplicationDbContextSeed
+    public static class ApplicationDbContextSeed //TODO: Revisit 
     {
-        private static UserManager<ApplicationUser> UserManager;
+        private static UserManager<ApplicationUser> _userManager;
 
         public static async Task SeedDefaultUserAsync(UserManager<ApplicationUser> userManager)
         {
-            UserManager = userManager;
+            _userManager = userManager;
 
             var defaultUser = new ApplicationUser {UserName = "administrator", Email = "administrator@localhost"};
 
@@ -52,7 +52,7 @@
                 context.Members.Add(
                     new AccountEntity
                     {
-                        UserId = UserManager.Users.First(u => "administrator" == u.UserName)
+                        UserId = _userManager.Users.First(u => "administrator" == u.UserName)
                             .Id
                     });
 
