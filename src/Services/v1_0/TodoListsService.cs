@@ -16,7 +16,7 @@ namespace CleanDDDArchitecture.Services.v1_0
 
         public async Task<ActionResult<TodosVm>> Get()
         {
-            return await _mediator.Send(new GetTodosQuery());
+            return await Mediator.Send(new GetTodosQuery());
         }
 
         // public async Task<FileResult> Get(int id)
