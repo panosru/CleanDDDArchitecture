@@ -2,13 +2,13 @@ namespace CleanDDDArchitecture.Services
 {
     using MediatR;
 
-    public class BaseService
+    public class BaseService //TODO: Once Aggregates will be ready then I'll revisit this project 
     {
         protected BaseService(IMediator mediator)
         {
-            _mediator = mediator;
+            Mediator = mediator;
         }
 
-        protected IMediator _mediator { get; set; }
+        protected IMediator Mediator { get; set; }
     }
 }

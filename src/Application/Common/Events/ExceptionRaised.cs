@@ -5,13 +5,13 @@ namespace CleanDDDArchitecture.Application.Common.Events
     using System.Threading.Tasks;
     using MediatR;
 
-    public class ExceptionRaised : IRequest
+    public class ExceptionRaised : IRequest //TODO: Move to Application exceptions event?
     {
-        public readonly string _error;
+        public readonly string Error;
 
         public ExceptionRaised(string error)
         {
-            _error = error;
+            Error = error;
         }
     }
 
@@ -20,7 +20,7 @@ namespace CleanDDDArchitecture.Application.Common.Events
         public Task<Unit> Handle(ExceptionRaised request, CancellationToken cancellationToken)
         {
             Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%");
-            Console.WriteLine(request._error);
+            Console.WriteLine(request.Error);
             Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%");
 
             return Task.FromResult(Unit.Value);
