@@ -46,13 +46,6 @@
     <Folder Include="Utils\Swagger" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Update="Pages\login.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
   <PropertyGroup>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\CleanDDDArchitecture.RestApi.xml</DocumentationFile>
     <LangVersion>latest</LangVersion>
