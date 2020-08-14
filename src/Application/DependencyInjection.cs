@@ -3,6 +3,7 @@
     using System.Reflection;
     using AutoMapper;
     using Aviant.DDD.Application.Behaviours;
+    using Aviant.DDD.Application.Mappings;
     using FluentValidation;
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
@@ -11,8 +12,12 @@
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
-
+            services.AddAutoMapper(
+                cfg =>
+                {
+                    cfg.AddProfile(new MappingProfile(Assembly.GetExecutingAssembly()));
+                });
+            
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
             services.AddMediatR(Assembly.GetExecutingAssembly());
