@@ -5,12 +5,13 @@ namespace Aviant.DDD.Application.Mappings
     using System.Linq;
     using System.Reflection;
     using AutoMapper;
+    using Microsoft.Extensions.DependencyInjection;
 
-    public abstract class MappingProfileBase : Profile
+    public class MappingProfile : Profile
     {
-        public MappingProfileBase()
+        public MappingProfile(Assembly assembly)
         {
-            ApplyMappingsFromAssembly(Assembly.GetCallingAssembly());
+            ApplyMappingsFromAssembly(assembly);
         }
 
         private void ApplyMappingsFromAssembly(Assembly assembly)
