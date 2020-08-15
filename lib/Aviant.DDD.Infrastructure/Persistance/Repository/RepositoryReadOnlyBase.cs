@@ -18,17 +18,17 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
         where TDbContext : ApplicationDbContextBase<TDbContext, TApplicationUser, TApplicationRole>
     {
         private readonly TDbContext _dbContext;
+        private readonly DbSet<TEntity> _table;
 
-        public RepositoryReadOnlyBase(TDbContext context)
+        protected RepositoryReadOnlyBase(TDbContext context)
         {
             _dbContext = context;
+            _table = _dbContext.Set<TEntity>();
         }
-
-        private DbSet<TEntity> Table => _dbContext.Set<TEntity>();
 
         public IQueryable<TEntity> GetAll()
         {
-            IQueryable<TEntity> query = Table;
+            IQueryable<TEntity> query = _table;
             return query;
         }
 
@@ -54,7 +54,7 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
 
         public ValueTask<TEntity> Find(TPrimaryKey id)
         {
-            return Table.FindAsync(id);
+            return _table.FindAsync(id);
         }
 
         public Task<TEntity> GetFirst(TPrimaryKey id)
@@ -129,22 +129,22 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
 
         public Task<bool> Any(Expression<Func<TEntity, bool>> predicate)
         {
-            return Table.AnyAsync(predicate);
+            return _table.AnyAsync(predicate);
         }
 
         public Task<bool> All(Expression<Func<TEntity, bool>> predicate)
         {
-            return Table.AllAsync(predicate);
+            return _table.AllAsync(predicate);
         }
 
         public async Task<int> Count()
         {
-            return await Table.CountAsync();
+            return await _table.CountAsync();
         }
 
         public Task<int> Count(Expression<Func<TEntity, bool>> predicate)
         {
-            return Table.CountAsync(predicate);
+            return _table.CountAsync(predicate);
         }
 
         public void Dispose()
