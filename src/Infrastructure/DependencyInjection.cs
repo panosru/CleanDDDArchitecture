@@ -4,9 +4,16 @@
     using Application.Persistence;
     using Application.Repositories;
     using Application.TodoLists.Queries.ExportTodos;
+    using Aviant.DDD.Application.Events;
     using Aviant.DDD.Application.Identity;
+    using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.Services;
+    using Aviant.DDD.Domain.Events;
+    using Aviant.DDD.Domain.Notifications;
+    using Aviant.DDD.Domain.Persistence;
+    using Aviant.DDD.Domain.Services;
     using Aviant.DDD.Infrastructure.Files;
+    using Aviant.DDD.Infrastructure.Persistance;
     using Aviant.DDD.Infrastructure.Service;
     using Files.Maps;
     using Identity;
@@ -71,6 +78,14 @@
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<ICsvFileBuilder<TodoItemRecord>, CsvFileBuilder<TodoItemRecord, TodoItemRecordMap>>();
 
+            services.AddScoped<IOrchestrator, Orchestrator>();
+            services.AddScoped<IUnitOfWork, UnitOfWork<ApplicationDbContext>>();
+            services.AddScoped<INotifications, Notifications>();
+            services.AddScoped<IEventDispatcher, EventDispatcherBase>();
+            services.AddScoped<Aviant.DDD.Application.Persistance.IApplicationDbContext, ApplicationDbContext>();
+
+            services.AddSingleton<IServiceContainer, HttpContextServiceProviderProxy>();
+            
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
