@@ -18,35 +18,41 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
         where TApplicationRole : ApplicationRoleBase
         where TDbContext : ApplicationDbContextBase<TDbContext, TApplicationUser, TApplicationRole>
     {
-        protected readonly TDbContext _dbContext;
+        private readonly TDbContext _dbContext;
+        private readonly DbSet<TEntity> _table;
 
-        public RepositoryWriteOnlyBase(TDbContext context)
+        protected RepositoryWriteOnlyBase(TDbContext context)
         {
             _dbContext = context;
+            _table = _dbContext.Set<TEntity>();
         }
-
-        protected DbSet<TEntity> Table => _dbContext.Set<TEntity>();
 
         public async Task Add(TEntity entity)
         {
-            await Table.AddAsync(entity);
+            await _table.AddAsync(entity);
         }
 
-        public async Task Update(TEntity entity)
+        public Task Update(TEntity entity)
         {
             _dbContext.Entry(entity).State = EntityState.Modified;
+            
+            return Task.CompletedTask;
         }
 
-        public async Task Delete(TEntity entity)
+        public Task Delete(TEntity entity)
         {
             _dbContext.Entry(entity).State = EntityState.Deleted;
+            
+            return Task.CompletedTask;
         }
 
-        public async Task DeleteWhere(Expression<Func<TEntity, bool>> predicate)
+        public Task DeleteWhere(Expression<Func<TEntity, bool>> predicate)
         {
-            IEnumerable<TEntity> entities = Table.Where(predicate);
+            IEnumerable<TEntity> entities = _table.Where(predicate);
 
             foreach (var entity in entities) _dbContext.Entry(entity).State = EntityState.Deleted;
+            
+            return Task.CompletedTask;
         }
 
         public async Task Commit(CancellationToken cancellationToken = new CancellationToken())
@@ -56,7 +62,7 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
 
         public void Dispose()
         {
-            _dbContext?.Dispose();
+            //_dbContext?.Dispose();
         }
     }
 }
