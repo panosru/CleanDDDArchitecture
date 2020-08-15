@@ -1,14 +1,14 @@
-namespace Aviant.DDD.Domain.Events
+namespace Aviant.DDD.Domain.Notifications
 {
     using System;
     using System.Collections.Generic;
     using Exceptions;
     using Services;
 
-    public static class EventsFacade //TODO: Revisit
+    public static class NotificationsFacade
     {
         [ThreadStatic]
-        private static IHaveEvents _mockContainer;
+        private static INotifications _mockContainer;
 
         private static bool _fromTesting;
 
@@ -23,7 +23,7 @@ namespace Aviant.DDD.Domain.Events
         /// </summary>
         /// <param name="mockContainer"></param>
         /// <exception cref="Exception"></exception>
-        public static void SetEventsContainer(IHaveEvents mockContainer)
+        public static void SetNotificationsContainer(INotifications mockContainer)
         {
             if (_fromTesting == false)
                 throw new DomainException(
@@ -32,28 +32,28 @@ namespace Aviant.DDD.Domain.Events
             _mockContainer = mockContainer;
         }
 
-        private static IHaveEvents GetContainer()
+        private static INotifications GetContainer()
         {
             if (_fromTesting)
                 return _mockContainer;
 
-            return ServiceLocator.ServiceContainer.GetService<IHaveEvents>(typeof(IHaveEvents));
+            return ServiceLocator.ServiceContainer.GetService<INotifications>(typeof(INotifications));
         }
 
-        public static void AddEvent(EventBase @event)
+        public static void AddNotification(string notification)
         {
             var container = GetContainer();
-            container.AddEvent(@event);
+            container.AddNotification(notification);
         }
 
-        public static List<EventBase> GetAll()
+        public static List<string> GetAll()
         {
             return GetContainer().GetAll();
         }
 
-        public static bool HasEvents()
+        public static bool HasNotifications()
         {
-            return GetContainer().HasEvents();
+            return GetContainer().HasNotifications();
         }
     }
 }
