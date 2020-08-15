@@ -15,7 +15,7 @@ namespace CleanDDDArchitecture.Services.v1_0
 
         public async Task<IEnumerable<WeatherForecast>> Get()
         {
-            return await _mediator.Send(new GetWeatherForecastsQuery());
+            return await Mediator.Send(new GetWeatherForecastsQuery());
         }
     }
 }

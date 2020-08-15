@@ -3,15 +3,17 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Commands;
+    using Aviant.DDD.Domain.Validators;
     using Domain.Entities;
     using Repositories;
 
-    public class CreateTodoListCommand : CommandBase<int>
+    public class CreateTodoListCommand : CommandBase<TodoListEntity>
     {
         public string Title { get; set; }
     }
 
-    public class CreateTodoListCommandCommandCommandCommandHandler : CommandCommandHandler<CreateTodoListCommand, int>
+    public class CreateTodoListCommandCommandCommandCommandHandler : 
+        CommandCommandHandler<CreateTodoListCommand, TodoListEntity>
     {
         private readonly ITodoListWriteRepository _todoListWriteRepository;
 
@@ -20,7 +22,8 @@
             _todoListWriteRepository = todoListWriteRepository;
         }
 
-        public override async Task<int> Handle(CreateTodoListCommand request, CancellationToken cancellationToken)
+        public override async Task<TodoListEntity> Handle(
+            CreateTodoListCommand request, CancellationToken cancellationToken)
         {
             var entity = new TodoListEntity();
 
@@ -28,9 +31,14 @@
 
             await _todoListWriteRepository.Add(entity);
 
-            await _todoListWriteRepository.Commit(cancellationToken);
+            //TODO: Added for demo purposes, will be removed
+            var satisfiedBy = AssertionsConcernValidator.IsSatisfiedBy(
+                AssertionsConcernValidator.IsGreaterThan(
+                    entity.Title.Length, 5, "Title must have more than 5 chars"));
 
-            return entity.Id;
+            //TODO: Check how to return the Id if needed since it is not yet populated (if possible).
+            // return entity.Id;
+            return entity;
         }
     }
 }
