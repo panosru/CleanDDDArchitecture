@@ -4,18 +4,25 @@ namespace Aviant.DDD.Application.Orchestration
     using System.Threading.Tasks;
     using Commands;
     using Domain.Events;
+    using Domain.Notifications;
     using Domain.Persistence;
     using MediatR;
 
     public class Orchestrator : IOrchestrator
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly INotifications _notifications;
         private readonly IEventDispatcher _eventDispatcher;
         private readonly IMediator _mediator;
 
-        public Orchestrator(IUnitOfWork unitOfWork, IEventDispatcher eventDispatcher, IMediator mediator)
+        public Orchestrator(
+            IUnitOfWork unitOfWork, 
+            INotifications notifications,
+            IEventDispatcher eventDispatcher,
+            IMediator mediator)
         {
             _unitOfWork = unitOfWork;
+            _notifications = notifications;
             _eventDispatcher = eventDispatcher;
             _mediator = mediator;
         }
@@ -27,24 +34,35 @@ namespace Aviant.DDD.Application.Orchestration
             // Fire pre/post events
             await _eventDispatcher.FirePreCommitEvents();
 
-            if (await _unitOfWork.Commit())
-            {
-                return new RequestResult
-                {
-                    Success = true,
-                    Payload = commandResponse
-                };
-            }
-            else
+            if (_notifications.HasNotifications())
             {
                 return new RequestResult
                 {
                     Success = false,
-                    Messages = new List<string>
-                    {
-                        "An error occurred"
-                    }
+                    Messages = _notifications.GetAll()
                 };
+            }
+            else
+            {
+                if (await _unitOfWork.Commit())
+                {
+                    return new RequestResult
+                    {
+                        Success = true,
+                        Payload = commandResponse
+                    };
+                }
+                else
+                {
+                    return new RequestResult
+                    {
+                        Success = false,
+                        Messages = new List<string>
+                        {
+                            "An error occurred"
+                        }
+                    };
+                }
             }
         }
 
