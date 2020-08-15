@@ -1,6 +1,6 @@
 namespace Aviant.DDD.Domain.TransferObjects
 {
-    public interface IDto
+    public interface IDto //TODO: Revisit 
     {
     }
 }

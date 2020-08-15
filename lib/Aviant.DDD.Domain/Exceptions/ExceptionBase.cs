@@ -2,7 +2,7 @@ namespace Aviant.DDD.Domain.Exceptions
 {
     using System;
 
-    public abstract class ExceptionBase : Exception
+    public abstract class ExceptionBase : Exception //TODO: Revisit exceptions (here and in Application also)
     {
         private ExceptionBase()
         {

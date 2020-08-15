@@ -5,7 +5,7 @@ namespace Aviant.DDD.Application.Events
     using Domain.Events;
     using MediatR;
 
-    public abstract class EventDispatcherBase : IEventDispatcher
+    public class EventDispatcherBase : IEventDispatcher //TODO: Utilise event dispatcher in project, possibly it shouldn't be an abstract class, also maybe it should be located in domain 
     {
         private readonly IMediator _mediator;
 

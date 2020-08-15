@@ -4,7 +4,8 @@
     using Aviant.DDD.Domain.Entities;
     using Aviant.DDD.Domain.Enums;
 
-    public class TodoItemEntity : EntityBase<int>, ICreationAudited, IModificationAudited, IDeletionAudited, ISoftDelete
+    public sealed class TodoItemEntity : EntityBase<int>, 
+        ICreationAudited, IModificationAudited, IDeletionAudited, ISoftDelete
     {
         public int ListId { get; set; }
 
@@ -14,8 +15,6 @@
 
         public DateTime? Reminder { get; set; }
 
-        public TodoListEntity ListEntity { get; set; }
-
         public bool IsCompleted { get; set; } = false;
 
         public PriorityLevel Priority { get; set; } = PriorityLevel.Medium;
@@ -23,11 +22,23 @@
         public State State { get; set; } = State.Active;
 
         public DateTime Created { get; set; }
+        
         public Guid CreatedBy { get; set; }
+        
         public DateTime? Deleted { get; set; }
+        
         public Guid? DeletedBy { get; set; }
+        
         public DateTime? LastModified { get; set; }
+        
         public Guid? LastModifiedBy { get; set; }
+        
         public bool IsDeleted { get; set; }
+
+        #region .:: Navigation Properties ::.
+
+        public TodoListEntity List { get; set; }
+
+        #endregion
     }
 }

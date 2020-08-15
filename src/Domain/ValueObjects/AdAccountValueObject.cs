@@ -4,7 +4,7 @@
     using Aviant.DDD.Domain.ValueObjects;
     using Exceptions;
 
-    public class AdAccountValueObject : ValueObjectBase
+    public class AdAccountValueObject : ValueObjectBase //TODO: Utilise this VO for Account Creation 
     {
         private AdAccountValueObject()
         {

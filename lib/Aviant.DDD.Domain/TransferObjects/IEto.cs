@@ -1,6 +1,6 @@
 namespace Aviant.DDD.Domain.TransferObjects
 {
-    public interface IEto
+    public interface IEto //TODO: Revisit 
     {
     }
 }
