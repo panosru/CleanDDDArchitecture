@@ -14,7 +14,7 @@
     using Microsoft.IdentityModel.Tokens;
     using IdentityResult = Aviant.DDD.Application.Identity.IdentityResult;
 
-    public class IdentityService : IIdentityService
+    public class IdentityService : IIdentityService //TODO: This requires a major refactor 
     {
         private readonly IConfiguration _config;
         private readonly UserManager<ApplicationUser> _userManager;

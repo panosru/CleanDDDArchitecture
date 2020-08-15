@@ -14,7 +14,7 @@ namespace Aviant.DDD.Domain.Events
             Message = message;
         }
 
-        public DateTime Occured { get; protected set; } = DateTime.Now;
+        public DateTime Occured { get; protected set; } = DateTime.Now; //TODO: Use DateTimeService instead
 
         public string? Message { get; }
     }
