@@ -4,6 +4,7 @@ namespace CleanDDDArchitecture.RestApi
     using System.Text;
     using Application;
     using Aviant.DDD.Application.Identity;
+    using Aviant.DDD.Domain.Services;
     using CleanDDDArchitecture.Services;
     using Filters;
     using Infrastructure;
@@ -96,11 +97,15 @@ namespace CleanDDDArchitecture.RestApi
         /// <param name="app"></param>
         /// <param name="env"></param>
         /// <param name="provider"></param>
+        /// <param name="serviceProvider"></param>
         public void Configure(
             IApplicationBuilder app,
             IWebHostEnvironment env,
-            IApiVersionDescriptionProvider provider)
+            IApiVersionDescriptionProvider provider,
+            IServiceProvider serviceProvider)
         {
+            ServiceLocator.Initialise(serviceProvider.GetService<IServiceContainer>());
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
