@@ -42,6 +42,8 @@ namespace Aviant.DDD.Infrastructure.Persistance
             _currentUserService = currentUserService;
             _mediator = mediator;
             _dateTimeService = dateTimeService;
+
+            ChangeTracker.LazyLoadingEnabled = false;
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
@@ -60,19 +62,18 @@ namespace Aviant.DDD.Infrastructure.Persistance
                         SetDeletionAuditProperties(entry);
                         break;
                 }
-
+        
             var result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
+        
+            //TODO: This functionality should be moved to orchestrator
             // ignore events if no dispatcher provided
-            if (_mediator is null)
-                return result;
-
+            
             // dispatch events only if save was successful
             var entitiesWithEvents = ChangeTracker.Entries<HaveEvents>()
                 .Select(e => e.Entity)
                 .Where(e => e.GetAll().Any())
                 .ToArray();
-
+            
             foreach (var entity in entitiesWithEvents)
             {
                 var events = entity.GetAll().ToArray();
@@ -80,13 +81,13 @@ namespace Aviant.DDD.Infrastructure.Persistance
                 foreach (var domainEvent in events)
                     await _mediator.Publish(domainEvent, cancellationToken).ConfigureAwait(false);
             }
-
+        
             return result;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
 
             base.OnModelCreating(modelBuilder);
 
