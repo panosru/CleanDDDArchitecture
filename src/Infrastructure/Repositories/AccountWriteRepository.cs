@@ -6,7 +6,7 @@ namespace CleanDDDArchitecture.Infrastructure.Repositories
     using Identity;
     using Persistence;
 
-    public class AccountWriteRepository
+    public class AccountWriteRepository //TODO: Maybe should add methods for easy creation?
         : RepositoryWriteOnlyBase<ApplicationDbContext, ApplicationUser, ApplicationRole, AccountEntity, int>,
             IAccountWriteRepository
     {

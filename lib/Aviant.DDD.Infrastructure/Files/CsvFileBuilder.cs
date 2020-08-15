@@ -7,7 +7,7 @@ namespace Aviant.DDD.Infrastructure.Files
     using CsvHelper;
     using CsvHelper.Configuration;
 
-    public class CsvFileBuilder<TRecrod, TMap> : ICsvFileBuilder<TRecrod>
+    public class CsvFileBuilder<TRecrod, TMap> : ICsvFileBuilder<TRecrod> //TODO: Maybe it should be moved to services
         where TRecrod : class
         where TMap : ClassMap<TRecrod>
     {
