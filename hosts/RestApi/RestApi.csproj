@@ -46,6 +46,10 @@
     <Folder Include="Utils\Swagger" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove=".gitignore" />
+  </ItemGroup>
+
   <PropertyGroup>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\CleanDDDArchitecture.RestApi.xml</DocumentationFile>
     <LangVersion>latest</LangVersion>
