@@ -31,6 +31,6 @@
 
         public DbSet<TodoItemEntity> TodoItems { get; set; }
 
-        public DbSet<AccountEntity> Members { get; set; } //TODO: I think it should be changed to Accounts
+        public DbSet<AccountEntity> Accounts { get; set; }
     }
 }
