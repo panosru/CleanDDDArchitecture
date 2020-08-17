@@ -29,11 +29,17 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
 
         public async Task Add(TEntity entity)
         {
+            // First validate entity's rules
+            await entity.Validate();
+            
             await _table.AddAsync(entity);
         }
 
         public Task Update(TEntity entity)
         {
+            // First validate entity's rules
+            entity.Validate();
+            
             _dbContext.Entry(entity).State = EntityState.Modified;
             
             return Task.CompletedTask;
@@ -41,6 +47,9 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
 
         public Task Delete(TEntity entity)
         {
+            // First validate entity's rules
+            entity.Validate();
+            
             _dbContext.Entry(entity).State = EntityState.Deleted;
             
             return Task.CompletedTask;
@@ -62,7 +71,7 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
 
         public void Dispose()
         {
-            //_dbContext?.Dispose();
+            _dbContext?.Dispose();
         }
     }
 }
