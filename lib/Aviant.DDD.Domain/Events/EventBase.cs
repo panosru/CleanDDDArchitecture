@@ -4,6 +4,6 @@ namespace Aviant.DDD.Domain.Events
 
     public abstract class EventBase : IEvent
     {
-        public DateTime Occured { get; protected set; } = DateTime.Now; //TODO: Use DateTimeService instead
+        public DateTime Occured { get; set; }
     }
 }

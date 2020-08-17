@@ -5,14 +5,17 @@ namespace Aviant.DDD.Application.Events
     using System.Threading.Tasks;
     using Domain.Events;
     using MediatR;
+    using Services;
 
     public class EventDispatcher : IEventDispatcher 
     {
         private readonly IMediator _mediator;
+        private readonly IDateTimeService _dateTimeService;
 
-        public EventDispatcher(IMediator mediator)
+        public EventDispatcher(IMediator mediator, IDateTimeService dateTimeService)
         {
             _mediator = mediator;
+            _dateTimeService = dateTimeService;
         }
 
         private List<IEvent> PreCommitEvents { get; } = new List<IEvent>();
@@ -20,11 +23,13 @@ namespace Aviant.DDD.Application.Events
 
         public void AddPreCommitEvent(IEvent @event)
         {
+            @event.Occured = _dateTimeService.Now;
             PreCommitEvents.Add(@event);
         }
 
         public void AddPostCommitEvent(IEvent @event)
         {
+            @event.Occured = _dateTimeService.Now;
             PostCommitEvents.Add(@event);
         }
 
