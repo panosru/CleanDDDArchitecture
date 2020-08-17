@@ -37,4 +37,14 @@ namespace Aviant.DDD.Domain.Entities
     {
         Guid? DeletedBy { get; set; }
     }
+
+    public interface IHasActivationStatus : IAuditedEntity
+    {
+        public bool IsActive { get; set; }
+    }
+
+    public interface IActivationAudited : IHasActivationStatus
+    {
+        public Guid? ActivationStatusModifiedBy { get; set; }
+    }
 }
