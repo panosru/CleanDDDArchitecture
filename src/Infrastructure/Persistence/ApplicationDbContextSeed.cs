@@ -47,9 +47,9 @@
                 modified = true;
             }
 
-            if (!context.Members.Any())
+            if (!context.Accounts.Any())
             {
-                context.Members.Add(
+                context.Accounts.Add(
                     new AccountEntity
                     {
                         UserId = _userManager.Users.First(u => "administrator" == u.UserName)

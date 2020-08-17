@@ -10,6 +10,6 @@
 
         DbSet<TodoItemEntity> TodoItems { get; set; }
 
-        DbSet<AccountEntity> Members { get; set; } //TODO: Have a look 
+        DbSet<AccountEntity> Accounts { get; set; } //TODO: Have a look 
     }
 }

@@ -1,6 +1,6 @@
 // See: https://github.com/dotnet/aspnetcore/issues/9548#issuecomment-488566084
 
-namespace Aviant.DDD.Infrastructure
+namespace Aviant.DDD.Infrastructure.Persistance
 {
     using System;
     using System.Threading.Tasks;
