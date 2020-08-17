@@ -29,7 +29,7 @@ namespace Aviant.DDD.Infrastructure.Persistance
         private readonly ICurrentUserService _currentUserService;
         private readonly IDateTimeService _dateTimeService;
 
-        public ApplicationDbContextBase(
+        protected ApplicationDbContextBase(
             DbContextOptions options,
             IOptions<OperationalStoreOptions> operationalStoreOptions,
             ICurrentUserService currentUserService,
@@ -148,7 +148,7 @@ namespace Aviant.DDD.Infrastructure.Persistance
         {
             if (!(entry.Entity is IHasDeletionTime hasDeletionTimeEntity)) return;
 
-            if (hasDeletionTimeEntity.Deleted == default) hasDeletionTimeEntity.Deleted = _dateTimeService.Now;
+            hasDeletionTimeEntity.Deleted ??= _dateTimeService.Now;
 
             if (!(entry.Entity is IDeletionAudited deletionAuditedEntity)) return;
 
