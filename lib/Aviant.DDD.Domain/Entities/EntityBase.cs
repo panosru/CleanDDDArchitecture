@@ -1,9 +1,15 @@
 namespace Aviant.DDD.Domain.Entities
 {
+    using System.Threading.Tasks;
     using Events;
 
-    public abstract class EntityBase<T> : HaveEvents, IEntity<T>
+    public abstract class EntityBase<T> : IEntity<T>
     {
         public T Id { get; set; } = default!;
+
+        public virtual Task<bool> Validate()
+        {
+            return Task.FromResult(true);
+        }
     }
 }

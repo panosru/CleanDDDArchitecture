@@ -81,7 +81,7 @@
             services.AddScoped<IOrchestrator, Orchestrator>();
             services.AddScoped<IUnitOfWork, UnitOfWork<ApplicationDbContext>>();
             services.AddScoped<INotifications, Notifications>();
-            services.AddScoped<IEventDispatcher, EventDispatcherBase>();
+            services.AddScoped<IEventDispatcher, EventDispatcher>();
             services.AddScoped<Aviant.DDD.Application.Persistance.IApplicationDbContext, ApplicationDbContext>();
 
             services.AddSingleton<IServiceContainer, HttpContextServiceProviderProxy>();

@@ -1,15 +1,16 @@
 namespace Aviant.DDD.Application.Events
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Domain.Events;
     using MediatR;
 
-    public class EventDispatcherBase : IEventDispatcher //TODO: Utilise event dispatcher in project, possibly it shouldn't be an abstract class, also maybe it should be located in domain 
+    public class EventDispatcher : IEventDispatcher 
     {
         private readonly IMediator _mediator;
 
-        public EventDispatcherBase(IMediator mediator)
+        public EventDispatcher(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -29,14 +30,20 @@ namespace Aviant.DDD.Application.Events
 
         public async Task FirePreCommitEvents()
         {
-            foreach (IEvent @event in PreCommitEvents)
-                await _mediator.Publish(@event);
+            foreach (IEvent @event in PreCommitEvents.ToList())
+            {
+                await _mediator.Publish(@event).ConfigureAwait(false);
+                RemovePreCommitEvent(@event);
+            }
         }
 
         public async Task FirePostCommitEvents()
         {
-            foreach (IEvent @event in PostCommitEvents)
-                await _mediator.Publish(@event);
+            foreach (IEvent @event in PostCommitEvents.ToList())
+            {
+                await _mediator.Publish(@event).ConfigureAwait(false);
+                RemovePostCommitEvent(@event);
+            }
         }
 
         public List<IEvent> GetPreCommitEvents()

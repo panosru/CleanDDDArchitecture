@@ -6,6 +6,6 @@ namespace Aviant.DDD.Domain.Events
     public abstract class EventHandlerBase<TEvent> : IEventHandler<TEvent>
         where TEvent : IEvent
     {
-        public abstract Task Handle(TEvent notification, CancellationToken cancellationToken);
+        public abstract Task Handle(TEvent @event, CancellationToken cancellationToken);
     }
 }
