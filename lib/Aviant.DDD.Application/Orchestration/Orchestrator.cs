@@ -1,5 +1,6 @@
 namespace Aviant.DDD.Application.Orchestration
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Commands;
@@ -42,33 +43,52 @@ namespace Aviant.DDD.Application.Orchestration
                     Messages = _notifications.GetAll()
                 };
             }
-            else
+
+            if (await _unitOfWork.Commit())
             {
-                if (await _unitOfWork.Commit())
+                // Fire post commit events
+                await _eventDispatcher.FirePostCommitEvents();
+
+                bool isLazy = typeof(Lazy<>) == (
+                    commandResponse?.GetType().GetGenericTypeDefinition());
+                    
+                return new RequestResult
                 {
-                    return new RequestResult
-                    {
-                        Success = true,
-                        Payload = commandResponse
-                    };
-                }
-                else
-                {
-                    return new RequestResult
-                    {
-                        Success = false,
-                        Messages = new List<string>
-                        {
-                            "An error occurred"
-                        }
-                    };
-                }
+                    Success = true,
+                    Payload = isLazy 
+                        ? commandResponse?.GetType().GetProperty("Value")?.GetValue(commandResponse, null)
+                        : commandResponse
+                };
             }
+
+            return new RequestResult
+            {
+                Success = false,
+                Messages = new List<string>
+                {
+                    "An error occurred"
+                }
+            };
         }
 
-        public Task<RequestResult> SendQuery<T>(ICommand<T> command)
+        public async Task<RequestResult> SendQuery<T>(ICommand<T> command)
         {
-            throw new System.NotImplementedException();
+            var commandResponse = await _mediator.Send(command);
+
+            if (_notifications.HasNotifications())
+            {
+                return new RequestResult
+                {
+                    Success = false,
+                    Messages = _notifications.GetAll()
+                };
+            }
+            
+            return new RequestResult
+            {
+                Success = true,
+                Payload = commandResponse
+            };
         }
     }
 }
