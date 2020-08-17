@@ -10,7 +10,6 @@ namespace Aviant.DDD.Infrastructure.Persistance
     using Application.Persistance;
     using Application.Services;
     using Domain.Entities;
-    using Domain.Events;
     using IdentityServer4.EntityFramework.Options;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
@@ -29,18 +28,15 @@ namespace Aviant.DDD.Infrastructure.Persistance
 
         private readonly ICurrentUserService _currentUserService;
         private readonly IDateTimeService _dateTimeService;
-        private readonly IMediator _mediator;
 
         public ApplicationDbContextBase(
             DbContextOptions options,
             IOptions<OperationalStoreOptions> operationalStoreOptions,
             ICurrentUserService currentUserService,
-            IMediator mediator,
             IDateTimeService dateTimeService)
             : base(options, operationalStoreOptions)
         {
             _currentUserService = currentUserService;
-            _mediator = mediator;
             _dateTimeService = dateTimeService;
 
             ChangeTracker.LazyLoadingEnabled = false;
@@ -64,23 +60,6 @@ namespace Aviant.DDD.Infrastructure.Persistance
                 }
         
             var result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        
-            //TODO: This functionality should be moved to orchestrator
-            // ignore events if no dispatcher provided
-            
-            // dispatch events only if save was successful
-            var entitiesWithEvents = ChangeTracker.Entries<HaveEvents>()
-                .Select(e => e.Entity)
-                .Where(e => e.GetAll().Any())
-                .ToArray();
-            
-            foreach (var entity in entitiesWithEvents)
-            {
-                var events = entity.GetAll().ToArray();
-                entity.CleanEvents();
-                foreach (var domainEvent in events)
-                    await _mediator.Publish(domainEvent, cancellationToken).ConfigureAwait(false);
-            }
         
             return result;
         }

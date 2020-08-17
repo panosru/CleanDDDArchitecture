@@ -18,13 +18,11 @@
             DbContextOptions options,
             IOptions<OperationalStoreOptions> operationalStoreOptions,
             ICurrentUserService currentUserService,
-            IMediator mediator,
             IDateTimeService dateTimeService)
             : base(
                 options,
                 operationalStoreOptions,
                 currentUserService,
-                mediator,
                 dateTimeService)
         {
         }
