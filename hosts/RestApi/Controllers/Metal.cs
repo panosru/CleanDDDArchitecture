@@ -1,14 +1,20 @@
 namespace CleanDDDArchitecture.RestApi.Controllers
 {
     using System.Diagnostics;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
+    ///     Metal endpoint
     /// </summary>
+    [ApiVersion("1.0")]
+    [ApiVersion("1.1")]
+    [AllowAnonymous]
     public class Metal : ApiController
     {
         /// <summary>
+        ///     Metal info
         /// </summary>
         /// <returns></returns>
         [HttpGet("/metal")]
