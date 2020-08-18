@@ -1,4 +1,4 @@
-﻿namespace CleanDDDArchitecture.Infrastructure.Persistence
+﻿namespace CleanDDDArchitecture.Infrastructure.Persistence.Contexts
 {
     using System.Linq;
     using System.Threading.Tasks;

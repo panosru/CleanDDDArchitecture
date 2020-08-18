@@ -7,6 +7,7 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
     using System.Threading;
     using System.Threading.Tasks;
     using Application.Identity;
+    using Contexts;
     using Domain.Entities;
     using Domain.Persistence;
     using Microsoft.EntityFrameworkCore;
@@ -19,12 +20,12 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
         where TDbContext : ApplicationDbContextBase<TDbContext, TApplicationUser, TApplicationRole>
     {
         private readonly TDbContext _dbContext;
-        private readonly DbSet<TEntity> _table;
+        private readonly DbSet<TEntity> _dbSet;
 
         protected RepositoryWriteOnlyBase(TDbContext context)
         {
             _dbContext = context;
-            _table = _dbContext.Set<TEntity>();
+            _dbSet = _dbContext.Set<TEntity>();
         }
 
         public async Task Add(TEntity entity)
@@ -32,7 +33,7 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
             // First validate entity's rules
             await entity.Validate();
             
-            await _table.AddAsync(entity);
+            await _dbSet.AddAsync(entity);
         }
 
         public Task Update(TEntity entity)
@@ -57,7 +58,7 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
 
         public Task DeleteWhere(Expression<Func<TEntity, bool>> predicate)
         {
-            IEnumerable<TEntity> entities = _table.Where(predicate);
+            IEnumerable<TEntity> entities = _dbSet.Where(predicate);
 
             foreach (var entity in entities) _dbContext.Entry(entity).State = EntityState.Deleted;
             
