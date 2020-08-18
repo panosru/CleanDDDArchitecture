@@ -2,8 +2,15 @@ namespace Aviant.DDD.Domain.Persistence
 {
     using System.Threading.Tasks;
 
-    public interface IUnitOfWork //TODO: Write UnitOfWork with Write Repository
+    /// <summary>
+    /// Unit of Work Interface
+    /// </summary>
+    public interface IUnitOfWork
     {
-        public Task<bool> Commit();
+        /// <summary>
+        /// Commit changes to database
+        /// </summary>
+        /// <returns>Integer representing affected rows</returns>
+        public Task<int> Commit();
     }
 }
