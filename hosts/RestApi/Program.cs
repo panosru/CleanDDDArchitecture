@@ -3,7 +3,6 @@ namespace CleanDDDArchitecture.RestApi
     using System;
     using System.Threading.Tasks;
     using Infrastructure.Identity;
-    using Infrastructure.Persistence;
     using Infrastructure.Persistence.Contexts;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;

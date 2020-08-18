@@ -85,7 +85,7 @@ namespace CleanDDDArchitecture.RestApi
                 {
                     options.Filters.Add(new ApiExceptionFilter());
                     //options.Filters.Add(new AuthorizeFilter());
-                } 
+                }
             );
         }
 
@@ -103,7 +103,7 @@ namespace CleanDDDArchitecture.RestApi
             IServiceProvider serviceProvider)
         {
             ServiceLocator.Initialise(serviceProvider.GetService<IServiceContainer>());
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

@@ -4,18 +4,20 @@ namespace CleanDDDArchitecture.RestApi.Controllers
     using Application.Users.Commands.Authenticate;
     using Application.Users.Commands.ConfirmEmail;
     using Aviant.DDD.Application.Identity;
+    using Aviant.DDD.Application.Orchestration;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
+    ///     User endpoints
     /// </summary>
-    [Route("api/[controller]")]
     [ApiVersion("1.0")]
     [ApiVersion("1.1")]
     public class User : ApiController
     {
         /// <summary>
+        ///     Authenticate a user and a bearer or an email confirmation token
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
@@ -23,16 +25,18 @@ namespace CleanDDDArchitecture.RestApi.Controllers
         [HttpPost("authenticate")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<object>> Authenticate(AuthenticateCommand command)
+        public async Task<ActionResult<object>> Authenticate([FromBody] AuthenticateCommand command)
         {
-            var result = await Mediator.Send(command);
+            RequestResult requestResult = await Orchestrator.SendCommand(command);
 
-            if (null != result) return Ok(result);
+            if (requestResult.Success && !(requestResult.Payload() is null))
+                return Ok(requestResult.Payload());
 
             return Unauthorized();
         }
 
         /// <summary>
+        ///     Confirm user email with token taken from authentication endpoint
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
@@ -42,11 +46,19 @@ namespace CleanDDDArchitecture.RestApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IdentityResult>> Confirm([FromRoute] ConfirmEmailCommand command)
         {
-            var result = await Mediator.Send(command);
+            RequestResult requestResult = await Orchestrator.SendCommand(command);
 
-            if (result.Succeeded) return Ok(result);
+            if (requestResult.Success)
+            {
+                var identityResult = requestResult.Payload<IdentityResult>();
 
-            return BadRequest(result);
+                if (identityResult.Succeeded)
+                    return Ok();
+
+                requestResult.Messages.AddRange(identityResult.Errors);
+            }
+
+            return BadRequest(requestResult.Messages);
         }
     }
 }
