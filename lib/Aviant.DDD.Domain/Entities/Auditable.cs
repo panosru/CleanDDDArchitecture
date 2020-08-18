@@ -16,7 +16,6 @@ namespace Aviant.DDD.Domain.Entities
         public Guid CreatedBy { get; set; }
     }
 
-
     public interface IHasModificationTime : IAuditedEntity
     {
         public DateTime? LastModified { get; set; }
@@ -26,8 +25,7 @@ namespace Aviant.DDD.Domain.Entities
     {
         public Guid? LastModifiedBy { get; set; }
     }
-
-
+    
     public interface IHasDeletionTime : IAuditedEntity
     {
         DateTime? Deleted { get; set; }

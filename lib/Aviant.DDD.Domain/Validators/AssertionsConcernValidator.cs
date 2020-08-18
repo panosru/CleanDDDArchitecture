@@ -1,10 +1,9 @@
 namespace Aviant.DDD.Domain.Validators
 {
     using System;
-    using Events;
     using Notifications;
 
-    public static class AssertionsConcernValidator //TODO: Make use of this validator
+    public static class AssertionsConcernValidator
     {
         public static bool HasNotifications()
         {
@@ -213,7 +212,7 @@ namespace Aviant.DDD.Domain.Validators
         {
             return delegate
             {
-                if (value?.Length == length) return true;
+                if (value.Length == length) return true;
 
                 NotificationsFacade.AddNotification(notification);
                 return false;
@@ -231,7 +230,7 @@ namespace Aviant.DDD.Domain.Validators
             };
         }
 
-        public static Func<bool> IsGuidNotNull(Guid guid, string notification)
+        public static Func<bool> IsGuidNotNull(Guid? guid, string notification)
         {
             return delegate
             {
@@ -250,9 +249,7 @@ namespace Aviant.DDD.Domain.Validators
         {
             return delegate
             {
-                var isValid = false;
-
-                isValid = IsSatisfiedBy(
+                var isValid = IsSatisfiedBy(
                     IsStringNotNullOrWhiteSpace(
                         guid,
                         stringIsEmptyMessage));
@@ -269,7 +266,7 @@ namespace Aviant.DDD.Domain.Validators
             };
         }
 
-        public static Func<bool> IsNotNull(object obj, string notification)
+        public static Func<bool> IsNotNull(object? obj, string notification)
         {
             return delegate
             {
@@ -280,7 +277,7 @@ namespace Aviant.DDD.Domain.Validators
             };
         }
 
-        public static Func<bool> IsNull(object obj, string notification)
+        public static Func<bool> IsNull(object? obj, string notification)
         {
             return delegate
             {

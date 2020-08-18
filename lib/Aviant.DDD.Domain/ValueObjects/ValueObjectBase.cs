@@ -11,7 +11,7 @@ namespace Aviant.DDD.Domain.ValueObjects
         private List<FieldInfo>? _fields;
         private List<PropertyInfo>? _properties;
 
-        public bool Equals(ValueObjectBase obj)
+        public bool Equals(ValueObjectBase? obj)
         {
             return Equals(obj as object);
         }
@@ -37,21 +37,21 @@ namespace Aviant.DDD.Domain.ValueObjects
             }
         }
 
-        public int HashValue(int seed, object value)
+        public int HashValue(int seed, object? value)
         {
             var currentHash = value?.GetHashCode() ?? 0;
 
             return seed * 23 + currentHash;
         }
 
-        public static bool operator ==(ValueObjectBase left, ValueObjectBase right)
+        public static bool operator ==(ValueObjectBase? left, ValueObjectBase? right)
         {
             if (left is null ^ right is null) return false;
 
             return left?.Equals(right) != false;
         }
 
-        public static bool operator !=(ValueObjectBase left, ValueObjectBase right)
+        public static bool operator !=(ValueObjectBase? left, ValueObjectBase? right)
         {
             return !(left == right);
         }
@@ -76,24 +76,18 @@ namespace Aviant.DDD.Domain.ValueObjects
 
         private IEnumerable<PropertyInfo> GetProperties()
         {
-            if (_properties is null)
-                _properties = GetType()
-                    .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                    .Where(p => p.GetCustomAttribute(typeof(IgnoreMemberAttribute)) is null)
-                    .ToList();
-
-            return _properties;
+            return _properties ??= GetType()
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(p => p.GetCustomAttribute(typeof(IgnoreMemberAttribute)) is null)
+                .ToList();
         }
 
         private IEnumerable<FieldInfo> GetFields()
         {
-            if (_fields is null)
-                _fields = GetType()
-                    .GetFields(BindingFlags.Instance | BindingFlags.Public)
-                    .Where(f => f.GetCustomAttribute(typeof(IgnoreMemberAttribute)) is null)
-                    .ToList();
-
-            return _fields;
+            return _fields ??= GetType()
+                .GetFields(BindingFlags.Instance | BindingFlags.Public)
+                .Where(f => f.GetCustomAttribute(typeof(IgnoreMemberAttribute)) is null)
+                .ToList();
         }
     }
 }
