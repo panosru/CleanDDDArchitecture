@@ -2,7 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Aviant.DDD.Domain.Entities;
+    using Aviant.DDD.Domain.Validators;
 
     public class TodoListEntity : EntityBase<int>, 
         ICreationAudited, IModificationAudited, IDeletionAudited, ISoftDelete
@@ -26,5 +28,16 @@
         public Guid? LastModifiedBy { get; set; }
         
         public bool IsDeleted { get; set; }
+
+        public override Task<bool> Validate()
+        {
+            var satisfied = AssertionsConcernValidator.IsSatisfiedBy(
+                AssertionsConcernValidator.IsGreaterThan(
+                    Title.Length,
+                    5,
+                    "Title must have more than 5 chars"));
+            
+            return Task.FromResult(satisfied);
+        }
     }
 }
