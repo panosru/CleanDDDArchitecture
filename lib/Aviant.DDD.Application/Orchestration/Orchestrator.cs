@@ -37,11 +37,7 @@ namespace Aviant.DDD.Application.Orchestration
 
             if (_notifications.HasNotifications())
             {
-                return new RequestResult
-                {
-                    Success = false,
-                    Messages = _notifications.GetAll()
-                };
+                return new RequestResult(_notifications.GetAll());
             }
 
             if (await _unitOfWork.Commit())
@@ -49,26 +45,28 @@ namespace Aviant.DDD.Application.Orchestration
                 // Fire post commit events
                 await _eventDispatcher.FirePostCommitEvents();
 
-                bool isLazy = typeof(Lazy<>) == (
-                    commandResponse?.GetType().GetGenericTypeDefinition());
-                    
-                return new RequestResult
+                bool isLazy = false;
+                
+                try
                 {
-                    Success = true,
-                    Payload = isLazy 
+                    isLazy = typeof(Lazy<>) == (
+                        commandResponse?.GetType().GetGenericTypeDefinition());
+                }
+                catch (Exception e)
+                {
+                    // ignored
+                }
+
+                return new RequestResult(
+                    isLazy
                         ? commandResponse?.GetType().GetProperty("Value")?.GetValue(commandResponse, null)
-                        : commandResponse
-                };
+                        : commandResponse);
             }
 
-            return new RequestResult
+            return new RequestResult(new List<string>
             {
-                Success = false,
-                Messages = new List<string>
-                {
-                    "An error occurred"
-                }
-            };
+                "An error occurred"
+            });
         }
 
         public async Task<RequestResult> SendQuery<T>(ICommand<T> command)
@@ -77,18 +75,10 @@ namespace Aviant.DDD.Application.Orchestration
 
             if (_notifications.HasNotifications())
             {
-                return new RequestResult
-                {
-                    Success = false,
-                    Messages = _notifications.GetAll()
-                };
+                return new RequestResult(_notifications.GetAll());
             }
             
-            return new RequestResult
-            {
-                Success = true,
-                Payload = commandResponse
-            };
+            return new RequestResult(commandResponse);
         }
     }
 }
