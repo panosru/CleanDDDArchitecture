@@ -72,7 +72,7 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
 
         public void Dispose()
         {
-            _dbContext?.Dispose();
+            _dbContext.Dispose();
         }
     }
 }
