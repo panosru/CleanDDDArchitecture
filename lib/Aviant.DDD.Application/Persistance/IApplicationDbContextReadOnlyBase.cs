@@ -1,6 +1,8 @@
 namespace Aviant.DDD.Application.Persistance
 {
-    public interface IApplicationDbContextReadOnlyBase
+    using System;
+
+    public interface IApplicationDbContextReadOnlyBase : IDisposable
     {
     }
 }
