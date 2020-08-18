@@ -1,11 +1,9 @@
 namespace Aviant.DDD.Infrastructure.Persistance
 {
     using System;
-    using System.Threading;
     using System.Threading.Tasks;
     using Application.Persistance;
     using Domain.Persistence;
-    using Microsoft.EntityFrameworkCore;
 
     public class UnitOfWork<TDbContext> : IUnitOfWork
         where TDbContext : IApplicationDbContextBase
@@ -25,7 +23,7 @@ namespace Aviant.DDD.Infrastructure.Persistance
 
                 return true;
             }
-            catch (Exception e) //TODO: Create a custom domain exception for this case.
+            catch (Exception)
             {
                 return false;
             }

@@ -52,7 +52,7 @@ namespace Aviant.DDD.Application.Orchestration
                     isLazy = typeof(Lazy<>) == (
                         commandResponse?.GetType().GetGenericTypeDefinition());
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     // ignored
                 }
