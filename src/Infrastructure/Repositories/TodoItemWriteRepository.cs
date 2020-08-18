@@ -5,6 +5,7 @@ namespace CleanDDDArchitecture.Infrastructure.Repositories
     using Domain.Entities;
     using Identity;
     using Persistence;
+    using Persistence.Contexts;
 
     public class TodoItemWriteRepository //TODO: Add MarkComplete & UnmarkComplete methods?
         : RepositoryWriteOnlyBase<

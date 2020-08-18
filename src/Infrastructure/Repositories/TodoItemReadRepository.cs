@@ -5,12 +5,13 @@ namespace CleanDDDArchitecture.Infrastructure.Repositories
     using Domain.Entities;
     using Identity;
     using Persistence;
+    using Persistence.Contexts;
 
     public class TodoItemReadRepository
-        : RepositoryReadOnlyBase<ApplicationDbContext, ApplicationUser, ApplicationRole, TodoItemEntity, int>,
+        : RepositoryReadOnlyBase<ApplicationDbContextReadOnly, ApplicationUser, ApplicationRole, TodoItemEntity, int>,
             ITodoItemReadRepository
     {
-        public TodoItemReadRepository(ApplicationDbContext context)
+        public TodoItemReadRepository(ApplicationDbContextReadOnly context)
             : base(context)
         {
         }

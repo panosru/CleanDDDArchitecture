@@ -1,7 +1,6 @@
-namespace Aviant.DDD.Infrastructure.Persistance
+namespace Aviant.DDD.Infrastructure.Persistance.Contexts
 {
     using System;
-    using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Threading;
@@ -11,15 +10,14 @@ namespace Aviant.DDD.Infrastructure.Persistance
     using Application.Services;
     using Domain.Entities;
     using IdentityServer4.EntityFramework.Options;
-    using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.ChangeTracking;
     using Microsoft.EntityFrameworkCore.Metadata;
     using Microsoft.Extensions.Options;
 
     public abstract class ApplicationDbContextBase<TDbContext, TApplicationUser, TApplicationRole>
-        : ApiAuthorizationDbContext<TApplicationUser, TApplicationRole, Guid>, IApplicationDbContext
-        where TDbContext : IApplicationDbContext
+        : ApiAuthorizationDbContext<TApplicationUser, TApplicationRole, Guid>, IApplicationDbContextBase
+        where TDbContext : IApplicationDbContextBase
         where TApplicationUser : ApplicationUserBase
         where TApplicationRole : ApplicationRoleBase
     {
