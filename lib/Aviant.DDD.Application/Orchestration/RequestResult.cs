@@ -8,6 +8,8 @@ namespace Aviant.DDD.Application.Orchestration
         public bool Success { get; set; }
         
         public List<string> Messages { get; set; } = new List<string>();
+        
+        public int? AffectedRows { get; set; }
 
         private readonly object? _payload;
 
@@ -19,6 +21,13 @@ namespace Aviant.DDD.Application.Orchestration
         {
             _payload = payload;
             Success = true;
+        }
+
+        public RequestResult(object? payload, int? affectedRows)
+        {
+            _payload = payload;
+            Success = true;
+            AffectedRows = affectedRows;
         }
 
         public RequestResult(List<string> messages)

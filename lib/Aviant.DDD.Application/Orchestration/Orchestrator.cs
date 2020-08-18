@@ -40,33 +40,36 @@ namespace Aviant.DDD.Application.Orchestration
                 return new RequestResult(_notifications.GetAll());
             }
 
-            if (await _unitOfWork.Commit())
-            {
-                // Fire post commit events
-                await _eventDispatcher.FirePostCommitEvents();
+            var affectedRows = await _unitOfWork.Commit();
 
-                bool isLazy = false;
-                
-                try
-                {
-                    isLazy = typeof(Lazy<>) == (
-                        commandResponse?.GetType().GetGenericTypeDefinition());
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-
+            if (-1 == affectedRows)
                 return new RequestResult(
-                    isLazy
-                        ? commandResponse?.GetType().GetProperty("Value")?.GetValue(commandResponse, null)
-                        : commandResponse);
+                    new List<string>
+                    {
+                        "An error occurred"
+                    });
+            
+            // Fire post commit events
+            await _eventDispatcher.FirePostCommitEvents();
+
+            var isLazy = false;
+                
+            try
+            {
+                isLazy = typeof(Lazy<>) == (
+                    commandResponse?.GetType().GetGenericTypeDefinition());
+            }
+            catch (Exception)
+            {
+                // ignored
             }
 
-            return new RequestResult(new List<string>
-            {
-                "An error occurred"
-            });
+            return new RequestResult(
+                isLazy
+                    ? commandResponse?.GetType().GetProperty("Value")?.GetValue(commandResponse, null)
+                    : commandResponse,
+                affectedRows);
+
         }
 
         public async Task<RequestResult> SendQuery<T>(ICommand<T> command)

@@ -5,28 +5,46 @@ namespace Aviant.DDD.Infrastructure.Persistance
     using Application.Persistance;
     using Domain.Persistence;
 
-    public class UnitOfWork<TDbContext> : IUnitOfWork
+    public class UnitOfWork<TDbContext> : IUnitOfWork, IDisposable
         where TDbContext : IApplicationDbContextBase
     {
         private readonly TDbContext _context;
+        private bool _isDisposed;
 
         public UnitOfWork(TDbContext context)
         {
             _context = context;
         }
 
-        public async Task<bool> Commit()
+        public async Task<int> Commit()
         {
             try
             {
-                await _context.SaveChangesAsync();
+                var affectedRows = await _context.SaveChangesAsync()
+                    .ConfigureAwait(false);
 
-                return true;
+                return affectedRows;
             }
             catch (Exception)
             {
-                return false;
+                return -1;
             }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (!_isDisposed && disposing)
+            {
+                _context.Dispose();
+            }
+
+            _isDisposed = true;
         }
     }
 }
