@@ -7,10 +7,11 @@
     using Aviant.DDD.Application.Commands;
     using Aviant.DDD.Application.Exceptions;
     using Aviant.DDD.Application.Processors;
+    using Aviant.DDD.Domain.Events;
     using Domain.Entities;
     using Repositories;
 
-    public class UpdateTodoItemCommand : CommandBase<TodoItemEntity>
+    public class UpdateTodoItemCommand : CommandBase<TodoItemDto>
     {
         public int Id { get; set; }
 
@@ -20,11 +21,11 @@
     }
 
     public class UpdateTodoItemCommandCommandCommandCommandHandler
-        : CommandCommandHandler<UpdateTodoItemCommand, TodoItemEntity>
+        : CommandCommandHandler<UpdateTodoItemCommand, TodoItemDto>
     {
-        private readonly IMapper _mapper;
         private readonly ITodoItemReadRepository _todoItemReadRepository;
         private readonly ITodoItemWriteRepository _todoItemWriteRepository;
+        private readonly IMapper _mapper;
 
         public UpdateTodoItemCommandCommandCommandCommandHandler(
             ITodoItemReadRepository todoItemReadRepository,
@@ -36,7 +37,7 @@
             _mapper = mapper;
         }
 
-        public override async Task<TodoItemEntity> Handle(
+        public override async Task<TodoItemDto> Handle(
             UpdateTodoItemCommand request,
             CancellationToken cancellationToken)
         {
@@ -51,44 +52,43 @@
 
             await _todoItemWriteRepository.Update(entity);
 
-            //return _mapper.Map<TodoItemDto>(entity);
-            return entity;
+            return _mapper.Map<TodoItemDto>(entity);
         }
     }
 
-    // public class UserPreProcessor :
-    //     RequestPreProcessorBase<UpdateTodoItemCommand>
-    // {
-    //     public override Task Process(
-    //         UpdateTodoItemCommand request, 
-    //         CancellationToken cancellationToken)
-    //     {
-    //         Console.WriteLine($"Pre handle {request.Title} {request.Done} with ID {request.Id}");
-    //         return Task.CompletedTask;
-    //     }
-    // }
-
-    public class UserPostProcessor : RequestPostProcessorBase<UpdateTodoItemCommand, TodoItemEntity>
+    public class UserPreProcessor :
+        RequestPreProcessorBase<UpdateTodoItemCommand>
     {
-        private readonly ITodoItemWriteRepository _todoItemWriteRepository;
-
-        public UserPostProcessor(ITodoItemWriteRepository todoItemWriteRepository)
+        public override Task Process(
+            UpdateTodoItemCommand request, 
+            CancellationToken cancellationToken)
         {
-            _todoItemWriteRepository = todoItemWriteRepository;
+            Console.WriteLine($"Pre handle {request.Title} {request.Done} with ID {request.Id}");
+            return Task.CompletedTask;
+        }
+    }
+
+    public class UserPostProcessor : RequestPostProcessorBase<UpdateTodoItemCommand, TodoItemDto>
+    {
+        private readonly IEventDispatcher _eventDispatcher;
+
+        public UserPostProcessor(IEventDispatcher eventDispatcher)
+        {
+            _eventDispatcher = eventDispatcher;
         }
 
-        public override async Task Process(
+        public override Task Process(
             UpdateTodoItemCommand request,
-            TodoItemEntity response,
+            TodoItemDto response,
             CancellationToken cancellationToken)
         {
             if (response.IsCompleted)
             {
-                Console.WriteLine("TodoCompletedEvent emitted");
-                response.AddEvent(new TodoCompletedEvent(response));
+                Console.WriteLine("TodoCompletedEvent added");
+                _eventDispatcher.AddPostCommitEvent(new TodoCompletedEvent(response));
             }
-
-            await _todoItemWriteRepository.Commit(cancellationToken);
+            
+            return Task.CompletedTask;
         }
     }
 }
