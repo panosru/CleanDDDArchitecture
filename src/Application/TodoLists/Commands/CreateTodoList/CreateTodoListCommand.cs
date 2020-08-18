@@ -1,44 +1,52 @@
 ﻿namespace CleanDDDArchitecture.Application.TodoLists.Commands.CreateTodoList
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using AutoMapper;
     using Aviant.DDD.Application.Commands;
-    using Aviant.DDD.Domain.Validators;
+    using Aviant.DDD.Domain.Events;
     using Domain.Entities;
+    using Events;
     using Repositories;
 
-    public class CreateTodoListCommand : CommandBase<TodoListEntity>
+    public class CreateTodoListCommand : CommandBase<Lazy<TodoListDto>>
     {
         public string Title { get; set; }
     }
 
     public class CreateTodoListCommandCommandCommandCommandHandler : 
-        CommandCommandHandler<CreateTodoListCommand, TodoListEntity>
+        CommandCommandHandler<CreateTodoListCommand, Lazy<TodoListDto>>
     {
         private readonly ITodoListWriteRepository _todoListWriteRepository;
+        private readonly IEventDispatcher _eventDispatcher;
+        private readonly IMapper _mapper;
 
-        public CreateTodoListCommandCommandCommandCommandHandler(ITodoListWriteRepository todoListWriteRepository)
+        public CreateTodoListCommandCommandCommandCommandHandler(
+            ITodoListWriteRepository todoListWriteRepository, 
+            IEventDispatcher eventDispatcher,
+            IMapper mapper)
         {
             _todoListWriteRepository = todoListWriteRepository;
+            _eventDispatcher = eventDispatcher;
+            _mapper = mapper;
         }
 
-        public override async Task<TodoListEntity> Handle(
-            CreateTodoListCommand request, CancellationToken cancellationToken)
+        public override async Task<Lazy<TodoListDto>> Handle(
+            CreateTodoListCommand request, 
+            CancellationToken cancellationToken)
         {
-            var entity = new TodoListEntity();
+            var entity = new TodoListEntity {Title = request.Title};
 
-            entity.Title = request.Title;
 
             await _todoListWriteRepository.Add(entity);
 
-            //TODO: Added for demo purposes, will be removed
-            var satisfiedBy = AssertionsConcernValidator.IsSatisfiedBy(
-                AssertionsConcernValidator.IsGreaterThan(
-                    entity.Title.Length, 5, "Title must have more than 5 chars"));
+            _eventDispatcher.AddPostCommitEvent(new TodoCreatedEvent
+            {
+                Name = entity.Title
+            });
 
-            //TODO: Check how to return the Id if needed since it is not yet populated (if possible).
-            // return entity.Id;
-            return entity;
+            return new Lazy<TodoListDto>(() => _mapper.Map<TodoListDto>(entity));
         }
     }
 }
