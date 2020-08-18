@@ -17,10 +17,10 @@
 
     public class GetTodosQueryCommandCommandHandler : CommandCommandHandler<GetTodosQuery, TodosVm>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly IApplicationDbContextReadOnly _context;
         private readonly IMapper _mapper;
 
-        public GetTodosQueryCommandCommandHandler(IApplicationDbContext context, IMapper mapper)
+        public GetTodosQueryCommandCommandHandler(IApplicationDbContextReadOnly context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -30,15 +30,15 @@
         {
             return new TodosVm
             {
-            PriorityLevels = Enum.GetValues(typeof(PriorityLevel))
-                .Cast<PriorityLevel>()
-                .Select(p => new PriorityLevelDto {Value = (int) p, Name = p.ToString()})
-                .ToList(),
+                PriorityLevels = Enum.GetValues(typeof(PriorityLevel))
+                    .Cast<PriorityLevel>()
+                    .Select(p => new PriorityLevelDto {Value = (int) p, Name = p.ToString()})
+                    .ToList(),
 
-            Lists = await _context.TodoLists
-                .ProjectTo<TodoListDto>(_mapper.ConfigurationProvider)
-                .OrderBy(t => t.Title)
-                .ToListAsync(cancellationToken);
+                Lists = await _context.TodoLists
+                    .ProjectTo<TodoListDto>(_mapper.ConfigurationProvider)
+                    .OrderBy(t => t.Title)
+                    .ToListAsync(cancellationToken)
             };
         }
     }

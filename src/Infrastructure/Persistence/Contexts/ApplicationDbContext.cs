@@ -1,13 +1,12 @@
-﻿namespace CleanDDDArchitecture.Infrastructure.Persistence
+﻿namespace CleanDDDArchitecture.Infrastructure.Persistence.Contexts
 {
     using Application.Persistence;
     using Aviant.DDD.Application.Identity;
     using Aviant.DDD.Application.Services;
-    using Aviant.DDD.Infrastructure.Persistance;
+    using Aviant.DDD.Infrastructure.Persistance.Contexts;
     using Domain.Entities;
     using Identity;
     using IdentityServer4.EntityFramework.Options;
-    using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
 
@@ -15,7 +14,7 @@
         : ApplicationDbContextBase<ApplicationDbContext, ApplicationUser, ApplicationRole>, IApplicationDbContext
     {
         public ApplicationDbContext(
-            DbContextOptions options,
+            DbContextOptions<ApplicationDbContext> options,
             IOptions<OperationalStoreOptions> operationalStoreOptions,
             ICurrentUserService currentUserService,
             IDateTimeService dateTimeService)

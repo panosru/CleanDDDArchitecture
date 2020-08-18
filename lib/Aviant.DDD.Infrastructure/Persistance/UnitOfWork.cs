@@ -8,7 +8,7 @@ namespace Aviant.DDD.Infrastructure.Persistance
     using Microsoft.EntityFrameworkCore;
 
     public class UnitOfWork<TDbContext> : IUnitOfWork
-        where TDbContext : IApplicationDbContext
+        where TDbContext : IApplicationDbContextBase
     {
         private readonly TDbContext _context;
 

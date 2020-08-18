@@ -6,6 +6,7 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
     using System.Linq.Expressions;
     using System.Threading.Tasks;
     using Application.Identity;
+    using Contexts;
     using Domain.Entities;
     using Domain.Persistence;
     using Microsoft.EntityFrameworkCore;
@@ -15,20 +16,20 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
         where TEntity : EntityBase<TPrimaryKey>
         where TApplicationUser : ApplicationUserBase
         where TApplicationRole : ApplicationRoleBase
-        where TDbContext : ApplicationDbContextBase<TDbContext, TApplicationUser, TApplicationRole>
+        where TDbContext : ApplicationDbContextReadOnlyBase<TApplicationUser, TApplicationRole>
     {
         private readonly TDbContext _dbContext;
-        private readonly DbSet<TEntity> _table;
+        private readonly DbSet<TEntity> _dbSet;
 
         protected RepositoryReadOnlyBase(TDbContext context)
         {
             _dbContext = context;
-            _table = _dbContext.Set<TEntity>();
+            _dbSet = _dbContext.Set<TEntity>();
         }
 
         public IQueryable<TEntity> GetAll()
         {
-            IQueryable<TEntity> query = _table;
+            IQueryable<TEntity> query = _dbSet;
             return query;
         }
 
@@ -54,7 +55,7 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
 
         public ValueTask<TEntity> Find(TPrimaryKey id)
         {
-            return _table.FindAsync(id);
+            return _dbSet.FindAsync(id);
         }
 
         public Task<TEntity> GetFirst(TPrimaryKey id)
@@ -129,22 +130,22 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
 
         public Task<bool> Any(Expression<Func<TEntity, bool>> predicate)
         {
-            return _table.AnyAsync(predicate);
+            return _dbSet.AnyAsync(predicate);
         }
 
         public Task<bool> All(Expression<Func<TEntity, bool>> predicate)
         {
-            return _table.AllAsync(predicate);
+            return _dbSet.AllAsync(predicate);
         }
 
         public async Task<int> Count()
         {
-            return await _table.CountAsync();
+            return await _dbSet.CountAsync();
         }
 
         public Task<int> Count(Expression<Func<TEntity, bool>> predicate)
         {
-            return _table.CountAsync(predicate);
+            return _dbSet.CountAsync(predicate);
         }
 
         public void Dispose()

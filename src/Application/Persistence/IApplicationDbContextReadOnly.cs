@@ -1,10 +1,10 @@
-﻿namespace CleanDDDArchitecture.Application.Persistence
+namespace CleanDDDArchitecture.Application.Persistence
 {
     using Aviant.DDD.Application.Persistance;
     using Domain.Entities;
     using Microsoft.EntityFrameworkCore;
 
-    public interface IApplicationDbContext : IApplicationDbContextBase
+    public interface IApplicationDbContextReadOnly : IApplicationDbContextReadOnlyBase
     {
         DbSet<TodoListEntity> TodoLists { get; set; }
 

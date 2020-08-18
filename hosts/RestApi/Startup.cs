@@ -9,6 +9,7 @@ namespace CleanDDDArchitecture.RestApi
     using Filters;
     using Infrastructure;
     using Infrastructure.Persistence;
+    using Infrastructure.Persistence.Contexts;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -85,7 +86,7 @@ namespace CleanDDDArchitecture.RestApi
             services.AddControllersWithViews(
                 options =>
                 {
-                    // options.Filters.Add(new ApiExceptionFilter());
+                    options.Filters.Add(new ApiExceptionFilter());
                     //options.Filters.Add(new AuthorizeFilter());
                 } 
             );

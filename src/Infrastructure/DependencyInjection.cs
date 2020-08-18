@@ -22,6 +22,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Persistence;
+    using Persistence.Contexts;
     using Repositories;
 
     public static class DependencyInjection
@@ -36,20 +37,40 @@
             JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
 
             if (configuration.GetValue<bool>("UseInMemoryDatabase"))
+            {
                 services.AddDbContext<ApplicationDbContext>(
                     options =>
                         options.UseInMemoryDatabase("CleanDDDArchitectureDb"));
+
+                services.AddDbContext<ApplicationDbContextReadOnly>(
+                    options =>
+                        options.UseInMemoryDatabase("CleanDDDArchitectureDb"));
+
+            }
             else
+            {
                 services.AddDbContext<ApplicationDbContext>(
                     options =>
                         options.UseNpgsql(
-                            configuration.GetConnectionString("DefaultConnection"),
+                            configuration.GetConnectionString("DefaultWriteConnection"),
                             b =>
                                 b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+
+                services.AddDbContext<ApplicationDbContextReadOnly>(
+                    options =>
+                        options.UseNpgsql(
+                            configuration.GetConnectionString("DefaultReadConnection"),
+                            b => 
+                                b.MigrationsAssembly(typeof(ApplicationDbContextReadOnly).Assembly.FullName)));
+            }
 
             services.AddScoped<IApplicationDbContext>(
                 provider =>
                     provider.GetService<ApplicationDbContext>());
+
+            services.AddScoped<IApplicationDbContextReadOnly>(
+                provider =>
+                    provider.GetService<ApplicationDbContextReadOnly>());
 
             #region Read Repositories
 
@@ -82,7 +103,6 @@
             services.AddScoped<IUnitOfWork, UnitOfWork<ApplicationDbContext>>();
             services.AddScoped<INotifications, Notifications>();
             services.AddScoped<IEventDispatcher, EventDispatcher>();
-            services.AddScoped<Aviant.DDD.Application.Persistance.IApplicationDbContext, ApplicationDbContext>();
 
             services.AddSingleton<IServiceContainer, HttpContextServiceProviderProxy>();
             
