@@ -5,10 +5,8 @@ namespace CleanDDDArchitecture.RestApi
     using Application;
     using Aviant.DDD.Application.Identity;
     using Aviant.DDD.Domain.Services;
-    using CleanDDDArchitecture.Services;
     using Filters;
     using Infrastructure;
-    using Infrastructure.Persistence;
     using Infrastructure.Persistence.Contexts;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
@@ -47,8 +45,7 @@ namespace CleanDDDArchitecture.RestApi
 
             services
                 .AddInfrastructure(Configuration)
-                .AddApplication()
-                .AddServices();
+                .AddApplication();
 
             services
                 .AddAuthorization()
