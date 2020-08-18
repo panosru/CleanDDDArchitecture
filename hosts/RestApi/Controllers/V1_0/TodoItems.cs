@@ -1,82 +1,122 @@
 ﻿namespace CleanDDDArchitecture.RestApi.Controllers.V1_0
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Application.TodoItems.Commands.CreateTodoItem;
     using Application.TodoItems.Commands.DeleteTodoItem;
     using Application.TodoItems.Commands.GetTodoItem;
     using Application.TodoItems.Commands.UpdateTodoItem;
     using Application.TodoItems.Commands.UpdateTodoItemDetail;
+    using Aviant.DDD.Application.Orchestration;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
+    ///     Todo items endpoints
     /// </summary>
     public class TodoItems : ApiController
     {
         /// <summary>
-        /// 
+        ///     Get a todo item
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("{Id}")]
-        public async Task<ActionResult<string>> Get([FromRoute] GetTodoItemQuery query)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<string>), StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> Get([FromRoute] GetTodoItemQuery query)
         {
-            return await Mediator.Send(query);
+            RequestResult requestResult = await Orchestrator.SendQuery(query);
+
+            if (!requestResult.Success)
+                return BadRequest(requestResult.Messages);
+
+            return Ok(requestResult.Payload());
         }
 
         /// <summary>
+        ///     Create a new todo item
         /// </summary>
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<int>> Create(CreateTodoItemCommand command)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<string>), StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> Create([FromBody] CreateTodoItemCommand command)
         {
-            return await Mediator.Send(command);
+            RequestResult requestResult = await Orchestrator.SendCommand(command);
+
+            if (!requestResult.Success)
+                return BadRequest(requestResult.Messages);
+
+            return Ok(requestResult.Payload());
         }
 
         /// <summary>
+        ///     Update todo item name and status
         /// </summary>
         /// <param name="id"></param>
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> Update(int id, UpdateTodoItemCommand command)
+        [ProducesResponseType(typeof(List<string>), StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> Update(
+            [FromRoute] int id,
+            [FromBody] UpdateTodoItemCommand command)
         {
             if (id != command.Id) return BadRequest();
 
-            await Mediator.Send(command);
+            RequestResult requestResult = await Orchestrator.SendCommand(command);
+
+            if (!requestResult.Success)
+                return BadRequest(requestResult.Messages);
 
             return NoContent();
         }
 
         /// <summary>
+        ///     Update todo item details
         /// </summary>
         /// <param name="id"></param>
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPut("[action]")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> UpdateItemDetails(int id, UpdateTodoItemDetailCommand command)
+        [ProducesResponseType(typeof(List<string>), StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> UpdateItemDetails(
+            [FromRoute] int id,
+            [FromBody] UpdateTodoItemDetailCommand command)
         {
             if (id != command.Id) return BadRequest();
 
-            await Mediator.Send(command);
+            RequestResult requestResult = await Orchestrator.SendCommand(command);
+
+            if (!requestResult.Success)
+                return BadRequest(requestResult.Messages);
 
             return NoContent();
         }
 
         /// <summary>
+        ///     Delete a todo item
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> Delete(int id)
+        [ProducesResponseType(typeof(List<string>), StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            await Mediator.Send(new DeleteTodoItemCommand {Id = id});
+            RequestResult requestResult = await Orchestrator.SendCommand(new DeleteTodoItemCommand {Id = id});
+
+            if (!requestResult.Success)
+                return BadRequest(requestResult.Messages);
 
             return NoContent();
         }
