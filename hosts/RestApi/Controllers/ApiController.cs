@@ -1,6 +1,6 @@
 ﻿namespace CleanDDDArchitecture.RestApi.Controllers
 {
-    using MediatR;
+    using Aviant.DDD.Application.Orchestration;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -10,10 +10,11 @@
     [Route("api/[controller]")]
     public abstract class ApiController : ControllerBase
     {
-        private IMediator? _mediator;
+        private IOrchestrator? _orchestrator;
 
         /// <summary>
+        /// 
         /// </summary>
-        protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
+        protected IOrchestrator Orchestrator => _orchestrator ??= HttpContext.RequestServices.GetService<IOrchestrator>();
     }
 }

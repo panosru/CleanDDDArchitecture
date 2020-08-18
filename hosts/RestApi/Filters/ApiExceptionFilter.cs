@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Application.Common.Events;
     using Aviant.DDD.Application.Exceptions;
+    using Aviant.DDD.Application.Orchestration;
     using MediatR;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -82,10 +84,23 @@
         {
             var exception = context.Exception as ValidationException;
 
-            var details = new ValidationProblemDetails(exception?.Failures)
+            // var details = new ValidationProblemDetails(exception?.Failures)
+            // {
+            //     Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
+            // };
+
+            var details = new RequestResult
             {
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
+                Success = false
             };
+
+            foreach (var failure in exception?.Failures)
+            {
+                foreach (var failureValue in failure.Value)
+                {
+                    details.Messages.Add(failureValue);
+                }
+            } 
 
             context.Result = new BadRequestObjectResult(details);
 

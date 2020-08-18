@@ -1,22 +1,46 @@
 ﻿namespace CleanDDDArchitecture.RestApi.Controllers.V1_1
 {
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Application.WeatherForecasts.Queries.GetWeatherForecasts;
+    using Aviant.DDD.Application.Orchestration;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using WeatherForecastsQuery = Application.WeatherForecasts.Queries.GetWeatherForecasts.WeatherForecast;
+    using WeatherForecastQuery = Application.WeatherForecasts.Queries.GetWeatherForecasts.WeatherForecast;
 
     /// <summary>
     /// </summary>
     public class WeatherForecast : ApiController
     {
+        private readonly IOrchestrator _orchestrator;
+
+
         /// <summary>
+        /// 
         /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public async Task<IEnumerable<WeatherForecastsQuery>> Get()
+        /// <param name="orchestrator"></param>
+        public WeatherForecast(IOrchestrator orchestrator)
         {
-            return await Mediator.Send(new GetWeatherForecastsQueryNew());
+            _orchestrator = orchestrator;
+        }
+
+        /// <summary>
+        ///     Get weather
+        /// </summary>
+        /// <returns>weather</returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RequestResult), StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> Get()
+        {
+            RequestResult requestResult = await _orchestrator.SendQuery(new GetWeatherForecastsQueryNew());
+
+            if (!requestResult.Success)
+                return BadRequest(requestResult.Messages);
+            
+            return Ok(requestResult.Payload());
         }
     }
 }
