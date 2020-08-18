@@ -65,11 +65,6 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
             return Task.CompletedTask;
         }
 
-        public async Task Commit(CancellationToken cancellationToken = new CancellationToken())
-        {
-            await _dbContext.SaveChangesAsync(cancellationToken);
-        }
-
         public void Dispose()
         {
             _dbContext.Dispose();

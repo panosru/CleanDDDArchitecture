@@ -38,8 +38,6 @@
 
             await _todoListWriteRepository.Update(entity);
 
-            await _todoListWriteRepository.Commit(cancellationToken);
-
             return Unit.Value;
         }
     }
