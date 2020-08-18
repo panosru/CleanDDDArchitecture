@@ -2,7 +2,6 @@ namespace Aviant.DDD.Domain.Persistence
 {
     using System;
     using System.Linq.Expressions;
-    using System.Threading;
     using System.Threading.Tasks;
     using Entities;
 
@@ -16,7 +15,5 @@ namespace Aviant.DDD.Domain.Persistence
         Task Delete(TEntity entity);
 
         Task DeleteWhere(Expression<Func<TEntity, bool>> predicate);
-
-        Task Commit(CancellationToken cancellationToken);
     }
 }

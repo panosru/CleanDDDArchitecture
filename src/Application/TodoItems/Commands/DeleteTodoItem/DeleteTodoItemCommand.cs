@@ -34,8 +34,6 @@
 
             await _todoItemWriteRepository.Delete(entity);
 
-            await _todoItemWriteRepository.Commit(cancellationToken);
-
             return Unit.Value;
         }
     }

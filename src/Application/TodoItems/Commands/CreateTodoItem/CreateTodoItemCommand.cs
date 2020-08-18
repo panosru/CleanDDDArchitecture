@@ -1,28 +1,37 @@
 ﻿namespace CleanDDDArchitecture.Application.TodoItems.Commands.CreateTodoItem
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using AutoMapper;
     using Aviant.DDD.Application.Commands;
     using Domain.Entities;
     using Repositories;
 
-    public class CreateTodoItemCommand : CommandBase<int>
+    public class CreateTodoItemCommand : CommandBase<Lazy<TodoItemDto>>
     {
         public int ListId { get; set; }
 
         public string Title { get; set; }
     }
 
-    public class CreateTodoItemCommandCommandCommandCommandHandler : CommandCommandHandler<CreateTodoItemCommand, int>
+    public class CreateTodoItemCommandCommandCommandCommandHandler : 
+        CommandCommandHandler<CreateTodoItemCommand, Lazy<TodoItemDto>>
     {
         private readonly ITodoItemWriteRepository _todoItemWriteRepository;
+        private readonly IMapper _mapper;
 
-        public CreateTodoItemCommandCommandCommandCommandHandler(ITodoItemWriteRepository todoItemWriteRepository)
+        public CreateTodoItemCommandCommandCommandCommandHandler(
+            ITodoItemWriteRepository todoItemWriteRepository, 
+            IMapper mapper)
         {
             _todoItemWriteRepository = todoItemWriteRepository;
+            _mapper = mapper;
         }
 
-        public override async Task<int> Handle(CreateTodoItemCommand request, CancellationToken cancellationToken)
+        public override async Task<Lazy<TodoItemDto>> Handle(
+            CreateTodoItemCommand request, 
+            CancellationToken cancellationToken)
         {
             var entity = new TodoItemEntity
             {
@@ -32,9 +41,7 @@
 
             await _todoItemWriteRepository.Add(entity);
 
-            await _todoItemWriteRepository.Commit(cancellationToken);
-
-            return entity.Id;
+            return new Lazy<TodoItemDto>(() => _mapper.Map<TodoItemDto>(entity));
         }
     }
 }
