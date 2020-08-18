@@ -4,6 +4,7 @@ namespace CleanDDDArchitecture.RestApi.Controllers
     using Application.Users.Commands.Authenticate;
     using Application.Users.Commands.ConfirmEmail;
     using Aviant.DDD.Application.Identity;
+    using Aviant.DDD.Application.Orchestration;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -25,9 +26,10 @@ namespace CleanDDDArchitecture.RestApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<object>> Authenticate(AuthenticateCommand command)
         {
-            var result = await Mediator.Send(command);
+            RequestResult requestResult = await Orchestrator.SendCommand(command);
 
-            if (null != result) return Ok(result);
+            if (requestResult.Success && !(requestResult.Payload() is null))
+                return Ok(requestResult.Payload());
 
             return Unauthorized();
         }
@@ -42,11 +44,19 @@ namespace CleanDDDArchitecture.RestApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IdentityResult>> Confirm([FromRoute] ConfirmEmailCommand command)
         {
-            var result = await Mediator.Send(command);
+            RequestResult requestResult = await Orchestrator.SendCommand(command);
 
-            if (result.Succeeded) return Ok(result);
+            if (requestResult.Success)
+            {
+                var identityResult = requestResult.Payload<IdentityResult>();
+                
+                if (identityResult.Succeeded)
+                    return Ok();
 
-            return BadRequest(result);
+                requestResult.Messages.AddRange(identityResult.Errors);
+            }
+            
+            return BadRequest(requestResult.Messages);
         }
     }
 }

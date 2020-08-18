@@ -1,4 +1,6 @@
-﻿namespace CleanDDDArchitecture.RestApi.Controllers.V1_0
+﻿using Microsoft.AspNetCore.Http;
+
+namespace CleanDDDArchitecture.RestApi.Controllers.V1_0
 {
     using System.Threading.Tasks;
     using Application.TodoItems.Commands.CreateTodoItem;
@@ -6,6 +8,7 @@
     using Application.TodoItems.Commands.GetTodoItem;
     using Application.TodoItems.Commands.UpdateTodoItem;
     using Application.TodoItems.Commands.UpdateTodoItemDetail;
+    using Aviant.DDD.Application.Orchestration;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
@@ -19,9 +22,17 @@
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("{Id}")]
-        public async Task<ActionResult<string>> Get([FromRoute] GetTodoItemQuery query)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(System.Collections.Generic.List<string>), StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> Get([FromRoute] GetTodoItemQuery query)
         {
-            return await Mediator.Send(query);
+            RequestResult requestResult = await Orchestrator.SendQuery(query);
+
+            if (!requestResult.Success)
+                return BadRequest(requestResult.Messages);
+            
+            return Ok(requestResult.Payload());
         }
 
         /// <summary>
@@ -29,9 +40,17 @@
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<int>> Create(CreateTodoItemCommand command)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(System.Collections.Generic.List<string>), StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> Create(CreateTodoItemCommand command)
         {
-            return await Mediator.Send(command);
+            RequestResult requestResult = await Orchestrator.SendCommand(command);
+
+            if (!requestResult.Success)
+                return BadRequest(requestResult.Messages);
+            
+            return Ok(requestResult.Payload());
         }
 
         /// <summary>
@@ -40,14 +59,18 @@
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> Update(int id, UpdateTodoItemCommand command)
+        [ProducesResponseType(typeof(System.Collections.Generic.List<string>), StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> Update(int id, UpdateTodoItemCommand command)
         {
             if (id != command.Id) return BadRequest();
 
-            await Mediator.Send(command);
+            RequestResult requestResult = await Orchestrator.SendCommand(command);
 
+            if (!requestResult.Success)
+                return BadRequest(requestResult.Messages);
+            
             return NoContent();
         }
 
@@ -57,14 +80,18 @@
         /// <param name="command"></param>
         /// <returns></returns>
         [HttpPut("[action]")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> UpdateItemDetails(int id, UpdateTodoItemDetailCommand command)
+        [ProducesResponseType(typeof(System.Collections.Generic.List<string>), StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> UpdateItemDetails(int id, UpdateTodoItemDetailCommand command)
         {
             if (id != command.Id) return BadRequest();
 
-            await Mediator.Send(command);
+            RequestResult requestResult = await Orchestrator.SendCommand(command);
 
+            if (!requestResult.Success)
+                return BadRequest(requestResult.Messages);
+            
             return NoContent();
         }
 
@@ -74,10 +101,15 @@
         /// <returns></returns>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> Delete(int id)
+        [ProducesResponseType(typeof(System.Collections.Generic.List<string>), StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> Delete(int id)
         {
-            await Mediator.Send(new DeleteTodoItemCommand {Id = id});
+            RequestResult requestResult = await Orchestrator.SendCommand(new DeleteTodoItemCommand {Id = id});
 
+            if (!requestResult.Success)
+                return BadRequest(requestResult.Messages);
+            
             return NoContent();
         }
     }
