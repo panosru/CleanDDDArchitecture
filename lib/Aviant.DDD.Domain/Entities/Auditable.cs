@@ -25,7 +25,7 @@ namespace Aviant.DDD.Domain.Entities
     {
         public Guid? LastModifiedBy { get; set; }
     }
-    
+
     public interface IHasDeletionTime : IAuditedEntity
     {
         DateTime? Deleted { get; set; }

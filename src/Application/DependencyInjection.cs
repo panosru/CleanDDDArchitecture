@@ -13,11 +13,8 @@
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddAutoMapper(
-                cfg =>
-                {
-                    cfg.AddProfile(new MappingProfile(Assembly.GetExecutingAssembly()));
-                });
-            
+                cfg => { cfg.AddProfile(new MappingProfile(Assembly.GetExecutingAssembly())); });
+
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
             services.AddMediatR(Assembly.GetExecutingAssembly());

@@ -15,14 +15,14 @@
         public string Title { get; set; }
     }
 
-    public class CreateTodoItemCommandCommandCommandCommandHandler : 
-        CommandCommandHandler<CreateTodoItemCommand, Lazy<TodoItemDto>>
+    public class CreateTodoItemCommandCommandCommandCommandHandler
+        : CommandCommandHandler<CreateTodoItemCommand, Lazy<TodoItemDto>>
     {
-        private readonly ITodoItemWriteRepository _todoItemWriteRepository;
         private readonly IMapper _mapper;
+        private readonly ITodoItemWriteRepository _todoItemWriteRepository;
 
         public CreateTodoItemCommandCommandCommandCommandHandler(
-            ITodoItemWriteRepository todoItemWriteRepository, 
+            ITodoItemWriteRepository todoItemWriteRepository,
             IMapper mapper)
         {
             _todoItemWriteRepository = todoItemWriteRepository;
@@ -30,7 +30,7 @@
         }
 
         public override async Task<Lazy<TodoItemDto>> Handle(
-            CreateTodoItemCommand request, 
+            CreateTodoItemCommand request,
             CancellationToken cancellationToken)
         {
             var entity = new TodoItemEntity

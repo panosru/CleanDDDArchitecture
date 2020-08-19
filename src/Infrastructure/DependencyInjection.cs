@@ -44,7 +44,6 @@
                 services.AddDbContext<ApplicationDbContextReadOnly>(
                     options =>
                         options.UseInMemoryDatabase("CleanDDDArchitectureDb"));
-
             }
             else
             {
@@ -59,7 +58,7 @@
                     options =>
                         options.UseNpgsql(
                             configuration.GetConnectionString("DefaultReadConnection"),
-                            b => 
+                            b =>
                                 b.MigrationsAssembly(typeof(ApplicationDbContextReadOnly).Assembly.FullName)));
             }
 
@@ -104,7 +103,7 @@
             services.AddScoped<IEventDispatcher, EventDispatcher>();
 
             services.AddSingleton<IServiceContainer, HttpContextServiceProviderProxy>();
-            
+
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 

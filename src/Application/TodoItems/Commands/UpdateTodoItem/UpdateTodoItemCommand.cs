@@ -23,9 +23,9 @@
     public class UpdateTodoItemCommandCommandCommandCommandHandler
         : CommandCommandHandler<UpdateTodoItemCommand, TodoItemDto>
     {
+        private readonly IMapper _mapper;
         private readonly ITodoItemReadRepository _todoItemReadRepository;
         private readonly ITodoItemWriteRepository _todoItemWriteRepository;
-        private readonly IMapper _mapper;
 
         public UpdateTodoItemCommandCommandCommandCommandHandler(
             ITodoItemReadRepository todoItemReadRepository,
@@ -56,11 +56,10 @@
         }
     }
 
-    public class UserPreProcessor :
-        RequestPreProcessorBase<UpdateTodoItemCommand>
+    public class UserPreProcessor : RequestPreProcessorBase<UpdateTodoItemCommand>
     {
         public override Task Process(
-            UpdateTodoItemCommand request, 
+            UpdateTodoItemCommand request,
             CancellationToken cancellationToken)
         {
             Console.WriteLine($"Pre handle {request.Title} {request.Done} with ID {request.Id}");
@@ -87,7 +86,7 @@
                 Console.WriteLine("TodoCompletedEvent added");
                 _eventDispatcher.AddPostCommitEvent(new TodoCompletedEvent(response));
             }
-            
+
             return Task.CompletedTask;
         }
     }

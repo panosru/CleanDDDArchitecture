@@ -5,12 +5,6 @@ namespace Aviant.DDD.Application.Orchestration
 
     public class RequestResult
     {
-        public bool Success { get; set; }
-        
-        public List<string> Messages { get; set; } = new List<string>();
-        
-        public int? AffectedRows { get; set; }
-
         private readonly object? _payload;
 
         public RequestResult()
@@ -24,9 +18,8 @@ namespace Aviant.DDD.Application.Orchestration
         }
 
         public RequestResult(object? payload, int? affectedRows)
+            : this(payload)
         {
-            _payload = payload;
-            Success = true;
             AffectedRows = affectedRows;
         }
 
@@ -35,6 +28,12 @@ namespace Aviant.DDD.Application.Orchestration
             Messages = messages;
             Success = false;
         }
+
+        public bool Success { get; set; }
+
+        public List<string> Messages { get; set; } = new List<string>();
+
+        public int? AffectedRows { get; set; }
 
         public object? Payload()
         {
@@ -45,11 +44,13 @@ namespace Aviant.DDD.Application.Orchestration
         {
             if (_payload is null)
                 throw new Exception("Payload is null");
-            
+
             if (typeof(T) != _payload.GetType())
-                throw new Exception(string.Format(
-                    "Type \"{0}\" does not much payload type \"{1}\"",
-                    typeof(T).FullName, _payload.GetType().FullName));
+                throw new Exception(
+                    string.Format(
+                        "Type \"{0}\" does not much payload type \"{1}\"",
+                        typeof(T).FullName,
+                        _payload.GetType().FullName));
 
             return (T) _payload;
         }

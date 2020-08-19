@@ -16,6 +16,12 @@ namespace Aviant.DDD.Infrastructure.Persistance
             _context = context;
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         public async Task<int> Commit()
         {
             try
@@ -31,18 +37,9 @@ namespace Aviant.DDD.Infrastructure.Persistance
             }
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
         private void Dispose(bool disposing)
         {
-            if (!_isDisposed && disposing)
-            {
-                _context.Dispose();
-            }
+            if (!_isDisposed && disposing) _context.Dispose();
 
             _isDisposed = true;
         }

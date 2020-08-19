@@ -8,7 +8,7 @@ namespace CleanDDDArchitecture.Application.TodoItems.Commands.CreateTodoItem
         public int Id { get; set; }
 
         public string Title { get; set; }
-        
+
         public string ListId { get; set; }
     }
 }

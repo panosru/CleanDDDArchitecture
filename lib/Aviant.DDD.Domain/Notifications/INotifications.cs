@@ -5,11 +5,11 @@ namespace Aviant.DDD.Domain.Notifications
     public interface INotifications
     {
         void AddNotification(string notification);
-        
+
         bool HasNotifications();
-        
+
         List<string> GetAll();
-        
+
         void CleanNotifications();
     }
 }

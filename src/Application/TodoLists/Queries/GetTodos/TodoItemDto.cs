@@ -21,9 +21,10 @@
         public void Mapping(Profile profile)
         {
             profile.CreateMap<TodoItemEntity, TodoItemDto>()
-                .ForMember(d => 
-                    d.Priority, 
-                    opt => 
+                .ForMember(
+                    d =>
+                        d.Priority,
+                    opt =>
                         opt.MapFrom(s => (int) s.Priority));
         }
     }
