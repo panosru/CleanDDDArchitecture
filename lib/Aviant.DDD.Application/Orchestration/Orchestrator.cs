@@ -11,13 +11,13 @@ namespace Aviant.DDD.Application.Orchestration
 
     public class Orchestrator : IOrchestrator
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly INotifications _notifications;
         private readonly IEventDispatcher _eventDispatcher;
         private readonly IMediator _mediator;
+        private readonly INotifications _notifications;
+        private readonly IUnitOfWork _unitOfWork;
 
         public Orchestrator(
-            IUnitOfWork unitOfWork, 
+            IUnitOfWork unitOfWork,
             INotifications notifications,
             IEventDispatcher eventDispatcher,
             IMediator mediator)
@@ -31,14 +31,11 @@ namespace Aviant.DDD.Application.Orchestration
         public async Task<RequestResult> SendCommand<T>(ICommand<T> command)
         {
             var commandResponse = await _mediator.Send(command);
-            
+
             // Fire pre/post events
             await _eventDispatcher.FirePreCommitEvents();
 
-            if (_notifications.HasNotifications())
-            {
-                return new RequestResult(_notifications.GetAll());
-            }
+            if (_notifications.HasNotifications()) return new RequestResult(_notifications.GetAll());
 
             var affectedRows = await _unitOfWork.Commit();
 
@@ -48,16 +45,15 @@ namespace Aviant.DDD.Application.Orchestration
                     {
                         "An error occurred"
                     });
-            
+
             // Fire post commit events
             await _eventDispatcher.FirePostCommitEvents();
 
             var isLazy = false;
-                
+
             try
             {
-                isLazy = typeof(Lazy<>) == (
-                    commandResponse?.GetType().GetGenericTypeDefinition());
+                isLazy = typeof(Lazy<>) == commandResponse?.GetType().GetGenericTypeDefinition();
             }
             catch (Exception)
             {
@@ -69,18 +65,14 @@ namespace Aviant.DDD.Application.Orchestration
                     ? commandResponse?.GetType().GetProperty("Value")?.GetValue(commandResponse, null)
                     : commandResponse,
                 affectedRows);
-
         }
 
         public async Task<RequestResult> SendQuery<T>(ICommand<T> command)
         {
             var commandResponse = await _mediator.Send(command);
 
-            if (_notifications.HasNotifications())
-            {
-                return new RequestResult(_notifications.GetAll());
-            }
-            
+            if (_notifications.HasNotifications()) return new RequestResult(_notifications.GetAll());
+
             return new RequestResult(commandResponse);
         }
     }

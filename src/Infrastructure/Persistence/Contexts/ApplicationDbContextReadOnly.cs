@@ -8,20 +8,20 @@ namespace CleanDDDArchitecture.Infrastructure.Persistence.Contexts
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
 
-    public class ApplicationDbContextReadOnly :
-        ApplicationDbContextReadOnlyBase<ApplicationUser, ApplicationRole>, IApplicationDbContextReadOnly
+    public class ApplicationDbContextReadOnly
+        : ApplicationDbContextReadOnlyBase<ApplicationUser, ApplicationRole>, IApplicationDbContextReadOnly
     {
         public ApplicationDbContextReadOnly(
-            DbContextOptions<ApplicationDbContextReadOnly> options, 
+            DbContextOptions<ApplicationDbContextReadOnly> options,
             IOptions<OperationalStoreOptions> operationalStoreOptions)
             : base(options, operationalStoreOptions)
         {
         }
 
         public DbSet<TodoListEntity> TodoLists { get; set; }
-        
+
         public DbSet<TodoItemEntity> TodoItems { get; set; }
-        
+
         public DbSet<AccountEntity> Accounts { get; set; }
     }
 }

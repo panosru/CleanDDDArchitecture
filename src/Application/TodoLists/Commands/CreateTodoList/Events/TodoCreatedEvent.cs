@@ -15,7 +15,7 @@ namespace CleanDDDArchitecture.Application.TodoLists.Commands.CreateTodoList.Eve
         public override Task Handle(TodoCreatedEvent @event, CancellationToken cancellationToken)
         {
             Console.WriteLine(@event.Name);
-            
+
             return Task.CompletedTask;
         }
     }

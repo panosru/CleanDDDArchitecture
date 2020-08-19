@@ -7,10 +7,10 @@ namespace Aviant.DDD.Application.Events
     using MediatR;
     using Services;
 
-    public class EventDispatcher : IEventDispatcher 
+    public class EventDispatcher : IEventDispatcher
     {
-        private readonly IMediator _mediator;
         private readonly IDateTimeService _dateTimeService;
+        private readonly IMediator _mediator;
 
         public EventDispatcher(IMediator mediator, IDateTimeService dateTimeService)
         {
