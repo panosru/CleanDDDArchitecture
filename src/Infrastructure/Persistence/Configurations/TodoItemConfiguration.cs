@@ -16,7 +16,7 @@
                 .HasForeignKey(e => e.ListId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
             builder.Property(t => t.Title)
                 .HasMaxLength(200)
                 .IsRequired();

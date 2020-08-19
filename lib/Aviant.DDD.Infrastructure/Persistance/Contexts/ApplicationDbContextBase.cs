@@ -56,9 +56,9 @@ namespace Aviant.DDD.Infrastructure.Persistance.Contexts
                         SetDeletionAuditProperties(entry);
                         break;
                 }
-        
+
             var result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        
+
             return result;
         }
 

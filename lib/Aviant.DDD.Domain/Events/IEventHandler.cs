@@ -8,7 +8,7 @@ namespace Aviant.DDD.Domain.Events
         where TEvent : IEvent
     {
         /// <summary>
-        /// Handles an event
+        ///     Handles an event
         /// </summary>
         /// <param name="event"></param>
         /// <param name="cancellationToken"></param>

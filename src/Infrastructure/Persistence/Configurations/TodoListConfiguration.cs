@@ -9,7 +9,7 @@
         public override void Configure(EntityTypeBuilder<TodoListEntity> builder)
         {
             builder.HasKey(e => e.Id);
-            
+
             builder.Property(t => t.Title)
                 .HasMaxLength(200)
                 .IsRequired();

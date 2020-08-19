@@ -4,7 +4,6 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Threading;
     using System.Threading.Tasks;
     using Application.Identity;
     using Contexts;
@@ -32,7 +31,7 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
         {
             // First validate entity's rules
             await entity.Validate();
-            
+
             await _dbSet.AddAsync(entity);
         }
 
@@ -40,9 +39,9 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
         {
             // First validate entity's rules
             entity.Validate();
-            
+
             _dbContext.Entry(entity).State = EntityState.Modified;
-            
+
             return Task.CompletedTask;
         }
 
@@ -50,9 +49,9 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
         {
             // First validate entity's rules
             entity.Validate();
-            
+
             _dbContext.Entry(entity).State = EntityState.Deleted;
-            
+
             return Task.CompletedTask;
         }
 
@@ -61,7 +60,7 @@ namespace Aviant.DDD.Infrastructure.Persistance.Repository
             IEnumerable<TEntity> entities = _dbSet.Where(predicate);
 
             foreach (var entity in entities) _dbContext.Entry(entity).State = EntityState.Deleted;
-            
+
             return Task.CompletedTask;
         }
 

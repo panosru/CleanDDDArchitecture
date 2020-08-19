@@ -1,7 +1,6 @@
 namespace Aviant.DDD.Domain.Entities
 {
     using System.Threading.Tasks;
-    using Events;
 
     public abstract class EntityBase<T> : IEntity<T>
     {
