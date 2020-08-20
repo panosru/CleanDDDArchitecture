@@ -30,7 +30,7 @@ namespace CleanDDDArchitecture.RestApi.Controllers
                 new
                 {
                     Version = version,
-                    LastUdated = creationDate
+                    LastUpdated = creationDate
                 });
         }
     }
