@@ -93,9 +93,9 @@
                 Success = false
             };
 
-            foreach (var failure in exception?.Failures)
-            foreach (var failureValue in failure.Value)
-                details.Messages.Add(failureValue);
+            foreach (var failure in exception?.Failures!)
+                foreach (var failureValue in failure.Value)
+                    details.Messages.Add(failureValue);
 
             context.Result = new BadRequestObjectResult(details);
 
