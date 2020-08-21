@@ -5,24 +5,24 @@
     using System.Threading.Tasks;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
-    using Aviant.DDD.Application.Commands;
+    using Aviant.DDD.Application.Queries;
     using Aviant.DDD.Application.Services;
     using Microsoft.EntityFrameworkCore;
     using Persistence;
 
-    public class ExportTodosQuery : CommandBase<ExportTodosVm>
+    public class ExportTodosQuery : Query<ExportTodosVm>
     {
         public int ListId { get; set; }
     }
 
-    public class ExportTodosQueryCommandCommandHandler : CommandCommandHandler<ExportTodosQuery, ExportTodosVm>
+    public class ExportTodosQueryHandler : QueryHandler<ExportTodosQuery, ExportTodosVm>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly ITodoDbContext _context;
         private readonly ICsvFileBuilder<TodoItemRecord> _fileBuilder;
         private readonly IMapper _mapper;
 
-        public ExportTodosQueryCommandCommandHandler(
-            IApplicationDbContext context,
+        public ExportTodosQueryHandler(
+            ITodoDbContext context,
             IMapper mapper,
             ICsvFileBuilder<TodoItemRecord> fileBuilder)
         {

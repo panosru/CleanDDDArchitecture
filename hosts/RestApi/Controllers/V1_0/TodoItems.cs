@@ -89,7 +89,7 @@
         [ProducesResponseType(typeof(List<string>), StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> UpdateItemDetails(
-            [FromRoute] int id,
+            [FromQuery] int id,
             [FromBody] UpdateTodoItemDetailCommand command)
         {
             if (id != command.Id) return BadRequest();

@@ -8,17 +8,17 @@
     using MediatR;
     using Repositories;
 
-    public class DeleteTodoItemCommand : CommandBase
+    public class DeleteTodoItemCommand : Command
     {
         public int Id { get; set; }
     }
 
-    public class DeleteTodoItemCommandCommandCommandCommandHandler : CommandCommandHandler<DeleteTodoItemCommand>
+    public class DeleteTodoItemCommandHandler : CommandHandler<DeleteTodoItemCommand>
     {
         private readonly ITodoItemReadRepository _todoItemReadRepository;
         private readonly ITodoItemWriteRepository _todoItemWriteRepository;
 
-        public DeleteTodoItemCommandCommandCommandCommandHandler(
+        public DeleteTodoItemCommandHandler(
             ITodoItemReadRepository todoItemReadRepository,
             ITodoItemWriteRepository todoItemWriteRepository)
         {

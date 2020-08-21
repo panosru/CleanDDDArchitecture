@@ -78,7 +78,7 @@ namespace CleanDDDArchitecture.RestApi
 
             services
                 .AddHealthChecks()
-                .AddDbContextCheck<ApplicationDbContext>();
+                .AddDbContextCheck<TodoDbContext>();
 
             services.AddControllersWithViews(
                 options =>

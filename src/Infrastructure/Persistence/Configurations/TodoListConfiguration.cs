@@ -4,7 +4,7 @@
     using Domain.Entities;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-    public class TodoListConfiguration : EntityConfigurationBase<TodoListEntity, int>
+    public class TodoListConfiguration : EntityConfiguration<TodoListEntity, int>
     {
         public override void Configure(EntityTypeBuilder<TodoListEntity> builder)
         {

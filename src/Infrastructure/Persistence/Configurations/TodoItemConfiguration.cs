@@ -5,7 +5,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-    public class TodoItemConfiguration : EntityConfigurationBase<TodoItemEntity, int>
+    public class TodoItemConfiguration : EntityConfiguration<TodoItemEntity, int>
     {
         public override void Configure(EntityTypeBuilder<TodoItemEntity> builder)
         {

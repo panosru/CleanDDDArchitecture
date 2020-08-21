@@ -7,10 +7,10 @@ namespace CleanDDDArchitecture.Infrastructure.Repositories
     using Persistence.Contexts;
 
     public class TodoListWriteRepository
-        : RepositoryWriteOnlyBase<ApplicationDbContext, ApplicationUser, ApplicationRole, TodoListEntity, int>,
+        : RepositoryWriteOnly<TodoDbContext, TodoUser, TodoRole, TodoListEntity, int>,
             ITodoListWriteRepository
     {
-        public TodoListWriteRepository(ApplicationDbContext context)
+        public TodoListWriteRepository(TodoDbContext context)
             : base(context)
         {
         }

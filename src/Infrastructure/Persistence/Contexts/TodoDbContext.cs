@@ -10,11 +10,11 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
 
-    public class ApplicationDbContext
-        : ApplicationDbContextBase<ApplicationDbContext, ApplicationUser, ApplicationRole>, IApplicationDbContext
+    public class TodoDbContext
+        : ApplicationDbContext<TodoDbContext, TodoUser, TodoRole>, ITodoDbContext
     {
-        public ApplicationDbContext(
-            DbContextOptions<ApplicationDbContext> options,
+        public TodoDbContext(
+            DbContextOptions<TodoDbContext> options,
             IOptions<OperationalStoreOptions> operationalStoreOptions,
             ICurrentUserService currentUserService,
             IDateTimeService dateTimeService)
