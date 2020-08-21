@@ -11,7 +11,7 @@
     using Domain.Entities;
     using Repositories;
 
-    public class UpdateTodoItemCommand : CommandBase<TodoItemDto>
+    public class UpdateTodoItemCommand : Command<TodoItemDto>
     {
         public int Id { get; set; }
 
@@ -20,14 +20,14 @@
         public bool Done { get; set; }
     }
 
-    public class UpdateTodoItemCommandCommandCommandCommandHandler
-        : CommandCommandHandler<UpdateTodoItemCommand, TodoItemDto>
+    public class UpdateTodoItemCommandHandler
+        : CommandHandler<UpdateTodoItemCommand, TodoItemDto>
     {
         private readonly IMapper _mapper;
         private readonly ITodoItemReadRepository _todoItemReadRepository;
         private readonly ITodoItemWriteRepository _todoItemWriteRepository;
 
-        public UpdateTodoItemCommandCommandCommandCommandHandler(
+        public UpdateTodoItemCommandHandler(
             ITodoItemReadRepository todoItemReadRepository,
             ITodoItemWriteRepository todoItemWriteRepository,
             IMapper mapper)
@@ -56,7 +56,7 @@
         }
     }
 
-    public class UserPreProcessor : RequestPreProcessorBase<UpdateTodoItemCommand>
+    public class UserPreProcessor : RequestPreProcessor<UpdateTodoItemCommand>
     {
         public override Task Process(
             UpdateTodoItemCommand request,
@@ -67,7 +67,7 @@
         }
     }
 
-    public class UserPostProcessor : RequestPostProcessorBase<UpdateTodoItemCommand, TodoItemDto>
+    public class UserPostProcessor : RequestPostProcessor<UpdateTodoItemCommand, TodoItemDto>
     {
         private readonly IEventDispatcher _eventDispatcher;
 

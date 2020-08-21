@@ -31,11 +31,11 @@ namespace CleanDDDArchitecture.RestApi
 
                 try
                 {
-                    var context = services.GetRequiredService<ApplicationDbContext>();
+                    var context = services.GetRequiredService<TodoDbContext>();
 
                     if (context.Database.IsNpgsql()) await context.Database.MigrateAsync();
 
-                    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                    var userManager = services.GetRequiredService<UserManager<TodoUser>>();
 
                     await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager);
                     await ApplicationDbContextSeed.SeedSampleDataAsync(context);

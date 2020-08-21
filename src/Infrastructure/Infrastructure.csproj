@@ -21,4 +21,8 @@
     <None Remove="Persistence\Migrations\.gitkeep" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Persistence\Migrations" />
+  </ItemGroup>
+
 </Project>

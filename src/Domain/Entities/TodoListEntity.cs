@@ -7,7 +7,7 @@
     using Aviant.DDD.Domain.Validators;
 
     public class TodoListEntity
-        : EntityBase<int>,
+        : Entity<int>,
             ICreationAudited,
             IModificationAudited,
             IDeletionAudited,

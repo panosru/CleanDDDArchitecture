@@ -8,19 +8,19 @@
     using MediatR;
     using Repositories;
 
-    public class UpdateTodoListCommand : CommandBase
+    public class UpdateTodoListCommand : Command
     {
         public int Id { get; set; }
 
         public string Title { get; set; }
     }
 
-    public class UpdateTodoListCommandCommandCommandCommandHandler : CommandCommandHandler<UpdateTodoListCommand>
+    public class UpdateTodoListCommandHandler : CommandHandler<UpdateTodoListCommand>
     {
         private readonly ITodoListReadRepository _todoListReadRepository;
         private readonly ITodoListWriteRepository _todoListWriteRepository;
 
-        public UpdateTodoListCommandCommandCommandCommandHandler(
+        public UpdateTodoListCommandHandler(
             ITodoListReadRepository todoListReadRepository,
             ITodoListWriteRepository todoListWriteRepository)
         {

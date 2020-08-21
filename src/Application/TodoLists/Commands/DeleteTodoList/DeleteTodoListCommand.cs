@@ -9,17 +9,17 @@
     using Microsoft.EntityFrameworkCore;
     using Repositories;
 
-    public class DeleteTodoListCommand : CommandBase
+    public class DeleteTodoListCommand : Command
     {
         public int Id { get; set; }
     }
 
-    public class DeleteTodoListCommandCommandCommandCommandHandler : CommandCommandHandler<DeleteTodoListCommand>
+    public class DeleteTodoListCommandHandler : CommandHandler<DeleteTodoListCommand>
     {
         private readonly ITodoListReadRepository _todoListReadRepository;
         private readonly ITodoListWriteRepository _todoListWriteRepository;
 
-        public DeleteTodoListCommandCommandCommandCommandHandler(
+        public DeleteTodoListCommandHandler(
             ITodoListReadRepository todoListReadRepository,
             ITodoListWriteRepository todoListWriteRepository)
         {

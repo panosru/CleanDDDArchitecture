@@ -5,7 +5,7 @@ namespace CleanDDDArchitecture.Application.TodoItems.Commands.UpdateTodoItem
     using System.Threading.Tasks;
     using Aviant.DDD.Domain.Events;
 
-    public class TodoCompletedEvent : EventBase
+    public class TodoCompletedEvent : Event
     {
         public TodoCompletedEvent(TodoItemDto completedTodo)
         {
@@ -15,7 +15,7 @@ namespace CleanDDDArchitecture.Application.TodoItems.Commands.UpdateTodoItem
         public TodoItemDto CompletedTodo { get; }
     }
 
-    public class TodoCompletedEventHandler : EventHandlerBase<TodoCompletedEvent>
+    public class TodoCompletedEventHandler : Aviant.DDD.Domain.Events.EventHandler<TodoCompletedEvent>
     {
         public override Task Handle(TodoCompletedEvent notification, CancellationToken cancellationToken)
         {

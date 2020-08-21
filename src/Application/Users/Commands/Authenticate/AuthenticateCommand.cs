@@ -5,18 +5,18 @@ namespace CleanDDDArchitecture.Application.Users.Commands.Authenticate
     using Aviant.DDD.Application.Commands;
     using Aviant.DDD.Application.Identity;
 
-    public class AuthenticateCommand : CommandBase<object>
+    public class AuthenticateCommand : Command<object>
     {
         public string Username { get; set; }
 
         public string Password { get; set; }
     }
 
-    public class AuthenticateCommandCommandCommandCommandHandler : CommandCommandHandler<AuthenticateCommand, object>
+    public class AuthenticateCommandCommandCommandHandler : CommandHandler<AuthenticateCommand, object>
     {
         private readonly IIdentityService _identityIdentityService;
 
-        public AuthenticateCommandCommandCommandCommandHandler(IIdentityService identityIdentityService)
+        public AuthenticateCommandCommandCommandHandler(IIdentityService identityIdentityService)
         {
             _identityIdentityService = identityIdentityService;
         }

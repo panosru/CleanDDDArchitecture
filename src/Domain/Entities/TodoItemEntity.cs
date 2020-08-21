@@ -5,7 +5,7 @@
     using Aviant.DDD.Domain.Enums;
 
     public sealed class TodoItemEntity
-        : EntityBase<int>,
+        : Entity<int>,
             ICreationAudited,
             IModificationAudited,
             IDeletionAudited,

@@ -7,10 +7,10 @@ namespace CleanDDDArchitecture.Infrastructure.Repositories
     using Persistence.Contexts;
 
     public class AccountWriteRepository //TODO: Maybe should add methods for easy creation?
-        : RepositoryWriteOnlyBase<ApplicationDbContext, ApplicationUser, ApplicationRole, AccountEntity, int>,
+        : RepositoryWriteOnly<TodoDbContext, TodoUser, TodoRole, AccountEntity, int>,
             IAccountWriteRepository
     {
-        public AccountWriteRepository(ApplicationDbContext context)
+        public AccountWriteRepository(TodoDbContext context)
             : base(context)
         {
         }

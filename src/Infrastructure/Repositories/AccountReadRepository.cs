@@ -7,10 +7,10 @@ namespace CleanDDDArchitecture.Infrastructure.Repositories
     using Persistence.Contexts;
 
     public class AccountReadRepository
-        : RepositoryReadOnlyBase<ApplicationDbContextReadOnly, ApplicationUser, ApplicationRole, AccountEntity, int>,
+        : RepositoryReadOnly<TodoDbContextReadOnly, TodoUser, TodoRole, AccountEntity, int>,
             IAccountReadRepository
     {
-        public AccountReadRepository(ApplicationDbContextReadOnly context)
+        public AccountReadRepository(TodoDbContextReadOnly context)
             : base(context)
         {
         }

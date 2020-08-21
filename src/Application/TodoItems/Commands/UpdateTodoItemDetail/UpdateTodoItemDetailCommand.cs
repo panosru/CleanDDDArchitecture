@@ -9,7 +9,7 @@
     using MediatR;
     using Repositories;
 
-    public class UpdateTodoItemDetailCommand : CommandBase
+    public class UpdateTodoItemDetailCommand : Command
     {
         public int Id { get; set; }
 
@@ -20,13 +20,13 @@
         public string Note { get; set; }
     }
 
-    public class UpdateTodoItemDetailCommandCommandCommandCommandHandler
-        : CommandCommandHandler<UpdateTodoItemDetailCommand>
+    public class UpdateTodoItemDetailCommandHandler
+        : CommandHandler<UpdateTodoItemDetailCommand>
     {
         private readonly ITodoItemReadRepository _todoItemReadRepository;
         private readonly ITodoItemWriteRepository _todoItemWriteRepository;
 
-        public UpdateTodoItemDetailCommandCommandCommandCommandHandler(
+        public UpdateTodoItemDetailCommandHandler(
             ITodoItemReadRepository todoItemReadRepository,
             ITodoItemWriteRepository todoItemWriteRepository)
         {

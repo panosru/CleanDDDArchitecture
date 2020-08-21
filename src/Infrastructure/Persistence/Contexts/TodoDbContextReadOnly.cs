@@ -8,11 +8,11 @@ namespace CleanDDDArchitecture.Infrastructure.Persistence.Contexts
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
 
-    public class ApplicationDbContextReadOnly
-        : ApplicationDbContextReadOnlyBase<ApplicationUser, ApplicationRole>, IApplicationDbContextReadOnly
+    public class TodoDbContextReadOnly
+        : ApplicationDbContextReadOnly<TodoUser, TodoRole>, ITodoDbContextReadOnly
     {
-        public ApplicationDbContextReadOnly(
-            DbContextOptions<ApplicationDbContextReadOnly> options,
+        public TodoDbContextReadOnly(
+            DbContextOptions<TodoDbContextReadOnly> options,
             IOptions<OperationalStoreOptions> operationalStoreOptions)
             : base(options, operationalStoreOptions)
         {

@@ -5,7 +5,7 @@
     using Aviant.DDD.Domain.TransferObjects;
     using Domain.Entities;
 
-    public class TodoItemDto : IMapFrom<TodoItemEntity>, IDto
+    public class TodoItemDto : Dto, IMapFrom<TodoItemEntity>
     {
         public int Id { get; set; }
 
