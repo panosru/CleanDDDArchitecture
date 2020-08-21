@@ -4,7 +4,7 @@ namespace CleanDDDArchitecture.Domain.Entities
     using Aviant.DDD.Domain.Entities;
 
     public class AccountEntity
-        : EntityBase<int>,
+        : Entity<int>,
             IActivationAudited
     {
         public Guid UserId { get; set; }

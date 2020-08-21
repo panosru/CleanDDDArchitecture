@@ -8,19 +8,19 @@
 
     public static class ApplicationDbContextSeed //TODO: Revisit 
     {
-        private static UserManager<ApplicationUser> _userManager;
+        private static UserManager<TodoUser> _userManager;
 
-        public static async Task SeedDefaultUserAsync(UserManager<ApplicationUser> userManager)
+        public static async Task SeedDefaultUserAsync(UserManager<TodoUser> userManager)
         {
             _userManager = userManager;
 
-            var defaultUser = new ApplicationUser {UserName = "administrator", Email = "administrator@localhost"};
+            var defaultUser = new TodoUser {UserName = "administrator", Email = "administrator@localhost"};
 
             if (userManager.Users.All(u => u.UserName != defaultUser.UserName))
                 await userManager.CreateAsync(defaultUser, "Administrator1!");
         }
 
-        public static async Task SeedSampleDataAsync(ApplicationDbContext context)
+        public static async Task SeedSampleDataAsync(TodoDbContext context)
         {
             var modified = false;
 

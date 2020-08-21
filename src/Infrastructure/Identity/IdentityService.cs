@@ -17,10 +17,10 @@
     public class IdentityService : IIdentityService //TODO: This requires a major refactor 
     {
         private readonly IConfiguration _config;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<TodoUser> _userManager;
 
         public IdentityService(
-            UserManager<ApplicationUser> userManager,
+            UserManager<TodoUser> userManager,
             IConfiguration config)
         {
             _userManager = userManager;
@@ -98,7 +98,7 @@
 
         public async Task<(IdentityResult Result, Guid UserId)> CreateUserAsync(string username, string password)
         {
-            var user = new ApplicationUser
+            var user = new TodoUser
             {
                 UserName = username,
                 Email = username
@@ -118,14 +118,14 @@
             return IdentityResult.Success();
         }
 
-        public async Task<IdentityResult> DeleteUserAsync(ApplicationUser user)
+        public async Task<IdentityResult> DeleteUserAsync(TodoUser user)
         {
             var result = await _userManager.DeleteAsync(user);
 
             return result.ToApplicationResult();
         }
 
-        private string GenerateJwtToken(ApplicationUser user)
+        private string GenerateJwtToken(TodoUser user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));

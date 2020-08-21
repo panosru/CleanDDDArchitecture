@@ -12,12 +12,12 @@
     using Aviant.DDD.Domain.Notifications;
     using Aviant.DDD.Domain.Persistence;
     using Aviant.DDD.Domain.Services;
-    using Aviant.DDD.Infrastructure.Files;
     using Aviant.DDD.Infrastructure.Persistance;
-    using Aviant.DDD.Infrastructure.Service;
+    using Aviant.DDD.Infrastructure.Services;
     using Files.Maps;
     using Identity;
     using Microsoft.AspNetCore.Authentication;
+    using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -37,38 +37,38 @@
 
             if (configuration.GetValue<bool>("UseInMemoryDatabase"))
             {
-                services.AddDbContext<ApplicationDbContext>(
+                services.AddDbContext<TodoDbContext>(
                     options =>
                         options.UseInMemoryDatabase("CleanDDDArchitectureDb"));
 
-                services.AddDbContext<ApplicationDbContextReadOnly>(
+                services.AddDbContext<TodoDbContextReadOnly>(
                     options =>
                         options.UseInMemoryDatabase("CleanDDDArchitectureDb"));
             }
             else
             {
-                services.AddDbContext<ApplicationDbContext>(
+                services.AddDbContext<TodoDbContext>(
                     options =>
                         options.UseNpgsql(
                             configuration.GetConnectionString("DefaultWriteConnection"),
                             b =>
-                                b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+                                b.MigrationsAssembly(typeof(TodoDbContext).Assembly.FullName)));
 
-                services.AddDbContext<ApplicationDbContextReadOnly>(
+                services.AddDbContext<TodoDbContextReadOnly>(
                     options =>
                         options.UseNpgsql(
                             configuration.GetConnectionString("DefaultReadConnection"),
                             b =>
-                                b.MigrationsAssembly(typeof(ApplicationDbContextReadOnly).Assembly.FullName)));
+                                b.MigrationsAssembly(typeof(TodoDbContextReadOnly).Assembly.FullName)));
             }
 
-            services.AddScoped<IApplicationDbContext>(
+            services.AddScoped<ITodoDbContext>(
                 provider =>
-                    provider.GetService<ApplicationDbContext>());
+                    provider.GetService<TodoDbContext>());
 
-            services.AddScoped<IApplicationDbContextReadOnly>(
+            services.AddScoped<ITodoDbContextReadOnly>(
                 provider =>
-                    provider.GetService<ApplicationDbContextReadOnly>());
+                    provider.GetService<TodoDbContextReadOnly>());
 
             #region Read Repositories
 
@@ -86,19 +86,19 @@
 
             #endregion
 
-            services.AddDefaultIdentity<ApplicationUser>()
-                .AddRoles<ApplicationRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddDefaultIdentity<TodoUser>()
+                .AddRoles<TodoRole>()
+                .AddEntityFrameworkStores<TodoDbContext>();
 
             services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+                .AddApiAuthorization<TodoUser, TodoDbContext>();
 
             services.AddTransient<IDateTimeService, DateTimeService>();
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<ICsvFileBuilder<TodoItemRecord>, CsvFileBuilder<TodoItemRecord, TodoItemRecordMap>>();
 
             services.AddScoped<IOrchestrator, Orchestrator>();
-            services.AddScoped<IUnitOfWork, UnitOfWork<ApplicationDbContext>>();
+            services.AddScoped<IUnitOfWork, UnitOfWork<TodoDbContext>>();
             services.AddScoped<INotifications, Notifications>();
             services.AddScoped<IEventDispatcher, EventDispatcher>();
 

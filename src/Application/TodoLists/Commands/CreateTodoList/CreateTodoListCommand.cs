@@ -10,19 +10,19 @@
     using Events;
     using Repositories;
 
-    public class CreateTodoListCommand : CommandBase<Lazy<TodoListDto>>
+    public class CreateTodoListCommand : Command<Lazy<TodoListDto>>
     {
         public string Title { get; set; }
     }
 
-    public class CreateTodoListCommandCommandCommandCommandHandler
-        : CommandCommandHandler<CreateTodoListCommand, Lazy<TodoListDto>>
+    public class CreateTodoListCommandHandler
+        : CommandHandler<CreateTodoListCommand, Lazy<TodoListDto>>
     {
         private readonly IEventDispatcher _eventDispatcher;
         private readonly IMapper _mapper;
         private readonly ITodoListWriteRepository _todoListWriteRepository;
 
-        public CreateTodoListCommandCommandCommandCommandHandler(
+        public CreateTodoListCommandHandler(
             ITodoListWriteRepository todoListWriteRepository,
             IEventDispatcher eventDispatcher,
             IMapper mapper)

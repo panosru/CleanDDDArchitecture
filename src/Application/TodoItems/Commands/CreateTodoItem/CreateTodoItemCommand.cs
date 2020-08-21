@@ -8,20 +8,20 @@
     using Domain.Entities;
     using Repositories;
 
-    public class CreateTodoItemCommand : CommandBase<Lazy<TodoItemDto>>
+    public class CreateTodoItemCommand : Command<Lazy<TodoItemDto>>
     {
         public int ListId { get; set; }
 
         public string Title { get; set; }
     }
 
-    public class CreateTodoItemCommandCommandCommandCommandHandler
-        : CommandCommandHandler<CreateTodoItemCommand, Lazy<TodoItemDto>>
+    public class CreateTodoItemCommandHandler
+        : CommandHandler<CreateTodoItemCommand, Lazy<TodoItemDto>>
     {
         private readonly IMapper _mapper;
         private readonly ITodoItemWriteRepository _todoItemWriteRepository;
 
-        public CreateTodoItemCommandCommandCommandCommandHandler(
+        public CreateTodoItemCommandHandler(
             ITodoItemWriteRepository todoItemWriteRepository,
             IMapper mapper)
         {

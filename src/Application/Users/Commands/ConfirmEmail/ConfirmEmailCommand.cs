@@ -8,19 +8,19 @@ namespace CleanDDDArchitecture.Application.Users.Commands.ConfirmEmail
     using Aviant.DDD.Application.Commands;
     using Aviant.DDD.Application.Identity;
 
-    public class ConfirmEmailCommand : CommandBase<IdentityResult>
+    public class ConfirmEmailCommand : Command<IdentityResult>
     {
         public string Token { get; set; }
 
         public string Email { get; set; }
     }
 
-    public class ConfirmEmailCommandCommandCommandCommandHandler
-        : CommandCommandHandler<ConfirmEmailCommand, IdentityResult>
+    public class ConfirmEmailCommandCommandCommandHandler
+        : CommandHandler<ConfirmEmailCommand, IdentityResult>
     {
         private readonly IIdentityService _identityIdentityService;
 
-        public ConfirmEmailCommandCommandCommandCommandHandler(IIdentityService identityIdentityService)
+        public ConfirmEmailCommandCommandCommandHandler(IIdentityService identityIdentityService)
         {
             _identityIdentityService = identityIdentityService;
         }

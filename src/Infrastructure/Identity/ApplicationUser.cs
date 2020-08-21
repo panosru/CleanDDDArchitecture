@@ -2,7 +2,7 @@
 {
     using Aviant.DDD.Application.Identity;
 
-    public class ApplicationUser : ApplicationUserBase
+    public class TodoUser : ApplicationUser
     {
     }
 }
