@@ -5,9 +5,9 @@
     using System.Threading.Tasks;
     using AutoMapper;
     using Aviant.DDD.Application.Commands;
-    using Aviant.DDD.Domain.Events;
+    using Aviant.DDD.Application.Notifications;
     using Domain.Entities;
-    using Events;
+    using Notifications;
     using Repositories;
 
     public class CreateTodoListCommand : Command<Lazy<TodoListDto>>
@@ -18,17 +18,17 @@
     public class CreateTodoListCommandHandler
         : CommandHandler<CreateTodoListCommand, Lazy<TodoListDto>>
     {
-        private readonly IEventDispatcher _eventDispatcher;
+        private readonly INotificationDispatcher _notificationDispatcher;
         private readonly IMapper _mapper;
         private readonly ITodoListWriteRepository _todoListWriteRepository;
 
         public CreateTodoListCommandHandler(
             ITodoListWriteRepository todoListWriteRepository,
-            IEventDispatcher eventDispatcher,
+            INotificationDispatcher notificationDispatcher,
             IMapper mapper)
         {
             _todoListWriteRepository = todoListWriteRepository;
-            _eventDispatcher = eventDispatcher;
+            _notificationDispatcher = notificationDispatcher;
             _mapper = mapper;
         }
 
@@ -41,8 +41,8 @@
 
             await _todoListWriteRepository.Add(entity);
 
-            _eventDispatcher.AddPostCommitEvent(
-                new TodoCreatedEvent
+            _notificationDispatcher.AddPostCommitNotification(
+                new TodoCreatedNotification
                 {
                     Name = entity.Title
                 });
