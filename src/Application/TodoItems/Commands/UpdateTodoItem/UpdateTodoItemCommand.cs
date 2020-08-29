@@ -6,6 +6,7 @@
     using AutoMapper;
     using Aviant.DDD.Application.Commands;
     using Aviant.DDD.Application.Exceptions;
+    using Aviant.DDD.Application.Notifications;
     using Aviant.DDD.Application.Processors;
     using Aviant.DDD.Domain.Events;
     using Domain.Entities;
@@ -69,11 +70,11 @@
 
     public class UserPostProcessor : RequestPostProcessor<UpdateTodoItemCommand, TodoItemDto>
     {
-        private readonly IEventDispatcher _eventDispatcher;
+        private readonly INotificationDispatcher _notificationDispatcher;
 
-        public UserPostProcessor(IEventDispatcher eventDispatcher)
+        public UserPostProcessor(INotificationDispatcher notificationDispatcher)
         {
-            _eventDispatcher = eventDispatcher;
+            _notificationDispatcher = notificationDispatcher;
         }
 
         public override Task Process(
@@ -83,8 +84,8 @@
         {
             if (response.IsCompleted)
             {
-                Console.WriteLine("TodoCompletedEvent added");
-                _eventDispatcher.AddPostCommitEvent(new TodoCompletedEvent(response));
+                Console.WriteLine("TodoCompletedNotification added");
+                _notificationDispatcher.AddPostCommitNotification(new TodoCompletedNotification(response));
             }
 
             return Task.CompletedTask;
