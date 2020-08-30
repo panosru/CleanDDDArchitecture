@@ -1,7 +1,7 @@
 namespace CleanDDDArchitecture.Infrastructure.Repositories
 {
     using Application.Repositories;
-    using Aviant.DDD.Infrastructure.Persistance.Repository;
+    using Aviant.DDD.Infrastructure.Persistence.Repository;
     using Domain.Entities;
     using Identity;
     using Persistence.Contexts;

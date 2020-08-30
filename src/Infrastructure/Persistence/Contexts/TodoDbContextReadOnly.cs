@@ -1,7 +1,7 @@
 namespace CleanDDDArchitecture.Infrastructure.Persistence.Contexts
 {
     using Application.Persistence;
-    using Aviant.DDD.Infrastructure.Persistance.Contexts;
+    using Aviant.DDD.Infrastructure.Persistence.Contexts;
     using Domain.Entities;
     using Identity;
     using IdentityServer4.EntityFramework.Options;
