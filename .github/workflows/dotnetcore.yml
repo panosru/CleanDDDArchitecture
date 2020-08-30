@@ -1,4 +1,4 @@
-name: .NET Core
+name: Clean DDD Architecture .NET Core Template
 
 on:
   push:
@@ -13,10 +13,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: recursive
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.302
+        dotnet-version: 3.1.401
     - name: Install dotnet ef
       run: dotnet tool install --global dotnet-ef
     - name: Build with dotnet
