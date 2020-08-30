@@ -1,0 +1,3 @@
+[submodule "lib/Aviant.DDD"]
+	path = lib/Aviant.DDD
+	url = https://github.com/panosru/Aviant.DDD.git
