@@ -26,11 +26,11 @@
             _todoItemWriteRepository = todoItemWriteRepository;
         }
 
-        public override async Task<Unit> Handle(DeleteTodoItemCommand request, CancellationToken cancellationToken)
+        public override async Task<Unit> Handle(DeleteTodoItemCommand command, CancellationToken cancellationToken)
         {
-            var entity = await _todoItemReadRepository.Find(request.Id);
+            var entity = await _todoItemReadRepository.Find(command.Id);
 
-            if (entity == null) throw new NotFoundException(nameof(TodoItemEntity), request.Id);
+            if (entity == null) throw new NotFoundException(nameof(TodoItemEntity), command.Id);
 
             await _todoItemWriteRepository.Delete(entity);
 
