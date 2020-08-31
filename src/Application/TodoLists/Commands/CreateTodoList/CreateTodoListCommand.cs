@@ -33,10 +33,10 @@
         }
 
         public override async Task<Lazy<TodoListDto>> Handle(
-            CreateTodoListCommand request,
+            CreateTodoListCommand command,
             CancellationToken cancellationToken)
         {
-            var entity = new TodoListEntity {Title = request.Title};
+            var entity = new TodoListEntity {Title = command.Title};
 
 
             await _todoListWriteRepository.Add(entity);
