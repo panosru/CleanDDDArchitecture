@@ -35,16 +35,16 @@
         }
 
         public override async Task<Unit> Handle(
-            UpdateTodoItemDetailCommand request,
+            UpdateTodoItemDetailCommand command,
             CancellationToken cancellationToken)
         {
-            var entity = await _todoItemReadRepository.Find(request.Id);
+            var entity = await _todoItemReadRepository.Find(command.Id);
 
-            if (entity == null) throw new NotFoundException(nameof(TodoItemEntity), request.Id);
+            if (entity == null) throw new NotFoundException(nameof(TodoItemEntity), command.Id);
 
-            entity.ListId = request.ListId;
-            entity.Priority = request.Priority;
-            entity.Note = request.Note;
+            entity.ListId = command.ListId;
+            entity.Priority = command.Priority;
+            entity.Note = command.Note;
 
             await _todoItemWriteRepository.Update(entity);
 

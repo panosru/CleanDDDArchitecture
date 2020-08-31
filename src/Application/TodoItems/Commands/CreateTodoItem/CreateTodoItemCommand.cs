@@ -30,13 +30,13 @@
         }
 
         public override async Task<Lazy<TodoItemDto>> Handle(
-            CreateTodoItemCommand request,
+            CreateTodoItemCommand command,
             CancellationToken cancellationToken)
         {
             var entity = new TodoItemEntity
             {
-                ListId = request.ListId,
-                Title = request.Title
+                ListId = command.ListId,
+                Title = command.Title
             };
 
             await _todoItemWriteRepository.Add(entity);

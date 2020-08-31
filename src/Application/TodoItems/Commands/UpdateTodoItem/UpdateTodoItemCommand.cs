@@ -39,16 +39,16 @@
         }
 
         public override async Task<TodoItemDto> Handle(
-            UpdateTodoItemCommand request,
+            UpdateTodoItemCommand command,
             CancellationToken cancellationToken)
         {
-            var entity = await _todoItemReadRepository.Find(request.Id);
+            var entity = await _todoItemReadRepository.Find(command.Id);
 
-            if (entity == null) throw new NotFoundException(nameof(TodoItemEntity), request.Id);
+            if (entity == null) throw new NotFoundException(nameof(TodoItemEntity), command.Id);
 
-            entity.Title = request.Title;
+            entity.Title = command.Title;
 
-            if (request.Done)
+            if (command.Done)
                 entity.IsCompleted = true;
 
             await _todoItemWriteRepository.Update(entity);

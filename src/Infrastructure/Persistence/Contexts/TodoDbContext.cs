@@ -3,7 +3,7 @@
     using Application.Persistence;
     using Aviant.DDD.Application.Identity;
     using Aviant.DDD.Application.Services;
-    using Aviant.DDD.Infrastructure.Persistance.Contexts;
+    using Aviant.DDD.Infrastructure.Persistence.Contexts;
     using Domain.Entities;
     using Identity;
     using IdentityServer4.EntityFramework.Options;

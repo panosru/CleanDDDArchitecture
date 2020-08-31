@@ -27,13 +27,13 @@
             _todoListWriteRepository = todoListWriteRepository;
         }
 
-        public override async Task<Unit> Handle(DeleteTodoListCommand request, CancellationToken cancellationToken)
+        public override async Task<Unit> Handle(DeleteTodoListCommand command, CancellationToken cancellationToken)
         {
             var entity = await _todoListReadRepository
-                .FindBy(l => l.Id == request.Id)
+                .FindBy(l => l.Id == command.Id)
                 .SingleOrDefaultAsync(cancellationToken);
 
-            if (entity == null) throw new NotFoundException(nameof(TodoListEntity), request.Id);
+            if (entity == null) throw new NotFoundException(nameof(TodoListEntity), command.Id);
 
             await _todoListWriteRepository.Delete(entity);
 
