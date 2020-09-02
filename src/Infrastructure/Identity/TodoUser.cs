@@ -3,6 +3,5 @@
     using Aviant.DDD.Application.Identity;
 
     public class TodoUser : ApplicationUser
-    {
-    }
+    { }
 }

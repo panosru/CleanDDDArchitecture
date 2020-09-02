@@ -19,24 +19,25 @@
         : CommandHandler<CreateTodoItemCommand, Lazy<TodoItemDto>>
     {
         private readonly IMapper _mapper;
+
         private readonly ITodoItemWriteRepository _todoItemWriteRepository;
 
         public CreateTodoItemCommandHandler(
             ITodoItemWriteRepository todoItemWriteRepository,
-            IMapper mapper)
+            IMapper                  mapper)
         {
             _todoItemWriteRepository = todoItemWriteRepository;
-            _mapper = mapper;
+            _mapper                  = mapper;
         }
 
         public override async Task<Lazy<TodoItemDto>> Handle(
             CreateTodoItemCommand command,
-            CancellationToken cancellationToken)
+            CancellationToken     cancellationToken)
         {
             var entity = new TodoItemEntity
             {
                 ListId = command.ListId,
-                Title = command.Title
+                Title  = command.Title
             };
 
             await _todoItemWriteRepository.Add(entity);

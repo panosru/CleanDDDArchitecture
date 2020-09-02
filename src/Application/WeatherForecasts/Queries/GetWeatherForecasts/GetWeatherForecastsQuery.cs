@@ -8,8 +8,7 @@
     using Aviant.DDD.Application.Queries;
 
     public class GetWeatherForecastsQuery : Query<IEnumerable<WeatherForecast>>
-    {
-    }
+    { }
 
     public class GetWeatherForecastsQueryHandler
         : QueryHandler<GetWeatherForecastsQuery, IEnumerable<WeatherForecast>>
@@ -21,18 +20,18 @@
 
         public override Task<IEnumerable<WeatherForecast>> Handle(
             GetWeatherForecastsQuery request,
-            CancellationToken cancellationToken)
+            CancellationToken        cancellationToken)
         {
             var rng = new Random();
 
-            var vm = Enumerable.Range(1, 5)
-                .Select(
-                    index => new WeatherForecast
-                    {
-                        Date = DateTime.Now.AddDays(index),
-                        TemperatureC = rng.Next(-20, 55),
-                        Summary = Summaries[rng.Next(Summaries.Length)]
-                    });
+            IEnumerable<WeatherForecast> vm = Enumerable.Range(1, 5)
+                                                        .Select(
+                                                             index => new WeatherForecast
+                                                             {
+                                                                 Date         = DateTime.Now.AddDays(index),
+                                                                 TemperatureC = rng.Next(-20, 55),
+                                                                 Summary      = Summaries[rng.Next(Summaries.Length)]
+                                                             });
 
             return Task.FromResult(vm);
         }

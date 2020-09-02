@@ -8,11 +8,10 @@ namespace CleanDDDArchitecture.Infrastructure.Repositories
 
     public class TodoItemReadRepository
         : RepositoryReadOnly<TodoDbContextReadOnly, TodoUser, TodoRole, TodoItemEntity, int>,
-            ITodoItemReadRepository
+          ITodoItemReadRepository
     {
         public TodoItemReadRepository(TodoDbContextReadOnly context)
             : base(context)
-        {
-        }
+        { }
     }
 }

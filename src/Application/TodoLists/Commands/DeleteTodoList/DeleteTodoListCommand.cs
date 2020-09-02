@@ -17,21 +17,22 @@
     public class DeleteTodoListCommandHandler : CommandHandler<DeleteTodoListCommand>
     {
         private readonly ITodoListReadRepository _todoListReadRepository;
+
         private readonly ITodoListWriteRepository _todoListWriteRepository;
 
         public DeleteTodoListCommandHandler(
-            ITodoListReadRepository todoListReadRepository,
+            ITodoListReadRepository  todoListReadRepository,
             ITodoListWriteRepository todoListWriteRepository)
         {
-            _todoListReadRepository = todoListReadRepository;
+            _todoListReadRepository  = todoListReadRepository;
             _todoListWriteRepository = todoListWriteRepository;
         }
 
         public override async Task<Unit> Handle(DeleteTodoListCommand command, CancellationToken cancellationToken)
         {
             var entity = await _todoListReadRepository
-                .FindBy(l => l.Id == command.Id)
-                .SingleOrDefaultAsync(cancellationToken);
+                              .FindBy(l => l.Id == command.Id)
+                              .SingleOrDefaultAsync(cancellationToken);
 
             if (entity == null) throw new NotFoundException(nameof(TodoListEntity), command.Id);
 

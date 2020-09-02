@@ -60,13 +60,13 @@ namespace CleanDDDArchitecture.RestApi
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(
-                    webBuilder =>
-                    {
-                        webBuilder.UseStartup<Startup>();
-                        webBuilder.ConfigureAppConfiguration(SetupConfiguration);
-                        webBuilder.ConfigureLogging(SetupLogging);
-                    });
+                       .ConfigureWebHostDefaults(
+                            webBuilder =>
+                            {
+                                webBuilder.UseStartup<Startup>();
+                                webBuilder.ConfigureAppConfiguration(SetupConfiguration);
+                                webBuilder.ConfigureLogging(SetupLogging);
+                            });
         }
 
         private static void SetupConfiguration(
@@ -76,8 +76,8 @@ namespace CleanDDDArchitecture.RestApi
             var configuration = configurationBuilder.Build();
 
             Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(configuration)
-                .CreateLogger();
+                        .ReadFrom.Configuration(configuration)
+                        .CreateLogger();
         }
 
         private static void SetupLogging(WebHostBuilderContext hostBuilderContext, ILoggingBuilder loggingBuilder)

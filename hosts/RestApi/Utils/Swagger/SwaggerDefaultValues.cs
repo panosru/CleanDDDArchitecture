@@ -13,6 +13,8 @@
     /// </remarks>
     public sealed class SwaggerDefaultValues : IOperationFilter
     {
+    #region IOperationFilter Members
+
         /// <summary>
         ///     Applies the filter to the specified operation using the given context.
         /// </summary>
@@ -25,7 +27,7 @@
             foreach (var parameter in operation.Parameters)
             {
                 var description = context.ApiDescription.ParameterDescriptions.First(p => p.Name == parameter.Name);
-                var routeInfo = description.RouteInfo;
+                var routeInfo   = description.RouteInfo;
 
                 if (parameter.Description == null) parameter.Description = description.ModelMetadata?.Description;
 
@@ -39,5 +41,7 @@
                 parameter.Required |= !routeInfo.IsOptional;
             }
         }
+
+    #endregion
     }
 }

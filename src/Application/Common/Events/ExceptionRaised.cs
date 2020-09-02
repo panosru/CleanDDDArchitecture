@@ -9,14 +9,13 @@ namespace CleanDDDArchitecture.Application.Common.Events
     {
         public readonly string Error;
 
-        public ExceptionRaised(string error)
-        {
-            Error = error;
-        }
+        public ExceptionRaised(string error) => Error = error;
     }
 
     public class ExceptionRaisedHandler : IRequestHandler<ExceptionRaised>
     {
+    #region IRequestHandler<ExceptionRaised> Members
+
         public Task<Unit> Handle(ExceptionRaised request, CancellationToken cancellationToken)
         {
             Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%");
@@ -25,5 +24,7 @@ namespace CleanDDDArchitecture.Application.Common.Events
 
             return Task.FromResult(Unit.Value);
         }
+
+    #endregion
     }
 }

@@ -16,13 +16,14 @@
     public class DeleteTodoItemCommandHandler : CommandHandler<DeleteTodoItemCommand>
     {
         private readonly ITodoItemReadRepository _todoItemReadRepository;
+
         private readonly ITodoItemWriteRepository _todoItemWriteRepository;
 
         public DeleteTodoItemCommandHandler(
-            ITodoItemReadRepository todoItemReadRepository,
+            ITodoItemReadRepository  todoItemReadRepository,
             ITodoItemWriteRepository todoItemWriteRepository)
         {
-            _todoItemReadRepository = todoItemReadRepository;
+            _todoItemReadRepository  = todoItemReadRepository;
             _todoItemWriteRepository = todoItemWriteRepository;
         }
 

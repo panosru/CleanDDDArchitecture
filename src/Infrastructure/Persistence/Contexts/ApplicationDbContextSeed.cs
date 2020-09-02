@@ -2,7 +2,6 @@
 {
     using System.Linq;
     using System.Threading.Tasks;
-    using Application.Accounts;
     using Domain.Entities;
     using Identity;
     using Microsoft.AspNetCore.Identity;
@@ -15,7 +14,7 @@
         {
             _userManager = userManager;
 
-            var defaultUser = new TodoUser {UserName = "administrator", Email = "administrator@localhost"};
+            var defaultUser = new TodoUser { UserName = "administrator", Email = "administrator@localhost" };
 
             if (userManager.Users.All(u => u.UserName != defaultUser.UserName))
                 await userManager.CreateAsync(defaultUser, "Administrator1!");
@@ -34,14 +33,14 @@
                         Title = "Shopping",
                         Items =
                         {
-                            new TodoItemEntity {Title = "Apples"},
-                            new TodoItemEntity {Title = "Milk"},
-                            new TodoItemEntity {Title = "Bread"},
-                            new TodoItemEntity {Title = "Toilet paper"},
-                            new TodoItemEntity {Title = "Pasta"},
-                            new TodoItemEntity {Title = "Tissues"},
-                            new TodoItemEntity {Title = "Tuna"},
-                            new TodoItemEntity {Title = "Water"}
+                            new TodoItemEntity { Title = "Apples" },
+                            new TodoItemEntity { Title = "Milk" },
+                            new TodoItemEntity { Title = "Bread" },
+                            new TodoItemEntity { Title = "Toilet paper" },
+                            new TodoItemEntity { Title = "Pasta" },
+                            new TodoItemEntity { Title = "Tissues" },
+                            new TodoItemEntity { Title = "Tuna" },
+                            new TodoItemEntity { Title = "Water" }
                         }
                     });
 

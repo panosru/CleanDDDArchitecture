@@ -18,13 +18,14 @@
     public class UpdateTodoListCommandHandler : CommandHandler<UpdateTodoListCommand>
     {
         private readonly ITodoListReadRepository _todoListReadRepository;
+
         private readonly ITodoListWriteRepository _todoListWriteRepository;
 
         public UpdateTodoListCommandHandler(
-            ITodoListReadRepository todoListReadRepository,
+            ITodoListReadRepository  todoListReadRepository,
             ITodoListWriteRepository todoListWriteRepository)
         {
-            _todoListReadRepository = todoListReadRepository;
+            _todoListReadRepository  = todoListReadRepository;
             _todoListWriteRepository = todoListWriteRepository;
         }
 

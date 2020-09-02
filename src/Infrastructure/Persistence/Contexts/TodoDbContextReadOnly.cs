@@ -1,6 +1,5 @@
 namespace CleanDDDArchitecture.Infrastructure.Persistence.Contexts
 {
-    using Application.Accounts;
     using Application.Persistence;
     using Aviant.DDD.Infrastructure.Persistence.Contexts;
     using Domain.Entities;
@@ -14,14 +13,17 @@ namespace CleanDDDArchitecture.Infrastructure.Persistence.Contexts
     {
         public TodoDbContextReadOnly(
             DbContextOptions<TodoDbContextReadOnly> options,
-            IOptions<OperationalStoreOptions> operationalStoreOptions)
+            IOptions<OperationalStoreOptions>       operationalStoreOptions)
             : base(options, operationalStoreOptions)
-        {
-        }
+        { }
+
+    #region ITodoDbContextReadOnly Members
 
         public DbSet<TodoListEntity> TodoLists { get; set; }
 
         public DbSet<TodoItemEntity> TodoItems { get; set; }
+
+    #endregion
 
         // public DbSet<AccountEntity> Accounts { get; set; }
     }

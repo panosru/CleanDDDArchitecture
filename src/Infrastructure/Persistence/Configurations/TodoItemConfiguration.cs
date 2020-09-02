@@ -12,14 +12,14 @@
             builder.HasKey(e => e.Id);
 
             builder.HasOne(e => e.List)
-                .WithMany(f => f.Items)
-                .HasForeignKey(e => e.ListId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
+                   .WithMany(f => f.Items)
+                   .HasForeignKey(e => e.ListId)
+                   .IsRequired()
+                   .OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(t => t.Title)
-                .HasMaxLength(200)
-                .IsRequired();
+                   .HasMaxLength(200)
+                   .IsRequired();
         }
     }
 }

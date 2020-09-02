@@ -4,6 +4,5 @@ namespace CleanDDDArchitecture.Application.Repositories
     using Domain.Entities;
 
     public interface ITodoItemReadRepository : IRepositoryRead<TodoItemEntity, int>
-    {
-    }
+    { }
 }
