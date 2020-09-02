@@ -12,7 +12,7 @@
     using Persistence;
 
     public class GetTodosQuery : Query<TodosVm>
-    { }
+    {}
 
     public class GetTodosQueryHandler : QueryHandler<GetTodosQuery, TodosVm>
     {
