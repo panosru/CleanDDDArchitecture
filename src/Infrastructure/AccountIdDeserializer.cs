@@ -7,11 +7,18 @@ namespace CleanDDDArchitecture.Infrastructure
 
     public class AccountIdDeserializer : IDeserializer<AccountId>
     {
-        public AccountId Deserialize(ReadOnlySpan<byte> data, bool isNull, SerializationContext context)
+    #region IDeserializer<AccountId> Members
+
+        public AccountId Deserialize(
+            ReadOnlySpan<byte>   data,
+            bool                 isNull,
+            SerializationContext context)
         {
             var decodedData = Encoding.UTF8.GetString(data.ToArray());
-            
+
             return new AccountId(int.Parse(decodedData));
         }
+
+    #endregion
     }
 }

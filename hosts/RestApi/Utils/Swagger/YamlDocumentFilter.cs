@@ -22,10 +22,9 @@
         ///     Initializes a new instance of the <see cref="YamlDocumentFilter" /> class.
         /// </summary>
         /// <param name="hostingEnvironment">IHostingEnvironment</param>
-        public YamlDocumentFilter(IWebHostEnvironment hostingEnvironment)
-        {
-            _hostingEnvironment = hostingEnvironment;
-        }
+        public YamlDocumentFilter(IWebHostEnvironment hostingEnvironment) => _hostingEnvironment = hostingEnvironment;
+
+    #region IDocumentFilter Members
 
         /// <summary>
         ///     Apply YAML Serializer
@@ -47,14 +46,16 @@
                     serializer.Serialize(writer, swaggerDoc);
 
                     var file = Path.Combine(_hostingEnvironment.WebRootPath, "swagger.yaml");
+
                     using (var stream = new StreamWriter(file))
                     {
                         var result = writer.ToString();
+
                         stream
-                            .WriteLine(
+                           .WriteLine(
                                 result
-                                    .Replace("2.0", "\"2.0\"", StringComparison.OrdinalIgnoreCase)
-                                    .Replace("ref:", "$ref:", StringComparison.OrdinalIgnoreCase));
+                                   .Replace("2.0",  "\"2.0\"", StringComparison.OrdinalIgnoreCase)
+                                   .Replace("ref:", "$ref:",   StringComparison.OrdinalIgnoreCase));
                     }
                 }
             }
@@ -64,20 +65,23 @@
             }
         }
 
+    #endregion
+
+    #region Nested type: PropertiesIgnoreTypeInspector
+
         private class PropertiesIgnoreTypeInspector : TypeInspectorSkeleton
         {
             private readonly ITypeInspector _typeInspector;
 
-            public PropertiesIgnoreTypeInspector(ITypeInspector typeInspector)
-            {
-                _typeInspector = typeInspector;
-            }
+            public PropertiesIgnoreTypeInspector(ITypeInspector typeInspector) => _typeInspector = typeInspector;
 
             public override IEnumerable<IPropertyDescriptor> GetProperties(Type type, object container)
             {
                 return _typeInspector.GetProperties(type, container)
-                    .Where(p => p.Name != "extensions" && p.Name != "operation-id");
+                                     .Where(p => p.Name != "extensions" && p.Name != "operation-id");
             }
         }
+
+    #endregion
     }
 }

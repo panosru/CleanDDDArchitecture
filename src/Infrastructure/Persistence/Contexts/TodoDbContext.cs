@@ -1,6 +1,5 @@
 ﻿namespace CleanDDDArchitecture.Infrastructure.Persistence.Contexts
 {
-    using Application.Accounts;
     using Application.Persistence;
     using Aviant.DDD.Application.Identity;
     using Aviant.DDD.Application.Services;
@@ -15,21 +14,24 @@
         : ApplicationDbContext<TodoDbContext, TodoUser, TodoRole>, ITodoDbContext
     {
         public TodoDbContext(
-            DbContextOptions<TodoDbContext> options,
+            DbContextOptions<TodoDbContext>   options,
             IOptions<OperationalStoreOptions> operationalStoreOptions,
-            ICurrentUserService currentUserService,
-            IDateTimeService dateTimeService)
+            ICurrentUserService               currentUserService,
+            IDateTimeService                  dateTimeService)
             : base(
                 options,
                 operationalStoreOptions,
                 currentUserService,
                 dateTimeService)
-        {
-        }
+        { }
+
+    #region ITodoDbContext Members
 
         public DbSet<TodoListEntity> TodoLists { get; set; }
 
         public DbSet<TodoItemEntity> TodoItems { get; set; }
+
+    #endregion
 
         // public DbSet<AccountEntity> Accounts { get; set; }
     }

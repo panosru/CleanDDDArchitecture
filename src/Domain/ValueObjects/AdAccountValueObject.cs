@@ -7,8 +7,7 @@
     public class AdAccountValueObject : ValueObject //TODO: Utilise this VO for Account Creation 
     {
         private AdAccountValueObject()
-        {
-        }
+        { }
 
         public string Domain { get; private set; }
 
@@ -22,7 +21,7 @@
             {
                 var index = accountString.IndexOf("\\", StringComparison.Ordinal);
                 account.Domain = accountString.Substring(0, index);
-                account.Name = accountString.Substring(index + 1);
+                account.Name   = accountString.Substring(index + 1);
             }
             catch (Exception ex)
             {
@@ -32,19 +31,11 @@
             return account;
         }
 
-        public static implicit operator string(AdAccountValueObject accountValueObject)
-        {
-            return accountValueObject.ToString();
-        }
+        public static implicit operator string(AdAccountValueObject accountValueObject) =>
+            accountValueObject.ToString();
 
-        public static explicit operator AdAccountValueObject(string accountString)
-        {
-            return For(accountString);
-        }
+        public static explicit operator AdAccountValueObject(string accountString) => For(accountString);
 
-        public override string ToString()
-        {
-            return $"{Domain}\\{Name}";
-        }
+        public override string ToString() => $"{Domain}\\{Name}";
     }
 }

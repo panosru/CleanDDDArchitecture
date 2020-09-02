@@ -18,14 +18,18 @@
 
         public string Note { get; set; }
 
+    #region IMapFrom<TodoItemEntity> Members
+
         public void Mapping(Profile profile)
         {
             profile.CreateMap<TodoItemEntity, TodoItemDto>()
-                .ForMember(
-                    d =>
-                        d.Priority,
-                    opt =>
-                        opt.MapFrom(s => (int) s.Priority));
+                   .ForMember(
+                        d =>
+                            d.Priority,
+                        opt =>
+                            opt.MapFrom(s => (int) s.Priority));
         }
+
+    #endregion
     }
 }

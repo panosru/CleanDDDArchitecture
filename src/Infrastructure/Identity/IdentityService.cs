@@ -17,15 +17,18 @@
     public class IdentityService : IIdentityService //TODO: This requires a major refactor 
     {
         private readonly IConfiguration _config;
+
         private readonly UserManager<TodoUser> _userManager;
 
         public IdentityService(
             UserManager<TodoUser> userManager,
-            IConfiguration config)
+            IConfiguration        config)
         {
             _userManager = userManager;
-            _config = config;
+            _config      = config;
         }
+
+    #region IIdentityService Members
 
         public async Task<object> Authenticate(string username, string password)
         {
@@ -38,21 +41,24 @@
             if (user is null) return null;
 
             // Check if the user is locked out
-            if (_userManager.SupportsUserLockout && await _userManager.IsLockedOutAsync(user))
-                return new {error = "Account is locked"};
+            if (_userManager.SupportsUserLockout
+             && await _userManager.IsLockedOutAsync(user))
+                return new { error = "Account is locked" };
 
             // Check if the provided password is correct
             if (!await _userManager.CheckPasswordAsync(user, password))
             {
                 // Lock user
-                if (_userManager.SupportsUserLockout && await _userManager.GetLockoutEnabledAsync(user))
+                if (_userManager.SupportsUserLockout
+                 && await _userManager.GetLockoutEnabledAsync(user))
                     await _userManager.AccessFailedAsync(user);
 
-                return new {error = "Invalid credentials"};
+                return new { error = "Invalid credentials" };
             }
 
             // Reset user count
-            if (_userManager.SupportsUserLockout && 0 < await _userManager.GetAccessFailedCountAsync(user))
+            if (_userManager.SupportsUserLockout
+             && 0 < await _userManager.GetAccessFailedCountAsync(user))
                 await _userManager.ResetAccessFailedCountAsync(user);
 
             // Check if email has been confirmed
@@ -66,7 +72,7 @@
                                 await _userManager.GenerateEmailConfirmationTokenAsync(user))))
                 };
 
-            return new {token = GenerateJwtToken(user)};
+            return new { token = GenerateJwtToken(user) };
         }
 
         public async Task<IdentityResult> ConfirmEmail(string token, string email)
@@ -74,15 +80,15 @@
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user is null)
-                return IdentityResult.Failure(new[] {"Invalid"});
+                return IdentityResult.Failure(new[] { "Invalid" });
 
             if (user.EmailConfirmed)
-                return IdentityResult.Failure(new[] {"Email already confirmed"});
+                return IdentityResult.Failure(new[] { "Email already confirmed" });
 
             var result = await _userManager.ConfirmEmailAsync(user, token);
 
             if (!result.Succeeded)
-                return IdentityResult.Failure(new[] {result.Errors.First().Description});
+                return IdentityResult.Failure(new[] { result.Errors.First().Description });
 
             return IdentityResult.Success();
         }
@@ -101,7 +107,7 @@
             var user = new TodoUser
             {
                 UserName = username,
-                Email = username
+                Email    = username
             };
 
             var result = await _userManager.CreateAsync(user, password);
@@ -118,6 +124,8 @@
             return IdentityResult.Success();
         }
 
+    #endregion
+
         public async Task<IdentityResult> DeleteUserAsync(TodoUser user)
         {
             var result = await _userManager.DeleteAsync(user);
@@ -128,25 +136,25 @@
         private string GenerateJwtToken(TodoUser user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
+            var securityKey  = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var credentials  = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub,    user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.NameId, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Email,  user.Email),
                 // new Claim("DateOfJoing", userInfo.DateOfJoing.ToString("yyyy-MM-dd")),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Subject            = new ClaimsIdentity(claims),
+                Expires            = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = credentials,
-                Audience = _config["Jwt:Issuer"],
-                Issuer = _config["Jwt:Issuer"]
+                Audience           = _config["Jwt:Issuer"],
+                Issuer             = _config["Jwt:Issuer"]
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);

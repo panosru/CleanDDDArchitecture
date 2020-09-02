@@ -10,13 +10,10 @@ namespace CleanDDDArchitecture.RestApi
     using Aviant.DDD.Application.Identity;
     using Aviant.DDD.Application.Processors;
     using Aviant.DDD.Application.Services;
-    using Aviant.DDD.Domain.Aggregates;
     using Aviant.DDD.Domain.EventBus;
     using Aviant.DDD.Domain.Services;
     using Aviant.DDD.Infrastructure.Persistence.EventStore;
     using Aviant.DDD.Infrastructure.Persistence.Kafka;
-    using Domain.Entities;
-    using Filters;
     using Infrastructure;
     using Infrastructure.Persistence.Contexts;
     using MediatR;
@@ -40,10 +37,7 @@ namespace CleanDDDArchitecture.RestApi
         /// <summary>
         /// </summary>
         /// <param name="configuration"></param>
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        public Startup(IConfiguration configuration) => Configuration = configuration;
 
         private IConfiguration Configuration { get; }
 
@@ -58,79 +52,82 @@ namespace CleanDDDArchitecture.RestApi
             services.Configure<SwaggerSettings>(Configuration.GetSection(nameof(SwaggerSettings)));
 
             services.AddScoped<IMediator, Mediator>();
+
             // services.AddMediatR(typeof(CreateAccount).Assembly);
             services.Scan(
-            scan =>
-            {
-                scan.FromAssembliesOf(typeof(CreateAccount), typeof(AccountCreatedEvent))
-                    .RegisterHandlers(typeof(IRequestHandler<>))
-                    .RegisterHandlers(typeof(IRequestHandler<,>))
-                    .RegisterHandlers(typeof(INotificationHandler<>));
-            });
-            
-            services
-                .AddApplication()
-                .AddInfrastructure(Configuration);
+                scan =>
+                {
+                    scan.FromAssembliesOf(typeof(CreateAccount), typeof(AccountCreatedEvent))
+                        .RegisterHandlers(typeof(IRequestHandler<>))
+                        .RegisterHandlers(typeof(IRequestHandler<,>))
+                        .RegisterHandlers(typeof(INotificationHandler<>));
+                });
 
             services
-                .AddSingleton<IEventDeserializer>(
+               .AddApplication()
+               .AddInfrastructure(Configuration);
+
+            services
+               .AddSingleton<IEventDeserializer>(
                     new JsonEventDeserializer(
                         new[]
                         {
                             typeof(AccountCreatedEvent).Assembly,
                             typeof(CreateAccount).Assembly
                         }));
-            
-            var kafkaConnStr = Configuration.GetConnectionString("kafka");
+
+            var kafkaConnStr    = Configuration.GetConnectionString("kafka");
             var eventsTopicName = Configuration["eventsTopicName"];
-            var groupName = Configuration["eventsTopicGroupName"];
-            var consumerConfig = new EventConsumerConfig(kafkaConnStr, eventsTopicName, groupName);
-            
+            var groupName       = Configuration["eventsTopicGroupName"];
+            var consumerConfig  = new EventConsumerConfig(kafkaConnStr, eventsTopicName, groupName);
+
             var eventstoreConnStr = Configuration.GetConnectionString("eventstore");
-            
+
             services.AddSingleton(consumerConfig)
-                .AddSingleton(typeof(IEventConsumer<,,>), typeof(EventConsumer<,,>))
-                .AddKafkaEventProducer<AccountEntity, AccountId>(consumerConfig);
-            
-            
+                    .AddSingleton(typeof(IEventConsumer<,,>), typeof(EventConsumer<,,>))
+                    .AddKafkaEventProducer<AccountEntity, AccountId>(consumerConfig);
+
+
             services.AddSingleton<IEventStoreConnectionWrapper>(
-                    ctx =>
-                    {
-                        var logger = ctx.GetRequiredService<ILogger<EventStoreConnectionWrapper>>();
-                        return new EventStoreConnectionWrapper(new Uri(eventstoreConnStr), logger);
-                    })
-                .AddEventsRepository<AccountEntity, AccountId>();
-            
-            
+                         ctx =>
+                         {
+                             var logger = ctx.GetRequiredService<ILogger<EventStoreConnectionWrapper>>();
+
+                             return new EventStoreConnectionWrapper(new Uri(eventstoreConnStr), logger);
+                         })
+                    .AddEventsRepository<AccountEntity, AccountId>();
+
+
             services.AddEventsService<AccountEntity, AccountId>();
 
             services.AddScoped<ServiceFactory>(ctx => ctx.GetRequiredService);
 
             services.Decorate(typeof(INotificationHandler<>), typeof(RetryProcessor<>));
-            
+
             services.AddSingleton<IEventConsumerFactory, EventConsumerFactory>();
 
             services.AddHostedService(
                 ctx =>
                 {
                     var factory = ctx.GetRequiredService<IEventConsumerFactory>();
+
                     return new EventsConsumerWorker(factory);
                 });
-            
+
             services
-                .AddAuthorization()
-                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(
+               .AddAuthorization()
+               .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+               .AddJwtBearer(
                     options =>
                     {
                         options.TokenValidationParameters = new TokenValidationParameters
                         {
-                            ValidateIssuer = true,
-                            ValidateAudience = true,
-                            ValidateLifetime = true,
+                            ValidateIssuer           = true,
+                            ValidateAudience         = true,
+                            ValidateLifetime         = true,
                             ValidateIssuerSigningKey = true,
-                            ValidIssuer = Configuration["Jwt:Issuer"],
-                            ValidAudience = Configuration["Jwt:Issuer"],
+                            ValidIssuer              = Configuration["Jwt:Issuer"],
+                            ValidAudience            = Configuration["Jwt:Issuer"],
                             IssuerSigningKey =
                                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
                             ClockSkew = TimeSpan.Zero
@@ -138,17 +135,17 @@ namespace CleanDDDArchitecture.RestApi
                     });
 
             services
-                .AddApiVersionWithExplorer()
-                .AddSwaggerOptions()
-                .AddSwaggerGen();
+               .AddApiVersionWithExplorer()
+               .AddSwaggerOptions()
+               .AddSwaggerGen();
 
             services.AddSingleton<ICurrentUserService, CurrentUser>();
 
             services.AddHttpContextAccessor();
 
             services
-                .AddHealthChecks()
-                .AddDbContextCheck<TodoDbContext>();
+               .AddHealthChecks()
+               .AddDbContextCheck<TodoDbContext>();
 
             // services.AddControllersWithViews(
             //     options =>
@@ -167,10 +164,10 @@ namespace CleanDDDArchitecture.RestApi
         /// <param name="provider"></param>
         /// <param name="serviceProvider"></param>
         public void Configure(
-            IApplicationBuilder app,
-            IWebHostEnvironment env,
+            IApplicationBuilder            app,
+            IWebHostEnvironment            env,
             IApiVersionDescriptionProvider provider,
-            IServiceProvider serviceProvider)
+            IServiceProvider               serviceProvider)
         {
             ServiceLocator.Initialise(serviceProvider.GetService<IServiceContainer>());
 
@@ -192,11 +189,12 @@ namespace CleanDDDArchitecture.RestApi
             app.UseSwaggerDocuments();
 
             app.UseHttpsRedirection();
+
             app.UseStaticFiles(
                 new StaticFileOptions
                 {
                     ServeUnknownFileTypes = true,
-                    DefaultContentType = "application/yaml"
+                    DefaultContentType    = "application/yaml"
                 });
 
 
@@ -209,7 +207,7 @@ namespace CleanDDDArchitecture.RestApi
                 endpoints =>
                 {
                     endpoints
-                        .MapDefaultControllerRoute();
+                       .MapDefaultControllerRoute();
                     // .RequireAuthorization();
                 });
         }

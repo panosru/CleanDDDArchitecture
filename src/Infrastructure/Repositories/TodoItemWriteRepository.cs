@@ -8,17 +8,16 @@ namespace CleanDDDArchitecture.Infrastructure.Repositories
 
     public class TodoItemWriteRepository //TODO: Add MarkComplete & UnmarkComplete methods?
         : RepositoryWriteOnly<
-                TodoDbContext,
-                TodoUser,
-                TodoRole,
-                TodoItemEntity,
-                int>,
-            ITodoItemWriteRepository
+              TodoDbContext,
+              TodoUser,
+              TodoRole,
+              TodoItemEntity,
+              int>,
+          ITodoItemWriteRepository
     {
         public TodoItemWriteRepository(TodoDbContext context)
             :
             base(context)
-        {
-        }
+        { }
     }
 }

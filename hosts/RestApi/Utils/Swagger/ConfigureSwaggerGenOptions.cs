@@ -17,6 +17,7 @@
     public sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
     {
         private readonly IApiVersionDescriptionProvider _provider;
+
         private readonly SwaggerSettings _settings;
 
         /// <summary>
@@ -26,14 +27,16 @@
         /// <param name="swaggerSettings">App Settings for Swagger</param>
         public ConfigureSwaggerGenOptions(
             IApiVersionDescriptionProvider versionDescriptionProvider,
-            IOptions<SwaggerSettings> swaggerSettings)
+            IOptions<SwaggerSettings>      swaggerSettings)
         {
             Debug.Assert(versionDescriptionProvider != null, $"{nameof(versionDescriptionProvider)} != null");
-            Debug.Assert(swaggerSettings != null, $"{nameof(swaggerSettings)} != null");
+            Debug.Assert(swaggerSettings            != null, $"{nameof(swaggerSettings)} != null");
 
             _provider = versionDescriptionProvider;
             _settings = swaggerSettings.Value ?? new SwaggerSettings();
         }
+
+    #region IConfigureOptions<SwaggerGenOptions> Members
 
         /// <inheritdoc />
         public void Configure(SwaggerGenOptions options)
@@ -49,10 +52,10 @@
                 "Bearer",
                 new OpenApiSecurityScheme
                 {
-                    In = ParameterLocation.Header,
+                    In          = ParameterLocation.Header,
                     Description = "Type into the textbox: Bearer {your JWT token}.",
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey
+                    Name        = "Authorization",
+                    Type        = SecuritySchemeType.ApiKey
                 });
 
             options.AddSecurityRequirement(
@@ -64,7 +67,7 @@
                             Reference = new OpenApiReference
                             {
                                 Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
+                                Id   = "Bearer"
                             }
                         },
                         new string[] { }
@@ -74,6 +77,8 @@
             AddSwaggerDocumentForEachDiscoveredApiVersion(options);
             SetCommentsPathForSwaggerJsonAndUi(options);
         }
+
+    #endregion
 
         private void AddSwaggerDocumentForEachDiscoveredApiVersion(SwaggerGenOptions options)
         {

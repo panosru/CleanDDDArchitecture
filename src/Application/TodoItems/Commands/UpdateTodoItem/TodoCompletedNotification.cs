@@ -7,10 +7,7 @@ namespace CleanDDDArchitecture.Application.TodoItems.Commands.UpdateTodoItem
 
     public class TodoCompletedNotification : Notification
     {
-        public TodoCompletedNotification(TodoItemDto completedTodo)
-        {
-            CompletedTodo = completedTodo;
-        }
+        public TodoCompletedNotification(TodoItemDto completedTodo) => CompletedTodo = completedTodo;
 
         public TodoItemDto CompletedTodo { get; }
     }

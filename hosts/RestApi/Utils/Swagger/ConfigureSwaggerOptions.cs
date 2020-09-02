@@ -11,15 +11,17 @@
         /// <summary>
         /// </summary>
         /// <param name="settings"></param>
-        public ConfigureSwaggerOptions(IOptions<SwaggerSettings> settings)
-        {
+        public ConfigureSwaggerOptions(IOptions<SwaggerSettings> settings) =>
             _settings = settings?.Value ?? new SwaggerSettings();
-        }
+
+    #region IConfigureOptions<SwaggerOptions> Members
 
         /// <inheritdoc />
         public void Configure(SwaggerOptions options)
         {
             options.RouteTemplate = _settings.RoutePrefixWithSlash + "{documentName}/swagger.json";
         }
+
+    #endregion
     }
 }

@@ -37,11 +37,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\Shared" />
     <Folder Include="Utils\Swagger" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove=".gitignore" />
+    <None Remove="Pages\Shared\.gitkeep" />
   </ItemGroup>
 
   <PropertyGroup>

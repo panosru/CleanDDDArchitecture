@@ -11,19 +11,22 @@
     public sealed class ConfigureSwaggerUiOptions : IConfigureOptions<SwaggerUIOptions>
     {
         private readonly IApiVersionDescriptionProvider _provider;
+
         private readonly SwaggerSettings _settings;
 
         /// <inheritdoc cref="ConfigureSwaggerUiOptions" />
         public ConfigureSwaggerUiOptions(
             IApiVersionDescriptionProvider versionDescriptionProvider,
-            IOptions<SwaggerSettings> settings)
+            IOptions<SwaggerSettings>      settings)
         {
             Debug.Assert(versionDescriptionProvider != null, $"{nameof(versionDescriptionProvider)} != null");
-            Debug.Assert(settings != null, $"{nameof(versionDescriptionProvider)} != null");
+            Debug.Assert(settings                   != null, $"{nameof(versionDescriptionProvider)} != null");
 
             _provider = versionDescriptionProvider;
             _settings = settings?.Value ?? new SwaggerSettings();
         }
+
+    #region IConfigureOptions<SwaggerUIOptions> Members
 
         /// <summary>
         ///     Configure
@@ -32,9 +35,9 @@
         public void Configure(SwaggerUIOptions options)
         {
             _provider
-                .ApiVersionDescriptions
-                .ToList()
-                .ForEach(
+               .ApiVersionDescriptions
+               .ToList()
+               .ForEach(
                     description =>
                     {
                         options.SwaggerEndpoint(
@@ -44,5 +47,7 @@
                         options.RoutePrefix = _settings.RoutePrefix;
                     });
         }
+
+    #endregion
     }
 }

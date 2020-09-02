@@ -24,12 +24,12 @@ namespace CleanDDDArchitecture.RestApi.Controllers
             var assembly = typeof(Startup).Assembly;
 
             var creationDate = System.IO.File.GetCreationTime(assembly.Location);
-            var version = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
+            var version      = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
 
             return Ok(
                 new
                 {
-                    Version = version,
+                    Version     = version,
                     LastUpdated = creationDate
                 });
         }

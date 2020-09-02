@@ -15,10 +15,7 @@ namespace CleanDDDArchitecture.RestApi.Pages
         /// <summary>
         /// </summary>
         /// <param name="logger"></param>
-        public ErrorModel(ILogger<ErrorModel> logger)
-        {
-            _logger = logger;
-        }
+        public ErrorModel(ILogger<ErrorModel> logger) => _logger = logger;
 
         /// <summary>
         /// </summary>

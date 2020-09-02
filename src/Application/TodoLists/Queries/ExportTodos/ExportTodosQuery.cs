@@ -1,5 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Application.TodoLists.Queries.ExportTodos
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -18,16 +19,18 @@
     public class ExportTodosQueryHandler : QueryHandler<ExportTodosQuery, ExportTodosVm>
     {
         private readonly ITodoDbContext _context;
+
         private readonly ICsvFileBuilder<TodoItemRecord> _fileBuilder;
+
         private readonly IMapper _mapper;
 
         public ExportTodosQueryHandler(
-            ITodoDbContext context,
-            IMapper mapper,
+            ITodoDbContext                  context,
+            IMapper                         mapper,
             ICsvFileBuilder<TodoItemRecord> fileBuilder)
         {
-            _context = context;
-            _mapper = mapper;
+            _context     = context;
+            _mapper      = mapper;
             _fileBuilder = fileBuilder;
         }
 
@@ -35,14 +38,14 @@
         {
             var vm = new ExportTodosVm();
 
-            var records = await _context.TodoItems
-                .Where(t => t.ListId == request.ListId)
-                .ProjectTo<TodoItemRecord>(_mapper.ConfigurationProvider)
-                .ToListAsync(cancellationToken);
+            List<TodoItemRecord> records = await _context.TodoItems
+                                                         .Where(t => t.ListId == request.ListId)
+                                                         .ProjectTo<TodoItemRecord>(_mapper.ConfigurationProvider)
+                                                         .ToListAsync(cancellationToken);
 
-            vm.Content = _fileBuilder.BuildTodoItemsFile(records);
+            vm.Content     = _fileBuilder.BuildTodoItemsFile(records);
             vm.ContentType = "text/csv";
-            vm.FileName = "TodoItems.csv";
+            vm.FileName    = "TodoItems.csv";
 
             return await Task.FromResult(vm);
         }

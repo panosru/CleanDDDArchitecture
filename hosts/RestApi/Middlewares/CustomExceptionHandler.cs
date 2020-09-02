@@ -17,10 +17,7 @@ namespace CleanDDDArchitecture.RestApi.Middlewares
         /// <summary>
         /// </summary>
         /// <param name="next"></param>
-        public CustomExceptionHandler(RequestDelegate next)
-        {
-            _next = next;
-        }
+        public CustomExceptionHandler(RequestDelegate next) => _next = next;
 
         /// <summary>
         /// </summary>
@@ -47,18 +44,21 @@ namespace CleanDDDArchitecture.RestApi.Middlewares
             switch (exception)
             {
                 case ValidationException validationException:
-                    code = HttpStatusCode.BadRequest;
+                    code   = HttpStatusCode.BadRequest;
                     result = JsonConvert.SerializeObject(validationException.Failures);
+
                     break;
+
                 case NotFoundException _:
                     code = HttpStatusCode.NotFound;
+
                     break;
             }
 
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int) code;
+            context.Response.StatusCode  = (int) code;
 
-            if (string.IsNullOrEmpty(result)) result = JsonConvert.SerializeObject(new {error = exception.Message});
+            if (string.IsNullOrEmpty(result)) result = JsonConvert.SerializeObject(new { error = exception.Message });
 
             return context.Response.WriteAsync(result);
         }
@@ -72,9 +72,7 @@ namespace CleanDDDArchitecture.RestApi.Middlewares
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UseCustomExceptionHandler(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<CustomExceptionHandler>();
-        }
+        public static IApplicationBuilder UseCustomExceptionHandler(this IApplicationBuilder builder) =>
+            builder.UseMiddleware<CustomExceptionHandler>();
     }
 }

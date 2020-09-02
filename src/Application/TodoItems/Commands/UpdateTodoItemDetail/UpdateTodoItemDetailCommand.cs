@@ -24,27 +24,28 @@
         : CommandHandler<UpdateTodoItemDetailCommand>
     {
         private readonly ITodoItemReadRepository _todoItemReadRepository;
+
         private readonly ITodoItemWriteRepository _todoItemWriteRepository;
 
         public UpdateTodoItemDetailCommandHandler(
-            ITodoItemReadRepository todoItemReadRepository,
+            ITodoItemReadRepository  todoItemReadRepository,
             ITodoItemWriteRepository todoItemWriteRepository)
         {
-            _todoItemReadRepository = todoItemReadRepository;
+            _todoItemReadRepository  = todoItemReadRepository;
             _todoItemWriteRepository = todoItemWriteRepository;
         }
 
         public override async Task<Unit> Handle(
             UpdateTodoItemDetailCommand command,
-            CancellationToken cancellationToken)
+            CancellationToken           cancellationToken)
         {
             var entity = await _todoItemReadRepository.Find(command.Id);
 
             if (entity == null) throw new NotFoundException(nameof(TodoItemEntity), command.Id);
 
-            entity.ListId = command.ListId;
+            entity.ListId   = command.ListId;
             entity.Priority = command.Priority;
-            entity.Note = command.Note;
+            entity.Note     = command.Note;
 
             await _todoItemWriteRepository.Update(entity);
 

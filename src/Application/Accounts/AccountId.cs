@@ -8,6 +8,6 @@ namespace CleanDDDArchitecture.Application.Accounts
         [JsonConstructor]
         public AccountId(int key)
             : base(key)
-        {}
+        { }
     }
 }

@@ -6,10 +6,10 @@
 
     public sealed class TodoItemEntity
         : Entity<int>,
-            ICreationAudited,
-            IModificationAudited,
-            IDeletionAudited,
-            ISoftDelete
+          ICreationAudited,
+          IModificationAudited,
+          IDeletionAudited,
+          ISoftDelete
     {
         public int ListId { get; set; }
 
@@ -25,24 +25,40 @@
 
         public State State { get; set; } = State.Active;
 
-        #region .:: Navigation Properties ::.
+    #region .:: Navigation Properties ::.
 
         public TodoListEntity List { get; set; }
 
-        #endregion
+    #endregion
+
+    #region ICreationAudited Members
 
         public DateTime Created { get; set; }
 
         public Guid CreatedBy { get; set; }
 
+    #endregion
+
+    #region IDeletionAudited Members
+
         public DateTime? Deleted { get; set; }
 
         public Guid? DeletedBy { get; set; }
+
+    #endregion
+
+    #region IModificationAudited Members
 
         public DateTime? LastModified { get; set; }
 
         public Guid? LastModifiedBy { get; set; }
 
+    #endregion
+
+    #region ISoftDelete Members
+
         public bool IsDeleted { get; set; }
+
+    #endregion
     }
 }

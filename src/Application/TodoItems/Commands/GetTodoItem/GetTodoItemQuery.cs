@@ -14,10 +14,8 @@ namespace CleanDDDArchitecture.Application.TodoItems.Commands.GetTodoItem
     {
         private readonly ITodoItemReadRepository _todoItemReadRepository;
 
-        public GetTodoItemQueryHandler(ITodoItemReadRepository todoItemReadRepository)
-        {
+        public GetTodoItemQueryHandler(ITodoItemReadRepository todoItemReadRepository) =>
             _todoItemReadRepository = todoItemReadRepository;
-        }
 
         public override Task<string> Handle(GetTodoItemQuery request, CancellationToken cancellationToken)
         {

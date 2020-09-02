@@ -7,8 +7,8 @@
         public UpdateTodoItemCommandValidator()
         {
             RuleFor(v => v.Title)
-                .MaximumLength(200)
-                .NotEmpty();
+               .MaximumLength(200)
+               .NotEmpty();
         }
     }
 }

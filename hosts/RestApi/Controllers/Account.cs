@@ -14,7 +14,7 @@ namespace CleanDDDArchitecture.RestApi.Controllers
     /// </summary>
     [ApiVersion("1.0")]
     [ApiVersion("1.1")]
-    public sealed partial class Account : ApiController
+    public sealed class Account : ApiController
     {
         /// <summary>
         ///     Authenticate a user and a bearer or an email confirmation token
@@ -29,7 +29,8 @@ namespace CleanDDDArchitecture.RestApi.Controllers
         {
             RequestResult requestResult = await Orchestrator.SendCommand(command);
 
-            if (requestResult.Success && !(requestResult.Payload() is null))
+            if (requestResult.Success
+             && !(requestResult.Payload() is null))
                 return Ok(requestResult.Payload());
 
             return Unauthorized();

@@ -13,9 +13,10 @@
         public SwaggerSettings()
         {
             Name = "RestApi API Example";
+
             Info = new OpenApiInfo
             {
-                Title = "RestApi API Example",
+                Title       = "RestApi API Example",
                 Description = "RestApi API Versions"
             };
         }
