@@ -8,7 +8,6 @@
     using Aviant.DDD.Application.Exceptions;
     using Aviant.DDD.Application.Notifications;
     using Aviant.DDD.Application.Processors;
-    using Aviant.DDD.Domain.Events;
     using Domain.Entities;
     using Repositories;
 
@@ -25,22 +24,24 @@
         : CommandHandler<UpdateTodoItemCommand, TodoItemDto>
     {
         private readonly IMapper _mapper;
+
         private readonly ITodoItemReadRepository _todoItemReadRepository;
+
         private readonly ITodoItemWriteRepository _todoItemWriteRepository;
 
         public UpdateTodoItemCommandHandler(
-            ITodoItemReadRepository todoItemReadRepository,
+            ITodoItemReadRepository  todoItemReadRepository,
             ITodoItemWriteRepository todoItemWriteRepository,
-            IMapper mapper)
+            IMapper                  mapper)
         {
-            _todoItemReadRepository = todoItemReadRepository;
+            _todoItemReadRepository  = todoItemReadRepository;
             _todoItemWriteRepository = todoItemWriteRepository;
-            _mapper = mapper;
+            _mapper                  = mapper;
         }
 
         public override async Task<TodoItemDto> Handle(
             UpdateTodoItemCommand command,
-            CancellationToken cancellationToken)
+            CancellationToken     cancellationToken)
         {
             var entity = await _todoItemReadRepository.Find(command.Id);
 
@@ -61,9 +62,10 @@
     {
         public override Task Process(
             UpdateTodoItemCommand request,
-            CancellationToken cancellationToken)
+            CancellationToken     cancellationToken)
         {
             Console.WriteLine($"Pre handle {request.Title} {request.Done} with ID {request.Id}");
+
             return Task.CompletedTask;
         }
     }
@@ -72,15 +74,13 @@
     {
         private readonly INotificationDispatcher _notificationDispatcher;
 
-        public UserPostProcessor(INotificationDispatcher notificationDispatcher)
-        {
+        public UserPostProcessor(INotificationDispatcher notificationDispatcher) =>
             _notificationDispatcher = notificationDispatcher;
-        }
 
         public override Task Process(
             UpdateTodoItemCommand request,
-            TodoItemDto response,
-            CancellationToken cancellationToken)
+            TodoItemDto           response,
+            CancellationToken     cancellationToken)
         {
             if (response.IsCompleted)
             {

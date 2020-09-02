@@ -15,9 +15,13 @@
 
         public bool IsCompleted { get; set; }
 
+    #region IMapFrom<TodoItemEntity> Members
+
         public void Mapping(Profile profile)
         {
             profile.CreateMap<TodoItemEntity, TodoItemDto>();
         }
+
+    #endregion
     }
 }

@@ -16,19 +16,18 @@
     public class ApiExceptionFilter : ExceptionFilterAttribute
     {
         private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
+
         private IMediator? _mediator;
 
         /// <summary>
         /// </summary>
-        public ApiExceptionFilter()
-        {
+        public ApiExceptionFilter() =>
             // Register known exception types and handlers.
             _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
             {
-                {typeof(ValidationException), HandleValidationException},
-                {typeof(NotFoundException), HandleNotFoundException}
+                { typeof(ValidationException), HandleValidationException },
+                { typeof(NotFoundException), HandleNotFoundException }
             };
-        }
 
         /// <summary>
         /// </summary>
@@ -53,9 +52,11 @@
         private void HandleException(ExceptionContext context)
         {
             Type type = context.Exception.GetType();
+
             if (_exceptionHandlers.ContainsKey(type))
             {
                 _exceptionHandlers[type].Invoke(context);
+
                 return;
             }
 
@@ -67,8 +68,8 @@
             var details = new ProblemDetails
             {
                 Status = StatusCodes.Status500InternalServerError,
-                Title = "An error occurred while processing your request.",
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
+                Title  = "An error occurred while processing your request.",
+                Type   = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
             };
 
             context.Result = new ObjectResult(details)
@@ -93,7 +94,7 @@
                 Success = false
             };
 
-            foreach (var failure in exception?.Failures!)
+            foreach (KeyValuePair<string, string[]> failure in exception?.Failures!)
                 foreach (var failureValue in failure.Value)
                     details.Messages.Add(failureValue);
 
@@ -108,8 +109,8 @@
 
             var details = new ProblemDetails
             {
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
-                Title = "The specified resource was not found.",
+                Type   = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+                Title  = "The specified resource was not found.",
                 Detail = exception?.Message
             };
 

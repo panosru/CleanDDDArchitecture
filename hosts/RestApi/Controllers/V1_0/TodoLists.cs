@@ -46,7 +46,7 @@
         [ProducesDefaultResponseType]
         public async Task<FileResult> Get([FromRoute] int id)
         {
-            RequestResult requestResult = await Orchestrator.SendQuery(new ExportTodosQuery {ListId = id});
+            RequestResult requestResult = await Orchestrator.SendQuery(new ExportTodosQuery { ListId = id });
 
             if (requestResult.Success)
             {
@@ -91,8 +91,8 @@
         [ProducesResponseType(typeof(List<string>), StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
         public async Task<ActionResult> Update(
-            [FromRoute] int id,
-            [FromBody] UpdateTodoListCommand command)
+            [FromRoute] int                   id,
+            [FromBody]  UpdateTodoListCommand command)
         {
             if (id != command.Id) return BadRequest();
 
@@ -115,7 +115,7 @@
         [ProducesDefaultResponseType]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
-            RequestResult requestResult = await Orchestrator.SendCommand(new DeleteTodoListCommand {Id = id});
+            RequestResult requestResult = await Orchestrator.SendCommand(new DeleteTodoListCommand { Id = id });
 
             if (!requestResult.Success)
                 return BadRequest(requestResult.Messages);

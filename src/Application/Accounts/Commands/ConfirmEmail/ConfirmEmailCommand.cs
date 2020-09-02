@@ -20,14 +20,12 @@ namespace CleanDDDArchitecture.Application.Accounts.Commands.ConfirmEmail
     {
         private readonly IIdentityService _identityIdentityService;
 
-        public ConfirmEmailCommandCommandCommandHandler(IIdentityService identityIdentityService)
-        {
+        public ConfirmEmailCommandCommandCommandHandler(IIdentityService identityIdentityService) =>
             _identityIdentityService = identityIdentityService;
-        }
 
         public override async Task<IdentityResult> Handle(
             ConfirmEmailCommand command,
-            CancellationToken cancellationToken)
+            CancellationToken   cancellationToken)
         {
             try
             {
@@ -40,7 +38,7 @@ namespace CleanDDDArchitecture.Application.Accounts.Commands.ConfirmEmail
             }
             catch (Exception e)
             {
-                return IdentityResult.Failure(new[] {e.Message});
+                return IdentityResult.Failure(new[] { e.Message });
             }
         }
     }

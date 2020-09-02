@@ -6,10 +6,7 @@
 
     public class TodoListDto : IMapFrom<TodoListEntity>
     {
-        public TodoListDto()
-        {
-            Items = new List<TodoItemDto>();
-        }
+        public TodoListDto() => Items = new List<TodoItemDto>();
 
         public int Id { get; set; }
 

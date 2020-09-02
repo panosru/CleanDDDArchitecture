@@ -65,8 +65,8 @@
         [ProducesResponseType(typeof(List<string>), StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> Update(
-            [FromRoute] int id,
-            [FromBody] UpdateTodoItemCommand command)
+            [FromRoute] int                   id,
+            [FromBody]  UpdateTodoItemCommand command)
         {
             if (id != command.Id) return BadRequest();
 
@@ -89,8 +89,8 @@
         [ProducesResponseType(typeof(List<string>), StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> UpdateItemDetails(
-            [FromQuery] int id,
-            [FromBody] UpdateTodoItemDetailCommand command)
+            [FromQuery] int                         id,
+            [FromBody]  UpdateTodoItemDetailCommand command)
         {
             if (id != command.Id) return BadRequest();
 
@@ -113,7 +113,7 @@
         [ProducesDefaultResponseType]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            RequestResult requestResult = await Orchestrator.SendCommand(new DeleteTodoItemCommand {Id = id});
+            RequestResult requestResult = await Orchestrator.SendCommand(new DeleteTodoItemCommand { Id = id });
 
             if (!requestResult.Success)
                 return BadRequest(requestResult.Messages);

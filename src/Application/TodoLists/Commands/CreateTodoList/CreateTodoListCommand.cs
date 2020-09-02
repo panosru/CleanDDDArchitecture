@@ -18,25 +18,27 @@
     public class CreateTodoListCommandHandler
         : CommandHandler<CreateTodoListCommand, Lazy<TodoListDto>>
     {
-        private readonly INotificationDispatcher _notificationDispatcher;
         private readonly IMapper _mapper;
+
+        private readonly INotificationDispatcher _notificationDispatcher;
+
         private readonly ITodoListWriteRepository _todoListWriteRepository;
 
         public CreateTodoListCommandHandler(
             ITodoListWriteRepository todoListWriteRepository,
-            INotificationDispatcher notificationDispatcher,
-            IMapper mapper)
+            INotificationDispatcher  notificationDispatcher,
+            IMapper                  mapper)
         {
             _todoListWriteRepository = todoListWriteRepository;
-            _notificationDispatcher = notificationDispatcher;
-            _mapper = mapper;
+            _notificationDispatcher  = notificationDispatcher;
+            _mapper                  = mapper;
         }
 
         public override async Task<Lazy<TodoListDto>> Handle(
             CreateTodoListCommand command,
-            CancellationToken cancellationToken)
+            CancellationToken     cancellationToken)
         {
-            var entity = new TodoListEntity {Title = command.Title};
+            var entity = new TodoListEntity { Title = command.Title };
 
 
             await _todoListWriteRepository.Add(entity);

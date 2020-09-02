@@ -9,8 +9,9 @@
         public TodoItemRecordMap()
         {
             AutoMap(CultureInfo.InvariantCulture);
+
             Map(m => m.Done)
-                .ConvertUsing(
+               .ConvertUsing(
                     c => c.Done
                         ? "Yes"
                         : "No");

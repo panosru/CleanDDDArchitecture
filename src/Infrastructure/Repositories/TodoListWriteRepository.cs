@@ -8,11 +8,10 @@ namespace CleanDDDArchitecture.Infrastructure.Repositories
 
     public class TodoListWriteRepository
         : RepositoryWriteOnly<TodoDbContext, TodoUser, TodoRole, TodoListEntity, int>,
-            ITodoListWriteRepository
+          ITodoListWriteRepository
     {
         public TodoListWriteRepository(TodoDbContext context)
             : base(context)
-        {
-        }
+        { }
     }
 }

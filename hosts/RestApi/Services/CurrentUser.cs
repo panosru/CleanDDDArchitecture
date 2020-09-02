@@ -15,10 +15,9 @@
         /// <summary>
         /// </summary>
         /// <param name="httpContextAccessor"></param>
-        public CurrentUser(IHttpContextAccessor httpContextAccessor)
-        {
-            _httpContextAccessor = httpContextAccessor;
-        }
+        public CurrentUser(IHttpContextAccessor httpContextAccessor) => _httpContextAccessor = httpContextAccessor;
+
+    #region ICurrentUserService Members
 
         /// <summary>
         /// </summary>
@@ -27,12 +26,14 @@
             get
             {
                 var id = _httpContextAccessor.HttpContext?.User?
-                    .FindFirstValue(JwtRegisteredClaimNames.Sub);
+                   .FindFirstValue(JwtRegisteredClaimNames.Sub);
 
                 return id is null
                     ? Guid.Empty
                     : Guid.Parse(id);
             }
         }
+
+    #endregion
     }
 }

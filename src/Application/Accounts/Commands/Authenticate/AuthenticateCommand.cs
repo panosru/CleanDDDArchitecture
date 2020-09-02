@@ -16,14 +16,10 @@ namespace CleanDDDArchitecture.Application.Accounts.Commands.Authenticate
     {
         private readonly IIdentityService _identityIdentityService;
 
-        public AuthenticateCommandCommandCommandHandler(IIdentityService identityIdentityService)
-        {
+        public AuthenticateCommandCommandCommandHandler(IIdentityService identityIdentityService) =>
             _identityIdentityService = identityIdentityService;
-        }
 
-        public override async Task<object> Handle(AuthenticateCommand command, CancellationToken cancellationToken)
-        {
-            return await _identityIdentityService.Authenticate(command.Username, command.Password);
-        }
+        public override async Task<object> Handle(AuthenticateCommand command, CancellationToken cancellationToken) =>
+            await _identityIdentityService.Authenticate(command.Username, command.Password);
     }
 }

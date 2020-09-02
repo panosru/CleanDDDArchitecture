@@ -2,13 +2,11 @@
 {
     using System.Reflection;
     using AutoMapper;
-    using Aviant.DDD.Application;
     using Aviant.DDD.Application.Behaviours;
     using Aviant.DDD.Application.Mappings;
     using FluentValidation;
     using MediatR;
     using Microsoft.Extensions.DependencyInjection;
-    using Persistence;
 
     public static class DependencyInjection
     {
@@ -24,18 +22,18 @@
             services.AddTransient(
                 typeof(IPipelineBehavior<,>),
                 typeof(PerformanceBehaviour<,>));
-            
+
             services.AddTransient(
                 typeof(IPipelineBehavior<,>),
                 typeof(ValidationBehaviour<,>));
-            
+
             services.AddTransient(
                 typeof(IPipelineBehavior<,>),
                 typeof(UnhandledExceptionBehaviour<,>));
 
 
             // services.RegisterApplication(typeof(ITodoDbContext).Assembly);
-            
+
             return services;
         }
     }

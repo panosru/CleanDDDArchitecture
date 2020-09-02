@@ -10,5 +10,9 @@
     <ProjectReference Include="..\..\lib\Aviant.DDD\src\Domain\Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Events" />
+  </ItemGroup>
+
 
 </Project>
