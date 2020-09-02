@@ -8,7 +8,7 @@
     using Aviant.DDD.Application.Queries;
 
     public class GetWeatherForecastsQuery : Query<IEnumerable<WeatherForecast>>
-    { }
+    {}
 
     public class GetWeatherForecastsQueryHandler
         : QueryHandler<GetWeatherForecastsQuery, IEnumerable<WeatherForecast>>
