@@ -2,6 +2,7 @@
 {
     using System.Linq;
     using System.Threading.Tasks;
+    using Application.Accounts;
     using Domain.Entities;
     using Identity;
     using Microsoft.AspNetCore.Identity;
@@ -47,17 +48,14 @@
                 modified = true;
             }
 
-            if (!context.Accounts.Any())
-            {
-                context.Accounts.Add(
-                    new AccountEntity
-                    {
-                        UserId = _userManager.Users.First(u => "administrator" == u.UserName)
-                            .Id
-                    });
-
-                modified = true;
-            }
+            // if (!context.Accounts.Any())
+            // {
+            //     var currentUser = _userManager.Users.First(u => "administrator" == u.UserName);
+            //
+            //     context.Accounts.Add(AccountEntity.Create(currentUser.Id, currentUser.Email));
+            //
+            //     modified = true;
+            // }
 
             if (modified)
                 await context.SaveChangesAsync();

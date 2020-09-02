@@ -1,5 +1,6 @@
 namespace CleanDDDArchitecture.Infrastructure.Persistence.Contexts
 {
+    using Application.Accounts;
     using Application.Persistence;
     using Aviant.DDD.Infrastructure.Persistence.Contexts;
     using Domain.Entities;
@@ -22,6 +23,6 @@ namespace CleanDDDArchitecture.Infrastructure.Persistence.Contexts
 
         public DbSet<TodoItemEntity> TodoItems { get; set; }
 
-        public DbSet<AccountEntity> Accounts { get; set; }
+        // public DbSet<AccountEntity> Accounts { get; set; }
     }
 }

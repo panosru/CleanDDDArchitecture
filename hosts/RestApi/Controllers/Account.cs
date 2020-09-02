@@ -1,8 +1,8 @@
 namespace CleanDDDArchitecture.RestApi.Controllers
 {
     using System.Threading.Tasks;
-    using Application.Users.Commands.Authenticate;
-    using Application.Users.Commands.ConfirmEmail;
+    using Application.Accounts.Commands.Authenticate;
+    using Application.Accounts.Commands.ConfirmEmail;
     using Aviant.DDD.Application.Identity;
     using Aviant.DDD.Application.Orchestration;
     using Microsoft.AspNetCore.Authorization;
@@ -10,11 +10,11 @@ namespace CleanDDDArchitecture.RestApi.Controllers
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
-    ///     User endpoints
+    ///     Account endpoints
     /// </summary>
     [ApiVersion("1.0")]
     [ApiVersion("1.1")]
-    public class User : ApiController
+    public sealed partial class Account : ApiController
     {
         /// <summary>
         ///     Authenticate a user and a bearer or an email confirmation token
