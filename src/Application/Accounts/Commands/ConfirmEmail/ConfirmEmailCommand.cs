@@ -1,4 +1,4 @@
-namespace CleanDDDArchitecture.Application.Users.Commands.ConfirmEmail
+namespace CleanDDDArchitecture.Application.Accounts.Commands.ConfirmEmail
 {
     using System;
     using System.Text;
@@ -26,17 +26,17 @@ namespace CleanDDDArchitecture.Application.Users.Commands.ConfirmEmail
         }
 
         public override async Task<IdentityResult> Handle(
-            ConfirmEmailCommand request,
+            ConfirmEmailCommand command,
             CancellationToken cancellationToken)
         {
             try
             {
                 var token = Encoding.UTF8.GetString(
-                    Convert.FromBase64String(HttpUtility.UrlDecode(request.Token)));
+                    Convert.FromBase64String(HttpUtility.UrlDecode(command.Token)));
 
                 return await _identityIdentityService.ConfirmEmail(
                     token,
-                    request.Email);
+                    command.Email);
             }
             catch (Exception e)
             {

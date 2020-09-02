@@ -1,23 +1,26 @@
 ﻿namespace CleanDDDArchitecture.Infrastructure
 {
+    using System;
     using System.IdentityModel.Tokens.Jwt;
     using Application.Persistence;
     using Application.Repositories;
     using Application.TodoLists.Queries.ExportTodos;
-    using Aviant.DDD.Application.Events;
     using Aviant.DDD.Application.Identity;
+    using Aviant.DDD.Application.Notifications;
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.Services;
-    using Aviant.DDD.Domain.Events;
-    using Aviant.DDD.Domain.Notifications;
+    using Aviant.DDD.Domain.Messages;
     using Aviant.DDD.Domain.Persistence;
     using Aviant.DDD.Domain.Services;
-    using Aviant.DDD.Infrastructure.Persistance;
+    using Aviant.DDD.Infrastructure;
+    using Aviant.DDD.Infrastructure.Persistence;
+    using Aviant.DDD.Infrastructure.Persistence.EventStore;
+    using Aviant.DDD.Infrastructure.Persistence.Kafka;
     using Aviant.DDD.Infrastructure.Services;
+    using Domain.Entities;
     using Files.Maps;
     using Identity;
     using Microsoft.AspNetCore.Authentication;
-    using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -74,7 +77,7 @@
 
             services.AddScoped<ITodoItemReadRepository, TodoItemReadRepository>();
             services.AddScoped<ITodoListReadRepository, TodoListReadRepository>();
-            services.AddScoped<IAccountReadRepository, AccountReadRepository>();
+            // services.AddScoped<IAccountReadRepository, AccountReadRepository>();
 
             #endregion
 
@@ -82,7 +85,7 @@
 
             services.AddScoped<ITodoItemWriteRepository, TodoItemWriteRepository>();
             services.AddScoped<ITodoListWriteRepository, TodoListWriteRepository>();
-            services.AddScoped<IAccountWriteRepository, AccountWriteRepository>();
+            // services.AddScoped<IAccountWriteRepository, AccountWriteRepository>();
 
             #endregion
 
@@ -93,16 +96,38 @@
             services.AddIdentityServer()
                 .AddApiAuthorization<TodoUser, TodoDbContext>();
 
-            services.AddTransient<IDateTimeService, DateTimeService>();
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<ICsvFileBuilder<TodoItemRecord>, CsvFileBuilder<TodoItemRecord, TodoItemRecordMap>>();
 
+            services.AddTransient<IDateTimeService, DateTimeService>();
+
             services.AddScoped<IOrchestrator, Orchestrator>();
             services.AddScoped<IUnitOfWork, UnitOfWork<TodoDbContext>>();
-            services.AddScoped<INotifications, Notifications>();
-            services.AddScoped<IEventDispatcher, EventDispatcher>();
-
+            services.AddScoped<IMessages, Messages>();
+            services.AddScoped<INotificationDispatcher, NotificationDispatcher>();
+            
             services.AddSingleton<IServiceContainer, HttpContextServiceProviderProxy>();
+            
+            // services
+            //     .AddSingleton<IEventDeserializer>(
+            //         new JsonEventDeserializer(
+            //             new[]
+            //             {
+            //                 typeof(FoobarCreatedEvent).Assembly,
+            //                 typeof(CreateFoobar).Assembly
+            //             }));
+            
+            // var kafkaConnStr = configuration.GetConnectionString("kafka");
+            // var eventsTopicName = configuration["eventsTopicName"];
+            // var groupName = configuration["eventsTopicGroupName"];
+            // var consumerConfig = new EventConsumerConfig(kafkaConnStr, eventsTopicName, groupName);
+            
+            // var eventStoreConnStr = configuration.GetConnectionString("eventstore");
+            
+            // services.RegisterInfrastructure<TodoDbContext>(eventStoreConnStr, consumerConfig)
+            //     .AddEventsRepository<Foobar, Guid>()
+            //     .AddEventsService<Foobar, Guid>()
+            //     .AddKafkaEventProducer<Foobar, Guid>(consumerConfig);
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();

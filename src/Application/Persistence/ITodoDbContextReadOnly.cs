@@ -1,5 +1,6 @@
 namespace CleanDDDArchitecture.Application.Persistence
 {
+    using Accounts;
     using Aviant.DDD.Application.Persistance;
     using Domain.Entities;
     using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,6 @@ namespace CleanDDDArchitecture.Application.Persistence
 
         DbSet<TodoItemEntity> TodoItems { get; set; }
 
-        DbSet<AccountEntity> Accounts { get; set; }
+        // DbSet<AccountEntity> Accounts { get; set; }
     }
 }

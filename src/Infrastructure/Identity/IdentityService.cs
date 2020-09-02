@@ -39,7 +39,7 @@
 
             // Check if the user is locked out
             if (_userManager.SupportsUserLockout && await _userManager.IsLockedOutAsync(user))
-                return new {error = "User is locked"};
+                return new {error = "Account is locked"};
 
             // Check if the provided password is correct
             if (!await _userManager.CheckPasswordAsync(user, password))

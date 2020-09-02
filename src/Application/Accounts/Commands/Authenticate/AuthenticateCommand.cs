@@ -1,4 +1,4 @@
-namespace CleanDDDArchitecture.Application.Users.Commands.Authenticate
+namespace CleanDDDArchitecture.Application.Accounts.Commands.Authenticate
 {
     using System.Threading;
     using System.Threading.Tasks;
@@ -21,9 +21,9 @@ namespace CleanDDDArchitecture.Application.Users.Commands.Authenticate
             _identityIdentityService = identityIdentityService;
         }
 
-        public override async Task<object> Handle(AuthenticateCommand request, CancellationToken cancellationToken)
+        public override async Task<object> Handle(AuthenticateCommand command, CancellationToken cancellationToken)
         {
-            return await _identityIdentityService.Authenticate(request.Username, request.Password);
+            return await _identityIdentityService.Authenticate(command.Username, command.Password);
         }
     }
 }
