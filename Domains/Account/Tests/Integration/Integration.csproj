@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>CleanDDDArchitecture.Domains.Account.Tests.Integration</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Domains.Account.Tests.Integration</AssemblyName>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\CrossCutting\CrossCutting.csproj" />
+    </ItemGroup>
+
+</Project>
