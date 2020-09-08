@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>CleanDDDArchitecture.Domains.Weather.Infrastructure</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Domains.Weather.Infrastructure</AssemblyName>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Library\Aviant.DDD\src\Infrastructure\Infrastructure.csproj" />
+        <ProjectReference Include="..\Application\Application.csproj" />
+    </ItemGroup>
+    
+</Project>
