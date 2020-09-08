@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>CleanDDDArchitecture.Domains.Account.Core</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Domains.Account.Core</AssemblyName>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Persistence" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Library\Aviant.DDD\src\Domain\Domain.csproj" />
+    </ItemGroup>
+
+</Project>
