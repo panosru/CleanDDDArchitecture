@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>CleanDDDArchitecture.Domains.Todo.Infrastructure</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Domains.Todo.Infrastructure</AssemblyName>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.7" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Library\Aviant.DDD\src\Infrastructure\Infrastructure.csproj" />
+        <ProjectReference Include="..\SubDomains\TodoItem\Application\Application.csproj" />
+        <ProjectReference Include="..\SubDomains\TodoList\Application\Application.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove=".gitignore" />
+        <None Remove="Persistence\Migrations\.gitkeep" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Persistence\Migrations" />
+    </ItemGroup>
+
+</Project>

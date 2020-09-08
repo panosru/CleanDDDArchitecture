@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>CleanDDDArchitecture.Domains.Todo.Hosts.RestApi.Application</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Domains.Todo.Hosts.RestApi.Application</AssemblyName>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\CrossCutting\CrossCutting.csproj" />
+      <ProjectReference Include="..\..\..\SubDomains\TodoItem\Hosts\RestApi\Application\Application.csproj" />
+      <ProjectReference Include="..\..\..\SubDomains\TodoList\Hosts\RestApi\Application\Application.csproj" />
+    </ItemGroup>
+
+</Project>

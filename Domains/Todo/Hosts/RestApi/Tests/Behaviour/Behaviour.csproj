@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>CleanDDDArchitecture.Domains.Todo.Hosts.RestApi.Tests.Behaviour</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Domains.Todo.Hosts.RestApi.Tests.Behaviour</AssemblyName>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Application\Application.csproj" />
+    </ItemGroup>
+</Project>

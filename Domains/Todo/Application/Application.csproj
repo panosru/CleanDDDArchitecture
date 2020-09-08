@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>CleanDDDArchitecture.Domains.Todo.Application</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Domains.Todo.Application</AssemblyName>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Library\Aviant.DDD\src\Application\Application.csproj" />
+      <ProjectReference Include="..\SubDomains\TodoItem\Core\Core.csproj" />
+      <ProjectReference Include="..\SubDomains\TodoList\Core\Core.csproj" />
+    </ItemGroup>
+
+</Project>
