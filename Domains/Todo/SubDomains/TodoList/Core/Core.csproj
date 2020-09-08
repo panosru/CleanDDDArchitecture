@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Core</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Core</AssemblyName>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Core\Core.csproj" />
+    </ItemGroup>
+
+</Project>

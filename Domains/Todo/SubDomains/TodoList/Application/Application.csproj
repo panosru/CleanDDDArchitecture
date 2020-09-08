@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application</AssemblyName>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Aggregates" />
+      <Folder Include="Exceptions" />
+      <Folder Include="UseCases\GetBy" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Application\Application.csproj" />
+    </ItemGroup>
+
+</Project>
