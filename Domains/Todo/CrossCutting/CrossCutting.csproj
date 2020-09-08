@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>CleanDDDArchitecture.Domains.Todo.CrossCutting</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Domains.Todo.CrossCutting</AssemblyName>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SubDomains\TodoItem\CrossCutting\CrossCutting.csproj" />
+      <ProjectReference Include="..\SubDomains\TodoList\CrossCutting\CrossCutting.csproj" />
+    </ItemGroup>
+
+</Project>

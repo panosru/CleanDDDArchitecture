@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application</AssemblyName>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\..\..\..\..\Hosts\RestApi\Core\Core.csproj" />
+        <ProjectReference Include="..\..\..\Infrastructure\Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>
