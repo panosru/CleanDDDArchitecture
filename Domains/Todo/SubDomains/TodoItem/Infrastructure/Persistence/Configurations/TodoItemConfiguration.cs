@@ -1,4 +1,4 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Infrastructure.Persistence
+﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Infrastructure.Persistence.Configurations
 {
     using Aviant.DDD.Infrastructure.Persistence.Configurations;
     using Microsoft.EntityFrameworkCore;
