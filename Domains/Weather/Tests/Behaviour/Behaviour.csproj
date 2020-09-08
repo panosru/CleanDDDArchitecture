@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>CleanDDDArchitecture.Domains.Weather.Tests.Behaviour</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Domains.Weather.Tests.Behaviour</AssemblyName>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\CrossCutting\CrossCutting.csproj" />
+    </ItemGroup>
+
+</Project>
