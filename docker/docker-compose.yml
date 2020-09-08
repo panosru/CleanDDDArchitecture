@@ -1,0 +1,109 @@
+version: '3.8'
+
+services:
+  eventstore_db:
+    image: eventstore/eventstore:latest
+    command: --dev --enable-external-tcp --ext-ip=0.0.0.0 --int-ip=0.0.0.0 --disable-external-tcp-tls
+    environment:
+      EVENTSTORE_CLUSTER_SIZE: 1
+      EVENTSTORE_INT_TCP_PORT: 1112
+      EVENTSTORE_EXT_TCP_PORT: 1113
+      EVENTSTORE_INT_HTTP_PORT: 2112
+      EVENTSTORE_EXT_HTTP_PORT: 2113
+    ports:
+      - 1113:1113
+      - 2113:2113
+    restart: always
+
+  zoo1:
+    image: library/zookeeper:3.4.14
+    hostname: zoo1
+    ports:
+      - "2181:2181"
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_PORT: 2181
+      ZOO_SERVERS: server.1=zoo1:2888:3888
+      ALLOW_ANONYMOUS_LOGIN: "yes"
+    volumes:
+      - zoo1_data:/data
+    tmpfs: "/datalog"
+
+  kafka1:
+    image: confluentinc/cp-kafka:latest
+    hostname: kafka1
+    ports:
+      - "9092:9092"
+    environment: # https://rmoff.net/2018/08/02/kafka-listeners-explained/
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka1:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: "zoo1:2181"
+      KAFKA_BROKER_ID: 1
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+    volumes:
+      - kafka1_data:/var/lib/kafka/data
+    depends_on:
+      - zoo1
+
+  kowl:
+    image: quay.io/cloudhut/kowl:master
+    restart: on-failure
+    hostname: kowl
+    volumes:
+      - ./config.yaml:/etc/kowl/config.yaml
+    ports:
+      - "8080:8080"
+    entrypoint: ./kowl --config.filepath=/etc/kowl/config.yaml
+    depends_on:
+      - kafka1
+
+  mongodb:
+    image: library/mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data:/data/db
+
+  postgres:
+    image: library/postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: panosru
+      POSTGRES_PASSWORD: 123123
+    volumes:
+      - postgres_data:/var/lib/postgres
+
+  loki:
+    image: grafana/loki:master
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - loki
+
+  grafana:
+    image: grafana/grafana:master
+    ports:
+      - "3000:3000"
+    networks:
+      - loki
+
+volumes:
+  zoo1_data:
+    driver: local
+  kafka1_data:
+    driver: local
+  mongodb_data:
+    driver: local
+  postgres_data:
+    driver: local
+
+networks:
+  loki:
