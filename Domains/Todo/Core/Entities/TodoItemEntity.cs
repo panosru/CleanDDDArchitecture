@@ -15,7 +15,7 @@
 
         public string Title { get; set; }
 
-        public string Note { get; set; }
+        public string? Note { get; set; }
 
         public DateTime? Reminder { get; set; }
 
