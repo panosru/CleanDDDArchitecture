@@ -78,7 +78,7 @@
             public override IEnumerable<IPropertyDescriptor> GetProperties(Type type, object container)
             {
                 return _typeInspector.GetProperties(type, container)
-                                     .Where(p => p.Name != "extensions" && p.Name != "operation-id");
+                                     .Where(p => p.Name != "extensions" && p.Name != "operation-aggregateId");
             }
         }
 
