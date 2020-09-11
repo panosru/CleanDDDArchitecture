@@ -1,5 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Utils.Swagger
 {
+    #region
+
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Versioning;
     using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
@@ -9,6 +11,8 @@
     using Swashbuckle.AspNetCore.Swagger;
     using Swashbuckle.AspNetCore.SwaggerGen;
     using Swashbuckle.AspNetCore.SwaggerUI;
+
+    #endregion
 
     /// <summary>
     ///     Service Collection(IServiceCollection) Extensions
@@ -22,26 +26,26 @@
         /// <returns>IServiceCollection</returns>
         public static IServiceCollection AddApiVersionWithExplorer(
             this IServiceCollection services,
-            IConfiguration configuration)
+            IConfiguration          configuration)
         {
             services.Configure<SwaggerSettings>(configuration.GetSection(nameof(SwaggerSettings)));
-            
+
             return services
-                  .AddVersionedApiExplorer(
-                       options =>
-                       {
-                           options.GroupNameFormat           = "'v'VVV";
-                           options.SubstituteApiVersionInUrl = true;
-                       })
-                  .AddApiVersioning(
-                       options =>
-                       {
-                           options.AssumeDefaultVersionWhenUnspecified = true;
-                           options.ReportApiVersions                   = true;
-                           options.DefaultApiVersion                   = new ApiVersion(1, 0);
-                           options.ApiVersionReader                    = new HeaderApiVersionReader("x-api-version");
-                           options.Conventions.Add(new VersionByNamespaceConvention());
-                       });
+               .AddVersionedApiExplorer(
+                    options =>
+                    {
+                        options.GroupNameFormat           = "'v'VVV";
+                        options.SubstituteApiVersionInUrl = true;
+                    })
+               .AddApiVersioning(
+                    options =>
+                    {
+                        options.AssumeDefaultVersionWhenUnspecified = true;
+                        options.ReportApiVersions                   = true;
+                        options.DefaultApiVersion                   = new ApiVersion(1, 0);
+                        options.ApiVersionReader                    = new HeaderApiVersionReader("x-api-version");
+                        options.Conventions.Add(new VersionByNamespaceConvention());
+                    });
         }
 
         /// <summary>

@@ -1,5 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.Controllers.V1_0
 {
+    #region
+
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Orchestration;
@@ -9,6 +11,8 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.Control
     using Domains.Account.Application.UseCases.UpdateDetails;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+
+    #endregion
 
     /// <summary>
     /// </summary>
@@ -28,7 +32,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.Control
             var command = new CreateAccount(dto.FirstName, dto.LastName, dto.Email);
             // await Mediator.Send(command, cancellationToken);
             // return Ok(command);
-            // return CreatedAtAction("GetFoobar", new {id = command.Id}, command);
+            // return CreatedAtAction("GetFoobar", new {aggregateId = command.AggregateId}, command);
 
             RequestResult requestResult = await Orchestrator.SendCommand(command);
 
@@ -39,7 +43,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.Control
         }
 
         [HttpPut]
-        [Route("{id:int}")]
+        [Route("{aggregateId:int}")]
         public async Task<IActionResult> Update(
             int               id,
             CreateAccountDto  dto,
@@ -49,7 +53,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.Control
                 return BadRequest();
 
             var command = new UpdateAccount(
-                new AccountId(id),
+                new AccountAggregateId(id),
                 dto.FirstName,
                 dto.LastName,
                 dto.Email);
@@ -64,8 +68,8 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.Control
             return Ok(requestResult.Payload());
         }
 
-        // [HttpGet, Route("{id:guid}", Name = "GetFoobar")]
-        // public async Task<IActionResult> GetFoobar(Guid id, CancellationToken cancellationToken = default)
+        // [HttpGet, Route("{aggregateId:guid}", Name = "GetFoobar")]
+        // public async Task<IActionResult> GetFoobar(Guid aggregateId, CancellationToken cancellationToken = default)
         // {
         //     var query = 
         // }

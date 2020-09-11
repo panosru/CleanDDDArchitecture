@@ -1,5 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
 {
+    #region
+
     using System;
     using System.Text;
     using System.Threading;
@@ -7,6 +9,8 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
     using System.Web;
     using Aviant.DDD.Application.Commands;
     using Aviant.DDD.Application.Identity;
+
+    #endregion
 
     public class ConfirmEmailCommand : Command<IdentityResult>
     {

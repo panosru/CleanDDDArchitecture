@@ -1,5 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.Forecast
 {
+    #region
+
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -7,8 +9,10 @@
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Queries;
 
+    #endregion
+
     public class GetWeatherForecastsQueryNew : Query<IEnumerable<WeatherForecast>>
-    {}
+    { }
 
     public class
         GetWeatherForecastsQueryNewHandler
@@ -27,13 +31,13 @@
             var rng = new Random();
 
             IEnumerable<WeatherForecast> vm = Enumerable.Range(1, 5)
-                                                        .Select(
-                                                             index => new WeatherForecast
-                                                             {
-                                                                 Date         = DateTime.Now.AddDays(index),
-                                                                 TemperatureC = rng.Next(-20, 55),
-                                                                 Summary      = Summaries[rng.Next(Summaries.Length)]
-                                                             });
+               .Select(
+                    index => new WeatherForecast
+                    {
+                        Date         = DateTime.Now.AddDays(index),
+                        TemperatureC = rng.Next(-20, 55),
+                        Summary      = Summaries[rng.Next(Summaries.Length)]
+                    });
 
             return Task.FromResult(vm);
         }

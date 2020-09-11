@@ -52,7 +52,7 @@
 //             // {
 //             //     var currentUser = _userManager.Users.First(u => "administrator" == u.UserName);
 //             //
-//             //     context.Accounts.Add(AccountEntity.Create(currentUser.Id, currentUser.Email));
+//             //     context.Accounts.Add(AccountAggregate.Create(currentUser.AggregateId, currentUser.Email));
 //             //
 //             //     modified = true;
 //             // }
@@ -62,3 +62,4 @@
 //         }
 //     }
 // }
+

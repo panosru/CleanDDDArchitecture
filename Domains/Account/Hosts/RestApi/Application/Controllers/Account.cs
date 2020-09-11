@@ -1,5 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.Controllers
 {
+    #region
+
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Identity;
     using Aviant.DDD.Application.Orchestration;
@@ -9,6 +11,8 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.Control
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+
+    #endregion
 
     /// <summary>
     ///     Account endpoints

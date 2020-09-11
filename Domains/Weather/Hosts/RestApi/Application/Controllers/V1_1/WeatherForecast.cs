@@ -1,11 +1,15 @@
 ﻿namespace CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.Controllers.V1_1
 {
+    #region
+
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Orchestration;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Weather.Application.UseCases.Forecast;
+
+    #endregion
 
     /// <summary>
     ///     Weather endpoints

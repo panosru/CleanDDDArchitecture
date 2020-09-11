@@ -1,9 +1,13 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update.Dtos
 {
+    #region
+
     using AutoMapper;
     using Aviant.DDD.Application.Mappings;
     using Aviant.DDD.Domain.TransferObjects;
     using Todo.Core.Entities;
+
+    #endregion
 
     public class TodoItemDto : Dto, IMapFrom<TodoItemEntity>
     {
@@ -15,13 +19,13 @@
 
         public bool IsCompleted { get; set; }
 
-    #region IMapFrom<TodoItemEntity> Members
+        #region IMapFrom<TodoItemEntity> Members
 
         public void Mapping(Profile profile)
         {
             profile.CreateMap<TodoItemEntity, TodoItemDto>();
         }
 
-    #endregion
+        #endregion
     }
 }

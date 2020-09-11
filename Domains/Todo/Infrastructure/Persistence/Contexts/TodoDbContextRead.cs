@@ -1,9 +1,13 @@
 namespace CleanDDDArchitecture.Domains.Todo.Infrastructure.Persistence.Contexts
 {
+    #region
+
     using Application.Persistence;
     using Aviant.DDD.Infrastructure.Persistence.Contexts;
     using Core.Entities;
     using Microsoft.EntityFrameworkCore;
+
+    #endregion
 
     public class TodoDbContextRead
         : DbContextRead, ITodoDbContextRead

@@ -1,5 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Utils.Swagger
 {
+    #region
+
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -10,6 +12,8 @@
     using YamlDotNet.Serialization;
     using YamlDotNet.Serialization.NamingConventions;
     using YamlDotNet.Serialization.TypeInspectors;
+
+    #endregion
 
     /// <summary>
     ///     To use YAML serializer to generate YAML
@@ -24,7 +28,7 @@
         /// <param name="hostingEnvironment">IHostingEnvironment</param>
         public YamlDocumentFilter(IWebHostEnvironment hostingEnvironment) => _hostingEnvironment = hostingEnvironment;
 
-    #region IDocumentFilter Members
+        #region IDocumentFilter Members
 
         /// <summary>
         ///     Apply YAML Serializer
@@ -65,9 +69,9 @@
             }
         }
 
-    #endregion
+        #endregion
 
-    #region Nested type: PropertiesIgnoreTypeInspector
+        #region Nested type: PropertiesIgnoreTypeInspector
 
         private class PropertiesIgnoreTypeInspector : TypeInspectorSkeleton
         {
@@ -78,10 +82,10 @@
             public override IEnumerable<IPropertyDescriptor> GetProperties(Type type, object container)
             {
                 return _typeInspector.GetProperties(type, container)
-                                     .Where(p => p.Name != "extensions" && p.Name != "operation-aggregateId");
+                   .Where(p => p.Name != "extensions" && p.Name != "operation-aggregateId");
             }
         }
 
-    #endregion
+        #endregion
     }
 }

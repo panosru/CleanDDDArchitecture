@@ -1,7 +1,11 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Export
 {
+    #region
+
     using Aviant.DDD.Application.Mappings;
     using Todo.Core.Entities;
+
+    #endregion
 
     public class TodoItemRecord : IMapFrom<TodoItemEntity>
     {

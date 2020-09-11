@@ -1,7 +1,11 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Create.Dtos
 {
+    #region
+
     using Aviant.DDD.Application.Mappings;
     using Todo.Core.Entities;
+
+    #endregion
 
     public class TodoItemDto : IMapFrom<TodoItemEntity>
     {

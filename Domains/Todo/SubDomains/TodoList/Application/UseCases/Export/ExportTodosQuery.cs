@@ -1,5 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Export
 {
+    #region
+
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
@@ -11,6 +13,8 @@
     using Microsoft.EntityFrameworkCore;
     using Todo.Application.Persistence;
     using ViewModels;
+
+    #endregion
 
     public class ExportTodosQuery : Query<ExportTodosVm>
     {
@@ -26,7 +30,7 @@
         private readonly IMapper _mapper;
 
         public ExportTodosQueryHandler(
-            ITodoDbContextWrite                  context,
+            ITodoDbContextWrite             context,
             IMapper                         mapper,
             ICsvFileBuilder<TodoItemRecord> fileBuilder)
         {
@@ -40,9 +44,9 @@
             var vm = new ExportTodosVm();
 
             List<TodoItemRecord> records = await _context.TodoItems
-                                                         .Where(t => t.ListId == request.ListId)
-                                                         .ProjectTo<TodoItemRecord>(_mapper.ConfigurationProvider)
-                                                         .ToListAsync(cancellationToken);
+               .Where(t => t.ListId == request.ListId)
+               .ProjectTo<TodoItemRecord>(_mapper.ConfigurationProvider)
+               .ToListAsync(cancellationToken);
 
             vm.Content     = _fileBuilder.BuildTodoItemsFile(records);
             vm.ContentType = "text/csv";

@@ -1,5 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Identity
 {
+    #region
+
     using System;
     using System.IdentityModel.Tokens.Jwt;
     using System.Linq;
@@ -14,6 +16,8 @@
     using Microsoft.IdentityModel.Tokens;
     using IdentityResult = Aviant.DDD.Application.Identity.IdentityResult;
 
+    #endregion
+
     public class IdentityService : IIdentityService //TODO: This requires a major refactor 
     {
         private readonly IConfiguration _config;
@@ -22,13 +26,13 @@
 
         public IdentityService(
             UserManager<AccountUser> userManager,
-            IConfiguration        config)
+            IConfiguration           config)
         {
             _userManager = userManager;
             _config      = config;
         }
 
-    #region IIdentityService Members
+        #region IIdentityService Members
 
         public async Task<object?> Authenticate(string username, string password)
         {
@@ -124,7 +128,7 @@
             return IdentityResult.Success();
         }
 
-    #endregion
+        #endregion
 
         public async Task<IdentityResult> DeleteUserAsync(AccountUser user)
         {

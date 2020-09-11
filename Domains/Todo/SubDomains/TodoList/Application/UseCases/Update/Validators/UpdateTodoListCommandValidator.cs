@@ -1,10 +1,14 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Update.Validators
 {
+    #region
+
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Core.Repositories;
     using FluentValidation;
+
+    #endregion
 
     public class UpdateTodoListCommandValidator : AbstractValidator<UpdateTodoListCommand>
     {
@@ -34,8 +38,8 @@
                 () =>
                 {
                     result = _todoListReadRepository
-                            .FindBy(l => l.Id != model.Id)
-                            .All(l => l.Title != title);
+                       .FindBy(l => l.Id != model.Id)
+                       .All(l => l.Title != title);
                 });
 
             return result;

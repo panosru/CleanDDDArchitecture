@@ -1,5 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Utils.Swagger
 {
+    #region
+
     using System;
     using System.Diagnostics;
     using System.IO;
@@ -9,6 +11,8 @@
     using Microsoft.Extensions.Options;
     using Microsoft.OpenApi.Models;
     using Swashbuckle.AspNetCore.SwaggerGen;
+
+    #endregion
 
     /// <inheritdoc />
     /// <summary>
@@ -36,7 +40,7 @@
             _settings = swaggerSettings.Value ?? new SwaggerSettings();
         }
 
-    #region IConfigureOptions<SwaggerGenOptions> Members
+        #region IConfigureOptions<SwaggerGenOptions> Members
 
         /// <inheritdoc />
         public void Configure(SwaggerGenOptions options)
@@ -78,7 +82,7 @@
             SetCommentsPathForSwaggerJsonAndUi(options);
         }
 
-    #endregion
+        #endregion
 
         private void AddSwaggerDocumentForEachDiscoveredApiVersion(SwaggerGenOptions options)
         {

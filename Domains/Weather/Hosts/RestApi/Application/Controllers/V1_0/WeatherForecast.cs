@@ -1,6 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.Controllers.V1_0
 {
-    using System;
+    #region
+
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Orchestration;
     using Microsoft.AspNetCore.Authorization;
@@ -9,6 +10,8 @@
     using Weather.Application.UseCases.AddCity;
     using Weather.Application.UseCases.Forecast;
     using Weather.Application.UseCases.SyncWeatherService;
+
+    #endregion
 
     /// <summary>
     ///     Weather endpoints
@@ -27,7 +30,7 @@
         public async Task<IActionResult> Get()
         {
             RequestResult requestResult = await Orchestrator.SendQuery(new GetWeatherForecastsQuery());
-            
+
             if (!requestResult.Success)
                 return BadRequest(requestResult.Messages);
 
@@ -39,7 +42,7 @@
         public async Task<IActionResult> Post([FromBody] SyncWeatherServiceCommand command)
         {
             RequestResult requestResult = await Orchestrator.SendCommand(command);
-            
+
             return Ok(requestResult.Payload());
         }
 

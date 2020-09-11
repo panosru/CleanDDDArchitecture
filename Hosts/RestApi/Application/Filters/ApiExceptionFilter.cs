@@ -1,5 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Filters
 {
+    #region
+
     using System;
     using System.Collections.Generic;
     using Aviant.DDD.Application.Exceptions;
@@ -10,6 +12,8 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.DependencyInjection;
+
+    #endregion
 
     /// <summary>
     /// </summary>

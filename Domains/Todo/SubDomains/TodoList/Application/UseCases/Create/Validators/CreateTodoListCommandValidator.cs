@@ -1,9 +1,13 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create.Validators
 {
+    #region
+
     using System.Threading;
     using System.Threading.Tasks;
     using Core.Repositories;
     using FluentValidation;
+
+    #endregion
 
     public class CreateTodoListCommandValidator : AbstractValidator<CreateTodoListCommand>
     {

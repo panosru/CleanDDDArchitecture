@@ -1,8 +1,12 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Core.Controllers
 {
+    #region
+
     using Aviant.DDD.Application.Orchestration;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.DependencyInjection;
+
+    #endregion
 
     /// <summary>
     /// </summary>

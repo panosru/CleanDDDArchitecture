@@ -1,5 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Delete
 {
+    #region
+
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Commands;
@@ -8,6 +10,8 @@
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Todo.Core.Entities;
+
+    #endregion
 
     public class DeleteTodoListCommand : Command
     {
@@ -31,8 +35,8 @@
         public override async Task<Unit> Handle(DeleteTodoListCommand command, CancellationToken cancellationToken)
         {
             var entity = await _todoListReadRepository
-                              .FindBy(l => l.Id == command.Id)
-                              .SingleOrDefaultAsync(cancellationToken);
+               .FindBy(l => l.Id == command.Id)
+               .SingleOrDefaultAsync(cancellationToken);
 
             if (entity == null) throw new NotFoundException(nameof(TodoListEntity), command.Id);
 

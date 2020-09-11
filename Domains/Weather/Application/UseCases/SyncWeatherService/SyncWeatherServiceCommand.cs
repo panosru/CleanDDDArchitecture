@@ -1,10 +1,14 @@
 namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherService
 {
+    #region
+
     using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Commands;
     using MediatR;
+
+    #endregion
 
     public sealed class SyncWeatherServiceCommand : ICommand
     {
@@ -19,7 +23,7 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherS
             // Perform some operations here
             if (false)
                 throw new Exception("Something went wrong!");
-            
+
             return Task.FromResult(Unit.Value); // Equivalent to void
         }
     }

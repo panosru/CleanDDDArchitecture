@@ -1,8 +1,12 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.Core.Entities
 {
+    #region
+
     using System;
     using Aviant.DDD.Domain.Entities;
     using Aviant.DDD.Domain.Enums;
+
+    #endregion
 
     public sealed class TodoItemEntity
         : Entity<int>,
@@ -25,40 +29,40 @@
 
         public State State { get; set; } = State.Active;
 
-    #region .:: Navigation Properties ::.
+        #region .:: Navigation Properties ::.
 
         public TodoListEntity List { get; set; }
 
-    #endregion
+        #endregion
 
-    #region ICreationAudited Members
+        #region ICreationAudited Members
 
         public DateTime Created { get; set; }
 
         public Guid CreatedBy { get; set; }
 
-    #endregion
+        #endregion
 
-    #region IDeletionAudited Members
+        #region IDeletionAudited Members
 
         public DateTime? Deleted { get; set; }
 
         public Guid? DeletedBy { get; set; }
 
-    #endregion
+        #endregion
 
-    #region IModificationAudited Members
+        #region IModificationAudited Members
 
         public DateTime? LastModified { get; set; }
 
         public Guid? LastModifiedBy { get; set; }
 
-    #endregion
+        #endregion
 
-    #region ISoftDelete Members
+        #region ISoftDelete Members
 
         public bool IsDeleted { get; set; }
 
-    #endregion
+        #endregion
     }
 }

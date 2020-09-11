@@ -1,6 +1,10 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Dtos
 {
+    #region
+
     using System.ComponentModel.DataAnnotations;
+
+    #endregion
 
     public class CreateAccountDto
     {

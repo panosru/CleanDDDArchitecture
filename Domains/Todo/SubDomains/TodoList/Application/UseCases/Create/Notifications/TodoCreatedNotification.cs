@@ -1,9 +1,13 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create.Notifications
 {
+    #region
+
     using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Notifications;
+
+    #endregion
 
     public class TodoCreatedNotification : Notification
     {
