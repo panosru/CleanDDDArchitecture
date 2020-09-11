@@ -3,11 +3,10 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Infrastructure.R
     using Aviant.DDD.Infrastructure.Persistence.Repository;
     using Core.Repositories;
     using Todo.Core.Entities;
-    using Todo.Infrastructure.Identity;
     using Todo.Infrastructure.Persistence.Contexts;
 
     public class TodoListRepositoryRead
-        : RepositoryReadOnly<TodoDbContextRead, TodoUser, TodoRole, TodoListEntity, int>,
+        : RepositoryRead<TodoDbContextRead, TodoListEntity, int>,
           ITodoListRepositoryRead
     {
         public TodoListRepositoryRead(TodoDbContextRead context)

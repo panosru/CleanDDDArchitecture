@@ -4,7 +4,7 @@
     using Core.Entities;
     using Microsoft.EntityFrameworkCore;
 
-    public interface ITodoDbContextWrite : IApplicationDbContext
+    public interface ITodoDbContextWrite : IDbContextWrite
     {
         DbSet<TodoListEntity> TodoLists { get; set; }
 

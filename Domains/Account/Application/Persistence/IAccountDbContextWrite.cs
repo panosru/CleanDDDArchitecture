@@ -1,10 +1,10 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.Persistence
 {
-    using Aggregates;
     using Aviant.DDD.Application.Persistance;
+    using Core.Entities;
     using Microsoft.EntityFrameworkCore;
 
-    public interface IAccountDbContextWrite : IApplicationDbContext
+    public interface IAccountDbContextWrite : IDbContextWrite
     {
         DbSet<AccountEntity> Accounts { get; set; }
     }
