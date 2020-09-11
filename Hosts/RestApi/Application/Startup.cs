@@ -60,6 +60,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 {
                     IEnumerable<Profile> profiles = TodoCrossCutting.TodoAutoMapperProfiles()
                        .Union(AccountCrossCutting.AccountAutoMapperProfiles())
+                       .Union(WeatherCrossCutting.WeatherAutoMapperProfiles())
                        .ToList();
 
                     foreach (var profile in profiles)
@@ -70,6 +71,8 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 TodoCrossCutting.TodoValidatorAssemblies()
                    .Union(
                         AccountCrossCutting.AccountValidatorAssemblies())
+                   .Union(
+                        WeatherCrossCutting.WeatherValidatorAssemblies())
                    .ToArray());
 
 
@@ -82,6 +85,8 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                             TodoCrossCutting.TodoMediatorAssemblies()
                                .Union(
                                     AccountCrossCutting.AccountMediatorAssemblies())
+                               .Union(
+                                    WeatherCrossCutting.WeatherMediatorAssemblies())
                                .ToArray())
                        .RegisterHandlers(typeof(IRequestHandler<>))
                        .RegisterHandlers(typeof(IRequestHandler<,>))
