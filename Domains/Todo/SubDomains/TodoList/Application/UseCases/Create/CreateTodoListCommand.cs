@@ -1,5 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create
 {
+    #region
+
     using System;
     using System.Threading;
     using System.Threading.Tasks;
@@ -10,6 +12,8 @@
     using Dtos;
     using Notifications;
     using Todo.Core.Entities;
+
+    #endregion
 
     public class CreateTodoListCommand : Command<Lazy<TodoListDto>>
     {

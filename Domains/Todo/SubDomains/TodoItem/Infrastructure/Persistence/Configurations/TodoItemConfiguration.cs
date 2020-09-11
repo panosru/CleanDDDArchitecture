@@ -1,9 +1,13 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Infrastructure.Persistence.Configurations
 {
+    #region
+
     using Aviant.DDD.Infrastructure.Persistence.Configurations;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Todo.Core.Entities;
+
+    #endregion
 
     public class TodoItemConfiguration : EntityConfiguration<TodoItemEntity, int>
     {
@@ -12,14 +16,14 @@
             builder.HasKey(e => e.Id);
 
             builder.HasOne(e => e.List)
-                   .WithMany(f => f.Items)
-                   .HasForeignKey(e => e.ListId)
-                   .IsRequired()
-                   .OnDelete(DeleteBehavior.Restrict);
+               .WithMany(f => f.Items)
+               .HasForeignKey(e => e.ListId)
+               .IsRequired()
+               .OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(t => t.Title)
-                   .HasMaxLength(200)
-                   .IsRequired();
+               .HasMaxLength(200)
+               .IsRequired();
         }
     }
 }

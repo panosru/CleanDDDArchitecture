@@ -1,5 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.CrossCutting
 {
+    #region
+
     using Core.Repositories;
     using Infrastructure.Persistence.Configurations;
     using Infrastructure.Repositories;
@@ -7,16 +9,17 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.CrossCutting
     using Microsoft.Extensions.DependencyInjection;
     using Todo.Infrastructure.Persistence.Contexts;
 
+    #endregion
+
     public static class DependencyInjectionRegistry
     {
         public static IServiceCollection AddTodoList(
             this IServiceCollection services,
             IConfiguration          configuration)
         {
-
             services.AddScoped<ITodoListRepositoryRead, TodoListRepositoryRead>();
             services.AddScoped<ITodoListRepositoryWrite, TodoListRepositoryWrite>();
-            
+
             TodoDbContextWrite.AddConfigurationAssemblyFromEntity(new TodoListConfiguration());
 
             return services;

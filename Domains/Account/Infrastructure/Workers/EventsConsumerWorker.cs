@@ -1,13 +1,16 @@
 namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Workers
 {
+    #region
+
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Application.Aggregates;
     using Aviant.DDD.Domain.EventBus;
-    using Infrastructure;
     using Microsoft.Extensions.Hosting;
+
+    #endregion
 
     public class EventsConsumerWorker : BackgroundService
     {

@@ -1,8 +1,12 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Utils.Swagger
 {
+    #region
+
     using System.Linq;
     using Microsoft.OpenApi.Models;
     using Swashbuckle.AspNetCore.SwaggerGen;
+
+    #endregion
 
     /// <summary>
     ///     Represents the Swagger/Swashbuckle operation filter used to document the implicit API version parameter.
@@ -13,7 +17,7 @@
     /// </remarks>
     public sealed class SwaggerDefaultValues : IOperationFilter
     {
-    #region IOperationFilter Members
+        #region IOperationFilter Members
 
         /// <summary>
         ///     Applies the filter to the specified operation using the given context.
@@ -42,6 +46,6 @@
             }
         }
 
-    #endregion
+        #endregion
     }
 }

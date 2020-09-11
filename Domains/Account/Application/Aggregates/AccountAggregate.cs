@@ -1,11 +1,15 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
 {
+    #region
+
     using System;
     using Aviant.DDD.Domain.Aggregates;
     using Aviant.DDD.Domain.Entities;
     using Aviant.DDD.Domain.Events;
     using UseCases.Create.Events;
     using UseCases.UpdateDetails.Events;
+
+    #endregion
 
     public class AccountAggregate
         : Aggregate<AccountAggregate, AccountAggregateId>,
@@ -16,9 +20,9 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
 
         private AccountAggregate(
             AccountAggregateId aggregateId,
-            string    firstName,
-            string    lastName,
-            string    email)
+            string             firstName,
+            string             lastName,
+            string             email)
             : base(aggregateId)
         {
             FirstName = firstName;
@@ -30,8 +34,8 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
 
         private AccountAggregate(
             AccountAggregateId aggregateId,
-            Guid      userId,
-            string    email)
+            Guid               userId,
+            string             email)
             : base(aggregateId)
         {
             UserId = userId;
@@ -46,13 +50,13 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
 
         public string Email { get; private set; }
 
-    #region IActivationAudited Members
+        #region IActivationAudited Members
 
         public bool IsActive { get; set; } = true;
 
         public Guid? ActivationStatusModifiedBy { get; set; }
 
-    #endregion
+        #endregion
 
         public static AccountAggregate Create(
             string firstname,
@@ -60,8 +64,8 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
             string email)
         {
             var unixTimestamp = (int) DateTime.UtcNow
-                                              .Subtract(new DateTime(1970, 1, 1))
-                                              .TotalSeconds;
+               .Subtract(new DateTime(1970, 1, 1))
+               .TotalSeconds;
 
             var id = new AccountAggregateId(unixTimestamp);
 
@@ -75,8 +79,8 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
         public static AccountAggregate Create(Guid userId, string email)
         {
             var unixTimestamp = (int) DateTime.UtcNow
-                                              .Subtract(new DateTime(1970, 1, 1))
-                                              .TotalSeconds;
+               .Subtract(new DateTime(1970, 1, 1))
+               .TotalSeconds;
 
             var id = new AccountAggregateId(unixTimestamp);
 

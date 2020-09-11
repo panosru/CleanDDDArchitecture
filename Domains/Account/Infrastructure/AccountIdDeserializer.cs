@@ -1,13 +1,17 @@
 namespace CleanDDDArchitecture.Domains.Account.Infrastructure
 {
+    #region
+
     using System;
     using System.Text;
     using Application.Aggregates;
     using Confluent.Kafka;
 
+    #endregion
+
     public class AccountIdDeserializer : IDeserializer<AccountAggregateId>
     {
-    #region IDeserializer<AccountAggregateId> Members
+        #region IDeserializer<AccountAggregateId> Members
 
         public AccountAggregateId Deserialize(
             ReadOnlySpan<byte>   data,
@@ -19,6 +23,6 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure
             return new AccountAggregateId(int.Parse(decodedData));
         }
 
-    #endregion
+        #endregion
     }
 }

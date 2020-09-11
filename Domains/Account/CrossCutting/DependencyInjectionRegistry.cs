@@ -1,5 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Account.CrossCutting
 {
+    #region
+
     using System;
     using System.IdentityModel.Tokens.Jwt;
     using System.Text;
@@ -33,6 +35,8 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using Microsoft.Extensions.Logging;
     using Microsoft.IdentityModel.Tokens;
 
+    #endregion
+
     public static class DependencyInjectionRegistry
     {
         public static IServiceCollection AddAccount(
@@ -50,42 +54,39 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                         configuration.GetConnectionString("DefaultWriteConnection"),
                         b =>
                             b.MigrationsAssembly(typeof(AccountDbContextWrite).Assembly.FullName)));
-            
+
             services.AddScoped<IAccountDbContextWrite>(
                 provider =>
                     provider.GetService<AccountDbContextWrite>());
-            
+
             services.AddDbContext<AccountDbContextRead>(
                 options =>
                     options.UseNpgsql(
                         configuration.GetConnectionString("DefaultReadConnection"),
                         b =>
                             b.MigrationsAssembly(typeof(IAccountDbContextRead).Assembly.FullName)));
-            
+
             services.AddScoped<IAccountDbContextRead>(
                 provider =>
                     provider.GetService<AccountDbContextRead>());
-            
+
             services.AddScoped<IAccountRepositoryRead, AccountRepositoryRead>();
             services.AddScoped<IAccountRepositoryWrite, AccountRepositoryWrite>();
-            
+
             services
                .AddDefaultIdentity<AccountUser>(
-                    options =>
-                    {
-                        options.User.RequireUniqueEmail = true;
-                    })
+                    options => { options.User.RequireUniqueEmail = true; })
                .AddRoles<AccountRole>()
                .AddEntityFrameworkStores<AccountDbContextWrite>();
 
             services.AddIdentityServer()
                .AddApiAuthorization<AccountUser, AccountDbContextWrite>();
-            
+
             services.AddTransient<IIdentityService, IdentityService>();
-            
+
             services.AddAuthentication()
                .AddIdentityServerJwt();
-            
+
             services
                .AddSingleton<IEventDeserializer>(
                     new JsonEventDeserializer(
@@ -103,24 +104,24 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
             var eventstoreConnStr = configuration.GetConnectionString("eventstore");
 
             services.AddSingleton(consumerConfig)
-                    .AddSingleton(typeof(IEventConsumer<,,>), typeof(EventConsumer<,,>))
-                    .AddKafkaEventProducer<AccountAggregate, AccountAggregateId>(consumerConfig);
-            
-            
+               .AddSingleton(typeof(IEventConsumer<,,>), typeof(EventConsumer<,,>))
+               .AddKafkaEventProducer<AccountAggregate, AccountAggregateId>(consumerConfig);
+
+
             services.AddSingleton<IEventStoreConnectionWrapper>(
-                         ctx =>
-                         {
-                             var logger = ctx.GetRequiredService<ILogger<EventStoreConnectionWrapper>>();
-            
-                             return new EventStoreConnectionWrapper(new Uri(eventstoreConnStr), logger);
-                         })
-                    .AddEventsRepository<AccountAggregate, AccountAggregateId>();
-            
-            
+                    ctx =>
+                    {
+                        var logger = ctx.GetRequiredService<ILogger<EventStoreConnectionWrapper>>();
+
+                        return new EventStoreConnectionWrapper(new Uri(eventstoreConnStr), logger);
+                    })
+               .AddEventsRepository<AccountAggregate, AccountAggregateId>();
+
+
             services.AddEventsService<AccountAggregate, AccountAggregateId>();
-            
+
             services.AddScoped<ServiceFactory>(ctx => ctx.GetRequiredService);
-            
+
             services.Decorate(typeof(INotificationHandler<>), typeof(RetryProcessor<>));
 
             services.AddSingleton<IEventConsumerFactory, EventConsumerFactory>();
@@ -129,12 +130,17 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                 ctx =>
                 {
                     var factory = ctx.GetRequiredService<IEventConsumerFactory>();
-            
+
                     return new EventsConsumerWorker(factory);
                 });
 
-            services.AddScoped<IOrchestrator<AccountAggregate, AccountAggregateId>, Orchestrator<AccountAggregate, AccountAggregateId>>();
-            services.AddScoped<IUnitOfWork<AccountAggregate, AccountAggregateId>, UnitOfWork<AccountAggregate, AccountAggregateId>>();
+            services
+               .AddScoped<IOrchestrator<AccountAggregate, AccountAggregateId>,
+                    Orchestrator<AccountAggregate, AccountAggregateId>>();
+
+            services
+               .AddScoped<IUnitOfWork<AccountAggregate, AccountAggregateId>,
+                    UnitOfWork<AccountAggregate, AccountAggregateId>>();
 
             return services;
         }
@@ -166,11 +172,8 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
             return services;
         }
 
-        public static IHealthChecksBuilder AddAccountChecks(
-            this IHealthChecksBuilder builder)
-        {
-            return builder.AddDbContextCheck<AccountDbContextWrite>();
-        }
+        public static IHealthChecksBuilder AddAccountChecks(this IHealthChecksBuilder builder) =>
+            builder.AddDbContextCheck<AccountDbContextWrite>();
 
         public static void UseAccountAuth(this IApplicationBuilder app)
         {

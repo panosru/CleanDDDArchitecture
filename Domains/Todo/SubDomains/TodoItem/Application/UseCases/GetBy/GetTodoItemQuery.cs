@@ -1,9 +1,13 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.GetBy
 {
+    #region
+
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Queries;
     using Core.Repositories;
+
+    #endregion
 
     public class GetTodoItemQuery : Query<string>
     {

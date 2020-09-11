@@ -1,23 +1,27 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails
 {
+    #region
+
     using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Aggregates;
     using Aviant.DDD.Application.Commands;
 
+    #endregion
+
     public class UpdateAccount : Command<AccountAggregate, AccountAggregateId>
     {
         public UpdateAccount(
             AccountAggregateId aggregateId,
-            string    firstName,
-            string    lastName,
-            string    email)
+            string             firstName,
+            string             lastName,
+            string             email)
         {
-            AggregateId        = aggregateId;
-            FirstName = firstName;
-            LastName  = lastName;
-            Email     = email;
+            AggregateId = aggregateId;
+            FirstName   = firstName;
+            LastName    = lastName;
+            Email       = email;
         }
 
         public AccountAggregateId AggregateId { get; }
