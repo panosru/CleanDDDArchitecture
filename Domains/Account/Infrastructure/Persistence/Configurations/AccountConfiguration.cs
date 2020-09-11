@@ -1,6 +1,8 @@
 namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Configurations
 {
-    // public class AccountConfiguration : EntityConfiguration<AccountEntity, AccountId>
-    // {
-    // }
+    using Aviant.DDD.Infrastructure.Persistence.Configurations;
+    using Core.Entities;
+
+    public class AccountConfiguration : EntityConfiguration<AccountEntity, int>
+    { }
 }

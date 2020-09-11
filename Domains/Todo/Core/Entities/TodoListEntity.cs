@@ -15,39 +15,39 @@
     {
         public string Title { get; set; }
 
-        public string Colour { get; set; }
+        public string? Colour { get; set; }
 
-        public IList<TodoItemEntity> Items { get; } = new List<TodoItemEntity>();
+        public IEnumerable<TodoItemEntity> Items { get; } = new List<TodoItemEntity>();
 
-    #region ICreationAudited Members
+        #region ICreationAudited Members
 
         public DateTime Created { get; set; }
 
         public Guid CreatedBy { get; set; }
 
-    #endregion
+        #endregion
 
-    #region IDeletionAudited Members
+        #region IDeletionAudited Members
 
         public DateTime? Deleted { get; set; }
 
         public Guid? DeletedBy { get; set; }
 
-    #endregion
+        #endregion
 
-    #region IModificationAudited Members
+        #region IModificationAudited Members
 
         public DateTime? LastModified { get; set; }
 
         public Guid? LastModifiedBy { get; set; }
 
-    #endregion
+        #endregion
 
-    #region ISoftDelete Members
+        #region ISoftDelete Members
 
         public bool IsDeleted { get; set; }
 
-    #endregion
+        #endregion
 
         public override Task<bool> Validate()
         {

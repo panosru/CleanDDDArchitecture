@@ -4,7 +4,7 @@ namespace CleanDDDArchitecture.Domains.Todo.Application.Persistence
     using Core.Entities;
     using Microsoft.EntityFrameworkCore;
 
-    public interface ITodoDbContextRead : IApplicationDbContextReadOnly
+    public interface ITodoDbContextRead : IDbContextRead
     {
         DbSet<TodoListEntity> TodoLists { get; set; }
 
