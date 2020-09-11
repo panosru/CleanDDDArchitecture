@@ -40,7 +40,6 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
                         b =>
                             b.MigrationsAssembly(typeof(TodoDbContextWrite).Assembly.FullName)));
 
-
             services.AddScoped<ITodoDbContextWrite>(
                 provider =>
                     provider.GetService<TodoDbContextWrite>());
@@ -74,6 +73,12 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
             services.AddScoped<IUnitOfWork<TodoDbContextWrite>, UnitOfWork<TodoDbContextWrite>>();
             
             return services;
+        }
+        
+        public static IHealthChecksBuilder AddTodoChecks(
+            this IHealthChecksBuilder builder)
+        {
+            return builder.AddDbContextCheck<TodoDbContextWrite>();
         }
     }
 }

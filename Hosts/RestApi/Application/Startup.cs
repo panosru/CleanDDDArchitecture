@@ -1,21 +1,36 @@
 namespace CleanDDDArchitecture.Hosts.RestApi.Application
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
     using System.Text;
+    using AutoMapper;
     using Aviant.DDD.Application;
+    using Aviant.DDD.Application.Behaviours;
     using Aviant.DDD.Application.EventBus;
     using Aviant.DDD.Application.Identity;
+    using Aviant.DDD.Application.Mappings;
+    using Aviant.DDD.Application.Notifications;
     using Aviant.DDD.Application.Processors;
     using Aviant.DDD.Application.Services;
     using Aviant.DDD.Domain.EventBus;
+    using Aviant.DDD.Domain.Messages;
     using Aviant.DDD.Domain.Services;
     using Aviant.DDD.Infrastructure.Persistence.EventStore;
     using Aviant.DDD.Infrastructure.Persistence.Kafka;
+    using Aviant.DDD.Infrastructure.Services;
     using Domains.Account.Application.UseCases.Authenticate;
+    using Domains.Account.CrossCutting;
     using Domains.Account.Infrastructure.Persistence.Contexts;
+    using Domains.Todo.CrossCutting;
     using Domains.Todo.SubDomains.TodoItem.Application.UseCases.Create;
     using Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
+    using Domains.Todo.SubDomains.TodoList.Application.UseCases.Create.Dtos;
     using Domains.Weather.Application.UseCases.Forecast;
+    using Domains.Weather.CrossCutting;
+    using Filters;
+    using FluentValidation;
     // using Domains.Weather.Application.UseCases.Forecast;
     // using Domains.Account.Application.Aggregates;
     // using Domains.Account.Application.UseCases.Create;
@@ -45,7 +60,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
         public Startup(IConfiguration configuration) => Configuration = configuration;
 
         private IConfiguration Configuration { get; }
-
+        
         /// <summary>
         ///     This method gets called by the runtime. Use this method to add services to the container.
         /// </summary>
@@ -54,100 +69,70 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
         {
             services.AddSingleton(Configuration);
 
-            services.Configure<SwaggerSettings>(Configuration.GetSection(nameof(SwaggerSettings)));
+            services.AddAutoMapper(
+                cfg =>
+                {
+                    IEnumerable<Profile> profiles = TodoCrossCutting.TodoAutoMapperProfiles()
+                       .Union(AccountCrossCutting.AccountAutoMapperProfiles())
+                       .ToList();
+                    
+                    foreach (var profile in profiles)
+                        cfg.AddProfile(profile);
+                });
 
+            services.AddValidatorsFromAssemblies(
+                TodoCrossCutting.TodoValidatorAssemblies()
+                   .Union(
+                        AccountCrossCutting.AccountValidatorAssemblies())
+                   .ToArray());
+            
+            
             services.AddTransient<IMediator, Mediator>();
-            // services.AddMediatR(typeof(GetWeatherForecastsQuery).Assembly);
 
             services.Scan(
                 scan =>
                 {
-                    scan.FromAssemblies(
-                            typeof(GetWeatherForecastsQuery).Assembly,
-                            typeof(AuthenticateCommand).Assembly,
-                            typeof(CreateTodoItemCommand).Assembly,
-                            typeof(CreateTodoListCommand).Assembly)
-                        .RegisterHandlers(typeof(IRequestHandler<>))
-                        .RegisterHandlers(typeof(IRequestHandler<,>))
-                       .RegisterHandlers(typeof(INotificationHandler<>));
+                    scan.FromAssemblies(TodoCrossCutting.TodoMediatorAssemblies()
+                                           .Union(
+                                                AccountCrossCutting.AccountMediatorAssemblies())
+                                           .ToArray())
+                       .RegisterHandlers(typeof(IRequestHandler<>))
+                       .RegisterHandlers(typeof(IRequestHandler<,>))
+                       .RegisterHandlers(typeof(MediatR.INotificationHandler<>));
                 });
             
-            // services.AddMediatR(typeof(CreateAccount).Assembly);
-            // services.Scan(
-            //     scan =>
-            //     {
-            //         scan.FromAssembliesOf(typeof(CreateAccount), typeof(AccountCreatedEvent))
-            //             .RegisterHandlers(typeof(IRequestHandler<>))
-            //             .RegisterHandlers(typeof(IRequestHandler<,>))
-            //             .RegisterHandlers(typeof(INotificationHandler<>));
-            //     });
 
-            services
-               .AddApplication()
-               .AddInfrastructure(Configuration);
-
+            services.AddTransient(
+                typeof(IPipelineBehavior<,>),
+                typeof(PerformanceBehaviour<,>));
+            
+            services.AddTransient(
+                typeof(IPipelineBehavior<,>),
+                typeof(ValidationBehaviour<,>));
+            
+            services.AddTransient(
+                typeof(IPipelineBehavior<,>),
+                typeof(UnhandledExceptionBehaviour<,>));
             
 
-            var kafkaConnStr    = Configuration.GetConnectionString("kafka");
-            var eventsTopicName = Configuration["eventsTopicName"];
-            var groupName       = Configuration["eventsTopicGroupName"];
-            var consumerConfig  = new EventConsumerConfig(kafkaConnStr, eventsTopicName, groupName);
+            // Add Infrastructure
+            services
+               .AddAccount(Configuration)
+               .AddTodo(Configuration)
+               .AddWeather(Configuration);
 
-            var eventstoreConnStr = Configuration.GetConnectionString("eventstore");
 
-            // services.AddSingleton(consumerConfig)
-            //         .AddSingleton(typeof(IEventConsumer<,,>), typeof(EventConsumer<,,>))
-            //         .AddKafkaEventProducer<AccountEntity, AccountId>(consumerConfig);
-            //
-            //
-            // services.AddSingleton<IEventStoreConnectionWrapper>(
-            //              ctx =>
-            //              {
-            //                  var logger = ctx.GetRequiredService<ILogger<EventStoreConnectionWrapper>>();
-            //
-            //                  return new EventStoreConnectionWrapper(new Uri(eventstoreConnStr), logger);
-            //              })
-            //         .AddEventsRepository<AccountEntity, AccountId>();
-            //
-            //
-            // services.AddEventsService<AccountEntity, AccountId>();
+            services.AddTransient<IDateTimeService, DateTimeService>();
 
-            services.AddScoped<ServiceFactory>(ctx => ctx.GetRequiredService);
+            services.AddScoped<IMessages, Messages>();
+            services.AddScoped<INotificationDispatcher, NotificationDispatcher>();
 
-            // services.Decorate(typeof(INotificationHandler<>), typeof(RetryProcessor<>));
+            services.AddSingleton<IServiceContainer, HttpContextServiceProviderProxy>();
 
-            // services.AddSingleton<IEventConsumerFactory, EventConsumerFactory>();
-
-            // services.AddHostedService(
-            //     ctx =>
-            //     {
-            //         var factory = ctx.GetRequiredService<IEventConsumerFactory>();
-            //
-            //         return new EventsConsumerWorker(factory);
-            //     });
+            services.AddAccountAuth(Configuration);
 
             services
-               .AddAuthorization()
-               .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-               .AddJwtBearer(
-                    options =>
-                    {
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuer           = true,
-                            ValidateAudience         = true,
-                            ValidateLifetime         = true,
-                            ValidateIssuerSigningKey = true,
-                            ValidIssuer              = Configuration["Jwt:Issuer"],
-                            ValidAudience            = Configuration["Jwt:Issuer"],
-                            IssuerSigningKey =
-                                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
-                            ClockSkew = TimeSpan.Zero
-                        };
-                    });
-
-            services
-               .AddApiVersionWithExplorer()
+               .AddApiVersionWithExplorer(Configuration)
                .AddSwaggerOptions()
                .AddSwaggerGen();
 
@@ -157,16 +142,16 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
 
             services
                .AddHealthChecks()
-               .AddDbContextCheck<AccountDbContextWrite>();
-            // .AddDbContextCheck<TodoDbContextWrite>();
+               .AddAccountChecks()
+               .AddTodoChecks();
 
-            // services.AddControllersWithViews(
-            //     options =>
-            //     {
-            //         options.Filters.Add(new ApiExceptionFilter());
-            //         //options.Filters.Add(new AuthorizeFilter());
-            //     }
-            // );
+            services.AddControllersWithViews(
+                options =>
+                {
+                    // options.Filters.Add(new ApiExceptionFilter());
+                    //options.Filters.Add(new AuthorizeFilter());
+                }
+            );
         }
 
         /// <summary>
@@ -179,7 +164,6 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
         public void Configure(
             IApplicationBuilder            app,
             IWebHostEnvironment            env,
-            IApiVersionDescriptionProvider provider,
             IServiceProvider               serviceProvider)
         {
             ServiceLocator.Initialise(serviceProvider.GetService<IServiceContainer>());
@@ -213,8 +197,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
 
             app.UseRouting();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            app.UseAccountAuth();
 
             app.UseEndpoints(
                 endpoints =>
