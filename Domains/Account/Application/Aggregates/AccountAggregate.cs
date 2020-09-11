@@ -7,19 +7,19 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
     using UseCases.Create.Events;
     using UseCases.UpdateDetails.Events;
 
-    public class AccountEntity
-        : AggregateRoot<AccountEntity, AccountId>,
+    public class AccountAggregate
+        : Aggregate<AccountAggregate, AccountAggregateId>,
           IActivationAudited
     {
-        private AccountEntity()
+        private AccountAggregate()
         { }
 
-        private AccountEntity(
-            AccountId id,
+        private AccountAggregate(
+            AccountAggregateId aggregateId,
             string    firstName,
             string    lastName,
             string    email)
-            : base(id)
+            : base(aggregateId)
         {
             FirstName = firstName;
             LastName  = lastName;
@@ -28,17 +28,17 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
             AddEvent(new AccountCreatedEvent(this));
         }
 
-        private AccountEntity(
-            AccountId id,
+        private AccountAggregate(
+            AccountAggregateId aggregateId,
             Guid      userId,
             string    email)
-            : base(id)
+            : base(aggregateId)
         {
             UserId = userId;
             Email  = email;
         }
 
-        public Guid UserId { get; }
+        public Guid UserId { get; private set; }
 
         public string FirstName { get; private set; }
 
@@ -54,7 +54,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
 
     #endregion
 
-        public static AccountEntity Create(
+        public static AccountAggregate Create(
             string firstname,
             string lastname,
             string email)
@@ -63,24 +63,24 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
                                               .Subtract(new DateTime(1970, 1, 1))
                                               .TotalSeconds;
 
-            var id = new AccountId(unixTimestamp);
+            var id = new AccountAggregateId(unixTimestamp);
 
-            return new AccountEntity(
+            return new AccountAggregate(
                 id,
                 firstname,
                 lastname,
                 email);
         }
 
-        public static AccountEntity Create(Guid userId, string email)
+        public static AccountAggregate Create(Guid userId, string email)
         {
             var unixTimestamp = (int) DateTime.UtcNow
                                               .Subtract(new DateTime(1970, 1, 1))
                                               .TotalSeconds;
 
-            var id = new AccountId(unixTimestamp);
+            var id = new AccountAggregateId(unixTimestamp);
 
-            return new AccountEntity(id, userId, email);
+            return new AccountAggregate(id, userId, email);
         }
 
         public void ChangeDetails(
@@ -95,7 +95,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
             AddEvent(new AccountUpdatedEvent(this));
         }
 
-        protected override void Apply(IEvent<AccountId> @event)
+        protected override void Apply(IEvent<AccountAggregateId> @event)
         {
             switch (@event)
             {

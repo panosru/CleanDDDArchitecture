@@ -3,23 +3,23 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Event
     using Aggregates;
     using Aviant.DDD.Domain.Events;
 
-    public class AccountCreatedEvent : Event<AccountEntity, AccountId>
+    public class AccountCreatedEvent : Event<AccountAggregate, AccountAggregateId>
     {
         private AccountCreatedEvent()
         { }
 
-        public AccountCreatedEvent(AccountEntity accountEntity)
-            : base(accountEntity)
+        public AccountCreatedEvent(AccountAggregate accountAggregate)
+            : base(accountAggregate)
         {
-            FirstName = accountEntity.FirstName;
-            LastName  = accountEntity.LastName;
-            Email     = accountEntity.Email;
+            FirstName = accountAggregate.FirstName;
+            LastName  = accountAggregate.LastName;
+            Email     = accountAggregate.Email;
         }
 
-        public string FirstName { get; }
+        public string FirstName { get; private set; }
 
-        public string LastName { get; }
+        public string LastName { get; private set; }
 
-        public string Email { get; }
+        public string Email { get; private set; }
     }
 }

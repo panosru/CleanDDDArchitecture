@@ -3,10 +3,10 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
     using Aviant.DDD.Domain.Aggregates;
     using Newtonsoft.Json;
 
-    public class AccountId : AggregateId<int>
+    public class AccountAggregateId : AggregateId<int>
     {
         [JsonConstructor]
-        public AccountId(int key)
+        public AccountAggregateId(int key)
             : base(key)
         { }
     }

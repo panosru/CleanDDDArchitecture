@@ -20,7 +20,7 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Workers
         {
             IEnumerable<IEventConsumer> consumers = new[]
             {
-                _eventConsumerFactory.Build<AccountEntity, AccountId, AccountIdDeserializer>()
+                _eventConsumerFactory.Build<AccountAggregate, AccountAggregateId, AccountIdDeserializer>()
             };
 
             var tc = Task.WhenAll(consumers.Select(c => c.ConsumeAsync(stoppingToken)));

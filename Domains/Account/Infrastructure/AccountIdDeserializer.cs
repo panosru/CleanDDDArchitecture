@@ -5,18 +5,18 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure
     using Application.Aggregates;
     using Confluent.Kafka;
 
-    public class AccountIdDeserializer : IDeserializer<AccountId>
+    public class AccountIdDeserializer : IDeserializer<AccountAggregateId>
     {
-    #region IDeserializer<AccountId> Members
+    #region IDeserializer<AccountAggregateId> Members
 
-        public AccountId Deserialize(
+        public AccountAggregateId Deserialize(
             ReadOnlySpan<byte>   data,
             bool                 isNull,
             SerializationContext context)
         {
             var decodedData = Encoding.UTF8.GetString(data.ToArray());
 
-            return new AccountId(int.Parse(decodedData));
+            return new AccountAggregateId(int.Parse(decodedData));
         }
 
     #endregion
