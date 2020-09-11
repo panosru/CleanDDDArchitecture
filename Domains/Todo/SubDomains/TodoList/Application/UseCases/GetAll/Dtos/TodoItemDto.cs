@@ -1,8 +1,12 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll.Dtos
 {
+    #region
+
     using AutoMapper;
     using Aviant.DDD.Application.Mappings;
     using Todo.Core.Entities;
+
+    #endregion
 
     public class TodoItemDto : IMapFrom<TodoItemEntity>
     {
@@ -18,18 +22,18 @@
 
         public string Note { get; set; }
 
-    #region IMapFrom<TodoItemEntity> Members
+        #region IMapFrom<TodoItemEntity> Members
 
         public void Mapping(Profile profile)
         {
             profile.CreateMap<TodoItemEntity, TodoItemDto>()
-                   .ForMember(
-                        d =>
-                            d.Priority,
-                        opt =>
-                            opt.MapFrom(s => (int) s.Priority));
+               .ForMember(
+                    d =>
+                        d.Priority,
+                    opt =>
+                        opt.MapFrom(s => (int) s.Priority));
         }
 
-    #endregion
+        #endregion
     }
 }

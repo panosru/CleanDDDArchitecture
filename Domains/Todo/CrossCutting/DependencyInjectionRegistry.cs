@@ -1,5 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
 {
+    #region
+
     using Application.Persistence;
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.Persistance;
@@ -15,13 +17,14 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
     using SubDomains.TodoList.CrossCutting;
     using SubDomains.TodoList.Infrastructure.Files.Maps;
 
+    #endregion
+
     public static class DependencyInjectionRegistry
     {
         public static IServiceCollection AddTodo(
             this IServiceCollection services,
             IConfiguration          configuration)
         {
-            
             if (configuration.GetValue<bool>("UseInMemoryDatabase"))
             {
                 // services.AddDbContext<TodoDbContextWrite>(
@@ -43,8 +46,8 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
             services.AddScoped<ITodoDbContextWrite>(
                 provider =>
                     provider.GetService<TodoDbContextWrite>());
-            
-            
+
+
             services.AddDbContext<TodoDbContextRead>(
                 options =>
                     options.UseNpgsql(
@@ -55,15 +58,15 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
             services.AddScoped<ITodoDbContextRead>(
                 provider =>
                     provider.GetService<TodoDbContextRead>());
-            
+
             // services.AddDefaultIdentity<TodoUser>()
             //         .AddRoles<TodoRole>()
             //         .AddEntityFrameworkStores<TodoDbContextWrite>();
 
             // services.AddIdentityServer()
             //         .AddApiAuthorization<TodoUser, TodoDbContextWrite>();
-            
-            
+
+
             services.AddTodoItem(configuration);
             services.AddTodoList(configuration);
 
@@ -71,14 +74,11 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
 
             services.AddScoped<IOrchestrator<TodoDbContextWrite>, Orchestrator<TodoDbContextWrite>>();
             services.AddScoped<IUnitOfWork<TodoDbContextWrite>, UnitOfWork<TodoDbContextWrite>>();
-            
+
             return services;
         }
-        
-        public static IHealthChecksBuilder AddTodoChecks(
-            this IHealthChecksBuilder builder)
-        {
-            return builder.AddDbContextCheck<TodoDbContextWrite>();
-        }
+
+        public static IHealthChecksBuilder AddTodoChecks(this IHealthChecksBuilder builder) =>
+            builder.AddDbContextCheck<TodoDbContextWrite>();
     }
 }

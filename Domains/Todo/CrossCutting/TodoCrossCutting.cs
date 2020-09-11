@@ -1,5 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
 {
+    #region
+
     using System.Collections.Generic;
     using System.Reflection;
     using AutoMapper;
@@ -11,33 +13,26 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
     using SubDomains.TodoList.Application.UseCases.Create.Dtos;
     using SubDomains.TodoList.Application.UseCases.Create.Validators;
 
+    #endregion
+
     public static class TodoCrossCutting
     {
-        public static IEnumerable<Profile> TodoAutoMapperProfiles()
+        public static IEnumerable<Profile> TodoAutoMapperProfiles() => new List<Profile>
         {
-            return new List<Profile>
-            {
-                new MappingProfile(typeof(TodoItemDto).Assembly),
-                new MappingProfile(typeof(TodoListDto).Assembly)
-            };
-        }
+            new MappingProfile(typeof(TodoItemDto).Assembly),
+            new MappingProfile(typeof(TodoListDto).Assembly)
+        };
 
-        public static IEnumerable<Assembly> TodoValidatorAssemblies()
+        public static IEnumerable<Assembly> TodoValidatorAssemblies() => new List<Assembly>
         {
-            return new List<Assembly>
-            {
-                typeof(CreateTodoItemCommandValidator).Assembly,
-                typeof(CreateTodoListCommandValidator).Assembly
-            };
-        }
-        
-        public static IEnumerable<Assembly> TodoMediatorAssemblies()
+            typeof(CreateTodoItemCommandValidator).Assembly,
+            typeof(CreateTodoListCommandValidator).Assembly
+        };
+
+        public static IEnumerable<Assembly> TodoMediatorAssemblies() => new List<Assembly>
         {
-            return new List<Assembly>
-            {
-                typeof(CreateTodoItemCommand).Assembly,
-                typeof(CreateTodoListCommand).Assembly
-            };
-        }
+            typeof(CreateTodoItemCommand).Assembly,
+            typeof(CreateTodoListCommand).Assembly
+        };
     }
 }

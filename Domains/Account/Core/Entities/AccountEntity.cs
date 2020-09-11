@@ -1,7 +1,11 @@
 namespace CleanDDDArchitecture.Domains.Account.Core.Entities
 {
+    #region
+
     using System;
     using Aviant.DDD.Domain.Entities;
+
+    #endregion
 
     public class AccountEntity
         : Entity<int>,

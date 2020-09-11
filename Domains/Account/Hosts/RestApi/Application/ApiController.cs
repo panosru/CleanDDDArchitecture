@@ -1,16 +1,20 @@
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application
 {
+    #region
+
     using Account.Application.Aggregates;
     using Aviant.DDD.Application.Orchestration;
-    using ApiControllerCore = CleanDDDArchitecture.Hosts.RestApi.Core.Controllers.ApiController;
     using Microsoft.Extensions.DependencyInjection;
-    
-    public abstract class ApiController :  ApiControllerCore
-    {
-        private IOrchestrator<AccountEntity, AccountId>? _orchestrator;
+    using ApiControllerCore = CleanDDDArchitecture.Hosts.RestApi.Core.Controllers.ApiController;
 
-        protected new IOrchestrator<AccountEntity, AccountId> Orchestrator =>
+    #endregion
+
+    public abstract class ApiController : ApiControllerCore
+    {
+        private IOrchestrator<AccountAggregate, AccountAggregateId>? _orchestrator;
+
+        protected new IOrchestrator<AccountAggregate, AccountAggregateId> Orchestrator =>
             _orchestrator ??= HttpContext.RequestServices
-               .GetService<IOrchestrator<AccountEntity, AccountId>>();
+               .GetService<IOrchestrator<AccountAggregate, AccountAggregateId>>();
     }
 }

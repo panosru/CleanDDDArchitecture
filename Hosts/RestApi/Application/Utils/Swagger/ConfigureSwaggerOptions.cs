@@ -1,7 +1,11 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Utils.Swagger
 {
+    #region
+
     using Microsoft.Extensions.Options;
     using Swashbuckle.AspNetCore.Swagger;
+
+    #endregion
 
     /// <inheritdoc />
     public sealed class ConfigureSwaggerOptions : IConfigureOptions<SwaggerOptions>
@@ -14,7 +18,7 @@
         public ConfigureSwaggerOptions(IOptions<SwaggerSettings> settings) =>
             _settings = settings?.Value ?? new SwaggerSettings();
 
-    #region IConfigureOptions<SwaggerOptions> Members
+        #region IConfigureOptions<SwaggerOptions> Members
 
         /// <inheritdoc />
         public void Configure(SwaggerOptions options)
@@ -22,6 +26,6 @@
             options.RouteTemplate = _settings.RoutePrefixWithSlash + "{documentName}/swagger.json";
         }
 
-    #endregion
+        #endregion
     }
 }
