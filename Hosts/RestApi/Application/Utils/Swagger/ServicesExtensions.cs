@@ -3,6 +3,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Versioning;
     using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
     using Swashbuckle.AspNetCore.Swagger;
@@ -19,8 +20,12 @@
         /// </summary>
         /// <param name="services"></param>
         /// <returns>IServiceCollection</returns>
-        public static IServiceCollection AddApiVersionWithExplorer(this IServiceCollection services)
+        public static IServiceCollection AddApiVersionWithExplorer(
+            this IServiceCollection services,
+            IConfiguration configuration)
         {
+            services.Configure<SwaggerSettings>(configuration.GetSection(nameof(SwaggerSettings)));
+            
             return services
                   .AddVersionedApiExplorer(
                        options =>

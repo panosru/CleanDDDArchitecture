@@ -530,18 +530,31 @@ paths:
         servers: []
     servers: []
     parameters: []
-  /api/Account/{id}:
+  /api/Account/{aggregateId}:
     operations:
       Put:
         tags:
         - name: Account
         parameters:
         - name: id
-          in: Path
-          required: true
+          in: Query
           schema:
             type: integer
             format: int32
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
+        - name: aggregateId
+          in: Path
+          required: true
+          schema:
+            type: string
             allOf: []
             oneOf: []
             anyOf: []
