@@ -3,23 +3,23 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
     using Aggregates;
     using Aviant.DDD.Domain.Events;
 
-    public class AccountUpdatedEvent : Event<AccountEntity, AccountId>
+    public class AccountUpdatedEvent : Event<AccountAggregate, AccountAggregateId>
     {
         private AccountUpdatedEvent()
         { }
 
-        public AccountUpdatedEvent(AccountEntity accountEntity)
-            : base(accountEntity)
+        public AccountUpdatedEvent(AccountAggregate accountAggregate)
+            : base(accountAggregate)
         {
-            FirstName = accountEntity.FirstName;
-            LastName  = accountEntity.LastName;
-            Email     = accountEntity.Email;
+            FirstName = accountAggregate.FirstName;
+            LastName  = accountAggregate.LastName;
+            Email     = accountAggregate.Email;
         }
 
-        public string FirstName { get; }
+        public string FirstName { get; private set; }
 
-        public string LastName { get; }
+        public string LastName { get; private set; }
 
-        public string Email { get; }
+        public string Email { get; private set; }
     }
 }

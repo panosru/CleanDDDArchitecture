@@ -5,7 +5,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
     using Aggregates;
     using Aviant.DDD.Application.Commands;
 
-    public class CreateAccount : Command<AccountEntity, AccountId>
+    public class CreateAccount : Command<AccountAggregate, AccountAggregateId>
     {
         public CreateAccount(
             string firstName,
@@ -24,11 +24,11 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
         public string Email { get; }
     }
 
-    public class CreateAccountHandler : CommandHandler<CreateAccount, AccountEntity, AccountId>
+    public class CreateAccountHandler : CommandHandler<CreateAccount, AccountAggregate, AccountAggregateId>
     {
-        public override async Task<AccountEntity> Handle(CreateAccount command, CancellationToken cancellationToken)
+        public override async Task<AccountAggregate> Handle(CreateAccount command, CancellationToken cancellationToken)
         {
-            var account = AccountEntity.Create(command.FirstName, command.LastName, command.Email);
+            var account = AccountAggregate.Create(command.FirstName, command.LastName, command.Email);
 
             return account;
         }
