@@ -1,4 +1,4 @@
-namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Identity
+namespace CleanDDDArchitecture.Domains.Account.Application.Identity
 {
     #region
 
