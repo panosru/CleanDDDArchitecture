@@ -6,7 +6,6 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Repositories
     using Application.Identity;
     using Application.Repositories;
     using Aviant.DDD.Infrastructure.Persistence.Repository;
-    using Identity;
     using Persistence.Contexts;
 
     #endregion

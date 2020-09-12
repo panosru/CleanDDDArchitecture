@@ -27,11 +27,6 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Microsoft.Extensions.Hosting;
     using Services;
     using Utils.Swagger;
-    // using Domains.Weather.Application.UseCases.Forecast;
-    // using Domains.Account.Application.Aggregates;
-    // using Domains.Account.Application.UseCases.Create;
-    // using Domains.Account.Application.UseCases.Create.Events;
-    // using Domains.Todo.Infrastructure.Persistence.Contexts;
 
     #endregion
 

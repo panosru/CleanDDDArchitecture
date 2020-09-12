@@ -35,8 +35,8 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.Control
             var command = new CreateAccount(
                 dto.UserName,
                 dto.Password,
-                dto.FirstName, 
-                dto.LastName, 
+                dto.FirstName,
+                dto.LastName,
                 dto.Email);
             // await Mediator.Send(command, cancellationToken);
             // return Ok(command);
@@ -53,7 +53,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.Control
         [HttpPut]
         [Route("{aggregateId:guid}")]
         public async Task<IActionResult> Update(
-            Guid               id,
+            Guid              id,
             CreateAccountDto  dto,
             CancellationToken cancellationToken = default)
         {

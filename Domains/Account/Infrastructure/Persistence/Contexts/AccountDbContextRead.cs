@@ -5,7 +5,6 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contex
     using Application.Identity;
     using Application.Persistence;
     using Aviant.DDD.Infrastructure.Persistence.Contexts;
-    using Identity;
     using IdentityServer4.EntityFramework.Options;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
