@@ -2,9 +2,9 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contex
 {
     #region
 
+    using Application.Identity;
     using Application.Persistence;
     using Aviant.DDD.Infrastructure.Persistence.Contexts;
-    using Core.Entities;
     using Identity;
     using IdentityServer4.EntityFramework.Options;
     using Microsoft.EntityFrameworkCore;
@@ -20,11 +20,5 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contex
             IOptions<OperationalStoreOptions> operationalStoreOptions)
             : base(options, operationalStoreOptions)
         { }
-
-        #region IAccountDbContextRead Members
-
-        public DbSet<AccountEntity> Accounts { get; set; }
-
-        #endregion
     }
 }
