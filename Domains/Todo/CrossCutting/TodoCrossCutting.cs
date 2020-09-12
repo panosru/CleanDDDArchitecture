@@ -2,10 +2,15 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
 {
     #region
 
+    using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using System.Threading.Tasks;
     using AutoMapper;
     using Aviant.DDD.Application.Mappings;
+    using Infrastructure.Persistence.Contexts;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.DependencyInjection;
     using SubDomains.TodoItem.Application.UseCases.Create;
     using SubDomains.TodoItem.Application.UseCases.Create.Dtos;
     using SubDomains.TodoItem.Application.UseCases.Create.Validators;
@@ -34,5 +39,13 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
             typeof(CreateTodoItemCommand).Assembly,
             typeof(CreateTodoListCommand).Assembly
         };
+
+        public static async Task GenerateTodoMigrationsIfNewExists(IServiceProvider serviceProvider)
+        {
+            var context = serviceProvider.GetRequiredService<TodoDbContextWrite>();
+
+            if (context.Database.IsNpgsql())
+                await context.Database.MigrateAsync();
+        }
     }
 }
