@@ -5,6 +5,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using System;
     using System.Threading.Tasks;
     using Domains.Account.CrossCutting;
+    using Domains.Todo.CrossCutting;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -33,14 +34,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 try
                 {
                     await AccountCrossCutting.GenerateDefaultUserIfNotExists(serviceProvider);
-                    // var context = services.GetRequiredService<TodoDbContextWrite>();
-                    //
-                    // if (context.Database.IsNpgsql()) await context.Database.MigrateAsync();
-                    //
-                    // var userManager = services.GetRequiredService<UserManager<TodoUser>>();
-                    //
-                    // await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager);
-                    // await ApplicationDbContextSeed.SeedSampleDataAsync(context);
+                    await TodoCrossCutting.GenerateTodoMigrationsIfNewExists(serviceProvider);
                 }
                 catch (Exception ex)
                 {
