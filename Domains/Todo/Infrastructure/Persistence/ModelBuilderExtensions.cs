@@ -1,7 +1,11 @@
 namespace CleanDDDArchitecture.Domains.Todo.Infrastructure.Persistence
 {
+    #region
+
     using Core.Entities;
     using Microsoft.EntityFrameworkCore;
+
+    #endregion
 
     public static class ModelBuilderExtensions
     {
@@ -11,13 +15,13 @@ namespace CleanDDDArchitecture.Domains.Todo.Infrastructure.Persistence
                .HasData(
                     new TodoListEntity
                     {
-                        Id = 1,
-                        Title = "Shopping",
+                        Id    = 1,
+                        Title = "Shopping"
                     });
 
             modelBuilder.Entity<TodoItemEntity>()
                .HasData(
-                    new TodoItemEntity { Title = "Apples", Id       = 1, ListId = 1},
+                    new TodoItemEntity { Title = "Apples", Id       = 1, ListId = 1 },
                     new TodoItemEntity { Title = "Milk", Id         = 2, ListId = 1 },
                     new TodoItemEntity { Title = "Bread", Id        = 3, ListId = 1 },
                     new TodoItemEntity { Title = "Toilet paper", Id = 4, ListId = 1 },

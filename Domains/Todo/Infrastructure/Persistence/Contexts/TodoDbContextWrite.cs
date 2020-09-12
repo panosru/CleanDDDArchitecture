@@ -27,7 +27,7 @@
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Seed();
-            
+
             base.OnModelCreating(modelBuilder);
         }
     }

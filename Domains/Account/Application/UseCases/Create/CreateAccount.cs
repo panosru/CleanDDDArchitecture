@@ -26,9 +26,9 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
         }
 
         public string UserName { get; }
-        
+
         public string Password { get; }
-        
+
         public string FirstName { get; }
 
         public string LastName { get; }
@@ -43,8 +43,8 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
             var account = AccountAggregate.Create(
                 command.UserName,
                 command.Password,
-                command.FirstName, 
-                command.LastName, 
+                command.FirstName,
+                command.LastName,
                 command.Email);
 
             return account;
