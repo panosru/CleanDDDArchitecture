@@ -3,6 +3,7 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Repositories
     #region
 
     using Application.Aggregates;
+    using Application.Identity;
     using Application.Repositories;
     using Aviant.DDD.Infrastructure.Persistence.Repository;
     using Identity;

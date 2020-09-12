@@ -9,6 +9,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web;
+    using Application.Identity;
     using Aviant.DDD.Application.Identity;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
