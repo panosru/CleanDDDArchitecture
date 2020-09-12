@@ -20,8 +20,8 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
 
         private AccountAggregate(
             AccountAggregateId aggregateId,
-            string userName,
-            string password,
+            string             userName,
+            string             password,
             string             firstName,
             string             lastName,
             string             email)
@@ -47,7 +47,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
         // }
 
         public string UserName { get; private set; }
-        
+
         public string Password { get; private set; }
 
         public string FirstName { get; private set; }

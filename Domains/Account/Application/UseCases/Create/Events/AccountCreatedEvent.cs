@@ -21,9 +21,9 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Event
             LastName  = accountAggregate.LastName;
             Email     = accountAggregate.Email;
         }
-        
+
         public string UserName { get; private set; }
-        
+
         public string Password { get; private set; }
 
         public string FirstName { get; private set; }
