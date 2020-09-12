@@ -29,7 +29,7 @@
         {
             RequestResult requestResult = await Orchestrator.SendQuery(new GetWeatherForecastsQueryNew());
 
-            if (!requestResult.Success)
+            if (!requestResult.Succeeded)
                 return BadRequest(requestResult.Messages);
 
             return Ok(requestResult.Payload());
