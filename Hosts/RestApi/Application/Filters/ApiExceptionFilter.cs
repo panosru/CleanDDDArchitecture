@@ -95,7 +95,7 @@
 
             var details = new RequestResult
             {
-                Success = false
+                Succeeded = false
             };
 
             foreach (KeyValuePair<string, string[]> failure in exception?.Failures!)

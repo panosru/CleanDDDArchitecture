@@ -33,7 +33,7 @@
         {
             RequestResult requestResult = await Orchestrator.SendQuery(query);
 
-            if (!requestResult.Success)
+            if (!requestResult.Succeeded)
                 return BadRequest(requestResult.Messages);
 
             return Ok(requestResult.Payload());
@@ -52,7 +52,7 @@
         {
             RequestResult requestResult = await Orchestrator.SendCommand(command);
 
-            if (!requestResult.Success)
+            if (!requestResult.Succeeded)
                 return BadRequest(requestResult.Messages);
 
             return Ok(requestResult.Payload());
@@ -76,7 +76,7 @@
 
             RequestResult requestResult = await Orchestrator.SendCommand(command);
 
-            if (!requestResult.Success)
+            if (!requestResult.Succeeded)
                 return BadRequest(requestResult.Messages);
 
             return NoContent();
@@ -100,7 +100,7 @@
 
             RequestResult requestResult = await Orchestrator.SendCommand(command);
 
-            if (!requestResult.Success)
+            if (!requestResult.Succeeded)
                 return BadRequest(requestResult.Messages);
 
             return NoContent();
@@ -119,7 +119,7 @@
         {
             RequestResult requestResult = await Orchestrator.SendCommand(new DeleteTodoItemCommand { Id = id });
 
-            if (!requestResult.Success)
+            if (!requestResult.Succeeded)
                 return BadRequest(requestResult.Messages);
 
             return NoContent();
