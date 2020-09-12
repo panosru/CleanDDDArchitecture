@@ -539,8 +539,8 @@ paths:
         - name: id
           in: Query
           schema:
-            type: integer
-            format: int32
+            type: string
+            format: uuid
             allOf: []
             oneOf: []
             anyOf: []
@@ -2747,7 +2747,27 @@ components:
       - email
       - firstName
       - lastName
+      - password
+      - userName
       properties:
+        userName:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+        password:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
         firstName:
           type: string
           allOf: []
@@ -2960,7 +2980,7 @@ components:
       anyOf: []
       required: []
       properties:
-        success:
+        succeeded:
           type: boolean
           allOf: []
           oneOf: []

@@ -11,7 +11,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.CrossCutting
 
     #endregion
 
-    public static class DependencyInjectionRegistry
+    public static class TodoListDependencyInjectionRegistry
     {
         public static IServiceCollection AddTodoList(
             this IServiceCollection services,

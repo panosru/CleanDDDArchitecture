@@ -35,7 +35,7 @@
         {
             RequestResult requestResult = await Orchestrator.SendQuery(new GetTodosQuery());
 
-            if (!requestResult.Success)
+            if (!requestResult.Succeeded)
                 return BadRequest(requestResult.Messages);
 
             var todosVm = requestResult.Payload<TodosVm>();
@@ -54,7 +54,7 @@
         {
             RequestResult requestResult = await Orchestrator.SendQuery(new ExportTodosQuery { ListId = id });
 
-            if (requestResult.Success)
+            if (requestResult.Succeeded)
             {
                 var exportTodosVm = requestResult.Payload<ExportTodosVm>();
 
@@ -80,7 +80,7 @@
         {
             RequestResult requestResult = await Orchestrator.SendCommand(command);
 
-            if (!requestResult.Success)
+            if (!requestResult.Succeeded)
                 return BadRequest(requestResult.Messages);
 
             return Ok(requestResult.Payload());
@@ -104,7 +104,7 @@
 
             RequestResult requestResult = await Orchestrator.SendCommand(command);
 
-            if (!requestResult.Success)
+            if (!requestResult.Succeeded)
                 return BadRequest(requestResult.Messages);
 
             return NoContent();
@@ -123,7 +123,7 @@
         {
             RequestResult requestResult = await Orchestrator.SendCommand(new DeleteTodoListCommand { Id = id });
 
-            if (!requestResult.Success)
+            if (!requestResult.Succeeded)
                 return BadRequest(requestResult.Messages);
 
             return NoContent();

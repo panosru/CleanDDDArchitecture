@@ -17,19 +17,19 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
 
     public static class TodoCrossCutting
     {
-        public static IEnumerable<Profile> TodoAutoMapperProfiles() => new List<Profile>
+        public static IEnumerable<Profile> AutoMapperProfiles() => new List<Profile>
         {
             new MappingProfile(typeof(TodoItemDto).Assembly),
             new MappingProfile(typeof(TodoListDto).Assembly)
         };
 
-        public static IEnumerable<Assembly> TodoValidatorAssemblies() => new List<Assembly>
+        public static IEnumerable<Assembly> ValidatorAssemblies() => new List<Assembly>
         {
             typeof(CreateTodoItemCommandValidator).Assembly,
             typeof(CreateTodoListCommandValidator).Assembly
         };
 
-        public static IEnumerable<Assembly> TodoMediatorAssemblies() => new List<Assembly>
+        public static IEnumerable<Assembly> MediatorAssemblies() => new List<Assembly>
         {
             typeof(CreateTodoItemCommand).Assembly,
             typeof(CreateTodoListCommand).Assembly
