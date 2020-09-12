@@ -9,6 +9,12 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Dtos
     public class CreateAccountDto
     {
         [Required]
+        public string UserName { get; set; }
+        
+        [Required]
+        public string Password { get; set; }
+        
+        [Required]
         public string FirstName { get; set; }
 
         [Required]
