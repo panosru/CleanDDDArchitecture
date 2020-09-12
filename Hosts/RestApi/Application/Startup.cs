@@ -21,6 +21,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using MediatR;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc.Authorization;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
@@ -58,9 +59,9 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             services.AddAutoMapper(
                 cfg =>
                 {
-                    IEnumerable<Profile> profiles = TodoCrossCutting.TodoAutoMapperProfiles()
-                       .Union(AccountCrossCutting.AccountAutoMapperProfiles())
-                       .Union(WeatherCrossCutting.WeatherAutoMapperProfiles())
+                    IEnumerable<Profile> profiles = TodoCrossCutting.AutoMapperProfiles()
+                       .Union(AccountCrossCutting.AutoMapperProfiles())
+                       .Union(WeatherCrossCutting.AutoMapperProfiles())
                        .ToList();
 
                     foreach (var profile in profiles)
@@ -68,11 +69,9 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 });
 
             services.AddValidatorsFromAssemblies(
-                TodoCrossCutting.TodoValidatorAssemblies()
-                   .Union(
-                        AccountCrossCutting.AccountValidatorAssemblies())
-                   .Union(
-                        WeatherCrossCutting.WeatherValidatorAssemblies())
+                TodoCrossCutting.ValidatorAssemblies()
+                   .Union(AccountCrossCutting.ValidatorAssemblies())
+                   .Union(WeatherCrossCutting.ValidatorAssemblies())
                    .ToArray());
 
 
@@ -82,11 +81,9 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 scan =>
                 {
                     scan.FromAssemblies(
-                            TodoCrossCutting.TodoMediatorAssemblies()
-                               .Union(
-                                    AccountCrossCutting.AccountMediatorAssemblies())
-                               .Union(
-                                    WeatherCrossCutting.WeatherMediatorAssemblies())
+                            TodoCrossCutting.MediatorAssemblies()
+                               .Union(AccountCrossCutting.MediatorAssemblies())
+                               .Union(WeatherCrossCutting.MediatorAssemblies())
                                .ToArray())
                        .RegisterHandlers(typeof(IRequestHandler<>))
                        .RegisterHandlers(typeof(IRequestHandler<,>))
@@ -141,7 +138,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 options =>
                 {
                     // options.Filters.Add(new ApiExceptionFilter());
-                    //options.Filters.Add(new AuthorizeFilter());
+                    options.Filters.Add(new AuthorizeFilter());
                 }
             );
         }

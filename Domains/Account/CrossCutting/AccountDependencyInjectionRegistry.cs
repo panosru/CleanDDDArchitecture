@@ -6,6 +6,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using System.IdentityModel.Tokens.Jwt;
     using System.Text;
     using Application.Aggregates;
+    using Application.Identity;
     using Application.Persistence;
     using Application.Repositories;
     using Application.UseCases.Create;
@@ -37,7 +38,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
 
     #endregion
 
-    public static class DependencyInjectionRegistry
+    public static class AccountDependencyInjectionRegistry
     {
         public static IServiceCollection AddAccount(
             this IServiceCollection services,
