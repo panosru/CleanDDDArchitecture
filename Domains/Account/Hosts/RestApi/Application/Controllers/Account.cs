@@ -34,7 +34,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.Control
         {
             RequestResult requestResult = await Orchestrator.SendCommand(command);
 
-            if (requestResult.Success
+            if (requestResult.Succeeded
              && !(requestResult.Payload() is null))
                 return Ok(requestResult.Payload());
 
@@ -54,7 +54,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.Control
         {
             RequestResult requestResult = await Orchestrator.SendCommand(command);
 
-            if (requestResult.Success)
+            if (requestResult.Succeeded)
             {
                 var identityResult = requestResult.Payload<IdentityResult>();
 

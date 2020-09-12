@@ -2,6 +2,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.Control
 {
     #region
 
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Orchestration;
@@ -9,6 +10,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.Control
     using Domains.Account.Application.UseCases.Create;
     using Domains.Account.Application.UseCases.Create.Dtos;
     using Domains.Account.Application.UseCases.UpdateDetails;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +22,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.Control
     public sealed class Account : ApiController
     {
         [HttpPost]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
@@ -29,23 +32,28 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.Control
             if (dto is null)
                 return BadRequest();
 
-            var command = new CreateAccount(dto.FirstName, dto.LastName, dto.Email);
+            var command = new CreateAccount(
+                dto.UserName,
+                dto.Password,
+                dto.FirstName, 
+                dto.LastName, 
+                dto.Email);
             // await Mediator.Send(command, cancellationToken);
             // return Ok(command);
             // return CreatedAtAction("GetFoobar", new {aggregateId = command.AggregateId}, command);
 
             RequestResult requestResult = await Orchestrator.SendCommand(command);
 
-            if (!requestResult.Success)
+            if (!requestResult.Succeeded)
                 return BadRequest(requestResult.Messages);
 
             return Ok(requestResult.Payload());
         }
 
         [HttpPut]
-        [Route("{aggregateId:int}")]
+        [Route("{aggregateId:guid}")]
         public async Task<IActionResult> Update(
-            int               id,
+            Guid               id,
             CreateAccountDto  dto,
             CancellationToken cancellationToken = default)
         {
@@ -62,7 +70,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.Control
 
             RequestResult requestResult = await Orchestrator.SendCommand(command);
 
-            if (!requestResult.Success)
+            if (!requestResult.Succeeded)
                 return BadRequest(requestResult.Messages);
 
             return Ok(requestResult.Payload());
