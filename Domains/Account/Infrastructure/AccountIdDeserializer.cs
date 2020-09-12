@@ -20,7 +20,7 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure
         {
             var decodedData = Encoding.UTF8.GetString(data.ToArray());
 
-            return new AccountAggregateId(int.Parse(decodedData));
+            return new AccountAggregateId(new Guid(decodedData));
         }
 
         #endregion
