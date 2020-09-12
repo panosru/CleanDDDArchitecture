@@ -2,15 +2,15 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
 {
     #region
 
+    using System;
     using System.Threading.Tasks;
+    using Domains.Account.CrossCutting;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Serilog;
-    // using Domains.Todo.Infrastructure.Identity;
-    // using Domains.Todo.Infrastructure.Persistence.Contexts;
 
     #endregion
 
@@ -28,27 +28,28 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
 
             using (var scope = host.Services.CreateScope())
             {
-                var services = scope.ServiceProvider;
+                var serviceProvider = scope.ServiceProvider;
 
-                // try
-                // {
-                //     var context = services.GetRequiredService<TodoDbContextWrite>();
-                //
-                //     if (context.Database.IsNpgsql()) await context.Database.MigrateAsync();
-                //
-                //     var userManager = services.GetRequiredService<UserManager<TodoUser>>();
-                //
-                //     await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager);
-                //     await ApplicationDbContextSeed.SeedSampleDataAsync(context);
-                // }
-                // catch (Exception ex)
-                // {
-                //     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-                //
-                //     logger.LogError(ex, "An error occurred while migrating or seeding the database.");
-                //
-                //     throw;
-                // }
+                try
+                {
+                    await AccountCrossCutting.GenerateDefaultUserIfNotExists(serviceProvider);
+                    // var context = services.GetRequiredService<TodoDbContextWrite>();
+                    //
+                    // if (context.Database.IsNpgsql()) await context.Database.MigrateAsync();
+                    //
+                    // var userManager = services.GetRequiredService<UserManager<TodoUser>>();
+                    //
+                    // await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager);
+                    // await ApplicationDbContextSeed.SeedSampleDataAsync(context);
+                }
+                catch (Exception ex)
+                {
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                
+                    logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+                
+                    throw;
+                }
             }
 
             await host.RunAsync();
