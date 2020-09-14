@@ -5,11 +5,11 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Aviant.DDD.Domain.EventBus;
+    using Aviant.DDD.Core.EventBus;
 
     #endregion
 
-    public class UpdatedHandler : Aviant.DDD.Domain.Events.EventHandler<AccountUpdatedEvent>
+    public class UpdatedHandler : Aviant.DDD.Core.Events.EventHandler<AccountUpdatedEvent>
     {
         public override Task Handle(EventReceived<AccountUpdatedEvent> @event, CancellationToken cancellationToken) =>
             throw new NotImplementedException();

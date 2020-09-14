@@ -3,7 +3,7 @@
     #region
 
     using System;
-    using Aviant.DDD.Domain.ValueObjects;
+    using Aviant.DDD.Core.ValueObjects;
     using Exceptions;
 
     #endregion

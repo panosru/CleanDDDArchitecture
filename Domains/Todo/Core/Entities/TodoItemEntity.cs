@@ -3,8 +3,8 @@
     #region
 
     using System;
-    using Aviant.DDD.Domain.Entities;
-    using Aviant.DDD.Domain.Enums;
+    using Aviant.DDD.Core.Entities;
+    using Aviant.DDD.Core.Enums;
 
     #endregion
 

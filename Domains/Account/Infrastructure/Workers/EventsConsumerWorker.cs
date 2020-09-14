@@ -7,7 +7,7 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Workers
     using System.Threading;
     using System.Threading.Tasks;
     using Application.Aggregates;
-    using Aviant.DDD.Domain.EventBus;
+    using Aviant.DDD.Core.EventBus;
     using Microsoft.Extensions.Hosting;
 
     #endregion

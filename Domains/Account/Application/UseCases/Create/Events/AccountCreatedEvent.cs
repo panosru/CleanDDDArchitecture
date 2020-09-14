@@ -3,7 +3,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Event
     #region
 
     using Aggregates;
-    using Aviant.DDD.Domain.Events;
+    using Aviant.DDD.Core.Events;
 
     #endregion
 
