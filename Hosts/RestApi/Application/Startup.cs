@@ -13,6 +13,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Aviant.DDD.Application.Services;
     using Aviant.DDD.Domain.Messages;
     using Aviant.DDD.Domain.Services;
+    using Aviant.DDD.Infrastructure.CrossCutting;
     using Aviant.DDD.Infrastructure.Services;
     using Domains.Account.CrossCutting;
     using Domains.Todo.CrossCutting;
@@ -37,11 +38,21 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     public class Startup
     {
         /// <summary>
+        /// 
         /// </summary>
         /// <param name="configuration"></param>
-        public Startup(IConfiguration configuration) => Configuration = configuration;
+        /// <param name="currentEnvironment"></param>
+        public Startup(
+            IConfiguration      configuration,
+            IWebHostEnvironment currentEnvironment)
+        {
+            Configuration = configuration;
+            CurrentEnvironment   = currentEnvironment;
+        }
 
         private IConfiguration Configuration { get; }
+        
+        private IWebHostEnvironment CurrentEnvironment { get; }
 
         /// <summary>
         ///     This method gets called by the runtime. Use this method to add services to the container.
@@ -50,6 +61,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(Configuration);
+            DependencyInjectionRegistry.CurrentEnvironment = CurrentEnvironment;
 
             services.AddAutoMapper(
                 cfg =>
@@ -101,9 +113,9 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
 
             // Add Infrastructure
             services
-               .AddAccount(Configuration)
-               .AddTodo(Configuration)
-               .AddWeather(Configuration);
+               .AddAccountDomain()
+               .AddTodo()
+               .AddWeather();
 
 
             services.AddTransient<IDateTimeService, DateTimeService>();
@@ -113,7 +125,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
 
             services.AddSingleton<IServiceContainer, HttpContextServiceProviderProxy>();
 
-            services.AddAccountAuth(Configuration);
+            services.AddAccountAuth();
 
             services
                .AddApiVersionWithExplorer(Configuration)
@@ -142,17 +154,14 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
         ///     This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
         /// <param name="app"></param>
-        /// <param name="env"></param>
-        /// <param name="provider"></param>
         /// <param name="serviceProvider"></param>
         public void Configure(
             IApplicationBuilder app,
-            IWebHostEnvironment env,
             IServiceProvider    serviceProvider)
         {
             ServiceLocator.Initialise(serviceProvider.GetService<IServiceContainer>());
 
-            if (env.IsDevelopment())
+            if (CurrentEnvironment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();

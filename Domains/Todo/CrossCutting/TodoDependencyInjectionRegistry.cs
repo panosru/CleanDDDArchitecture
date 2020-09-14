@@ -6,6 +6,7 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.Persistance;
     using Aviant.DDD.Application.Services;
+    using Aviant.DDD.Infrastructure.CrossCutting;
     using Aviant.DDD.Infrastructure.Persistence;
     using Aviant.DDD.Infrastructure.Services;
     using Infrastructure.Persistence.Contexts;
@@ -19,13 +20,16 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
 
     #endregion
 
-    public static class DependencyInjectionRegistry
+    public static class TodoDependencyInjectionRegistry
     {
-        public static IServiceCollection AddTodo(
-            this IServiceCollection services,
-            IConfiguration          configuration)
+        private const string CurrentDomain = "Todo";
+        
+        private static IConfiguration Configuration { get; } =
+            DependencyInjectionRegistry.GetDomainConfiguration(CurrentDomain.ToLower());
+        
+        public static IServiceCollection AddTodo(this IServiceCollection services)
         {
-            if (configuration.GetValue<bool>("UseInMemoryDatabase"))
+            if (Configuration.GetValue<bool>("UseInMemoryDatabase"))
             {
                 // services.AddDbContext<TodoDbContextWrite>(
                 //     options =>
@@ -39,7 +43,7 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
             services.AddDbContext<TodoDbContextWrite>(
                 options =>
                     options.UseNpgsql(
-                        configuration.GetConnectionString("DefaultWriteConnection"),
+                        Configuration.GetConnectionString("DefaultWriteConnection"),
                         b =>
                             b.MigrationsAssembly(typeof(TodoDbContextWrite).Assembly.FullName)));
 
@@ -51,7 +55,7 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
             services.AddDbContext<TodoDbContextRead>(
                 options =>
                     options.UseNpgsql(
-                        configuration.GetConnectionString("DefaultWriteConnection"),
+                        Configuration.GetConnectionString("DefaultWriteConnection"),
                         b =>
                             b.MigrationsAssembly(typeof(TodoDbContextRead).Assembly.FullName)));
 
@@ -59,16 +63,8 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
                 provider =>
                     provider.GetService<TodoDbContextRead>());
 
-            // services.AddDefaultIdentity<TodoUser>()
-            //         .AddRoles<TodoRole>()
-            //         .AddEntityFrameworkStores<TodoDbContextWrite>();
-
-            // services.AddIdentityServer()
-            //         .AddApiAuthorization<TodoUser, TodoDbContextWrite>();
-
-
-            services.AddTodoItem(configuration);
-            services.AddTodoList(configuration);
+            services.AddTodoItem(Configuration);
+            services.AddTodoList(Configuration);
 
             services.AddTransient<ICsvFileBuilder<TodoItemRecord>, CsvFileBuilder<TodoItemRecord, TodoItemRecordMap>>();
 

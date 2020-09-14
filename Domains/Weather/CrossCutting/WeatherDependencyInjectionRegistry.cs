@@ -8,11 +8,9 @@ namespace CleanDDDArchitecture.Domains.Weather.CrossCutting
 
     #endregion
 
-    public static class DependencyInjectionRegistry
+    public static class WeatherDependencyInjectionRegistry
     {
-        public static IServiceCollection AddWeather(
-            this IServiceCollection services,
-            IConfiguration          configuration)
+        public static IServiceCollection AddWeather(this IServiceCollection services)
         {
             services.AddScoped<IOrchestrator, Orchestrator>();
 

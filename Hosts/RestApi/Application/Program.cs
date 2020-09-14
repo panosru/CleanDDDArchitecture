@@ -4,6 +4,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
 
     using System;
     using System.Threading.Tasks;
+    using Aviant.DDD.Infrastructure.CrossCutting;
     using Domains.Account.CrossCutting;
     using Domains.Todo.CrossCutting;
     using Microsoft.AspNetCore.Hosting;
@@ -53,7 +54,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static IHostBuilder CreateHostBuilder(string[] args)
+        private static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
                .ConfigureWebHostDefaults(
@@ -69,7 +70,8 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             WebHostBuilderContext hostBuilderContext,
             IConfigurationBuilder configurationBuilder)
         {
-            var configuration = configurationBuilder.Build();
+            DependencyInjectionRegistry.ConfigurationBuilder = configurationBuilder;
+            var configuration = DependencyInjectionRegistry.DefaultConfiguration = configurationBuilder.Build();
 
             Log.Logger = new LoggerConfiguration()
                .ReadFrom.Configuration(configuration)
