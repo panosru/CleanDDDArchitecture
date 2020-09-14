@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Commands;
     using Aviant.DDD.Application.Exceptions;
-    using Aviant.DDD.Domain.Enums;
+    using Aviant.DDD.Core.Enums;
     using Core.Repositories;
     using MediatR;
     using Todo.Core.Entities;

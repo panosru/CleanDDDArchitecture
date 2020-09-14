@@ -5,8 +5,8 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Aviant.DDD.Domain.Entities;
-    using Aviant.DDD.Domain.Validators;
+    using Aviant.DDD.Core.Entities;
+    using Aviant.DDD.Core.Validators;
 
     #endregion
 

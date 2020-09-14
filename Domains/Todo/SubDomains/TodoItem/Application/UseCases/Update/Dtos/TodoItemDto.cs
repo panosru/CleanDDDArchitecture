@@ -4,7 +4,7 @@
 
     using AutoMapper;
     using Aviant.DDD.Application.Mappings;
-    using Aviant.DDD.Domain.TransferObjects;
+    using Aviant.DDD.Core.TransferObjects;
     using Todo.Core.Entities;
 
     #endregion

@@ -4,8 +4,8 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Event
 
     using System.Threading;
     using System.Threading.Tasks;
-    using Aviant.DDD.Domain.EventBus;
-    using Aviant.DDD.Domain.Events;
+    using Aviant.DDD.Core.EventBus;
+    using Aviant.DDD.Core.Events;
     using Identity;
     using Microsoft.AspNetCore.Identity;
 

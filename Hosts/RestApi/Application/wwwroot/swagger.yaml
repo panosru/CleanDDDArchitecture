@@ -2692,12 +2692,12 @@ components:
           nullable: true
       additionalPropertiesAllowed: true
       additionalProperties:
-        type: object
         allOf: []
         oneOf: []
         anyOf: []
         required: []
         properties: {}
+        additionalPropertiesAllowed: true
         enum: []
       enum: []
     IdentityResult:

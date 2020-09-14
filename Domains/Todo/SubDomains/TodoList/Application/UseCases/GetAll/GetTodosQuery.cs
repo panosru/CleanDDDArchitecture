@@ -9,7 +9,7 @@
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using Aviant.DDD.Application.Queries;
-    using Aviant.DDD.Domain.Enums;
+    using Aviant.DDD.Core.Enums;
     using Dtos;
     using Microsoft.EntityFrameworkCore;
     using Todo.Application.Persistence;
