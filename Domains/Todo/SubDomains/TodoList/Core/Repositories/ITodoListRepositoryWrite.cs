@@ -2,7 +2,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Core.Repositorie
 {
     #region
 
-    using Aviant.DDD.Domain.Persistence;
+    using Aviant.DDD.Core.Persistence;
     using Todo.Core.Entities;
 
     #endregion

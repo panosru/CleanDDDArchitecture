@@ -11,8 +11,8 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Aviant.DDD.Application.Identity;
     using Aviant.DDD.Application.Notifications;
     using Aviant.DDD.Application.Services;
-    using Aviant.DDD.Domain.Messages;
-    using Aviant.DDD.Domain.Services;
+    using Aviant.DDD.Core.Messages;
+    using Aviant.DDD.Core.Services;
     using Aviant.DDD.Infrastructure.CrossCutting;
     using Aviant.DDD.Infrastructure.Services;
     using Domains.Account.CrossCutting;

@@ -3,9 +3,9 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
     #region
 
     using System;
-    using Aviant.DDD.Domain.Aggregates;
-    using Aviant.DDD.Domain.Entities;
-    using Aviant.DDD.Domain.Events;
+    using Aviant.DDD.Core.Aggregates;
+    using Aviant.DDD.Core.Entities;
+    using Aviant.DDD.Core.Events;
     using UseCases.Create.Events;
     using UseCases.UpdateDetails.Events;
 

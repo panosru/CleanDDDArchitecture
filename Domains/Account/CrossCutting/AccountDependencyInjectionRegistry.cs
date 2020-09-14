@@ -17,8 +17,8 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using Aviant.DDD.Application.Persistance;
     using Aviant.DDD.Application.Processors;
     using Aviant.DDD.Application.Services;
-    using Aviant.DDD.Domain.EventBus;
-    using Aviant.DDD.Domain.Services;
+    using Aviant.DDD.Core.EventBus;
+    using Aviant.DDD.Core.Services;
     using Aviant.DDD.Infrastructure.CrossCutting;
     using Aviant.DDD.Infrastructure.Persistence;
     using Aviant.DDD.Infrastructure.Persistence.EventStore;
