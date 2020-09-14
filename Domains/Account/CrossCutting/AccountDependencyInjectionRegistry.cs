@@ -19,6 +19,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using Aviant.DDD.Application.Services;
     using Aviant.DDD.Domain.EventBus;
     using Aviant.DDD.Domain.Services;
+    using Aviant.DDD.Infrastructure.CrossCutting;
     using Aviant.DDD.Infrastructure.Persistence;
     using Aviant.DDD.Infrastructure.Persistence.EventStore;
     using Aviant.DDD.Infrastructure.Persistence.Kafka;
@@ -40,54 +41,57 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
 
     public static class AccountDependencyInjectionRegistry
     {
-        public static IServiceCollection AddAccount(
-            this IServiceCollection services,
-            IConfiguration          configuration)
+        private const string CurrentDomain = "Account";
+
+        private static IConfiguration Configuration { get; } =
+            DependencyInjectionRegistry.GetDomainConfiguration(CurrentDomain.ToLower());
+        
+        public static IServiceCollection AddAccountDomain(this IServiceCollection services)
         {
             // By default, Microsoft has some legacy claim mapping that converts
             // standard JWT claims into proprietary ones. This removes those mappings.
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
-
+            
             services.AddDbContext<AccountDbContextWrite>(
                 options =>
                     options.UseNpgsql(
-                        configuration.GetConnectionString("DefaultWriteConnection"),
+                        Configuration.GetConnectionString("DefaultWriteConnection"),
                         b =>
                             b.MigrationsAssembly(typeof(AccountDbContextWrite).Assembly.FullName)));
-
+            
             services.AddScoped<IAccountDbContextWrite>(
                 provider =>
                     provider.GetService<AccountDbContextWrite>());
-
+            
             services.AddDbContext<AccountDbContextRead>(
                 options =>
                     options.UseNpgsql(
-                        configuration.GetConnectionString("DefaultReadConnection"),
+                        Configuration.GetConnectionString("DefaultReadConnection"),
                         b =>
                             b.MigrationsAssembly(typeof(IAccountDbContextRead).Assembly.FullName)));
-
+            
             services.AddScoped<IAccountDbContextRead>(
                 provider =>
                     provider.GetService<AccountDbContextRead>());
-
+            
             services.AddScoped<IAccountRepositoryRead, AccountRepositoryRead>();
             services.AddScoped<IAccountRepositoryWrite, AccountRepositoryWrite>();
-
+            
             services
                .AddDefaultIdentity<AccountUser>(
                     options => { options.User.RequireUniqueEmail = true; })
                .AddRoles<AccountRole>()
                .AddEntityFrameworkStores<AccountDbContextWrite>();
-
+            
             services.AddIdentityServer()
                .AddApiAuthorization<AccountUser, AccountDbContextWrite>();
-
+            
             services.AddTransient<IIdentityService, IdentityService>();
-
+            
             services.AddAuthentication()
                .AddIdentityServerJwt();
-
+            
             services
                .AddSingleton<IEventDeserializer>(
                     new JsonEventDeserializer(
@@ -96,49 +100,48 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                             typeof(AccountCreatedEvent).Assembly,
                             typeof(CreateAccount).Assembly
                         }));
-
-            var kafkaConnStr    = configuration.GetConnectionString("kafka");
-            var eventsTopicName = configuration["eventsTopicName"];
-            var groupName       = configuration["eventsTopicGroupName"];
-            var consumerConfig  = new EventConsumerConfig(kafkaConnStr, eventsTopicName, groupName);
-
-            var eventstoreConnStr = configuration.GetConnectionString("eventstore");
-
+            
+            var consumerConfig  = new EventConsumerConfig(
+                Configuration.GetConnectionString("kafka"), 
+                Configuration["eventsTopicName"], 
+                Configuration["eventsTopicGroupName"]);
+            
             services.AddSingleton(consumerConfig)
                .AddSingleton(typeof(IEventConsumer<,,>), typeof(EventConsumer<,,>))
                .AddKafkaEventProducer<AccountAggregate, AccountAggregateId>(consumerConfig);
-
-
+            
+            
             services.AddSingleton<IEventStoreConnectionWrapper>(
                     ctx =>
                     {
-                        var logger = ctx.GetRequiredService<ILogger<EventStoreConnectionWrapper>>();
-
-                        return new EventStoreConnectionWrapper(new Uri(eventstoreConnStr), logger);
+                        var logger            = ctx.GetRequiredService<ILogger<EventStoreConnectionWrapper>>();
+            
+                        return new EventStoreConnectionWrapper(
+                            new Uri(Configuration.GetConnectionString("eventstore")), logger);
                     })
                .AddEventsRepository<AccountAggregate, AccountAggregateId>();
-
-
+            
+            
             services.AddEventsService<AccountAggregate, AccountAggregateId>();
-
+            
             services.AddScoped<ServiceFactory>(ctx => ctx.GetRequiredService);
-
+            
             services.Decorate(typeof(INotificationHandler<>), typeof(RetryProcessor<>));
-
+            
             services.AddSingleton<IEventConsumerFactory, EventConsumerFactory>();
-
+            
             services.AddHostedService(
                 ctx =>
                 {
                     var factory = ctx.GetRequiredService<IEventConsumerFactory>();
-
+            
                     return new EventsConsumerWorker(factory);
                 });
-
+            
             services
                .AddScoped<IOrchestrator<AccountAggregate, AccountAggregateId>,
                     Orchestrator<AccountAggregate, AccountAggregateId>>();
-
+            
             services
                .AddScoped<IUnitOfWork<AccountAggregate, AccountAggregateId>,
                     UnitOfWork<AccountAggregate, AccountAggregateId>>();
@@ -146,9 +149,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
             return services;
         }
 
-        public static IServiceCollection AddAccountAuth(
-            this IServiceCollection services,
-            IConfiguration          configuration)
+        public static IServiceCollection AddAccountAuth(this IServiceCollection services)
         {
             services
                .AddAuthorization()
@@ -162,10 +163,10 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                             ValidateAudience         = true,
                             ValidateLifetime         = true,
                             ValidateIssuerSigningKey = true,
-                            ValidIssuer              = configuration["Jwt:Issuer"],
-                            ValidAudience            = configuration["Jwt:Issuer"],
+                            ValidIssuer              = Configuration["Jwt:Issuer"],
+                            ValidAudience            = Configuration["Jwt:Issuer"],
                             IssuerSigningKey =
-                                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"])),
+                                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
                             ClockSkew = TimeSpan.Zero
                         };
                     });
