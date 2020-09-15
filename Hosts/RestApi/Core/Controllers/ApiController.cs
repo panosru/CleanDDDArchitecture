@@ -14,11 +14,9 @@
     [Route("api/[controller]")]
     public abstract class ApiController : ControllerBase
     {
-        private IOrchestrator? _orchestrator;
-
         /// <summary>
         /// </summary>
-        protected IOrchestrator Orchestrator =>
-            _orchestrator ??= HttpContext.RequestServices.GetService<IOrchestrator>();
+        protected IOrchestrator Orchestrator => 
+            HttpContext.RequestServices.GetRequiredService<IOrchestrator>();
     }
 }

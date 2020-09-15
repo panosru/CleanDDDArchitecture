@@ -11,10 +11,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Ap
 
     public abstract class ApiController : ApiControllerCore
     {
-        private IOrchestrator<TodoDbContextWrite>? _orchestrator;
-
-        protected new IOrchestrator<TodoDbContextWrite> Orchestrator =>
-            _orchestrator ??= HttpContext.RequestServices
-               .GetService<IOrchestrator<TodoDbContextWrite>>();
+        protected new IOrchestrator<TodoDbContextWrite> Orchestrator => 
+            HttpContext.RequestServices.GetRequiredService<IOrchestrator<TodoDbContextWrite>>();
     }
 }

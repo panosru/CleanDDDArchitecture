@@ -11,10 +11,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application
 
     public abstract class ApiController : ApiControllerCore
     {
-        private IOrchestrator<AccountAggregate, AccountAggregateId>? _orchestrator;
-
         protected new IOrchestrator<AccountAggregate, AccountAggregateId> Orchestrator =>
-            _orchestrator ??= HttpContext.RequestServices
-               .GetService<IOrchestrator<AccountAggregate, AccountAggregateId>>();
+            HttpContext.RequestServices.GetRequiredService<IOrchestrator<AccountAggregate, AccountAggregateId>>();
     }
 }
