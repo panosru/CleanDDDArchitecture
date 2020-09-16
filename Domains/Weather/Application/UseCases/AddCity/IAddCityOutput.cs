@@ -10,7 +10,7 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity
     {
         public void Invalid(string message);
 
-        public void Ok(object? @object);
+        public void Ok(string city);
 
         public void NotFound();
     }
