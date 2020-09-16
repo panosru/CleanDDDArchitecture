@@ -8,29 +8,30 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Queries;
+    using Services;
 
     #endregion
 
-    public class GetWeatherForecastsQuery : Query<IEnumerable<WeatherForecast>>
+    public class GetWeatherForecastsQuery : Query<IEnumerable<WeatherForecastService>>
     { }
 
     public class GetWeatherForecastsQueryHandler
-        : QueryHandler<GetWeatherForecastsQuery, IEnumerable<WeatherForecast>>
+        : QueryHandler<GetWeatherForecastsQuery, IEnumerable<WeatherForecastService>>
     {
         private static readonly string[] Summaries =
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        public override Task<IEnumerable<WeatherForecast>> Handle(
+        public override Task<IEnumerable<WeatherForecastService>> Handle(
             GetWeatherForecastsQuery request,
             CancellationToken        cancellationToken)
         {
             var rng = new Random();
 
-            IEnumerable<WeatherForecast> vm = Enumerable.Range(1, 5)
+            IEnumerable<WeatherForecastService> vm = Enumerable.Range(1, 5)
                .Select(
-                    index => new WeatherForecast
+                    index => new WeatherForecastService
                     {
                         Date         = DateTime.Now.AddDays(index),
                         TemperatureC = rng.Next(-20, 55),
