@@ -24,7 +24,7 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity
                         });
 
                     if (requestResult.Succeeded)
-                        Output.Ok(requestResult.Payload());
+                        Output.Ok(requestResult.Payload()?.ToString());
                     else
                         Output.Invalid(requestResult.Messages.First());
                     break;
