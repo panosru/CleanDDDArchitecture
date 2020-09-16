@@ -1,4 +1,4 @@
-﻿namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.Forecast
+﻿namespace CleanDDDArchitecture.Domains.Weather.Application.Services
 {
     #region
 
@@ -6,7 +6,7 @@
 
     #endregion
 
-    public class WeatherForecast
+    public class WeatherForecastService
     {
         public DateTime Date { get; set; }
 
