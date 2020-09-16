@@ -23,7 +23,7 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity
             if (false)
                 throw new Exception("Something went terribly wrong!");
 
-            return Task.FromResult($"City \"{command.City}\" has added");
+            return Task.FromResult(command.City);
         }
     }
 }

@@ -27,7 +27,8 @@
             ViewModel = BadRequest(message);
         }
 
-        void IAddCityOutput.Ok(object? @object) => ViewModel = Ok(@object);
+        void IAddCityOutput.Ok(string city) =>
+            ViewModel = Ok((new AddCityResponse(city)).ToString());
 
         void IAddCityOutput.NotFound() => ViewModel = NotFound();
 
