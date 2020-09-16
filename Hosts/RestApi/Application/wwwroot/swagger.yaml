@@ -2347,150 +2347,11 @@ paths:
         servers: []
     servers: []
     parameters: []
-  /api/WeatherForecast:
+  /api/Weather:
     operations:
-      Get:
-        tags:
-        - name: WeatherForecast
-        parameters:
-        - name: x-api-version
-          in: Header
-          description: The requested API version
-          schema:
-            type: string
-            allOf: []
-            oneOf: []
-            anyOf: []
-            required: []
-            properties: {}
-            additionalPropertiesAllowed: true
-            enum: []
-          examples: {}
-          content: {}
-        responses:
-          200:
-            description: Success
-            headers: {}
-            content: {}
-            links: {}
-          400:
-            description: Bad Request
-            headers: {}
-            content:
-              text/plain:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: RequestResult
-                    isLocal: true
-                    referenceV3: '#/components/schemas/RequestResult'
-                    referenceV2: '#/definitions/RequestResult'
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: RequestResult
-                    isLocal: true
-                    referenceV3: '#/components/schemas/RequestResult'
-                    referenceV2: '#/definitions/RequestResult'
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: RequestResult
-                    isLocal: true
-                    referenceV3: '#/components/schemas/RequestResult'
-                    referenceV2: '#/definitions/RequestResult'
-                examples: {}
-                encoding: {}
-            links: {}
-          default:
-            description: Error
-            headers: {}
-            content:
-              text/plain:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-            links: {}
-        callbacks: {}
-        security: []
-        servers: []
       Post:
         tags:
-        - name: WeatherForecast
+        - name: Weather
         parameters:
         - name: x-api-version
           in: Header
@@ -2542,13 +2403,40 @@ paths:
         callbacks: {}
         security: []
         servers: []
+      Get:
+        tags:
+        - name: Weather
+        parameters:
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
+        responses:
+          200:
+            description: Success
+            headers: {}
+            content: {}
+            links: {}
+        callbacks: {}
+        security: []
+        servers: []
     servers: []
     parameters: []
-  /api/WeatherForecast/AddCity:
+  /api/Weather/AddCity:
     operations:
       Post:
         tags:
-        - name: WeatherForecast
+        - name: Weather
         parameters:
         - name: x-api-version
           in: Header
@@ -2577,10 +2465,10 @@ paths:
                 enum: []
                 reference:
                   type: Schema
-                  id: AddCityCommand
+                  id: AddCityDto
                   isLocal: true
-                  referenceV3: '#/components/schemas/AddCityCommand'
-                  referenceV2: '#/definitions/AddCityCommand'
+                  referenceV3: '#/components/schemas/AddCityDto'
+                  referenceV2: '#/definitions/AddCityDto'
               examples: {}
               encoding: {}
             text/json:
@@ -2973,42 +2861,6 @@ components:
           enum: []
           nullable: true
       enum: []
-    RequestResult:
-      type: object
-      allOf: []
-      oneOf: []
-      anyOf: []
-      required: []
-      properties:
-        succeeded:
-          type: boolean
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-        messages:
-          type: array
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          items:
-            type: string
-            allOf: []
-            oneOf: []
-            anyOf: []
-            required: []
-            properties: {}
-            additionalPropertiesAllowed: true
-            enum: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-          nullable: true
-      enum: []
     SyncWeatherServiceCommand:
       type: object
       allOf: []
@@ -3027,7 +2879,7 @@ components:
           enum: []
           nullable: true
       enum: []
-    AddCityCommand:
+    AddCityDto:
       type: object
       allOf: []
       oneOf: []

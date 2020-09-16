@@ -1,4 +1,4 @@
-﻿namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.Forecast
+﻿namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.ForecastV1_1
 {
     #region
 
@@ -8,15 +8,16 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Queries;
+    using Services;
 
     #endregion
 
-    public class GetWeatherForecastsQueryNew : Query<IEnumerable<WeatherForecast>>
+    public class GetWeatherForecastsQueryNew : Query<IEnumerable<WeatherForecastService>>
     { }
 
     public class
         GetWeatherForecastsQueryNewHandler
-        : QueryHandler<GetWeatherForecastsQueryNew, IEnumerable<WeatherForecast>>
+        : QueryHandler<GetWeatherForecastsQueryNew, IEnumerable<WeatherForecastService>>
     {
         private static readonly string[] Summaries =
         {
@@ -24,15 +25,15 @@
             "Warm v1.1", "Balmy v1.1", "Hot v1.1", "Sweltering v1.1", "Scorching v1.1"
         };
 
-        public override Task<IEnumerable<WeatherForecast>> Handle(
+        public override Task<IEnumerable<WeatherForecastService>> Handle(
             GetWeatherForecastsQueryNew request,
             CancellationToken           cancellationToken)
         {
             var rng = new Random();
 
-            IEnumerable<WeatherForecast> vm = Enumerable.Range(1, 5)
+            IEnumerable<WeatherForecastService> vm = Enumerable.Range(1, 5)
                .Select(
-                    index => new WeatherForecast
+                    index => new WeatherForecastService
                     {
                         Date         = DateTime.Now.AddDays(index),
                         TemperatureC = rng.Next(-20, 55),
