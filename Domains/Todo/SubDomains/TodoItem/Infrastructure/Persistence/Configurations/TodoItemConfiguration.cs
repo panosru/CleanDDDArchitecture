@@ -1,13 +1,9 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Infrastructure.Persistence.Configurations
 {
-    #region
-
     using Aviant.DDD.Infrastructure.Persistence.Configurations;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Todo.Core.Entities;
-
-    #endregion
 
     public class TodoItemConfiguration : EntityConfiguration<TodoItemEntity, int>
     {

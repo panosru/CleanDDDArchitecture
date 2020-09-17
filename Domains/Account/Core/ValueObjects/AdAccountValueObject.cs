@@ -1,12 +1,8 @@
 ﻿namespace CleanDDDArchitecture.Domains.Account.Core.ValueObjects
 {
-    #region
-
     using System;
     using Aviant.DDD.Core.ValueObjects;
     using Exceptions;
-
-    #endregion
 
     public class AdAccountValueObject : ValueObject //TODO: Utilise this VO for Account Creation 
     {

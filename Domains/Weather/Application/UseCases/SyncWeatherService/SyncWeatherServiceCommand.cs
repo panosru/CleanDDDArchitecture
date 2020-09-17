@@ -1,14 +1,10 @@
 namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherService
 {
-    #region
-
     using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Commands;
     using MediatR;
-
-    #endregion
 
     public sealed class SyncWeatherServiceCommand : ICommand
     {

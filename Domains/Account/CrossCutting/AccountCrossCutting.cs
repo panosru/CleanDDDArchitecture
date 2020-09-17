@@ -1,7 +1,5 @@
 namespace CleanDDDArchitecture.Domains.Account.CrossCutting
 {
-    #region
-
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -17,8 +15,6 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
-
-    #endregion
 
     public static class AccountCrossCutting
     {

@@ -1,7 +1,5 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Export
 {
-    #region
-
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
@@ -13,8 +11,6 @@
     using Microsoft.EntityFrameworkCore;
     using Todo.Application.Persistence;
     using ViewModels;
-
-    #endregion
 
     public class ExportTodosQuery : Query<ExportTodosVm>
     {

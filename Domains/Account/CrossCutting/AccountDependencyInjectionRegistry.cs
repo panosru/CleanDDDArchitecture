@@ -1,7 +1,5 @@
 namespace CleanDDDArchitecture.Domains.Account.CrossCutting
 {
-    #region
-
     using System;
     using System.IdentityModel.Tokens.Jwt;
     using System.Text;
@@ -36,8 +34,6 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Microsoft.IdentityModel.Tokens;
-
-    #endregion
 
     public static class AccountDependencyInjectionRegistry
     {

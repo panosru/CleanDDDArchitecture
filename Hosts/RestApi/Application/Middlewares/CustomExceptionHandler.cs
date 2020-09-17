@@ -1,7 +1,5 @@
 namespace CleanDDDArchitecture.Hosts.RestApi.Application.Middlewares
 {
-    #region
-
     using System;
     using System.Net;
     using System.Threading.Tasks;
@@ -9,8 +7,6 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Middlewares
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Newtonsoft.Json;
-
-    #endregion
 
     /// <summary>
     /// </summary>

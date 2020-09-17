@@ -1,14 +1,10 @@
 namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity
 {
-    #region
-
     using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
-
-    #endregion
 
     public class AddCityUseCase : UseCase<AddCityInput, IAddCityOutput>
     {

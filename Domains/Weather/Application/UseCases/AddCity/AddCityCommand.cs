@@ -1,13 +1,9 @@
 namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity
 {
-    #region
-
     using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Commands;
-
-    #endregion
 
     public class AddCityCommand : Command<string>
     {

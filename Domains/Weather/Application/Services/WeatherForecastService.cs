@@ -1,10 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Domains.Weather.Application.Services
 {
-    #region
-
     using System;
-
-    #endregion
 
     public class WeatherForecastService
     {

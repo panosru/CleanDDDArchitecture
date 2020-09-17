@@ -1,13 +1,9 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
 {
-    #region
-
     using System.Threading;
     using System.Threading.Tasks;
     using Aggregates;
     using Aviant.DDD.Application.Commands;
-
-    #endregion
 
     public class CreateAccount : Command<AccountAggregate, AccountAggregateId>
     {

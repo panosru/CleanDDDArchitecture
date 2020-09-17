@@ -1,14 +1,10 @@
 namespace CleanDDDArchitecture.Hosts.RestApi.Application.Controllers
 {
-    #region
-
     using System.Diagnostics;
     using Core.Controllers;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-
-    #endregion
 
     /// <summary>
     ///     Metal endpoint

@@ -1,13 +1,9 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate
 {
-    #region
-
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Commands;
     using Aviant.DDD.Application.Identity;
-
-    #endregion
 
     public class AuthenticateCommand : Command<object>
     {

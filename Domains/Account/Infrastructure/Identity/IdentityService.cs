@@ -1,7 +1,5 @@
 ﻿namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Identity
 {
-    #region
-
     using System;
     using System.IdentityModel.Tokens.Jwt;
     using System.Linq;
@@ -16,8 +14,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.IdentityModel.Tokens;
     using IdentityResult = Aviant.DDD.Application.Identity.IdentityResult;
-
-    #endregion
 
     public class IdentityService : IIdentityService //TODO: This requires a major refactor 
     {
