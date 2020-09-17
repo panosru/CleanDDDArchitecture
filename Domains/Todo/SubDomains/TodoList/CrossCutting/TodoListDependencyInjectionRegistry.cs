@@ -2,6 +2,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.CrossCutting
 {
     #region
 
+    using Aviant.DDD.Infrastructure.CrossCutting;
     using Core.Repositories;
     using Infrastructure.Persistence.Configurations;
     using Infrastructure.Repositories;
@@ -13,9 +14,15 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.CrossCutting
 
     public static class TodoListDependencyInjectionRegistry
     {
-        public static IServiceCollection AddTodoList(
-            this IServiceCollection services,
-            IConfiguration          configuration)
+        private const string CurrentDomain = "Todo";
+        
+        private const string CurrentSubDomain = "TodoList";
+        
+        private static IConfiguration Configuration { get; } =
+            DependencyInjectionRegistry.GetDomainConfiguration(
+                $"{CurrentDomain}.{CurrentSubDomain}".ToLower());
+        
+        public static IServiceCollection AddTodoListSubDomain(this IServiceCollection services)
         {
             services.AddScoped<ITodoListRepositoryRead, TodoListRepositoryRead>();
             services.AddScoped<ITodoListRepositoryWrite, TodoListRepositoryWrite>();
