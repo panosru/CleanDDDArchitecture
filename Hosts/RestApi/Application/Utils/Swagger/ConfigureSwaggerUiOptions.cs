@@ -1,15 +1,11 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Utils.Swagger
 {
-    #region
-
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Mvc.ApiExplorer;
     using Microsoft.Extensions.Options;
     using Swashbuckle.AspNetCore.SwaggerUI;
-
-    #endregion
 
     /// <inheritdoc cref="SwaggerUIOptions" />
     public sealed class ConfigureSwaggerUiOptions : IConfigureOptions<SwaggerUIOptions>

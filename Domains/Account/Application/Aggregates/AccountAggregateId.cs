@@ -1,12 +1,8 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
 {
-    #region
-
     using System;
     using Aviant.DDD.Core.Aggregates;
     using Newtonsoft.Json;
-
-    #endregion
 
     public class AccountAggregateId : AggregateId<Guid>
     {

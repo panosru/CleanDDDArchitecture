@@ -1,12 +1,8 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll.Dtos
 {
-    #region
-
     using AutoMapper;
     using Aviant.DDD.Application.Mappings;
     using Todo.Core.Entities;
-
-    #endregion
 
     public class TodoItemDto : IMapFrom<TodoItemEntity>
     {

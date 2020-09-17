@@ -1,10 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Domains.Account.Core.Exceptions
 {
-    #region
-
     using System;
-
-    #endregion
 
     public class AdAccountInvalidException : Exception
     {

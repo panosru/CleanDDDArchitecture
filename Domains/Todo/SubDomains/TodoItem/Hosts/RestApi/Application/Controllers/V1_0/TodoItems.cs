@@ -1,7 +1,5 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Hosts.RestApi.Application.Controllers.V1_0
 {
-    #region
-
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Orchestration;
@@ -12,8 +10,6 @@
     using TodoItem.Application.UseCases.GetBy;
     using TodoItem.Application.UseCases.Update;
     using TodoItem.Application.UseCases.UpdateDetails;
-
-    #endregion
 
     /// <summary>
     ///     Todo items endpoints

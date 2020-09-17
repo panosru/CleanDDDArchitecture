@@ -1,13 +1,9 @@
 ﻿namespace CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.UseCases.V1_0.AddCity
 {
-    #region
-
     using System.Threading.Tasks;
     using Domains.Weather.Application.UseCases.AddCity;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-
-    #endregion
 
     /// <summary>
     ///     Weather endpoints

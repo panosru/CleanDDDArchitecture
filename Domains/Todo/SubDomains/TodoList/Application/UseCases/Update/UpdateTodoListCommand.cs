@@ -1,7 +1,5 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Update
 {
-    #region
-
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Commands;
@@ -9,8 +7,6 @@
     using Core.Repositories;
     using MediatR;
     using Todo.Core.Entities;
-
-    #endregion
 
     public class UpdateTodoListCommand : Command
     {

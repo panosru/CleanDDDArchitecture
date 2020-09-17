@@ -1,13 +1,9 @@
 namespace CleanDDDArchitecture.Domains.Weather.CrossCutting
 {
-    #region
-
     using System.Collections.Generic;
     using System.Reflection;
     using Application.UseCases.Forecast;
     using AutoMapper;
-
-    #endregion
 
     public static class WeatherCrossCutting
     {

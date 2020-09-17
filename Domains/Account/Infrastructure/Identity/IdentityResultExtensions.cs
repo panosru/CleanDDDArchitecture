@@ -1,11 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Identity
 {
-    #region
-
     using System.Linq;
     using Aviant.DDD.Application.Identity;
-
-    #endregion
 
     public static class IdentityResultExtensions
     {

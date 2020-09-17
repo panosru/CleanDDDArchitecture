@@ -1,11 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails.Events
 {
-    #region
-
     using Aggregates;
     using Aviant.DDD.Core.Events;
-
-    #endregion
 
     public class AccountUpdatedEvent : Event<AccountAggregate, AccountAggregateId>
     {

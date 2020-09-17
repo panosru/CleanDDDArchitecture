@@ -1,7 +1,5 @@
 namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
 {
-    #region
-
     using System;
     using System.Collections.Generic;
     using System.Reflection;
@@ -17,8 +15,6 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
     using SubDomains.TodoList.Application.UseCases.Create;
     using SubDomains.TodoList.Application.UseCases.Create.Dtos;
     using SubDomains.TodoList.Application.UseCases.Create.Validators;
-
-    #endregion
 
     public static class TodoCrossCutting
     {

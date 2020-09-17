@@ -1,15 +1,11 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Events.Consumers
 {
-    #region
-
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Core.EventBus;
     using Aviant.DDD.Core.Events;
     using Identity;
     using Microsoft.AspNetCore.Identity;
-
-    #endregion
 
     public class AccountCreatedEventConsumer : EventHandler<AccountCreatedEvent>
     {

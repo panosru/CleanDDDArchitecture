@@ -1,14 +1,10 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails
 {
-    #region
-
     using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Aggregates;
     using Aviant.DDD.Application.Commands;
-
-    #endregion
 
     public class UpdateAccount : Command<AccountAggregate, AccountAggregateId>
     {

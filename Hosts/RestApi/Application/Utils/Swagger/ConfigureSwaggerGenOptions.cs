@@ -1,7 +1,5 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Utils.Swagger
 {
-    #region
-
     using System;
     using System.Diagnostics;
     using System.IO;
@@ -11,8 +9,6 @@
     using Microsoft.Extensions.Options;
     using Microsoft.OpenApi.Models;
     using Swashbuckle.AspNetCore.SwaggerGen;
-
-    #endregion
 
     /// <inheritdoc />
     /// <summary>

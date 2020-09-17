@@ -1,13 +1,9 @@
 namespace CleanDDDArchitecture.Domains.Account.Infrastructure
 {
-    #region
-
     using System;
     using System.Text;
     using Application.Aggregates;
     using Confluent.Kafka;
-
-    #endregion
 
     public class AccountIdDeserializer : IDeserializer<AccountAggregateId>
     {

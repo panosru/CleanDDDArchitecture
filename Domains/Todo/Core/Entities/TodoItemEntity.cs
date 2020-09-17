@@ -1,12 +1,8 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.Core.Entities
 {
-    #region
-
     using System;
     using Aviant.DDD.Core.Entities;
     using Aviant.DDD.Core.Enums;
-
-    #endregion
 
     public sealed class TodoItemEntity
         : Entity<int>,

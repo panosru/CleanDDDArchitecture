@@ -1,11 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Todo.Infrastructure.Persistence
 {
-    #region
-
     using Core.Entities;
     using Microsoft.EntityFrameworkCore;
-
-    #endregion
 
     public static class ModelBuilderExtensions
     {

@@ -1,13 +1,9 @@
 ﻿namespace CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.UseCases.V1_1.Forecast
 {
-    #region
-
     using System.Threading.Tasks;
     using Domains.Weather.Application.UseCases.ForecastV1_1;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-
-    #endregion
 
     /// <summary>
     ///     Weather endpoints

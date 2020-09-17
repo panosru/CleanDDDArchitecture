@@ -1,7 +1,5 @@
 namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Workers
 {
-    #region
-
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
@@ -9,8 +7,6 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Workers
     using Application.Aggregates;
     using Aviant.DDD.Core.EventBus;
     using Microsoft.Extensions.Hosting;
-
-    #endregion
 
     public class EventsConsumerWorker : BackgroundService
     {

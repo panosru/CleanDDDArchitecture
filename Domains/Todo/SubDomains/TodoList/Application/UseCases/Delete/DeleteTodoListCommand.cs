@@ -1,7 +1,5 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Delete
 {
-    #region
-
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Commands;
@@ -10,8 +8,6 @@
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Todo.Core.Entities;
-
-    #endregion
 
     public class DeleteTodoListCommand : Command
     {

@@ -1,7 +1,5 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll
 {
-    #region
-
     using System;
     using System.Linq;
     using System.Threading;
@@ -14,8 +12,6 @@
     using Microsoft.EntityFrameworkCore;
     using Todo.Application.Persistence;
     using ViewModels;
-
-    #endregion
 
     public class GetTodosQuery : Query<TodosVm>
     { }

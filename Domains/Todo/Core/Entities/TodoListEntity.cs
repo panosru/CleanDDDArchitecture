@@ -1,14 +1,10 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.Core.Entities
 {
-    #region
-
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Aviant.DDD.Core.Entities;
     using Aviant.DDD.Core.Validators;
-
-    #endregion
 
     public class TodoListEntity
         : Entity<int>,

@@ -1,13 +1,9 @@
 namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.ForecastV1_1
 {
-    #region
-
     using System.Linq;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
-
-    #endregion
 
     public class ForecastUseCase : UseCase<IForecastOutput>
     {

@@ -1,11 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Utils.Swagger
 {
-    #region
-
     using Microsoft.Extensions.Options;
     using Swashbuckle.AspNetCore.Swagger;
-
-    #endregion
 
     /// <inheritdoc />
     public sealed class ConfigureSwaggerOptions : IConfigureOptions<SwaggerOptions>

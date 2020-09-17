@@ -1,10 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.Forecast
 {
-    #region
-
     using Aviant.DDD.Application.UseCases;
-
-    #endregion
 
     public interface IForecastOutput : IUseCaseOutput
     {
