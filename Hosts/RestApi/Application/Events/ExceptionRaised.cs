@@ -1,13 +1,9 @@
 namespace CleanDDDArchitecture.Hosts.RestApi.Application.Events
 {
-    #region
-
     using System;
     using System.Threading;
     using System.Threading.Tasks;
     using MediatR;
-
-    #endregion
 
     public class ExceptionRaised : IRequest //TODO: Move to Application exceptions event?
     {

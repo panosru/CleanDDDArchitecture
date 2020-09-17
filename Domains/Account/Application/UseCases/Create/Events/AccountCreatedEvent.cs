@@ -1,11 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Events
 {
-    #region
-
     using Aggregates;
     using Aviant.DDD.Core.Events;
-
-    #endregion
 
     public class AccountCreatedEvent : Event<AccountAggregate, AccountAggregateId>
     {

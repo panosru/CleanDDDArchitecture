@@ -1,11 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Utils.Swagger
 {
-    #region
-
     using System;
     using Microsoft.AspNetCore.Builder;
-
-    #endregion
 
     /// <summary>
     ///     Extending Swagger services

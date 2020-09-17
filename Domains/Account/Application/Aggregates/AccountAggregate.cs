@@ -1,15 +1,11 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
 {
-    #region
-
     using System;
     using Aviant.DDD.Core.Aggregates;
     using Aviant.DDD.Core.Entities;
     using Aviant.DDD.Core.Events;
     using UseCases.Create.Events;
     using UseCases.UpdateDetails.Events;
-
-    #endregion
 
     public class AccountAggregate
         : Aggregate<AccountAggregate, AccountAggregateId>,

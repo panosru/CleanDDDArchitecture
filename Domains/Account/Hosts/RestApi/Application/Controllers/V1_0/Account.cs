@@ -1,7 +1,5 @@
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.Controllers.V1_0
 {
-    #region
-
     using System;
     using System.Threading;
     using System.Threading.Tasks;
@@ -13,8 +11,6 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.Control
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-
-    #endregion
 
     /// <summary>
     /// </summary>

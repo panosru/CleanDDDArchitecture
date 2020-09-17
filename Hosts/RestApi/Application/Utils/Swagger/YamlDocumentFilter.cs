@@ -1,7 +1,5 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Utils.Swagger
 {
-    #region
-
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -12,8 +10,6 @@
     using YamlDotNet.Serialization;
     using YamlDotNet.Serialization.NamingConventions;
     using YamlDotNet.Serialization.TypeInspectors;
-
-    #endregion
 
     /// <summary>
     ///     To use YAML serializer to generate YAML

@@ -1,10 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Utils.Swagger
 {
-    #region
-
     using Microsoft.OpenApi.Models;
-
-    #endregion
 
     /// <summary>
     ///     Swagger Configuration

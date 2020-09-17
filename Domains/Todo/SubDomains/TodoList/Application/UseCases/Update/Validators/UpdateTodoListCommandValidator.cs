@@ -1,14 +1,10 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Update.Validators
 {
-    #region
-
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Core.Repositories;
     using FluentValidation;
-
-    #endregion
 
     public class UpdateTodoListCommandValidator : AbstractValidator<UpdateTodoListCommand>
     {

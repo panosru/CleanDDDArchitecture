@@ -1,7 +1,5 @@
 ﻿namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.ForecastV1_1
 {
-    #region
-
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -9,8 +7,6 @@
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Queries;
     using Services;
-
-    #endregion
 
     public class GetWeatherForecastsQueryNew : Query<IEnumerable<WeatherForecastService>>
     { }
