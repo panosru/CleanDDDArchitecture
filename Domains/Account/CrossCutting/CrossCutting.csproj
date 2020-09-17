@@ -12,11 +12,22 @@
     </ItemGroup>
     
     <ItemGroup>
-        <Content Include="appsettings.account.json">
+        <Content Include="appsettings.account.Development.json">
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <DependentUpon>appsettings.account.json</DependentUpon>
         </Content>
-        <Content Include="appsettings.account.*.json">
+        <Content Include="appsettings.account.json">
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Include="appsettings.account.Production.json">
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <DependentUpon>appsettings.account.json</DependentUpon>
         </Content>
     </ItemGroup>
 
