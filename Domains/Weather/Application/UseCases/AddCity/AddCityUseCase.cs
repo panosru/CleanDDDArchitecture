@@ -37,9 +37,7 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity
 
         protected override void SetInput<TInputData>(TInputData data)
         {
-            if (!(data is AddCityDto dto))
-                throw new TypeAccessException(
-                    $"Expected type \"{nameof(AddCityDto)}\", but \"{data.GetType().Name}\" found instead.");
+            var dto = GetDataByType<AddCityDto>(data);
 
             Input = new AddCityInput(dto.City);
         }
