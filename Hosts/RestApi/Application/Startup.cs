@@ -1,9 +1,8 @@
 namespace CleanDDDArchitecture.Hosts.RestApi.Application
 {
-    #region
-
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.Design;
     using System.Linq;
     using AutoMapper;
     using Aviant.DDD.Application.Behaviours;
@@ -28,8 +27,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Microsoft.Extensions.Hosting;
     using Services;
     using Utils.Swagger;
-
-    #endregion
+    using IServiceContainer = Aviant.DDD.Core.Services.IServiceContainer;
 
     // using Workers;
 
@@ -114,8 +112,8 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             // Add Infrastructure
             services
                .AddAccountDomain()
-               .AddTodo()
-               .AddWeather();
+               .AddTodoDomain()
+               .AddWeatherDomain();
 
 
             services.AddTransient<IDateTimeService, DateTimeService>();
@@ -145,7 +143,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 options =>
                 {
                     // options.Filters.Add(new ApiExceptionFilter());
-                    options.Filters.Add(new AuthorizeFilter());
+                    //options.Filters.Add(new AuthorizeFilter());
                 }
             );
         }
@@ -159,7 +157,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             IApplicationBuilder app,
             IServiceProvider    serviceProvider)
         {
-            ServiceLocator.Initialise(serviceProvider.GetService<IServiceContainer>());
+            ServiceLocator.Initialise(serviceProvider); 
 
             if (CurrentEnvironment.IsDevelopment())
             {
