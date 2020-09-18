@@ -9,11 +9,11 @@
     using Aviant.DDD.Application.Notifications;
     using Aviant.DDD.Application.Processors;
     using Core.Repositories;
-    using Dtos;
     using Notifications;
     using Todo.Core.Entities;
+    using ViewModels;
 
-    public class UpdateTodoItemCommand : Command<TodoItemDto>
+    public class UpdateTodoItemCommand : Command<TodoItemViewModel>
     {
         public int Id { get; set; }
 
@@ -23,7 +23,7 @@
     }
 
     public class UpdateTodoItemCommandHandler
-        : CommandHandler<UpdateTodoItemCommand, TodoItemDto>
+        : CommandHandler<UpdateTodoItemCommand, TodoItemViewModel>
     {
         private readonly IMapper _mapper;
 
@@ -41,7 +41,7 @@
             _mapper                  = mapper;
         }
 
-        public override async Task<TodoItemDto> Handle(
+        public override async Task<TodoItemViewModel> Handle(
             UpdateTodoItemCommand command,
             CancellationToken     cancellationToken)
         {
@@ -50,13 +50,11 @@
             if (entity == null) throw new NotFoundException(nameof(TodoItemEntity), command.Id);
 
             entity.Title = command.Title;
-
-            if (command.Done)
-                entity.IsCompleted = true;
+            entity.IsCompleted = command.Done;
 
             await _todoItemWriteRepository.Update(entity);
 
-            return _mapper.Map<TodoItemDto>(entity);
+            return _mapper.Map<TodoItemViewModel>(entity);
         }
     }
 
@@ -72,7 +70,7 @@
         }
     }
 
-    public class UserPostProcessor : RequestPostProcessor<UpdateTodoItemCommand, TodoItemDto>
+    public class UserPostProcessor : RequestPostProcessor<UpdateTodoItemCommand, TodoItemViewModel>
     {
         private readonly INotificationDispatcher _notificationDispatcher;
 
@@ -81,7 +79,7 @@
 
         public override Task Process(
             UpdateTodoItemCommand request,
-            TodoItemDto           response,
+            TodoItemViewModel     response,
             CancellationToken     cancellationToken)
         {
             if (response.IsCompleted)

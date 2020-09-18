@@ -1,11 +1,10 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update.Dtos
+﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update.ViewModels
 {
     using AutoMapper;
     using Aviant.DDD.Application.Mappings;
-    using Aviant.DDD.Core.TransferObjects;
     using Todo.Core.Entities;
 
-    public class TodoItemDto : Dto, IMapFrom<TodoItemEntity>
+    public class TodoItemViewModel : IMapFrom<TodoItemEntity>
     {
         public int Id { get; set; }
 
@@ -19,7 +18,7 @@
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<TodoItemEntity, TodoItemDto>();
+            profile.CreateMap<TodoItemEntity, TodoItemViewModel>();
         }
 
         #endregion

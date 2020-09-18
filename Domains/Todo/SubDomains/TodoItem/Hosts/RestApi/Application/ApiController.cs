@@ -3,14 +3,14 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Hosts.RestApi.Ap
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
     using Microsoft.Extensions.DependencyInjection;
-    using Todo.Infrastructure.Persistence.Contexts;
+    using Todo.Application.Persistence;
 
     public abstract class ApiController : CleanDDDArchitecture.Hosts.RestApi.Core.Controllers.ApiController
     {
-        protected new IOrchestrator<TodoDbContextWrite> Orchestrator => 
-            HttpContext.RequestServices.GetRequiredService<IOrchestrator<TodoDbContextWrite>>();
+        protected new IOrchestrator<ITodoDbContextWrite> Orchestrator =>
+            HttpContext.RequestServices.GetRequiredService<IOrchestrator<ITodoDbContextWrite>>();
     }
-    
+
     public class ApiController<TUseCase> : CleanDDDArchitecture.Hosts.RestApi.Core.Controllers.ApiController<TUseCase>
         where TUseCase : class, IUseCase
     {
