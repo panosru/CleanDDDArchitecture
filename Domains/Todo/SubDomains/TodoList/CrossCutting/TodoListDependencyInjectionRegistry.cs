@@ -4,6 +4,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.CrossCutting
     using Application.UseCases.Delete;
     using Application.UseCases.Export;
     using Application.UseCases.GetAll;
+    using Application.UseCases.Update;
     using Aviant.DDD.Infrastructure.CrossCutting;
     using Core.Repositories;
     using Infrastructure.Persistence.Configurations;
@@ -29,6 +30,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.CrossCutting
 
             services.AddScoped(typeof(GetAllUseCase));
             services.AddScoped(typeof(CreateTodoListUseCase));
+            services.AddScoped(typeof(UpdateTodoListUseCase));
             services.AddScoped(typeof(DeleteTodoListUseCase));
             services.AddScoped(typeof(ExportTodoListUseCase));
 
