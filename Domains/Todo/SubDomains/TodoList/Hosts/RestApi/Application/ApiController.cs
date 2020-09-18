@@ -1,17 +1,21 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application
 {
-    #region
-
     using Aviant.DDD.Application.Orchestration;
+    using Aviant.DDD.Application.UseCases;
     using Microsoft.Extensions.DependencyInjection;
-    using Todo.Infrastructure.Persistence.Contexts;
-    using ApiControllerCore = CleanDDDArchitecture.Hosts.RestApi.Core.Controllers.ApiController;
+    using Todo.Application.Persistence;
 
-    #endregion
-
-    public abstract class ApiController : ApiControllerCore
+    public abstract class ApiController : CleanDDDArchitecture.Hosts.RestApi.Core.Controllers.ApiController
     {
-        protected new IOrchestrator<TodoDbContextWrite> Orchestrator => 
-            HttpContext.RequestServices.GetRequiredService<IOrchestrator<TodoDbContextWrite>>();
+        protected new IOrchestrator<ITodoDbContextWrite> Orchestrator => 
+            HttpContext.RequestServices.GetRequiredService<IOrchestrator<ITodoDbContextWrite>>();
+    }
+    
+    public class ApiController<TUseCase> : CleanDDDArchitecture.Hosts.RestApi.Core.Controllers.ApiController<TUseCase>
+        where TUseCase : class, IUseCase
+    {
+        public ApiController(TUseCase useCase)
+            : base(useCase)
+        { }
     }
 }
