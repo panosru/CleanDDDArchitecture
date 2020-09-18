@@ -139,6 +139,12 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                .AddAccountChecks()
                .AddTodoChecks();
 
+            services.AddRouting(
+                options =>
+                {
+                    options.LowercaseUrls = true;
+                });
+            
             services.AddControllersWithViews(
                 options =>
                 {
