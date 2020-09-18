@@ -10,8 +10,8 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using SubDomains.TodoItem.Application.UseCases.Create;
-    using SubDomains.TodoItem.Application.UseCases.Create.Dtos;
     using SubDomains.TodoItem.Application.UseCases.Create.Validators;
+    using SubDomains.TodoItem.Application.UseCases.Create.ViewModels;
     using SubDomains.TodoList.Application.UseCases.Create;
     using SubDomains.TodoList.Application.UseCases.Create.Validators;
     using SubDomains.TodoList.Application.UseCases.Create.ViewModels;
@@ -20,7 +20,7 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
     {
         public static IEnumerable<Profile> AutoMapperProfiles() => new List<Profile>
         {
-            new MappingProfile(typeof(TodoItemDto).Assembly),
+            new MappingProfile(typeof(TodoItemViewModel).Assembly),
             new MappingProfile(typeof(TodoListCreatedViewModel).Assembly)
         };
 

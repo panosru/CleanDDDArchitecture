@@ -4,13 +4,13 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Notifications;
-    using Dtos;
+    using ViewModels;
 
     public class TodoCompletedNotification : Notification
     {
-        public TodoCompletedNotification(TodoItemDto completedTodo) => CompletedTodo = completedTodo;
+        public TodoCompletedNotification(TodoItemViewModel completedTodo) => CompletedTodo = completedTodo;
 
-        public TodoItemDto CompletedTodo { get; }
+        public TodoItemViewModel CompletedTodo { get; }
     }
 
     public class TodoCompletedNotificationHandler : NotificationHandler<TodoCompletedNotification>

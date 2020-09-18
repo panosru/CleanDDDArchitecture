@@ -647,15 +647,14 @@ paths:
         servers: []
     servers: []
     parameters: []
-  /api/todoitems/{Id}:
+  /api/todoitems/updatedetails:
     operations:
-      Get:
+      Put:
         tags:
         - name: TodoItems
         parameters:
-        - name: Id
-          in: Path
-          required: true
+        - name: id
+          in: Query
           schema:
             type: integer
             format: int32
@@ -668,161 +667,6 @@ paths:
             enum: []
           examples: {}
           content: {}
-        - name: x-api-version
-          in: Header
-          description: The requested API version
-          schema:
-            type: string
-            allOf: []
-            oneOf: []
-            anyOf: []
-            required: []
-            properties: {}
-            additionalPropertiesAllowed: true
-            enum: []
-          examples: {}
-          content: {}
-        responses:
-          200:
-            description: Success
-            headers: {}
-            content: {}
-            links: {}
-          400:
-            description: Bad Request
-            headers: {}
-            content:
-              text/plain:
-                schema:
-                  type: array
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  items:
-                    type: string
-                    allOf: []
-                    oneOf: []
-                    anyOf: []
-                    required: []
-                    properties: {}
-                    additionalPropertiesAllowed: true
-                    enum: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  type: array
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  items:
-                    type: string
-                    allOf: []
-                    oneOf: []
-                    anyOf: []
-                    required: []
-                    properties: {}
-                    additionalPropertiesAllowed: true
-                    enum: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  type: array
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  items:
-                    type: string
-                    allOf: []
-                    oneOf: []
-                    anyOf: []
-                    required: []
-                    properties: {}
-                    additionalPropertiesAllowed: true
-                    enum: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                examples: {}
-                encoding: {}
-            links: {}
-          default:
-            description: Error
-            headers: {}
-            content:
-              text/plain:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-            links: {}
-        callbacks: {}
-        security: []
-        servers: []
-    servers: []
-    parameters: []
-  /api/todoitems:
-    operations:
-      Post:
-        tags:
-        - name: TodoItems
-        parameters:
         - name: x-api-version
           in: Header
           description: The requested API version
@@ -850,10 +694,10 @@ paths:
                 enum: []
                 reference:
                   type: Schema
-                  id: CreateTodoItemCommand
+                  id: TodoItemUpdateDetailsDto
                   isLocal: true
-                  referenceV3: '#/components/schemas/CreateTodoItemCommand'
-                  referenceV2: '#/definitions/CreateTodoItemCommand'
+                  referenceV3: '#/components/schemas/TodoItemUpdateDetailsDto'
+                  referenceV2: '#/definitions/TodoItemUpdateDetailsDto'
               examples: {}
               encoding: {}
             text/json:
@@ -869,130 +713,6 @@ paths:
             description: Success
             headers: {}
             content: {}
-            links: {}
-          400:
-            description: Bad Request
-            headers: {}
-            content:
-              text/plain:
-                schema:
-                  type: array
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  items:
-                    type: string
-                    allOf: []
-                    oneOf: []
-                    anyOf: []
-                    required: []
-                    properties: {}
-                    additionalPropertiesAllowed: true
-                    enum: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  type: array
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  items:
-                    type: string
-                    allOf: []
-                    oneOf: []
-                    anyOf: []
-                    required: []
-                    properties: {}
-                    additionalPropertiesAllowed: true
-                    enum: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  type: array
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  items:
-                    type: string
-                    allOf: []
-                    oneOf: []
-                    anyOf: []
-                    required: []
-                    properties: {}
-                    additionalPropertiesAllowed: true
-                    enum: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                examples: {}
-                encoding: {}
-            links: {}
-          default:
-            description: Error
-            headers: {}
-            content:
-              text/plain:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
             links: {}
         callbacks: {}
         security: []
@@ -1047,10 +767,10 @@ paths:
                 enum: []
                 reference:
                   type: Schema
-                  id: UpdateTodoItemCommand
+                  id: TodoItemUpdateDto
                   isLocal: true
-                  referenceV3: '#/components/schemas/UpdateTodoItemCommand'
-                  referenceV2: '#/definitions/UpdateTodoItemCommand'
+                  referenceV3: '#/components/schemas/TodoItemUpdateDto'
+                  referenceV2: '#/definitions/TodoItemUpdateDto'
               examples: {}
               encoding: {}
             text/json:
@@ -1062,134 +782,52 @@ paths:
               examples: {}
               encoding: {}
         responses:
-          204:
+          200:
             description: Success
             headers: {}
             content: {}
             links: {}
-          400:
-            description: Bad Request
+        callbacks: {}
+        security: []
+        servers: []
+      Get:
+        tags:
+        - name: TodoItems
+        parameters:
+        - name: id
+          in: Path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
+        responses:
+          200:
+            description: Success
             headers: {}
-            content:
-              text/plain:
-                schema:
-                  type: array
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  items:
-                    type: string
-                    allOf: []
-                    oneOf: []
-                    anyOf: []
-                    required: []
-                    properties: {}
-                    additionalPropertiesAllowed: true
-                    enum: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  type: array
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  items:
-                    type: string
-                    allOf: []
-                    oneOf: []
-                    anyOf: []
-                    required: []
-                    properties: {}
-                    additionalPropertiesAllowed: true
-                    enum: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  type: array
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  items:
-                    type: string
-                    allOf: []
-                    oneOf: []
-                    anyOf: []
-                    required: []
-                    properties: {}
-                    additionalPropertiesAllowed: true
-                    enum: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                examples: {}
-                encoding: {}
-            links: {}
-          default:
-            description: Error
-            headers: {}
-            content:
-              text/plain:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
+            content: {}
             links: {}
         callbacks: {}
         security: []
@@ -1228,160 +866,22 @@ paths:
           examples: {}
           content: {}
         responses:
-          204:
+          200:
             description: Success
             headers: {}
             content: {}
-            links: {}
-          400:
-            description: Bad Request
-            headers: {}
-            content:
-              text/plain:
-                schema:
-                  type: array
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  items:
-                    type: string
-                    allOf: []
-                    oneOf: []
-                    anyOf: []
-                    required: []
-                    properties: {}
-                    additionalPropertiesAllowed: true
-                    enum: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  type: array
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  items:
-                    type: string
-                    allOf: []
-                    oneOf: []
-                    anyOf: []
-                    required: []
-                    properties: {}
-                    additionalPropertiesAllowed: true
-                    enum: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  type: array
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  items:
-                    type: string
-                    allOf: []
-                    oneOf: []
-                    anyOf: []
-                    required: []
-                    properties: {}
-                    additionalPropertiesAllowed: true
-                    enum: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                examples: {}
-                encoding: {}
-            links: {}
-          default:
-            description: Error
-            headers: {}
-            content:
-              text/plain:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
             links: {}
         callbacks: {}
         security: []
         servers: []
     servers: []
     parameters: []
-  /api/todoitems/updateitemdetails:
+  /api/todoitems:
     operations:
-      Put:
+      Post:
         tags:
         - name: TodoItems
         parameters:
-        - name: id
-          in: Query
-          schema:
-            type: integer
-            format: int32
-            allOf: []
-            oneOf: []
-            anyOf: []
-            required: []
-            properties: {}
-            additionalPropertiesAllowed: true
-            enum: []
-          examples: {}
-          content: {}
         - name: x-api-version
           in: Header
           description: The requested API version
@@ -1409,10 +909,10 @@ paths:
                 enum: []
                 reference:
                   type: Schema
-                  id: UpdateTodoItemDetailCommand
+                  id: TodoItemCreateDto
                   isLocal: true
-                  referenceV3: '#/components/schemas/UpdateTodoItemDetailCommand'
-                  referenceV2: '#/definitions/UpdateTodoItemDetailCommand'
+                  referenceV3: '#/components/schemas/TodoItemCreateDto'
+                  referenceV2: '#/definitions/TodoItemCreateDto'
               examples: {}
               encoding: {}
             text/json:
@@ -1424,134 +924,10 @@ paths:
               examples: {}
               encoding: {}
         responses:
-          204:
+          200:
             description: Success
             headers: {}
             content: {}
-            links: {}
-          400:
-            description: Bad Request
-            headers: {}
-            content:
-              text/plain:
-                schema:
-                  type: array
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  items:
-                    type: string
-                    allOf: []
-                    oneOf: []
-                    anyOf: []
-                    required: []
-                    properties: {}
-                    additionalPropertiesAllowed: true
-                    enum: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  type: array
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  items:
-                    type: string
-                    allOf: []
-                    oneOf: []
-                    anyOf: []
-                    required: []
-                    properties: {}
-                    additionalPropertiesAllowed: true
-                    enum: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  type: array
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  items:
-                    type: string
-                    allOf: []
-                    oneOf: []
-                    anyOf: []
-                    required: []
-                    properties: {}
-                    additionalPropertiesAllowed: true
-                    enum: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                examples: {}
-                encoding: {}
-            links: {}
-          default:
-            description: Error
-            headers: {}
-            content:
-              text/plain:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
             links: {}
         callbacks: {}
         security: []
@@ -2137,71 +1513,6 @@ components:
           additionalPropertiesAllowed: true
           enum: []
       enum: []
-    CreateTodoItemCommand:
-      type: object
-      allOf: []
-      oneOf: []
-      anyOf: []
-      required: []
-      properties:
-        listId:
-          type: integer
-          format: int32
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-        title:
-          type: string
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-          nullable: true
-      enum: []
-    UpdateTodoItemCommand:
-      type: object
-      allOf: []
-      oneOf: []
-      anyOf: []
-      required: []
-      properties:
-        id:
-          type: integer
-          format: int32
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-        title:
-          type: string
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-          nullable: true
-        done:
-          type: boolean
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-      enum: []
     PriorityLevel:
       type: integer
       format: int32
@@ -2216,7 +1527,7 @@ components:
       - value: 1
       - value: 2
       - value: 3
-    UpdateTodoItemDetailCommand:
+    TodoItemUpdateDetailsDto:
       type: object
       allOf: []
       oneOf: []
@@ -2258,6 +1569,71 @@ components:
             referenceV3: '#/components/schemas/PriorityLevel'
             referenceV2: '#/definitions/PriorityLevel'
         note:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+      enum: []
+    TodoItemUpdateDto:
+      type: object
+      allOf: []
+      oneOf: []
+      anyOf: []
+      required: []
+      properties:
+        id:
+          type: integer
+          format: int32
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+        title:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        done:
+          type: boolean
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+      enum: []
+    TodoItemCreateDto:
+      type: object
+      allOf: []
+      oneOf: []
+      anyOf: []
+      required: []
+      properties:
+        listId:
+          type: integer
+          format: int32
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+        title:
           type: string
           allOf: []
           oneOf: []

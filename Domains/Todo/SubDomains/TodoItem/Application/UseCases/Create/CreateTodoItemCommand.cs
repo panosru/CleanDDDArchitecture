@@ -6,10 +6,10 @@
     using AutoMapper;
     using Aviant.DDD.Application.Commands;
     using Core.Repositories;
-    using Dtos;
     using Todo.Core.Entities;
+    using ViewModels;
 
-    public class CreateTodoItemCommand : Command<Lazy<TodoItemDto>>
+    public class CreateTodoItemCommand : Command<Lazy<TodoItemViewModel>>
     {
         public int ListId { get; set; }
 
@@ -17,7 +17,7 @@
     }
 
     public class CreateTodoItemCommandHandler
-        : CommandHandler<CreateTodoItemCommand, Lazy<TodoItemDto>>
+        : CommandHandler<CreateTodoItemCommand, Lazy<TodoItemViewModel>>
     {
         private readonly IMapper _mapper;
 
@@ -31,7 +31,7 @@
             _mapper                  = mapper;
         }
 
-        public override async Task<Lazy<TodoItemDto>> Handle(
+        public override async Task<Lazy<TodoItemViewModel>> Handle(
             CreateTodoItemCommand command,
             CancellationToken     cancellationToken)
         {
@@ -43,7 +43,7 @@
 
             await _todoItemWriteRepository.Add(entity);
 
-            return new Lazy<TodoItemDto>(() => _mapper.Map<TodoItemDto>(entity));
+            return new Lazy<TodoItemViewModel>(() => _mapper.Map<TodoItemViewModel>(entity));
         }
     }
 }
