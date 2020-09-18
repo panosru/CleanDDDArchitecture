@@ -1,7 +1,5 @@
 namespace CleanDDDArchitecture.Hosts.RestApi.Application
 {
-    #region
-
     using System;
     using System.Threading.Tasks;
     using Aviant.DDD.Infrastructure.CrossCutting;
@@ -13,8 +11,6 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Serilog;
-
-    #endregion
 
     /// <summary>
     /// </summary>
@@ -71,10 +67,9 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             IConfigurationBuilder configurationBuilder)
         {
             DependencyInjectionRegistry.ConfigurationBuilder = configurationBuilder;
-            var configuration = DependencyInjectionRegistry.DefaultConfiguration = configurationBuilder.Build();
 
             Log.Logger = new LoggerConfiguration()
-               .ReadFrom.Configuration(configuration)
+               .ReadFrom.Configuration(DependencyInjectionRegistry.SetConfiguration(configurationBuilder.Build()))
                .CreateLogger();
         }
 
