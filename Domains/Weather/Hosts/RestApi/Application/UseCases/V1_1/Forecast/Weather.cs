@@ -26,11 +26,11 @@
 
         [HttpGet]
         [AllowAnonymous]
-        public Task<IActionResult> Forecast()
+        public async Task<IActionResult> Forecast()
         {
-            UseCase.Execute(this);
+            await UseCase.ExecuteAsync(this);
 
-            return Task.FromResult(ViewModel);
+            return ViewModel;
         }
     }
 }
