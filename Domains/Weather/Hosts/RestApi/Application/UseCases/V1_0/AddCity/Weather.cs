@@ -8,25 +8,22 @@
     /// <summary>
     ///     Weather endpoints
     /// </summary>
-    public class Weather : ApiController, IAddCityOutput
+    public class Weather : ApiController<AddCityUseCase>, IAddCityOutput
     {
-        private readonly AddCityUseCase _useCase;
-
-        public Weather([FromServices] AddCityUseCase useCase) => _useCase = useCase;
-
-        private IActionResult ViewModel { get; set; } = new NoContentResult();
+        public Weather([FromServices] AddCityUseCase useCase)
+            : base(useCase)
+        { }
 
         #region IAddCityOutput Members
 
-        void IAddCityOutput.Invalid(string message)
-        {
+        void IAddCityOutput.Invalid(string message) =>
             ViewModel = BadRequest(message);
-        }
 
         void IAddCityOutput.Ok(string city) =>
-            ViewModel = Ok((new AddCityResponse(city)).ToString());
+            ViewModel = Ok(new AddCityResponse(city).ToString());
 
-        void IAddCityOutput.NotFound() => ViewModel = NotFound();
+        void IAddCityOutput.NotFound() =>
+            ViewModel = NotFound();
 
         #endregion
 
@@ -34,7 +31,7 @@
         [AllowAnonymous]
         public Task<IActionResult> AddCity([FromBody] AddCityDto dto)
         {
-            _useCase.Execute(this, dto);
+            UseCase.Execute(this, dto);
 
             return Task.FromResult(ViewModel);
         }

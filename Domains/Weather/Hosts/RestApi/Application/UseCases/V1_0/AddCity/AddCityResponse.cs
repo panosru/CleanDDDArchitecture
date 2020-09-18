@@ -2,7 +2,7 @@ namespace CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.UseCase
 {
     public class AddCityResponse
     {
-        public AddCityResponse(string city) => 
+        public AddCityResponse(string city) =>
             Message = $"City \"{city}\" has added";
 
         public string Message { get; }
