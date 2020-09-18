@@ -25,6 +25,7 @@
         /// <summary>
         ///     Delete a todo list
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
         [AllowAnonymous]
