@@ -7,17 +7,17 @@
     using Aviant.DDD.Application.Commands;
     using Aviant.DDD.Application.Notifications;
     using Core.Repositories;
-    using Dtos;
     using Notifications;
     using Todo.Core.Entities;
+    using ViewModels;
 
-    public class CreateTodoListCommand : Command<Lazy<TodoListDto>>
+    public class CreateTodoListCommand : Command<Lazy<TodoListCreatedViewModel>>
     {
         public string Title { get; set; }
     }
 
     public class CreateTodoListCommandHandler
-        : CommandHandler<CreateTodoListCommand, Lazy<TodoListDto>>
+        : CommandHandler<CreateTodoListCommand, Lazy<TodoListCreatedViewModel>>
     {
         private readonly IMapper _mapper;
 
@@ -35,7 +35,7 @@
             _mapper                  = mapper;
         }
 
-        public override async Task<Lazy<TodoListDto>> Handle(
+        public override async Task<Lazy<TodoListCreatedViewModel>> Handle(
             CreateTodoListCommand command,
             CancellationToken     cancellationToken)
         {
@@ -50,7 +50,7 @@
                     Name = entity.Title
                 });
 
-            return new Lazy<TodoListDto>(() => _mapper.Map<TodoListDto>(entity));
+            return new Lazy<TodoListCreatedViewModel>(() => _mapper.Map<TodoListCreatedViewModel>(entity));
         }
     }
 }
