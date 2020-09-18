@@ -8,20 +8,16 @@
     /// <summary>
     ///     Weather endpoints
     /// </summary>
-    public class Weather : ApiController, ISyncWeatherServiceOutput
+    public class Weather : ApiController<SyncWeatherServiceUseCase>, ISyncWeatherServiceOutput
     {
-        private readonly SyncWeatherServiceUseCase _useCase;
-
-        public Weather([FromServices] SyncWeatherServiceUseCase useCase) => _useCase = useCase;
-
-        private IActionResult ViewModel { get; set; } = new NoContentResult();
+        public Weather([FromServices] SyncWeatherServiceUseCase useCase)
+            : base(useCase)
+        { }
 
         #region ISyncWeatherServiceOutput Members
 
-        void ISyncWeatherServiceOutput.Invalid(string message)
-        {
+        void ISyncWeatherServiceOutput.Invalid(string message) =>
             ViewModel = BadRequest(message);
-        }
 
         void ISyncWeatherServiceOutput.NoContent() => ViewModel = NoContent();
 
@@ -31,7 +27,7 @@
         [AllowAnonymous]
         public Task<IActionResult> Forecast([FromBody] SyncWeatherServiceCommand command)
         {
-            _useCase.Execute(this, command);
+            UseCase.Execute(this, command);
 
             return Task.FromResult(ViewModel);
         }

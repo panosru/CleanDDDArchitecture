@@ -8,22 +8,19 @@
     /// <summary>
     ///     Weather endpoints
     /// </summary>
-    public class Weather : ApiController, IForecastOutput
+    public class Weather : ApiController<ForecastUseCase>, IForecastOutput
     {
-        private readonly ForecastUseCase _useCase;
-
-        public Weather([FromServices] ForecastUseCase useCase) => _useCase = useCase;
-
-        private IActionResult ViewModel { get; set; } = new NoContentResult();
+        public Weather([FromServices] ForecastUseCase useCase)
+            : base(useCase)
+        { }
 
         #region IForecastOutput Members
 
-        void IForecastOutput.Invalid(string message)
-        {
+        void IForecastOutput.Invalid(string message) =>
             ViewModel = BadRequest(message);
-        }
 
-        void IForecastOutput.Ok(object? @object) => ViewModel = Ok(@object);
+        void IForecastOutput.Ok(object? @object) =>
+            ViewModel = Ok(@object);
 
         #endregion
 
@@ -31,7 +28,7 @@
         [AllowAnonymous]
         public Task<IActionResult> Forecast()
         {
-            _useCase.Execute(this);
+            UseCase.Execute(this);
 
             return Task.FromResult(ViewModel);
         }
