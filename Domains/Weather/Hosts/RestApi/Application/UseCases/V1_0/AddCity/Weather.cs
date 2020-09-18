@@ -29,11 +29,11 @@
 
         [HttpPost("[action]")]
         [AllowAnonymous]
-        public Task<IActionResult> AddCity([FromBody] AddCityDto dto)
+        public async Task<IActionResult> AddCity([FromBody] AddCityDto dto)
         {
-            UseCase.Execute(this, dto);
+            await UseCase.ExecuteAsync(this, dto);
 
-            return Task.FromResult(ViewModel);
+            return ViewModel;
         }
     }
 }

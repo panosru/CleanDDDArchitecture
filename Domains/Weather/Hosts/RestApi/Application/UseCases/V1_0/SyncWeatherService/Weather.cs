@@ -25,11 +25,11 @@
 
         [HttpPost]
         [AllowAnonymous]
-        public Task<IActionResult> Forecast([FromBody] SyncWeatherServiceCommand command)
+        public async Task<IActionResult> Forecast([FromBody] SyncWeatherServiceCommand command)
         {
-            UseCase.Execute(this, command);
+            await UseCase.ExecuteAsync(this, command);
 
-            return Task.FromResult(ViewModel);
+            return ViewModel;
         }
     }
 }
