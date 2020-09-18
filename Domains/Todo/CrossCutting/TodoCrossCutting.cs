@@ -13,15 +13,15 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
     using SubDomains.TodoItem.Application.UseCases.Create.Dtos;
     using SubDomains.TodoItem.Application.UseCases.Create.Validators;
     using SubDomains.TodoList.Application.UseCases.Create;
-    using SubDomains.TodoList.Application.UseCases.Create.Dtos;
     using SubDomains.TodoList.Application.UseCases.Create.Validators;
+    using SubDomains.TodoList.Application.UseCases.Create.ViewModels;
 
     public static class TodoCrossCutting
     {
         public static IEnumerable<Profile> AutoMapperProfiles() => new List<Profile>
         {
             new MappingProfile(typeof(TodoItemDto).Assembly),
-            new MappingProfile(typeof(TodoListDto).Assembly)
+            new MappingProfile(typeof(TodoListCreatedViewModel).Assembly)
         };
 
         public static IEnumerable<Assembly> ValidatorAssemblies() => new List<Assembly>

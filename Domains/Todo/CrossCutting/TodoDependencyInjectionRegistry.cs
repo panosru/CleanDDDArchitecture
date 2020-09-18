@@ -1,7 +1,5 @@
 namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
 {
-    #region
-
     using Application.Persistence;
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.Persistance;
@@ -18,8 +16,6 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
     using SubDomains.TodoList.CrossCutting;
     using SubDomains.TodoList.Infrastructure.Files.Maps;
 
-    #endregion
-
     public static class TodoDependencyInjectionRegistry
     {
         private const string CurrentDomain = "Todo";
@@ -27,7 +23,7 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
         private static IConfiguration Configuration { get; } =
             DependencyInjectionRegistry.GetDomainConfiguration(CurrentDomain.ToLower());
         
-        public static IServiceCollection AddTodo(this IServiceCollection services)
+        public static IServiceCollection AddTodoDomain(this IServiceCollection services)
         {
             if (Configuration.GetValue<bool>("UseInMemoryDatabase"))
             {
@@ -63,13 +59,14 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
                 provider =>
                     provider.GetService<TodoDbContextRead>());
 
-            services.AddTodoItem(Configuration);
-            services.AddTodoList(Configuration);
+            services.AddTodoItemSubDomain();
+            services.AddTodoListSubDomain();
 
             services.AddTransient<ICsvFileBuilder<TodoItemRecord>, CsvFileBuilder<TodoItemRecord, TodoItemRecordMap>>();
 
-            services.AddScoped<IOrchestrator<TodoDbContextWrite>, Orchestrator<TodoDbContextWrite>>();
-            services.AddScoped<IUnitOfWork<TodoDbContextWrite>, UnitOfWork<TodoDbContextWrite>>();
+            services.AddScoped<IUnitOfWork<ITodoDbContextWrite>, UnitOfWork<ITodoDbContextWrite>>();
+            
+            services.AddScoped<IOrchestrator<ITodoDbContextWrite>, Orchestrator<ITodoDbContextWrite>>();
 
             return services;
         }

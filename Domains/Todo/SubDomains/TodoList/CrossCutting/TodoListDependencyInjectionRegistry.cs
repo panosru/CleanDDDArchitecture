@@ -1,7 +1,9 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.CrossCutting
 {
-    #region
-
+    using Application.UseCases.Create;
+    using Application.UseCases.Delete;
+    using Application.UseCases.Export;
+    using Application.UseCases.GetAll;
     using Aviant.DDD.Infrastructure.CrossCutting;
     using Core.Repositories;
     using Infrastructure.Persistence.Configurations;
@@ -9,8 +11,6 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.CrossCutting
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Todo.Infrastructure.Persistence.Contexts;
-
-    #endregion
 
     public static class TodoListDependencyInjectionRegistry
     {
@@ -26,6 +26,11 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.CrossCutting
         {
             services.AddScoped<ITodoListRepositoryRead, TodoListRepositoryRead>();
             services.AddScoped<ITodoListRepositoryWrite, TodoListRepositoryWrite>();
+
+            services.AddScoped(typeof(GetAllUseCase));
+            services.AddScoped(typeof(CreateTodoListUseCase));
+            services.AddScoped(typeof(DeleteTodoListUseCase));
+            services.AddScoped(typeof(ExportTodoListUseCase));
 
             TodoDbContextWrite.AddConfigurationAssemblyFromEntity(new TodoListConfiguration());
 
