@@ -10,7 +10,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application
         protected new IOrchestrator<AccountAggregate, AccountAggregateId> Orchestrator =>
             HttpContext.RequestServices.GetRequiredService<IOrchestrator<AccountAggregate, AccountAggregateId>>();
     }
-    
+
     public class ApiController<TUseCase> : CleanDDDArchitecture.Hosts.RestApi.Core.Controllers.ApiController<TUseCase>
         where TUseCase : class, IUseCase
     {

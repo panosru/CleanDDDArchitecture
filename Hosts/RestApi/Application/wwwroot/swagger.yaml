@@ -73,12 +73,27 @@ info:
       userInfo: ''
 servers: []
 paths:
-  /api/account/authenticate:
+  /api/account/{id}:
     operations:
-      Post:
+      Put:
         tags:
         - name: Account
         parameters:
+        - name: id
+          in: Path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
         - name: x-api-version
           in: Header
           description: The requested API version
@@ -106,10 +121,10 @@ paths:
                 enum: []
                 reference:
                   type: Schema
-                  id: AuthenticateCommand
+                  id: UpdateAccountDto
                   isLocal: true
-                  referenceV3: '#/components/schemas/AuthenticateCommand'
-                  referenceV2: '#/definitions/AuthenticateCommand'
+                  referenceV3: '#/components/schemas/UpdateAccountDto'
+                  referenceV2: '#/definitions/UpdateAccountDto'
               examples: {}
               encoding: {}
             text/json:
@@ -121,62 +136,107 @@ paths:
               examples: {}
               encoding: {}
         responses:
-          401:
-            description: Unauthorized
+          200:
+            description: Success
             headers: {}
-            content:
-              text/plain:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
+            content: {}
             links: {}
+        callbacks: {}
+        security: []
+        servers: []
+      Get:
+        tags:
+        - name: Account
+        operationId: GetAccount
+        parameters:
+        - name: id
+          in: Path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
+        responses:
+          200:
+            description: Success
+            headers: {}
+            content: {}
+            links: {}
+        callbacks: {}
+        security: []
+        servers: []
+    servers: []
+    parameters: []
+  /api/account:
+    operations:
+      Post:
+        tags:
+        - name: Account
+        parameters:
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
+        requestBody:
+          content:
+            application/json:
+              schema: &o3
+                allOf: []
+                oneOf: []
+                anyOf: []
+                required: []
+                properties: {}
+                additionalPropertiesAllowed: true
+                enum: []
+                reference:
+                  type: Schema
+                  id: CreateAccountDto
+                  isLocal: true
+                  referenceV3: '#/components/schemas/CreateAccountDto'
+                  referenceV2: '#/definitions/CreateAccountDto'
+              examples: {}
+              encoding: {}
+            text/json:
+              schema: *o3
+              examples: {}
+              encoding: {}
+            application/*+json:
+              schema: *o3
+              examples: {}
+              encoding: {}
+        responses:
           200:
             description: Success
             headers: {}
@@ -241,329 +301,19 @@ paths:
           200:
             description: Success
             headers: {}
-            content:
-              text/plain:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: IdentityResult
-                    isLocal: true
-                    referenceV3: '#/components/schemas/IdentityResult'
-                    referenceV2: '#/definitions/IdentityResult'
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: IdentityResult
-                    isLocal: true
-                    referenceV3: '#/components/schemas/IdentityResult'
-                    referenceV2: '#/definitions/IdentityResult'
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: IdentityResult
-                    isLocal: true
-                    referenceV3: '#/components/schemas/IdentityResult'
-                    referenceV2: '#/definitions/IdentityResult'
-                examples: {}
-                encoding: {}
-            links: {}
-          400:
-            description: Bad Request
-            headers: {}
-            content:
-              text/plain:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
+            content: {}
             links: {}
         callbacks: {}
         security: []
         servers: []
     servers: []
     parameters: []
-  /api/account:
+  /api/account/authenticate:
     operations:
       Post:
         tags:
         - name: Account
         parameters:
-        - name: x-api-version
-          in: Header
-          description: The requested API version
-          schema:
-            type: string
-            allOf: []
-            oneOf: []
-            anyOf: []
-            required: []
-            properties: {}
-            additionalPropertiesAllowed: true
-            enum: []
-          examples: {}
-          content: {}
-        requestBody:
-          content:
-            application/json:
-              schema: &o3
-                allOf: []
-                oneOf: []
-                anyOf: []
-                required: []
-                properties: {}
-                additionalPropertiesAllowed: true
-                enum: []
-                reference:
-                  type: Schema
-                  id: CreateAccountDto
-                  isLocal: true
-                  referenceV3: '#/components/schemas/CreateAccountDto'
-                  referenceV2: '#/definitions/CreateAccountDto'
-              examples: {}
-              encoding: {}
-            text/json:
-              schema: *o3
-              examples: {}
-              encoding: {}
-            application/*+json:
-              schema: *o3
-              examples: {}
-              encoding: {}
-        responses:
-          201:
-            description: Success
-            headers: {}
-            content: {}
-            links: {}
-          400:
-            description: Bad Request
-            headers: {}
-            content:
-              text/plain:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-            links: {}
-          default:
-            description: Error
-            headers: {}
-            content:
-              text/plain:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-            links: {}
-          200:
-            description: Success
-            headers: {}
-            content: {}
-            links: {}
-        callbacks: {}
-        security: []
-        servers: []
-    servers: []
-    parameters: []
-  /api/account/{aggregateId}:
-    operations:
-      Put:
-        tags:
-        - name: Account
-        parameters:
-        - name: id
-          in: Query
-          schema:
-            type: string
-            format: uuid
-            allOf: []
-            oneOf: []
-            anyOf: []
-            required: []
-            properties: {}
-            additionalPropertiesAllowed: true
-            enum: []
-          examples: {}
-          content: {}
-        - name: aggregateId
-          in: Path
-          required: true
-          schema:
-            type: string
-            allOf: []
-            oneOf: []
-            anyOf: []
-            required: []
-            properties: {}
-            additionalPropertiesAllowed: true
-            enum: []
-          examples: {}
-          content: {}
         - name: x-api-version
           in: Header
           description: The requested API version
@@ -591,10 +341,10 @@ paths:
                 enum: []
                 reference:
                   type: Schema
-                  id: CreateAccountDto
+                  id: AuthenticateCommand
                   isLocal: true
-                  referenceV3: '#/components/schemas/CreateAccountDto'
-                  referenceV2: '#/definitions/CreateAccountDto'
+                  referenceV3: '#/components/schemas/AuthenticateCommand'
+                  referenceV2: '#/definitions/AuthenticateCommand'
               examples: {}
               encoding: {}
             text/json:
@@ -1321,14 +1071,17 @@ paths:
     parameters: []
 components:
   schemas:
-    AuthenticateCommand:
+    UpdateAccountDto:
       type: object
       allOf: []
       oneOf: []
       anyOf: []
-      required: []
+      required:
+      - email
+      - firstName
+      - lastName
       properties:
-        username:
+        firstName:
           type: string
           allOf: []
           oneOf: []
@@ -1337,8 +1090,7 @@ components:
           properties: {}
           additionalPropertiesAllowed: true
           enum: []
-          nullable: true
-        password:
+        lastName:
           type: string
           allOf: []
           oneOf: []
@@ -1347,16 +1099,7 @@ components:
           properties: {}
           additionalPropertiesAllowed: true
           enum: []
-          nullable: true
-      enum: []
-    ProblemDetails:
-      type: object
-      allOf: []
-      oneOf: []
-      anyOf: []
-      required: []
-      properties:
-        type:
+        email:
           type: string
           allOf: []
           oneOf: []
@@ -1365,95 +1108,6 @@ components:
           properties: {}
           additionalPropertiesAllowed: true
           enum: []
-          nullable: true
-        title:
-          type: string
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-          nullable: true
-        status:
-          type: integer
-          format: int32
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-          nullable: true
-        detail:
-          type: string
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-          nullable: true
-        instance:
-          type: string
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-          nullable: true
-      additionalPropertiesAllowed: true
-      additionalProperties:
-        allOf: []
-        oneOf: []
-        anyOf: []
-        required: []
-        properties: {}
-        additionalPropertiesAllowed: true
-        enum: []
-      enum: []
-    IdentityResult:
-      type: object
-      allOf: []
-      oneOf: []
-      anyOf: []
-      required: []
-      properties:
-        succeeded:
-          type: boolean
-          readOnly: true
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-        errors:
-          type: array
-          readOnly: true
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          items:
-            type: string
-            allOf: []
-            oneOf: []
-            anyOf: []
-            required: []
-            properties: {}
-            additionalPropertiesAllowed: true
-            enum: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-          nullable: true
       enum: []
     CreateAccountDto:
       type: object
@@ -1512,6 +1166,34 @@ components:
           properties: {}
           additionalPropertiesAllowed: true
           enum: []
+      enum: []
+    AuthenticateCommand:
+      type: object
+      allOf: []
+      oneOf: []
+      anyOf: []
+      required: []
+      properties:
+        username:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        password:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
       enum: []
     PriorityLevel:
       type: integer
