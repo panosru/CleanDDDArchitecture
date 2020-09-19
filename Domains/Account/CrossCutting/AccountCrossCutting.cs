@@ -36,7 +36,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
 
             // Get UserManager Service
             var userManager = serviceProvider.GetRequiredService<UserManager<AccountUser>>();
-            
+
             // Create default user data
             var accountDto = new CreateAccountDto
             {
@@ -46,16 +46,16 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                 LastName  = "Kosmidis",
                 Password  = "Administrator1!"
             };
-            
+
             if (userManager.Users.All(u => u.UserName != accountDto.UserName))
             {
                 var orchestrator =
                     serviceProvider.GetRequiredService<IOrchestrator<AccountAggregate, AccountAggregateId>>();
-            
+
                 if (orchestrator is null)
                     throw new NullReferenceException(
                         typeof(IOrchestrator<AccountAggregate, AccountAggregateId>).Name);
-            
+
                 RequestResult requestResult = await orchestrator
                    .SendCommand(
                         new CreateAccount(
@@ -64,7 +64,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                             accountDto.FirstName,
                             accountDto.LastName,
                             accountDto.Email));
-            
+
                 if (!requestResult.Succeeded)
                     throw new Exception($"Unable to create default user \"{accountDto.UserName}\".");
             }

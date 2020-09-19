@@ -22,6 +22,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Event
             await _userManager.CreateAsync(
                     new AccountUser
                     {
+                        Id        = @event.Event.Id.Key,
                         UserName  = @event.Event.UserName,
                         Email     = @event.Event.Email,
                         FirstName = @event.Event.FirstName,

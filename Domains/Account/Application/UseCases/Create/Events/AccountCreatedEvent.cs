@@ -11,12 +11,15 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Event
         public AccountCreatedEvent(AccountAggregate accountAggregate)
             : base(accountAggregate)
         {
+            Id        = accountAggregate.Id;
             UserName  = accountAggregate.UserName;
             Password  = accountAggregate.Password;
             FirstName = accountAggregate.FirstName;
             LastName  = accountAggregate.LastName;
             Email     = accountAggregate.Email;
         }
+
+        public AccountAggregateId Id { get; private set; }
 
         public string UserName { get; private set; }
 
