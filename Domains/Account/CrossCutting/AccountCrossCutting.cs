@@ -32,7 +32,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
             var context = serviceProvider.GetRequiredService<AccountDbContextWrite>();
 
             if (context.Database.IsNpgsql())
-                await context.Database.MigrateAsync();
+                await context.Database.MigrateAsync().ConfigureAwait(false);
 
             // Get UserManager Service
             var userManager = serviceProvider.GetRequiredService<UserManager<AccountUser>>();

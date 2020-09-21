@@ -41,7 +41,8 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         {
             dto.Id = id;
 
-            await UseCase.ExecuteAsync(this, dto);
+            await UseCase.ExecuteAsync(this, dto)
+               .ConfigureAwait(false);
 
             return ViewModel;
         }

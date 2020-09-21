@@ -28,7 +28,8 @@
         [AllowAnonymous]
         public async Task<IActionResult> Forecast()
         {
-            await UseCase.ExecuteAsync(this);
+            await UseCase.ExecuteAsync(this)
+               .ConfigureAwait(false);
 
             return ViewModel;
         }

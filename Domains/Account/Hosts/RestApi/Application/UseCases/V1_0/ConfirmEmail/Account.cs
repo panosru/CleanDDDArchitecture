@@ -36,7 +36,8 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         [HttpGet("confirm/{Token}/{Email}")]
         public async Task<IActionResult> ConfirmEmail([FromRoute] ConfirmEmailCommand command)
         {
-            await UseCase.ExecuteAsync(this, command);
+            await UseCase.ExecuteAsync(this, command)
+               .ConfigureAwait(false);
 
             return ViewModel;
         }
