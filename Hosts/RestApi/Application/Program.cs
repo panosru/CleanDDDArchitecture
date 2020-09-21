@@ -1,6 +1,7 @@
 namespace CleanDDDArchitecture.Hosts.RestApi.Application
 {
     using System;
+    using System.IO;
     using System.Threading.Tasks;
     using Aviant.DDD.Infrastructure.CrossCutting;
     using Domains.Account.CrossCutting;
@@ -56,9 +57,9 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                .ConfigureWebHostDefaults(
                     webBuilder =>
                     {
-                        webBuilder.UseStartup<Startup>();
                         webBuilder.ConfigureAppConfiguration(SetupConfiguration);
                         webBuilder.ConfigureLogging(SetupLogging);
+                        webBuilder.UseStartup<Startup>();
                     });
         }
 
@@ -67,6 +68,23 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             IConfigurationBuilder configurationBuilder)
         {
             DependencyInjectionRegistry.ConfigurationBuilder = configurationBuilder;
+
+            string[] configFiles =
+            {
+                "appsettings.yml",
+                $"appsettings.{hostBuilderContext.HostingEnvironment.EnvironmentName}.yml",
+                "appsettings.yaml",
+                $"appsettings.{hostBuilderContext.HostingEnvironment.EnvironmentName}.yaml"
+            };
+
+            foreach (var configFile in configFiles)
+            {
+                if (!File.Exists(
+                    Path.Combine(Directory.GetCurrentDirectory(), configFile)))
+                    continue;
+                
+                configurationBuilder.AddYamlFile(configFile, optional: false, reloadOnChange: true);
+            }
 
             Log.Logger = new LoggerConfiguration()
                .ReadFrom.Configuration(DependencyInjectionRegistry.SetConfiguration(configurationBuilder.Build()))

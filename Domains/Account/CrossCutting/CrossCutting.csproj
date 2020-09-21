@@ -12,22 +12,16 @@
     </ItemGroup>
     
     <ItemGroup>
-        <Content Include="appsettings.account.Development.json">
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-            <DependentUpon>appsettings.account.json</DependentUpon>
-        </Content>
-        <Content Include="appsettings.account.json">
+        <Content Include="appsettings.account.yaml">
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
-        <Content Include="appsettings.account.Production.json">
+        <Content Include="appsettings.account.Development.yaml">
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-            <DependentUpon>appsettings.account.json</DependentUpon>
+            <DependentUpon>appsettings.account.yaml</DependentUpon>
         </Content>
     </ItemGroup>
 

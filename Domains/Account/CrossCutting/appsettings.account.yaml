@@ -1,0 +1,4 @@
+---
+Jwt:
+  Key: "thisismysecretkey"
+  Issuer: "test.com"
