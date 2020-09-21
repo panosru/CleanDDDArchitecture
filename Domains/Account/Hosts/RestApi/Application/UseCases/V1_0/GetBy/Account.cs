@@ -38,7 +38,8 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         [HttpGet("{id:guid}", Name = "GetAccount")]
         public async Task<IActionResult> GetAccount([FromRoute] Guid id)
         {
-            await UseCase.ExecuteAsync(this, id);
+            await UseCase.ExecuteAsync(this, id)
+               .ConfigureAwait(false);
 
             return ViewModel;
         }

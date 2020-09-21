@@ -14,7 +14,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate
                 {
                     Username = Input.Username,
                     Password = Input.Password
-                });
+                }).ConfigureAwait(false);
 
             if (requestResult.Succeeded
              && !(requestResult.Payload() is null))

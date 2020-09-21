@@ -20,6 +20,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate
             _identityIdentityService = identityIdentityService;
 
         public override async Task<object> Handle(AuthenticateCommand command, CancellationToken cancellationToken) =>
-            await _identityIdentityService.Authenticate(command.Username, command.Password);
+            await _identityIdentityService.Authenticate(command.Username, command.Password)
+               .ConfigureAwait(false);
     }
 }
