@@ -1,11 +1,13 @@
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.Create
 {
+    using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Controllers;
     using Domains.Account.Application.Aggregates;
     using Domains.Account.Application.UseCases.Create;
     using Domains.Account.Application.UseCases.Create.Dtos;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
@@ -35,13 +37,20 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         /// <summary>
         ///     Create a new account
         /// </summary>
+        /// <response code="200">Account already exists</response>
+        /// <response code="201">Account created successfully</response>
+        /// <response code="400">Bad request.</response>
         /// <param name="dto"></param>
-        /// <returns></returns>
+        /// <returns>The newly registered account.</returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Create([FromBody] CreateAccountDto dto)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AccountResponse))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AccountResponse))]
+        [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Create))]
+        public async Task<IActionResult> Create([FromBody] [Required] CreateAccountDto dto)
         {
-            await UseCase.ExecuteAsync(this, dto);
+            await UseCase.ExecuteAsync(this, dto)
+               .ConfigureAwait(false);
 
             return ViewModel;
         }
