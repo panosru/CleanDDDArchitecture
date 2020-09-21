@@ -210,6 +210,7 @@ paths:
           examples: {}
           content: {}
         requestBody:
+          required: true
           content:
             application/json:
               schema: &o3
@@ -240,7 +241,114 @@ paths:
           200:
             description: Success
             headers: {}
-            content: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: AccountResponse
+                    isLocal: true
+                    referenceV3: '#/components/schemas/AccountResponse'
+                    referenceV2: '#/definitions/AccountResponse'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: AccountResponse
+                    isLocal: true
+                    referenceV3: '#/components/schemas/AccountResponse'
+                    referenceV2: '#/definitions/AccountResponse'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: AccountResponse
+                    isLocal: true
+                    referenceV3: '#/components/schemas/AccountResponse'
+                    referenceV2: '#/definitions/AccountResponse'
+                examples: {}
+                encoding: {}
+            links: {}
+          201:
+            description: Success
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: AccountResponse
+                    isLocal: true
+                    referenceV3: '#/components/schemas/AccountResponse'
+                    referenceV2: '#/definitions/AccountResponse'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: AccountResponse
+                    isLocal: true
+                    referenceV3: '#/components/schemas/AccountResponse'
+                    referenceV2: '#/definitions/AccountResponse'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: AccountResponse
+                    isLocal: true
+                    referenceV3: '#/components/schemas/AccountResponse'
+                    referenceV2: '#/definitions/AccountResponse'
+                examples: {}
+                encoding: {}
             links: {}
         callbacks: {}
         security: []
@@ -1167,6 +1275,69 @@ components:
           additionalPropertiesAllowed: true
           enum: []
       enum: []
+    AccountResponse:
+      type: object
+      allOf: []
+      oneOf: []
+      anyOf: []
+      required: []
+      properties:
+        message:
+          type: string
+          readOnly: true
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        username:
+          type: string
+          readOnly: true
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        firstName:
+          type: string
+          readOnly: true
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        lastName:
+          type: string
+          readOnly: true
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        email:
+          type: string
+          readOnly: true
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+      enum: []
     AuthenticateCommand:
       type: object
       allOf: []
@@ -1421,6 +1592,12 @@ components:
   links: {}
   callbacks: {}
 securityRequirements:
-- Microsoft.OpenApi.Models.OpenApiSecurityScheme: []
+- ? reference:
+      type: SecurityScheme
+      id: Bearer
+      isLocal: true
+      referenceV3: Bearer
+      referenceV2: Bearer
+  : []
 tags: []
 
