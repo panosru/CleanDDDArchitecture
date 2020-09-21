@@ -15,7 +15,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy
                 new GetAccountQuery
                 {
                     Id = Input.Id
-                });
+                }).ConfigureAwait(false);
 
             if (requestResult.Succeeded)
                 Output.Ok(requestResult.Payload<AccountUser>());

@@ -27,7 +27,8 @@
         [AllowAnonymous]
         public async Task<IActionResult> Forecast([FromBody] SyncWeatherServiceCommand command)
         {
-            await UseCase.ExecuteAsync(this, command);
+            await UseCase.ExecuteAsync(this, command)
+               .ConfigureAwait(false);
 
             return ViewModel;
         }

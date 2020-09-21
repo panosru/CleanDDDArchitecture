@@ -35,7 +35,8 @@
             if (id != dto.Id)
                 return BadRequest();
 
-            await UseCase.ExecuteAsync(this, dto);
+            await UseCase.ExecuteAsync(this, dto)
+               .ConfigureAwait(false);
 
             return ViewModel;
         }

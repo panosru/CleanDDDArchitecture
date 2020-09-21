@@ -34,7 +34,8 @@
         [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] TodoListDto dto)
         {
-            await UseCase.ExecuteAsync(this, dto);
+            await UseCase.ExecuteAsync(this, dto)
+               .ConfigureAwait(false);
 
             return ViewModel;
         }

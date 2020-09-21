@@ -36,31 +36,31 @@
             // Check if user with that username exists
             var user = await _userManager.Users.FirstOrDefaultAsync(
                 u =>
-                    u.UserName == username);
+                    u.UserName == username).ConfigureAwait(false);
 
             // Check if the user exists
             if (user is null) return null;
 
             // Check if the user is locked out
             if (_userManager.SupportsUserLockout
-             && await _userManager.IsLockedOutAsync(user))
+             && await _userManager.IsLockedOutAsync(user).ConfigureAwait(false))
                 return new { error = "Account is locked" };
 
             // Check if the provided password is correct
-            if (!await _userManager.CheckPasswordAsync(user, password))
+            if (!await _userManager.CheckPasswordAsync(user, password).ConfigureAwait(false))
             {
                 // Lock user
                 if (_userManager.SupportsUserLockout
-                 && await _userManager.GetLockoutEnabledAsync(user))
-                    await _userManager.AccessFailedAsync(user);
+                 && await _userManager.GetLockoutEnabledAsync(user).ConfigureAwait(false))
+                    await _userManager.AccessFailedAsync(user).ConfigureAwait(false);
 
                 return new { error = "Invalid credentials" };
             }
 
             // Reset user count
             if (_userManager.SupportsUserLockout
-             && 0 < await _userManager.GetAccessFailedCountAsync(user))
-                await _userManager.ResetAccessFailedCountAsync(user);
+             && 0 < await _userManager.GetAccessFailedCountAsync(user).ConfigureAwait(false))
+                await _userManager.ResetAccessFailedCountAsync(user).ConfigureAwait(false);
 
             // Check if email has been confirmed
             if (!user.EmailConfirmed)
@@ -70,7 +70,8 @@
                     confirm_token = HttpUtility.UrlEncode(
                         Convert.ToBase64String(
                             Encoding.UTF8.GetBytes(
-                                await _userManager.GenerateEmailConfirmationTokenAsync(user))))
+                                await _userManager.GenerateEmailConfirmationTokenAsync(user)
+                                   .ConfigureAwait(false))))
                 };
 
             return new { token = GenerateJwtToken(user) };
@@ -78,7 +79,7 @@
 
         public async Task<IdentityResult> ConfirmEmail(string token, string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(email).ConfigureAwait(false);
 
             if (user is null)
                 return IdentityResult.Failure(new[] { "Invalid" });
@@ -86,7 +87,7 @@
             if (user.EmailConfirmed)
                 return IdentityResult.Failure(new[] { "Email already confirmed" });
 
-            var result = await _userManager.ConfirmEmailAsync(user, token);
+            var result = await _userManager.ConfirmEmailAsync(user, token).ConfigureAwait(false);
 
             if (!result.Succeeded)
                 return IdentityResult.Failure(new[] { result.Errors.First().Description });
@@ -98,7 +99,8 @@
         {
             Console.WriteLine(userId);
 
-            var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
+            var user = await _userManager.Users.FirstAsync(u => u.Id == userId)
+               .ConfigureAwait(false);
 
             return user.UserName;
         }
@@ -111,7 +113,8 @@
                 Email    = username
             };
 
-            var result = await _userManager.CreateAsync(user, password);
+            var result = await _userManager.CreateAsync(user, password)
+               .ConfigureAwait(false);
 
             return (result.ToApplicationResult(), user.Id);
         }
@@ -120,7 +123,8 @@
         {
             var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
 
-            if (user != null) return await DeleteUserAsync(user);
+            if (user != null) return await DeleteUserAsync(user)
+               .ConfigureAwait(false);
 
             return IdentityResult.Success();
         }
@@ -129,7 +133,8 @@
 
         public async Task<IdentityResult> DeleteUserAsync(AccountUser user)
         {
-            var result = await _userManager.DeleteAsync(user);
+            var result = await _userManager.DeleteAsync(user)
+               .ConfigureAwait(false);
 
             return result.ToApplicationResult();
         }

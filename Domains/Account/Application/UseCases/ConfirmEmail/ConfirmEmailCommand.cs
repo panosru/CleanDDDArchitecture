@@ -34,7 +34,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
 
                 return await _identityIdentityService.ConfirmEmail(
                     token,
-                    command.Email);
+                    command.Email).ConfigureAwait(false);
             }
             catch (Exception e)
             {

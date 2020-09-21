@@ -18,7 +18,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
                     Input.Password,
                     Input.FirstName,
                     Input.LastName,
-                    Input.Email));
+                    Input.Email)).ConfigureAwait(false);
 
             if (requestResult.Succeeded)
                 Output.Ok(requestResult.Payload<AccountAggregate>());

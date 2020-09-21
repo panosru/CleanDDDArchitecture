@@ -16,7 +16,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
                 {
                     Token = Input.Token,
                     Email = Input.Email
-                });
+                }).ConfigureAwait(false);
 
             if (requestResult.Succeeded)
             {

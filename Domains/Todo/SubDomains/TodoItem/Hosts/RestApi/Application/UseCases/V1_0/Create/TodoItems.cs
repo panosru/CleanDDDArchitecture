@@ -33,7 +33,8 @@
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] TodoItemCreateDto dto)
         {
-            await UseCase.ExecuteAsync(this, dto);
+            await UseCase.ExecuteAsync(this, dto)
+               .ConfigureAwait(false);
 
             return ViewModel;
         }

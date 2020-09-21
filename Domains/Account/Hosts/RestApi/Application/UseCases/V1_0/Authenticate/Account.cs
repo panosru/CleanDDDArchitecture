@@ -33,7 +33,8 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody] AuthenticateCommand command)
         {
-            await UseCase.ExecuteAsync(this, command);
+            await UseCase.ExecuteAsync(this, command)
+               .ConfigureAwait(false);
 
             return ViewModel;
         }

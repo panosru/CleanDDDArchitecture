@@ -17,7 +17,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
                     new AccountAggregateId(Input.Id),
                     Input.FirstName,
                     Input.LastName,
-                    Input.Email));
+                    Input.Email)).ConfigureAwait(false);
 
             if (requestResult.Succeeded)
                 Output.Ok(requestResult.Payload<AccountAggregate>());

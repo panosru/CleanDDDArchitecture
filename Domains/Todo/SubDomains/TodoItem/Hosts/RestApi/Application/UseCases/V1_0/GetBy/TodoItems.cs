@@ -32,7 +32,8 @@
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBy([FromRoute] int id)
         {
-            await UseCase.ExecuteAsync(this, id);
+            await UseCase.ExecuteAsync(this, id)
+               .ConfigureAwait(false);
 
             return ViewModel;
         }

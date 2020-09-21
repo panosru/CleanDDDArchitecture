@@ -41,7 +41,7 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
             var context = serviceProvider.GetRequiredService<TodoDbContextWrite>();
 
             if (context.Database.IsNpgsql())
-                await context.Database.MigrateAsync();
+                await context.Database.MigrateAsync().ConfigureAwait(false);
         }
     }
 }

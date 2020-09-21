@@ -33,7 +33,8 @@
         [AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {
-            await UseCase.ExecuteAsync(this);
+            await UseCase.ExecuteAsync(this)
+               .ConfigureAwait(false);
 
             return ViewModel;
         }

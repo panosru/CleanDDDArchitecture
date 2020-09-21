@@ -33,7 +33,8 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
     {
         public override async Task<AccountAggregate> Handle(UpdateAccount command, CancellationToken cancellationToken)
         {
-            var account = await EventsService.RehydrateAsync(command.AggregateId);
+            var account = await EventsService.RehydrateAsync(command.AggregateId)
+               .ConfigureAwait(false);
 
             if (account is null)
                 throw new ArgumentOutOfRangeException(nameof(UpdateAccount.AggregateId), "Invalid account aggregateId");

@@ -23,7 +23,7 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Workers
             };
 
             var tc = Task.WhenAll(consumers.Select(c => c.ConsumeAsync(stoppingToken)));
-            await tc;
+            await tc.ConfigureAwait(false);
         }
     }
 }

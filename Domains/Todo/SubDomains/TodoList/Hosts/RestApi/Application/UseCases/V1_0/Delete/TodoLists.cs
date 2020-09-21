@@ -31,7 +31,8 @@
         [AllowAnonymous]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            await UseCase.ExecuteAsync(this, id);
+            await UseCase.ExecuteAsync(this, id)
+               .ConfigureAwait(false);
 
             return ViewModel;
         }
