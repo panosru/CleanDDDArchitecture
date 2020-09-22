@@ -1,4 +1,4 @@
-﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Utils.Swagger
+﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger
 {
     using System.Diagnostics;
     using System.Linq;
