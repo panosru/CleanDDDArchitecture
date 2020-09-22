@@ -1,4 +1,4 @@
-﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Utils.Swagger
+﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Versioning;
