@@ -1,13 +1,17 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application.UseCases.V1_0.GetAll
 {
     using System.Threading.Tasks;
+    using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.FeatureManagement.Mvc;
     using TodoList.Application.UseCases.GetAll;
 
     /// <summary>
     ///     Todo Lists endpoints
     /// </summary>
+    [FeatureGate(Feature.TodoListGetAll)]
+    [AllowAnonymous]
     public class TodoLists : ApiController<GetAllUseCase>, IGetAllOutput
     {
         public TodoLists([FromServices] GetAllUseCase useCase)
@@ -30,7 +34,6 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {
             await UseCase.ExecuteAsync(this)
