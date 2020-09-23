@@ -17,6 +17,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Domains.Account.CrossCutting;
     using Domains.Todo.CrossCutting;
     using Domains.Weather.CrossCutting;
+    using Features;
     using FluentValidation;
     using MediatR;
     using Microsoft.AspNetCore.Builder;
@@ -26,7 +27,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Services;
-    using Utils.Swagger;
+    using Swagger;
     using IServiceContainer = Aviant.DDD.Core.Services.IServiceContainer;
 
     // using Workers;
@@ -96,6 +97,8 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 });
 
 
+            services.AddFeatureFlags();
+            
             services.AddTransient(
                 typeof(IPipelineBehavior<,>),
                 typeof(PerformanceBehaviour<,>));
@@ -138,7 +141,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                .AddHealthChecks()
                .AddAccountChecks()
                .AddTodoChecks();
-
+            
             services.AddRouting(
                 options =>
                 {

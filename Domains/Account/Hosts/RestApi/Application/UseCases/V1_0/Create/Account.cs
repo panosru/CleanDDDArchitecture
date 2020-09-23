@@ -3,17 +3,21 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Controllers;
+    using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Domains.Account.Application.Aggregates;
     using Domains.Account.Application.UseCases.Create;
     using Domains.Account.Application.UseCases.Create.Dtos;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.FeatureManagement.Mvc;
 
     /// <summary>
     ///     Account endpoints
     /// </summary>
     [ApiVersion("1.0")]
+    [FeatureGate(Feature.AccountCreate)]
+    [AllowAnonymous]
     public sealed class Account : ApiController<AccountCreateUseCase>, ICreateAccountOutput
     {
         public Account([FromServices] AccountCreateUseCase useCase)
@@ -43,7 +47,6 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         /// <param name="dto"></param>
         /// <returns>The newly registered account.</returns>
         [HttpPost]
-        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AccountResponse))]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AccountResponse))]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Create))]
