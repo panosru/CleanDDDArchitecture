@@ -97,8 +97,6 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 });
 
 
-            services.AddFeatureFlags();
-            
             services.AddTransient(
                 typeof(IPipelineBehavior<,>),
                 typeof(PerformanceBehaviour<,>));
@@ -117,8 +115,9 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                .AddAccountDomain()
                .AddTodoDomain()
                .AddWeatherDomain();
-
-
+            
+            services.AddFeatureFlags();
+            
             services.AddTransient<IDateTimeService, DateTimeService>();
 
             services.AddScoped<IMessages, Messages>();

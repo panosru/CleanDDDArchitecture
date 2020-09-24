@@ -87,7 +87,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             }
 
             Log.Logger = new LoggerConfiguration()
-               .ReadFrom.Configuration(DependencyInjectionRegistry.SetConfiguration(configurationBuilder.Build()))
+               .ReadFrom.Configuration(DependencyInjectionRegistry.SetConfiguration(configurationBuilder))
                .CreateLogger();
         }
 
