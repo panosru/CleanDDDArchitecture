@@ -189,172 +189,6 @@ paths:
         servers: []
     servers: []
     parameters: []
-  /api/account:
-    operations:
-      Post:
-        tags:
-        - name: Account
-        parameters:
-        - name: x-api-version
-          in: Header
-          description: The requested API version
-          schema:
-            type: string
-            allOf: []
-            oneOf: []
-            anyOf: []
-            required: []
-            properties: {}
-            additionalPropertiesAllowed: true
-            enum: []
-          examples: {}
-          content: {}
-        requestBody:
-          required: true
-          content:
-            application/json:
-              schema: &o3
-                allOf: []
-                oneOf: []
-                anyOf: []
-                required: []
-                properties: {}
-                additionalPropertiesAllowed: true
-                enum: []
-                reference:
-                  type: Schema
-                  id: CreateAccountDto
-                  isLocal: true
-                  referenceV3: '#/components/schemas/CreateAccountDto'
-                  referenceV2: '#/definitions/CreateAccountDto'
-              examples: {}
-              encoding: {}
-            text/json:
-              schema: *o3
-              examples: {}
-              encoding: {}
-            application/*+json:
-              schema: *o3
-              examples: {}
-              encoding: {}
-        responses:
-          200:
-            description: Success
-            headers: {}
-            content:
-              text/plain:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: AccountResponse
-                    isLocal: true
-                    referenceV3: '#/components/schemas/AccountResponse'
-                    referenceV2: '#/definitions/AccountResponse'
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: AccountResponse
-                    isLocal: true
-                    referenceV3: '#/components/schemas/AccountResponse'
-                    referenceV2: '#/definitions/AccountResponse'
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: AccountResponse
-                    isLocal: true
-                    referenceV3: '#/components/schemas/AccountResponse'
-                    referenceV2: '#/definitions/AccountResponse'
-                examples: {}
-                encoding: {}
-            links: {}
-          201:
-            description: Success
-            headers: {}
-            content:
-              text/plain:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: AccountResponse
-                    isLocal: true
-                    referenceV3: '#/components/schemas/AccountResponse'
-                    referenceV2: '#/definitions/AccountResponse'
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: AccountResponse
-                    isLocal: true
-                    referenceV3: '#/components/schemas/AccountResponse'
-                    referenceV2: '#/definitions/AccountResponse'
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: AccountResponse
-                    isLocal: true
-                    referenceV3: '#/components/schemas/AccountResponse'
-                    referenceV2: '#/definitions/AccountResponse'
-                examples: {}
-                encoding: {}
-            links: {}
-        callbacks: {}
-        security: []
-        servers: []
-    servers: []
-    parameters: []
   /api/account/confirm/{Token}/{Email}:
     operations:
       Get:
@@ -439,7 +273,7 @@ paths:
         requestBody:
           content:
             application/json:
-              schema: &o4
+              schema: &o3
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -456,11 +290,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o4
+              schema: *o3
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o4
+              schema: *o3
               examples: {}
               encoding: {}
         responses:
@@ -542,7 +376,7 @@ paths:
         requestBody:
           content:
             application/json:
-              schema: &o5
+              schema: &o4
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -559,11 +393,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o5
+              schema: *o4
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o5
+              schema: *o4
               examples: {}
               encoding: {}
         responses:
@@ -615,7 +449,7 @@ paths:
         requestBody:
           content:
             application/json:
-              schema: &o6
+              schema: &o5
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -632,11 +466,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o6
+              schema: *o5
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o6
+              schema: *o5
               examples: {}
               encoding: {}
         responses:
@@ -757,7 +591,7 @@ paths:
         requestBody:
           content:
             application/json:
-              schema: &o7
+              schema: &o6
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -774,11 +608,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o7
+              schema: *o6
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o7
+              schema: *o6
               examples: {}
               encoding: {}
         responses:
@@ -830,7 +664,7 @@ paths:
         requestBody:
           content:
             application/json:
-              schema: &o8
+              schema: &o7
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -847,11 +681,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o8
+              schema: *o7
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o8
+              schema: *o7
               examples: {}
               encoding: {}
         responses:
@@ -999,7 +833,7 @@ paths:
         requestBody:
           content:
             application/json:
-              schema: &o9
+              schema: &o8
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -1016,11 +850,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o9
+              schema: *o8
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o9
+              schema: *o8
               examples: {}
               encoding: {}
         responses:
@@ -1057,7 +891,7 @@ paths:
         requestBody:
           content:
             application/json:
-              schema: &o10
+              schema: &o9
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -1074,11 +908,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o10
+              schema: *o9
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o10
+              schema: *o9
               examples: {}
               encoding: {}
         responses:
@@ -1142,7 +976,7 @@ paths:
         requestBody:
           content:
             application/json:
-              schema: &o11
+              schema: &o10
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -1159,11 +993,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o11
+              schema: *o10
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o11
+              schema: *o10
               examples: {}
               encoding: {}
         responses:
@@ -1216,127 +1050,6 @@ components:
           properties: {}
           additionalPropertiesAllowed: true
           enum: []
-      enum: []
-    CreateAccountDto:
-      type: object
-      allOf: []
-      oneOf: []
-      anyOf: []
-      required:
-      - email
-      - firstName
-      - lastName
-      - password
-      - userName
-      properties:
-        userName:
-          type: string
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-        password:
-          type: string
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-        firstName:
-          type: string
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-        lastName:
-          type: string
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-        email:
-          type: string
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-      enum: []
-    AccountResponse:
-      type: object
-      allOf: []
-      oneOf: []
-      anyOf: []
-      required: []
-      properties:
-        message:
-          type: string
-          readOnly: true
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-          nullable: true
-        username:
-          type: string
-          readOnly: true
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-          nullable: true
-        firstName:
-          type: string
-          readOnly: true
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-          nullable: true
-        lastName:
-          type: string
-          readOnly: true
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-          nullable: true
-        email:
-          type: string
-          readOnly: true
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-          nullable: true
       enum: []
     AuthenticateCommand:
       type: object

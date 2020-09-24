@@ -19,10 +19,15 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.CrossCutting
         
         private const string CurrentSubDomain = "TodoList";
         
-        private static IConfiguration Configuration { get; } =
-            DependencyInjectionRegistry.GetDomainConfiguration(
-                $"{CurrentDomain}.{CurrentSubDomain}".ToLower());
-        
+        private static IConfiguration Configuration { get; }
+
+        static TodoListDependencyInjectionRegistry()
+        {
+            Configuration =
+                DependencyInjectionRegistry.GetDomainConfiguration(
+                    $"{CurrentDomain}.{CurrentSubDomain}".ToLower());
+        }
+
         public static IServiceCollection AddTodoListSubDomain(this IServiceCollection services)
         {
             services.AddScoped<ITodoListRepositoryRead, TodoListRepositoryRead>();

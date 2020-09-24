@@ -11,6 +11,3 @@ Logging:
     Microsoft: Information
 SwaggerSettings:
   RoutePrefix: ''
-FeatureManagement:
-  AccountCreate: false
-  TodoListGetAll: false
