@@ -9,7 +9,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Features
     {
         public static IServiceCollection AddFeatureFlags(this IServiceCollection services)
         {
-            services.AddFeatureManagement(DependencyInjectionRegistry.DefaultConfiguration);
+            services.AddFeatureManagement(DependencyInjectionRegistry.ConfigurationWithDomains);
 
             var featureManager = services.BuildServiceProvider()
                .GetRequiredService<IFeatureManager>();
