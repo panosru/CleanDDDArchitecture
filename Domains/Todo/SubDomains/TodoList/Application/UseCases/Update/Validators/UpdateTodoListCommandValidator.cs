@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using Core.Repositories;
     using FluentValidation;
+    using Microsoft.EntityFrameworkCore;
 
     public class UpdateTodoListCommandValidator : AbstractValidator<UpdateTodoListCommand>
     {
@@ -23,22 +24,14 @@
                .WithMessage("The specified title already exists.");
         }
 
-        public async Task<bool> BeUniqueTitle(
+        private Task<bool> BeUniqueTitle(
             UpdateTodoListCommand model,
             string                title,
             CancellationToken     cancellationToken)
         {
-            var result = false;
-
-            await Task.Run(
-                () =>
-                {
-                    result = _todoListReadRepository
-                       .FindBy(l => l.Id != model.Id)
-                       .All(l => l.Title != title);
-                });
-
-            return result;
+            return _todoListReadRepository
+               .FindBy(l => l.Id      != model.Id)
+               .AllAsync(l => l.Title != title, cancellationToken: cancellationToken);
         }
     }
 }
