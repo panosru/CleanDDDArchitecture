@@ -7,7 +7,7 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.ForecastV1_1
 
     public class ForecastUseCase : UseCase<IForecastOutput>
     {
-        protected override async Task Execute()
+        public override async Task Execute()
         {
             RequestResult requestResult = await Orchestrator.SendQuery(new GetWeatherForecastsQueryNew());
 

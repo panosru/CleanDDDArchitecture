@@ -9,14 +9,15 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
     public class ConfirmEmailUseCase
         : UseCase<ConfirmEmailInput, IConfirmEmailOutput>
     {
-        protected override async Task Execute()
+        public override async Task Execute()
         {
             RequestResult requestResult = await Orchestrator.SendCommand(
-                new ConfirmEmailCommand
-                {
-                    Token = Input.Token,
-                    Email = Input.Email
-                }).ConfigureAwait(false);
+                    new ConfirmEmailCommand
+                    {
+                        Token = Input.Token,
+                        Email = Input.Email
+                    })
+               .ConfigureAwait(false);
 
             if (requestResult.Succeeded)
             {
@@ -33,11 +34,11 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
             }
         }
 
-        protected override void SetInput<TInputData>(TInputData data)
+        public ConfirmEmailUseCase SetInput(ConfirmEmailCommand command)
         {
-            var commandData = GetDataByType<ConfirmEmailCommand>(data);
+            Input = new ConfirmEmailInput(command.Token, command.Email);
 
-            Input = new ConfirmEmailInput(commandData.Token, commandData.Email);
+            return this;
         }
     }
 }

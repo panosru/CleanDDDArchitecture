@@ -2,7 +2,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
 {
     using Aviant.DDD.Application.UseCases;
 
-    public class ExportTodoListInput : IUseCaseInput
+    public class ExportTodoListInput : UseCaseInput
     {
         public ExportTodoListInput(int listId) => ListId = listId;
 

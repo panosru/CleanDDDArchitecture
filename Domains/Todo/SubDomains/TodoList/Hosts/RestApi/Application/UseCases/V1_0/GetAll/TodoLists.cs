@@ -12,11 +12,12 @@
     /// </summary>
     [FeatureGate(Feature.TodoListGetAll)]
     [AllowAnonymous]
-    public class TodoLists : ApiController<GetAllUseCase>, IGetAllOutput
+    public class TodoLists
+        : ApiController<GetAllUseCase, TodoLists>,
+          IGetAllOutput
     {
         public TodoLists([FromServices] GetAllUseCase useCase)
-            : base(useCase)
-        { }
+            : base(useCase) => UseCase.SetOutput(this);
 
         #region IGetAllOutput Members
 
@@ -36,7 +37,7 @@
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            await UseCase.ExecuteAsync(this)
+            await UseCase.Execute()
                .ConfigureAwait(false);
 
             return ViewModel;

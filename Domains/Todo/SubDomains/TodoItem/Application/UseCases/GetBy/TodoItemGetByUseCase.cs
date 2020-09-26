@@ -5,9 +5,10 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
 
-    public class TodoItemGetByUseCase : UseCase<TodoItemGetByInput, ITodoItemGetByOutput>
+    public class TodoItemGetByUseCase
+        : UseCase<TodoItemGetByInput, ITodoItemGetByOutput>
     {
-        protected override async Task Execute()
+        public override async Task Execute()
         {
             RequestResult requestResult = await Orchestrator.SendQuery(
                 new GetTodoItemQuery
@@ -21,9 +22,11 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
                 Output.Invalid(requestResult.Messages.First());
         }
 
-        protected override void SetInput<TInputData>(TInputData data)
+        public TodoItemGetByUseCase SetInput(int id)
         {
-            Input = new TodoItemGetByInput(GetDataByType<int>(data));
+            Input = new TodoItemGetByInput(id);
+
+            return this;
         }
     }
 }

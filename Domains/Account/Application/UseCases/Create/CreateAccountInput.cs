@@ -2,7 +2,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
 {
     using Aviant.DDD.Application.UseCases;
 
-    public class CreateAccountInput : IUseCaseInput
+    public class CreateAccountInput : UseCaseInput
     {
         public CreateAccountInput(
             string userName,

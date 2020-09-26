@@ -19,10 +19,10 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
     public static class TodoDependencyInjectionRegistry
     {
         private const string CurrentDomain = "Todo";
-        
+
         private static IConfiguration Configuration { get; } =
             DependencyInjectionRegistry.GetDomainConfiguration(CurrentDomain.ToLower());
-        
+
         public static IServiceCollection AddTodoDomain(this IServiceCollection services)
         {
             if (Configuration.GetValue<bool>("UseInMemoryDatabase"))
@@ -65,7 +65,7 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
             services.AddTransient<ICsvFileBuilder<TodoItemRecord>, CsvFileBuilder<TodoItemRecord, TodoItemRecordMap>>();
 
             services.AddScoped<IUnitOfWork<ITodoDbContextWrite>, UnitOfWork<ITodoDbContextWrite>>();
-            
+
             services.AddScoped<IOrchestrator<ITodoDbContextWrite>, Orchestrator<ITodoDbContextWrite>>();
 
             return services;

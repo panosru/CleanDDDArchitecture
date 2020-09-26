@@ -1,15 +1,15 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create.Validators
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create
 {
     using System.Threading;
     using System.Threading.Tasks;
     using Core.Repositories;
     using FluentValidation;
 
-    public class CreateTodoListCommandValidator : AbstractValidator<CreateTodoListCommand>
+    public class CreateTodoListInputValidator : AbstractValidator<CreateTodoListInput>
     {
         private readonly ITodoListRepositoryRead _todoListReadRepository;
 
-        public CreateTodoListCommandValidator(ITodoListRepositoryRead todoListReadRepository)
+        public CreateTodoListInputValidator(ITodoListRepositoryRead todoListReadRepository)
         {
             _todoListReadRepository = todoListReadRepository;
 
@@ -22,7 +22,7 @@
                .WithMessage("The specified title already exists.");
         }
 
-        public async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)
+        private async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)
         {
             return await _todoListReadRepository.All(l => l.Title != title);
         }

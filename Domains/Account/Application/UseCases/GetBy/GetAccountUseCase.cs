@@ -9,21 +9,24 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy
     public class GetAccountUseCase
         : UseCase<GetAccountInput, IGetAccountOutput>
     {
-        protected override async Task Execute()
+        public override async Task Execute()
         {
             RequestResult requestResult = await Orchestrator.SendQuery(
-                new GetAccountQuery
-                {
-                    Id = Input.Id
-                }).ConfigureAwait(false);
+                    new GetAccountQuery
+                    {
+                        Id = Input.Id
+                    })
+               .ConfigureAwait(false);
 
             if (requestResult.Succeeded)
                 Output.Ok(requestResult.Payload<AccountUser>());
         }
 
-        protected override void SetInput<TInputData>(TInputData data)
+        public GetAccountUseCase SetInput(Guid id)
         {
-            Input = new GetAccountInput(GetDataByType<Guid>(data));
+            Input = new GetAccountInput(id);
+
+            return this;
         }
     }
 }

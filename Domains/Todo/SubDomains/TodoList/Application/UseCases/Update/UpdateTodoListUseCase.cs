@@ -9,7 +9,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
     public class UpdateTodoListUseCase
         : UseCase<UpdateTodoListInput, IUpdateTodoListOutput, ITodoDbContextWrite>
     {
-        protected override async Task Execute()
+        public override async Task Execute()
         {
             RequestResult requestResult = await Orchestrator.SendCommand(
                 new UpdateTodoListCommand
@@ -22,11 +22,11 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
                 Output.Invalid(requestResult.Messages.First());
         }
 
-        protected override void SetInput<TInputData>(TInputData data)
+        public UpdateTodoListUseCase SetInput(UpdateTodoListDto dto)
         {
-            var dto = GetDataByType<UpdateTodoListDto>(data);
-
             Input = new UpdateTodoListInput(dto.Id, dto.Title);
+
+            return this;
         }
     }
 }

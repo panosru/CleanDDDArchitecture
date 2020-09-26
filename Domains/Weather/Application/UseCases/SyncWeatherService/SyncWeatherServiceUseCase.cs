@@ -6,13 +6,15 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherS
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
 
-    public class SyncWeatherServiceUseCase : UseCase<SyncWeatherServiceInput, ISyncWeatherServiceOutput>
+    public class SyncWeatherServiceUseCase
+        : UseCase<SyncWeatherServiceInput, ISyncWeatherServiceOutput>
     {
-        private SyncWeatherServiceCommand _command;
+        private SyncWeatherServiceCommand? _command;
 
-        protected override async Task Execute()
+        public override async Task Execute()
         {
-            RequestResult requestResult = await Orchestrator.SendCommand(_command);
+            RequestResult requestResult = await Orchestrator.SendCommand(
+                _command ?? throw new NullReferenceException(typeof(SyncWeatherServiceUseCase).FullName));
 
             if (requestResult.Succeeded)
                 Output.NoContent();
@@ -20,14 +22,12 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherS
                 Output.Invalid(requestResult.Messages.First());
         }
 
-        protected override void SetInput<TInputData>(TInputData data)
+        public SyncWeatherServiceUseCase SetInput(SyncWeatherServiceCommand command)
         {
-            if (!(data is SyncWeatherServiceCommand command))
-                throw new TypeAccessException(
-                    $"Expected type \"{nameof(SyncWeatherServiceCommand)}\", but \"{data.GetType().Name}\" found instead.");
-
-            Input    = new SyncWeatherServiceInput(command.City);
             _command = command;
+            Input    = new SyncWeatherServiceInput(command.City);
+
+            return this;
         }
     }
 }

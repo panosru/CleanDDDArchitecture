@@ -10,7 +10,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
     public class TodoItemUpdateUseCase
         : UseCase<TodoItemUpdateInput, ITodoItemUpdateOutput, ITodoDbContextWrite>
     {
-        protected override async Task Execute()
+        public override async Task Execute()
         {
             RequestResult requestResult = await Orchestrator.SendCommand(
                 new UpdateTodoItemCommand
@@ -24,11 +24,11 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
                 Output.Invalid(requestResult.Messages.First());
         }
 
-        protected override void SetInput<TInputData>(TInputData data)
+        public TodoItemUpdateUseCase SetInput(TodoItemUpdateDto dto)
         {
-            var dto = GetDataByType<TodoItemUpdateDto>(data);
-
             Input = new TodoItemUpdateInput(dto.Id, dto.Title, dto.Done);
+
+            return this;
         }
     }
 }

@@ -8,11 +8,12 @@
     /// <summary>
     ///     Todo items endpoints
     /// </summary>
-    public class TodoItems : ApiController<TodoItemUpdateUseCase>, ITodoItemUpdateOutput
+    public class TodoItems
+        : ApiController<TodoItemUpdateUseCase, TodoItems>,
+          ITodoItemUpdateOutput
     {
         public TodoItems([FromServices] TodoItemUpdateUseCase useCase)
-            : base(useCase)
-        { }
+            : base(useCase) => UseCase.SetOutput(this);
 
         #region ITodoItemUpdateOutput Members
 
@@ -30,13 +31,15 @@
         /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(
-            [FromRoute] int         id,
+            [FromRoute] int               id,
             [FromBody]  TodoItemUpdateDto dto)
         {
             if (id != dto.Id)
                 return BadRequest();
 
-            await UseCase.ExecuteAsync(this, dto)
+            await UseCase
+               .SetInput(dto)
+               .Execute()
                .ConfigureAwait(false);
 
             return ViewModel;

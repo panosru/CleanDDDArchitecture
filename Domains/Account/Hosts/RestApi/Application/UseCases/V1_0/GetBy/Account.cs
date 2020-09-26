@@ -2,7 +2,6 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
 {
     using System;
     using System.Threading.Tasks;
-    using CleanDDDArchitecture.Hosts.RestApi.Core.Controllers;
     using Domains.Account.Application.Identity;
     using Domains.Account.Application.UseCases.GetBy;
     using Microsoft.AspNetCore.Mvc;
@@ -11,11 +10,12 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     ///     Account endpoints
     /// </summary>
     [ApiVersion("1.0")]
-    public sealed class Account : ApiController<GetAccountUseCase>, IGetAccountOutput
+    public sealed class Account
+        : ApiController<GetAccountUseCase, Account>,
+          IGetAccountOutput
     {
         public Account([FromServices] GetAccountUseCase useCase)
-            : base(useCase)
-        { }
+            : base(useCase) => UseCase.SetOutput(this);
 
         #region IGetAccountOutput Members
 
@@ -38,7 +38,9 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         [HttpGet("{id:guid}", Name = "GetAccount")]
         public async Task<IActionResult> GetAccount([FromRoute] Guid id)
         {
-            await UseCase.ExecuteAsync(this, id)
+            await UseCase
+               .SetInput(id)
+               .Execute()
                .ConfigureAwait(false);
 
             return ViewModel;

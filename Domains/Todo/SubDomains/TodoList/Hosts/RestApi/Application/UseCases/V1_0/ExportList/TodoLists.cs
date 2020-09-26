@@ -9,11 +9,12 @@
     /// <summary>
     ///     Export todo list items into csv file
     /// </summary>
-    public class TodoLists : ApiController<ExportTodoListUseCase>, IExportTodoListOutput
+    public class TodoLists
+        : ApiController<ExportTodoListUseCase, TodoLists>,
+          IExportTodoListOutput
     {
         public TodoLists([FromServices] ExportTodoListUseCase useCase)
-            : base(useCase)
-        { }
+            : base(useCase) => UseCase.SetOutput(this);
 
         #region IExportTodoListOutput Members
 
@@ -34,7 +35,9 @@
         [AllowAnonymous]
         public async Task<IActionResult> Export([FromRoute] int id)
         {
-            await UseCase.ExecuteAsync(this, id)
+            await UseCase
+               .SetInput(id)
+               .Execute()
                .ConfigureAwait(false);
 
             return ViewModel;

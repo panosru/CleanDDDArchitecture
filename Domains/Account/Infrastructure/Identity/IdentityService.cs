@@ -35,8 +35,9 @@
         {
             // Check if user with that username exists
             var user = await _userManager.Users.FirstOrDefaultAsync(
-                u =>
-                    u.UserName == username).ConfigureAwait(false);
+                    u =>
+                        u.UserName == username)
+               .ConfigureAwait(false);
 
             // Check if the user exists
             if (user is null) return null;
@@ -123,8 +124,9 @@
         {
             var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
 
-            if (user != null) return await DeleteUserAsync(user)
-               .ConfigureAwait(false);
+            if (user != null)
+                return await DeleteUserAsync(user)
+                   .ConfigureAwait(false);
 
             return IdentityResult.Success();
         }

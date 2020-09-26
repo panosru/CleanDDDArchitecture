@@ -18,6 +18,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Domains.Todo.CrossCutting;
     using Domains.Weather.CrossCutting;
     using Features;
+    using Filters;
     using FluentValidation;
     using MediatR;
     using Microsoft.AspNetCore.Builder;
@@ -150,7 +151,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             services.AddControllersWithViews(
                 options =>
                 {
-                    // options.Filters.Add(new ApiExceptionFilter());
+                    options.Filters.Add(new ApiExceptionFilter());
                     //options.Filters.Add(new AuthorizeFilter());
                 }
             );

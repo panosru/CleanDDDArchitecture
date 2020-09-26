@@ -7,11 +7,12 @@
     /// <summary>
     ///     Todo items endpoints
     /// </summary>
-    public class TodoItems : ApiController<TodoItemUpdatedetailsUseCase>, ITodoItemUpdateDetailsOutput
+    public class TodoItems
+        : ApiController<TodoItemUpdatedetailsUseCase, TodoItems>,
+          ITodoItemUpdateDetailsOutput
     {
         public TodoItems([FromServices] TodoItemUpdatedetailsUseCase useCase)
-            : base(useCase)
-        { }
+            : base(useCase) => UseCase.SetOutput(this);
 
         #region ITodoItemUpdateDetailsOutput Members
 
@@ -35,7 +36,9 @@
             if (id != dto.Id)
                 return BadRequest();
 
-            await UseCase.ExecuteAsync(this, dto)
+            await UseCase
+               .SetInput(dto)
+               .Execute()
                .ConfigureAwait(false);
 
             return ViewModel;

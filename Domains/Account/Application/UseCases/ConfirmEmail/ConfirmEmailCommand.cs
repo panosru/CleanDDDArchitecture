@@ -33,8 +33,9 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
                     Convert.FromBase64String(HttpUtility.UrlDecode(command.Token)));
 
                 return await _identityIdentityService.ConfirmEmail(
-                    token,
-                    command.Email).ConfigureAwait(false);
+                        token,
+                        command.Email)
+                   .ConfigureAwait(false);
             }
             catch (Exception e)
             {

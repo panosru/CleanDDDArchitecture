@@ -1,7 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.ConfirmEmail
 {
     using System.Threading.Tasks;
-    using CleanDDDArchitecture.Hosts.RestApi.Core.Controllers;
     using Domains.Account.Application.UseCases.ConfirmEmail;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -11,11 +10,12 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     /// </summary>
     [ApiVersion("1.0")]
     [ApiVersion("1.1")]
-    public sealed class Account : ApiController<ConfirmEmailUseCase>, IConfirmEmailOutput
+    public sealed class Account
+        : ApiController<ConfirmEmailUseCase, Account>,
+          IConfirmEmailOutput
     {
         public Account([FromServices] ConfirmEmailUseCase useCase)
-            : base(useCase)
-        { }
+            : base(useCase) => UseCase.SetOutput(this);
 
         #region IConfirmEmailOutput Members
 
@@ -36,7 +36,9 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         [HttpGet("confirm/{Token}/{Email}")]
         public async Task<IActionResult> ConfirmEmail([FromRoute] ConfirmEmailCommand command)
         {
-            await UseCase.ExecuteAsync(this, command)
+            await UseCase
+               .SetInput(command)
+               .Execute()
                .ConfigureAwait(false);
 
             return ViewModel;

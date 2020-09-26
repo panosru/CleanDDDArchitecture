@@ -2,7 +2,6 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
 {
     using System;
     using System.Threading.Tasks;
-    using CleanDDDArchitecture.Hosts.RestApi.Core.Controllers;
     using Domains.Account.Application.Aggregates;
     using Domains.Account.Application.UseCases.UpdateDetails;
     using Domains.Account.Application.UseCases.UpdateDetails.Dtos;
@@ -12,11 +11,12 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     ///     Account endpoints
     /// </summary>
     [ApiVersion("1.0")]
-    public sealed class Account : ApiController<UpdateDetailsUseCase>, IUpdateDetailsOutput
+    public sealed class Account
+        : ApiController<UpdateDetailsUseCase, Account>,
+          IUpdateDetailsOutput
     {
         public Account([FromServices] UpdateDetailsUseCase useCase)
-            : base(useCase)
-        { }
+            : base(useCase) => UseCase.SetOutput(this);
 
         #region IUpdateDetailsOutput Members
 
@@ -39,9 +39,9 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
             [FromRoute] Guid             id,
             [FromBody]  UpdateAccountDto dto)
         {
-            dto.Id = id;
-
-            await UseCase.ExecuteAsync(this, dto)
+            await UseCase
+               .SetInput(id, dto)
+               .Execute()
                .ConfigureAwait(false);
 
             return ViewModel;

@@ -1,14 +1,14 @@
 namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity
 {
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
 
-    public class AddCityUseCase : UseCase<AddCityInput, IAddCityOutput>
+    public class AddCityUseCase
+        : UseCase<AddCityInput, IAddCityOutput>
     {
-        protected override async Task Execute()
+        public override async Task Execute()
         {
             switch (Input.City)
             {
@@ -35,11 +35,11 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity
             }
         }
 
-        protected override void SetInput<TInputData>(TInputData data)
+        public AddCityUseCase SetInput(AddCityDto dto)
         {
-            var dto = GetDataByType<AddCityDto>(data);
-
             Input = new AddCityInput(dto.City);
+
+            return this;
         }
     }
 }
