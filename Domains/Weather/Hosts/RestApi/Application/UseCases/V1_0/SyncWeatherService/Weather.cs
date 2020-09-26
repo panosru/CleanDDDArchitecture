@@ -37,15 +37,14 @@
         /// <response code="200">Synchornisation successfully comleted.</response>
         /// <response code="400">Bad request.</response>
         /// <response code="404">Not Found.</response>
-        /// <param name="command"></param>
+        /// <param name="dto"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns>Successful message.</returns>
         [HttpPost]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Patch))]
-        public async Task<IActionResult> Forecast([FromBody] SyncWeatherServiceCommand command)
+        public async Task<IActionResult> Forecast([FromBody] SyncWeatherServiceDto dto)
         {
-            await UseCase
-               .SetInput(command)
-               .Execute()
+            await UseCase.Execute(new SyncWeatherServiceInput(dto.City))
                .ConfigureAwait(false);
 
             return ViewModel;

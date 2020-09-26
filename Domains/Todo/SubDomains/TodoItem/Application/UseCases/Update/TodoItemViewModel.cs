@@ -1,4 +1,4 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update.ViewModels
+﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update
 {
     using AutoMapper;
     using Aviant.DDD.Application.Mappings;

@@ -9,9 +9,7 @@
     using Aviant.DDD.Application.Notifications;
     using Aviant.DDD.Application.Processors;
     using Core.Repositories;
-    using Notifications;
     using Todo.Core.Entities;
-    using ViewModels;
 
     public class UpdateTodoItemCommand : Command<TodoItemViewModel>
     {

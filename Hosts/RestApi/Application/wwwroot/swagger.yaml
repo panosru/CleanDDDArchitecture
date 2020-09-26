@@ -510,7 +510,6 @@ paths:
             properties: {}
             additionalPropertiesAllowed: true
             enum: []
-            nullable: true
           examples: {}
           content: {}
         - name: Email
@@ -525,7 +524,6 @@ paths:
             properties: {}
             additionalPropertiesAllowed: true
             enum: []
-            nullable: true
           examples: {}
           content: {}
         - name: x-api-version
@@ -616,6 +614,142 @@ paths:
             links: {}
           404:
             description: Not Found.
+            headers: {}
+            content: {}
+            links: {}
+        callbacks: {}
+        security: []
+        servers: []
+    servers: []
+    parameters: []
+  /api/account/authenticate:
+    operations:
+      Post:
+        tags:
+        - name: Account
+        summary: Authenticate a user and a bearer or an email confirmation token
+        parameters:
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
+        requestBody:
+          description: ''
+          content:
+            application/json:
+              schema: &o4
+                allOf: []
+                oneOf: []
+                anyOf: []
+                required: []
+                properties: {}
+                additionalPropertiesAllowed: true
+                enum: []
+                reference:
+                  type: Schema
+                  id: AuthenticateDto
+                  isLocal: true
+                  referenceV3: '#/components/schemas/AuthenticateDto'
+                  referenceV2: '#/definitions/AuthenticateDto'
+              examples: {}
+              encoding: {}
+            text/json:
+              schema: *o4
+              examples: {}
+              encoding: {}
+            application/*+json:
+              schema: *o4
+              examples: {}
+              encoding: {}
+        responses:
+          202:
+            description: Success
+            headers: {}
+            content: {}
+            links: {}
+          401:
+            description: Invalid credentials or mail not confirmed.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
+          200:
+            description: Email confirmation required.
+            headers: {}
+            content: {}
+            links: {}
+          201:
+            description: Login successful.
+            headers: {}
+            content: {}
+            links: {}
+          400:
+            description: Bad request.
+            headers: {}
+            content: {}
+            links: {}
+          404:
+            description: Not found.
             headers: {}
             content: {}
             links: {}
@@ -823,7 +957,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o4
+              schema: &o5
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -840,11 +974,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o4
+              schema: *o5
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o4
+              schema: *o5
               examples: {}
               encoding: {}
         responses:
@@ -1068,7 +1202,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o5
+              schema: &o6
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -1085,11 +1219,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o5
+              schema: *o6
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o5
+              schema: *o6
               examples: {}
               encoding: {}
         responses:
@@ -1667,7 +1801,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o6
+              schema: &o7
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -1684,11 +1818,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o6
+              schema: *o7
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o6
+              schema: *o7
               examples: {}
               encoding: {}
         responses:
@@ -1754,7 +1888,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o7
+              schema: &o8
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -1771,11 +1905,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o7
+              schema: *o8
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o7
+              schema: *o8
               examples: {}
               encoding: {}
         responses:
@@ -2439,7 +2573,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o8
+              schema: &o9
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -2456,11 +2590,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o8
+              schema: *o9
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o8
+              schema: *o9
               examples: {}
               encoding: {}
         responses:
@@ -2509,7 +2643,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o9
+              schema: &o10
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -2519,18 +2653,18 @@ paths:
                 enum: []
                 reference:
                   type: Schema
-                  id: SyncWeatherServiceCommand
+                  id: SyncWeatherServiceDto
                   isLocal: true
-                  referenceV3: '#/components/schemas/SyncWeatherServiceCommand'
-                  referenceV2: '#/definitions/SyncWeatherServiceCommand'
+                  referenceV3: '#/components/schemas/SyncWeatherServiceDto'
+                  referenceV2: '#/definitions/SyncWeatherServiceDto'
               examples: {}
               encoding: {}
             text/json:
-              schema: *o9
+              schema: *o10
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o9
+              schema: *o10
               examples: {}
               encoding: {}
         responses:
@@ -2877,7 +3011,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o10
+              schema: &o11
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -2894,16 +3028,16 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o10
+              schema: *o11
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o10
+              schema: *o11
               examples: {}
               encoding: {}
         responses:
-          default:
-            description: Error
+          200:
+            description: City added successfully
             headers: {}
             content:
               text/plain:
@@ -2917,10 +3051,10 @@ paths:
                   enum: []
                   reference:
                     type: Schema
-                    id: ProblemDetails
+                    id: AddCityResponse
                     isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
+                    referenceV3: '#/components/schemas/AddCityResponse'
+                    referenceV2: '#/definitions/AddCityResponse'
                 examples: {}
                 encoding: {}
               application/json:
@@ -2934,10 +3068,10 @@ paths:
                   enum: []
                   reference:
                     type: Schema
-                    id: ProblemDetails
+                    id: AddCityResponse
                     isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
+                    referenceV3: '#/components/schemas/AddCityResponse'
+                    referenceV2: '#/definitions/AddCityResponse'
                 examples: {}
                 encoding: {}
               text/json:
@@ -2951,10 +3085,10 @@ paths:
                   enum: []
                   reference:
                     type: Schema
-                    id: ProblemDetails
+                    id: AddCityResponse
                     isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
+                    referenceV3: '#/components/schemas/AddCityResponse'
+                    referenceV2: '#/definitions/AddCityResponse'
                 examples: {}
                 encoding: {}
             links: {}
@@ -2966,58 +3100,7 @@ paths:
           400:
             description: Bad request.
             headers: {}
-            content:
-              text/plain:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
+            content: {}
             links: {}
         callbacks: {}
         security: []
@@ -3346,6 +3429,34 @@ components:
         additionalPropertiesAllowed: true
         enum: []
       enum: []
+    AuthenticateDto:
+      type: object
+      allOf: []
+      oneOf: []
+      anyOf: []
+      required:
+      - password
+      - username
+      properties:
+        username:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+        password:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+      enum: []
     PriorityLevel:
       type: integer
       format: int32
@@ -3365,7 +3476,11 @@ components:
       allOf: []
       oneOf: []
       anyOf: []
-      required: []
+      required:
+      - id
+      - listId
+      - note
+      - priority
       properties:
         id:
           type: integer
@@ -3410,14 +3525,16 @@ components:
           properties: {}
           additionalPropertiesAllowed: true
           enum: []
-          nullable: true
       enum: []
     TodoItemUpdateDto:
       type: object
       allOf: []
       oneOf: []
       anyOf: []
-      required: []
+      required:
+      - done
+      - id
+      - title
       properties:
         id:
           type: integer
@@ -3438,7 +3555,6 @@ components:
           properties: {}
           additionalPropertiesAllowed: true
           enum: []
-          nullable: true
         done:
           type: boolean
           allOf: []
@@ -3454,7 +3570,9 @@ components:
       allOf: []
       oneOf: []
       anyOf: []
-      required: []
+      required:
+      - listId
+      - title
       properties:
         listId:
           type: integer
@@ -3475,14 +3593,15 @@ components:
           properties: {}
           additionalPropertiesAllowed: true
           enum: []
-          nullable: true
       enum: []
     UpdateTodoListDto:
       type: object
       allOf: []
       oneOf: []
       anyOf: []
-      required: []
+      required:
+      - id
+      - title
       properties:
         id:
           type: integer
@@ -3503,14 +3622,14 @@ components:
           properties: {}
           additionalPropertiesAllowed: true
           enum: []
-          nullable: true
       enum: []
     CreateTodoListDto:
       type: object
       allOf: []
       oneOf: []
       anyOf: []
-      required: []
+      required:
+      - title
       properties:
         title:
           type: string
@@ -3521,14 +3640,14 @@ components:
           properties: {}
           additionalPropertiesAllowed: true
           enum: []
-          nullable: true
       enum: []
-    SyncWeatherServiceCommand:
+    SyncWeatherServiceDto:
       type: object
       allOf: []
       oneOf: []
       anyOf: []
-      required: []
+      required:
+      - city
       properties:
         city:
           type: string
@@ -3539,17 +3658,35 @@ components:
           properties: {}
           additionalPropertiesAllowed: true
           enum: []
-          nullable: true
       enum: []
     AddCityDto:
       type: object
       allOf: []
       oneOf: []
       anyOf: []
-      required: []
+      required:
+      - city
       properties:
         city:
           type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+      enum: []
+    AddCityResponse:
+      type: object
+      allOf: []
+      oneOf: []
+      anyOf: []
+      required: []
+      properties:
+        message:
+          type: string
+          readOnly: true
           allOf: []
           oneOf: []
           anyOf: []

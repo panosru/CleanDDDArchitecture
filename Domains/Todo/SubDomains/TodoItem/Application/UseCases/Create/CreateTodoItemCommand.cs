@@ -7,7 +7,6 @@
     using Aviant.DDD.Application.Commands;
     using Core.Repositories;
     using Todo.Core.Entities;
-    using ViewModels;
 
     public class CreateTodoItemCommand : Command<Lazy<TodoItemViewModel>>
     {

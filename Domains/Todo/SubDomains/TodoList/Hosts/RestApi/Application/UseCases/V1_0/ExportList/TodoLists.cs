@@ -8,7 +8,6 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
     using TodoList.Application.UseCases.Export;
-    using TodoList.Application.UseCases.Export.ViewModels;
 
     /// <summary>
     ///     Export todo list items into csv file
@@ -46,9 +45,7 @@
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Get))]
         public async Task<IActionResult> Export([FromRoute] int id)
         {
-            await UseCase
-               .SetInput(id)
-               .Execute()
+            await UseCase.Execute(new ExportTodoListInput(id))
                .ConfigureAwait(false);
 
             return ViewModel;

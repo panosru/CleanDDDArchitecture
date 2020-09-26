@@ -9,33 +9,21 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
     public class AccountCreateUseCase
         : UseCase<CreateAccountInput, ICreateAccountOutput, AccountAggregate, AccountAggregateId>
     {
-        public override async Task Execute()
+        public override async Task Execute(CreateAccountInput input)
         {
             RequestResult requestResult = await Orchestrator.SendCommand(
                     new CreateAccount(
-                        Input.UserName,
-                        Input.Password,
-                        Input.FirstName,
-                        Input.LastName,
-                        Input.Email))
+                        input.UserName,
+                        input.Password,
+                        input.FirstName,
+                        input.LastName,
+                        input.Email))
                .ConfigureAwait(false);
 
             if (requestResult.Succeeded)
                 Output.Ok(requestResult.Payload<AccountAggregate>());
             else
                 Output.Invalid(requestResult.Messages.First());
-        }
-
-        public AccountCreateUseCase SetInput(CreateAccountDto dto)
-        {
-            Input = new CreateAccountInput(
-                dto.UserName,
-                dto.Password,
-                dto.FirstName,
-                dto.LastName,
-                dto.Email);
-
-            return this;
         }
     }
 }

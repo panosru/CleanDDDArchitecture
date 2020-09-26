@@ -2,7 +2,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
 {
     using System.ComponentModel.DataAnnotations;
 
-    public class CreateAccountDto
+    public struct CreateAccountDto
     {
         [Required]
         public string UserName { get; set; }

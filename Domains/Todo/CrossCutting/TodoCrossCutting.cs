@@ -10,8 +10,6 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using SubDomains.TodoItem.Application.UseCases.Create;
-    using SubDomains.TodoItem.Application.UseCases.Create.Validators;
-    using SubDomains.TodoItem.Application.UseCases.Create.ViewModels;
     using SubDomains.TodoList.Application.UseCases.Create;
 
     public static class TodoCrossCutting
