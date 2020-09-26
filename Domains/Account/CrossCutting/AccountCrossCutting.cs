@@ -8,7 +8,6 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using Application.Aggregates;
     using Application.Identity;
     using Application.UseCases.Create;
-    using Application.UseCases.Create.Dtos;
     using AutoMapper;
     using Aviant.DDD.Application.Orchestration;
     using Infrastructure.Persistence.Contexts;

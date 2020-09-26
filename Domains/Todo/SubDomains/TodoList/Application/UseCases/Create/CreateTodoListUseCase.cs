@@ -4,14 +4,21 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
-    using Dtos;
     using Todo.Application.Persistence;
 
     public class CreateTodoListUseCase
         : UseCase<CreateTodoListInput, ICreateTodoListOutput, ITodoDbContextWrite>
     {
-        protected override async Task Execute()
+        public override async Task Execute()
         {
+            Input.Validate();
+
+            if (!Input.ValidationResult.IsValid)
+            {
+                Output.Invalid(Input.ValidationResult.Errors.First().ToString());
+                return;
+            }
+
             RequestResult requestResult = await Orchestrator.SendCommand(
                 new CreateTodoListCommand
                 {
@@ -24,11 +31,11 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
                 Output.Invalid(requestResult.Messages.First());
         }
 
-        protected override void SetInput<TInputData>(TInputData data)
+        public CreateTodoListUseCase SetInput(CreateTodoListDto dto)
         {
-            var dto = GetDataByType<TodoListDto>(data);
-
             Input = new CreateTodoListInput(dto.Title);
+
+            return this;
         }
     }
 }

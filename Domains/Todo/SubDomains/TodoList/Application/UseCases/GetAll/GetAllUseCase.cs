@@ -11,7 +11,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
         // private new IOrchestrator Orchestrator =>
         //     ServiceLocator.ServiceContainer.GetRequiredService<IOrchestrator>();
 
-        protected override async Task Execute()
+        public override async Task Execute()
         {
             RequestResult requestResult = await Orchestrator.SendQuery(new GetTodosQuery());
 

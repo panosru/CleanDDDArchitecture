@@ -2,7 +2,7 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherS
 {
     using Aviant.DDD.Application.UseCases;
 
-    public class SyncWeatherServiceInput : IUseCaseInput
+    public class SyncWeatherServiceInput : UseCaseInput
     {
         public SyncWeatherServiceInput(string city) => City = city;
 

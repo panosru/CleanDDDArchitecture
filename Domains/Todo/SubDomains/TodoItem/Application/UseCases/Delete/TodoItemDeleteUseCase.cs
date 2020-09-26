@@ -9,7 +9,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
     public class TodoItemDeleteUseCase
         : UseCase<TodoItemDeleteInput, ITodoItemDeleteOutput, ITodoDbContextWrite>
     {
-        protected override async Task Execute()
+        public override async Task Execute()
         {
             RequestResult requestResult = await Orchestrator.SendCommand(
                 new DeleteTodoItemCommand
@@ -21,9 +21,11 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
                 Output.Invalid(requestResult.Messages.First());
         }
 
-        protected override void SetInput<TInputData>(TInputData data)
+        public TodoItemDeleteUseCase SetInput(int id)
         {
-            Input = new TodoItemDeleteInput(GetDataByType<int>(data));
+            Input = new TodoItemDeleteInput(id);
+
+            return this;
         }
     }
 }

@@ -7,12 +7,14 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Ap
 
     public abstract class ApiController : CleanDDDArchitecture.Hosts.RestApi.Core.Controllers.ApiController
     {
-        protected new IOrchestrator<ITodoDbContextWrite> Orchestrator => 
+        protected new IOrchestrator<ITodoDbContextWrite> Orchestrator =>
             HttpContext.RequestServices.GetRequiredService<IOrchestrator<ITodoDbContextWrite>>();
     }
-    
-    public class ApiController<TUseCase> : CleanDDDArchitecture.Hosts.RestApi.Core.Controllers.ApiController<TUseCase>
-        where TUseCase : class, IUseCase
+
+    public class ApiController<TUseCase, TUseCaseOutput>
+        : CleanDDDArchitecture.Hosts.RestApi.Core.Controllers.ApiController<TUseCase, TUseCaseOutput>
+        where TUseCase : class, IUseCase<TUseCaseOutput>
+        where TUseCaseOutput : class, IUseCaseOutput
     {
         public ApiController(TUseCase useCase)
             : base(useCase)

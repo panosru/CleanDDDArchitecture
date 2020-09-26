@@ -8,7 +8,9 @@
     /// <summary>
     ///     Weather endpoints
     /// </summary>
-    public class Weather : ApiController<AddCityUseCase>, IAddCityOutput
+    public class Weather
+        : ApiController<AddCityUseCase, Weather>,
+          IAddCityOutput
     {
         public Weather([FromServices] AddCityUseCase useCase)
             : base(useCase)
@@ -31,7 +33,9 @@
         [AllowAnonymous]
         public async Task<IActionResult> AddCity([FromBody] AddCityDto dto)
         {
-            await UseCase.ExecuteAsync(this, dto)
+            await UseCase
+               .SetInput(dto)
+               .Execute()
                .ConfigureAwait(false);
 
             return ViewModel;

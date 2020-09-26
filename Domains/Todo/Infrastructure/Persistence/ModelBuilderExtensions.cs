@@ -14,7 +14,7 @@ namespace CleanDDDArchitecture.Domains.Todo.Infrastructure.Persistence
                         Id    = -1,
                         Title = "Shopping"
                     });
-            
+
             modelBuilder.Entity<TodoItemEntity>()
                .HasData(
                     new TodoItemEntity { Title = "Apples", Id       = -1, ListId = -1 },

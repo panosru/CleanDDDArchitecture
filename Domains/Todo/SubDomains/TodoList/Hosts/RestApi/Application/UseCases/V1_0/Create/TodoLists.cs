@@ -4,16 +4,17 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using TodoList.Application.UseCases.Create;
-    using TodoList.Application.UseCases.Create.Dtos;
 
     /// <summary>
     ///     Todo Lists endpoints
     /// </summary>
-    public class TodoLists : ApiController<CreateTodoListUseCase>, ICreateTodoListOutput
+    [AllowAnonymous]
+    public class TodoLists
+        : ApiController<CreateTodoListUseCase, TodoLists>,
+          ICreateTodoListOutput
     {
         public TodoLists([FromServices] CreateTodoListUseCase useCase)
-            : base(useCase)
-        { }
+            : base(useCase) => UseCase.SetOutput(this);
 
         #region ICreateTodoListOutput Members
 
@@ -31,10 +32,11 @@
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> Create([FromBody] TodoListDto dto)
+        public async Task<IActionResult> Create([FromBody] CreateTodoListDto dto)
         {
-            await UseCase.ExecuteAsync(this, dto)
+            await UseCase
+               .SetInput(dto)
+               .Execute()
                .ConfigureAwait(false);
 
             return ViewModel;

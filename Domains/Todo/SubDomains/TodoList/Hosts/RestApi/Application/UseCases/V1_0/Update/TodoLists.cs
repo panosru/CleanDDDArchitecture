@@ -8,11 +8,12 @@
     /// <summary>
     ///     Todo Lists endpoints
     /// </summary>
-    public class TodoLists : ApiController<UpdateTodoListUseCase>, IUpdateTodoListOutput
+    public class TodoLists
+        : ApiController<UpdateTodoListUseCase, TodoLists>,
+          IUpdateTodoListOutput
     {
         public TodoLists([FromServices] UpdateTodoListUseCase useCase)
-            : base(useCase)
-        { }
+            : base(useCase) => UseCase.SetOutput(this);
 
         #region IUpdateTodoListOutput Members
 
@@ -28,14 +29,16 @@
         /// <returns></returns>
         [HttpPut("{id}")]
         [AllowAnonymous]
-        public async Task<IActionResult> Delete(
+        public async Task<IActionResult> Update(
             [FromRoute] int               id,
             [FromBody]  UpdateTodoListDto dto)
         {
             if (id != dto.Id)
                 return BadRequest();
 
-            await UseCase.ExecuteAsync(this, dto)
+            await UseCase
+               .SetInput(dto)
+               .Execute()
                .ConfigureAwait(false);
 
             return ViewModel;

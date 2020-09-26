@@ -8,11 +8,12 @@
     /// <summary>
     ///     Weather endpoints
     /// </summary>
-    public class Weather : ApiController<ForecastUseCase>, IForecastOutput
+    public class Weather
+        : ApiController<ForecastUseCase, Weather>,
+          IForecastOutput
     {
         public Weather([FromServices] ForecastUseCase useCase)
-            : base(useCase)
-        { }
+            : base(useCase) => UseCase.SetOutput(this);
 
         #region IForecastOutput Members
 
@@ -28,7 +29,7 @@
         [AllowAnonymous]
         public async Task<IActionResult> Forecast()
         {
-            await UseCase.ExecuteAsync(this)
+            await UseCase.Execute()
                .ConfigureAwait(false);
 
             return ViewModel;

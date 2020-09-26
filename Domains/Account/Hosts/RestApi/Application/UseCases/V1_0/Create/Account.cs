@@ -6,7 +6,6 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Domains.Account.Application.Aggregates;
     using Domains.Account.Application.UseCases.Create;
-    using Domains.Account.Application.UseCases.Create.Dtos;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -18,11 +17,12 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     [ApiVersion("1.0")]
     [FeatureGate(Feature.AccountCreate)]
     [AllowAnonymous]
-    public sealed class Account : ApiController<AccountCreateUseCase>, ICreateAccountOutput
+    public sealed class Account
+        : Application.ApiController<AccountCreateUseCase, Account>,
+          ICreateAccountOutput
     {
         public Account([FromServices] AccountCreateUseCase useCase)
-            : base(useCase)
-        { }
+            : base(useCase) => useCase.SetOutput(this);
 
         #region ICreateAccountOutput Members
 
@@ -47,12 +47,14 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         /// <param name="dto"></param>
         /// <returns>The newly registered account.</returns>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AccountResponse))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type      = typeof(AccountResponse))]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AccountResponse))]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Create))]
         public async Task<IActionResult> Create([FromBody] [Required] CreateAccountDto dto)
         {
-            await UseCase.ExecuteAsync(this, dto)
+            await UseCase
+               .SetInput(dto)
+               .Execute()
                .ConfigureAwait(false);
 
             return ViewModel;

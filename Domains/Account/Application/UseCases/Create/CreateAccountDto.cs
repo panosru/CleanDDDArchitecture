@@ -1,4 +1,4 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Dtos
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
 {
     using System.ComponentModel.DataAnnotations;
 

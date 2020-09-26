@@ -843,10 +843,10 @@ paths:
                 enum: []
                 reference:
                   type: Schema
-                  id: TodoListDto
+                  id: CreateTodoListDto
                   isLocal: true
-                  referenceV3: '#/components/schemas/TodoListDto'
-                  referenceV2: '#/definitions/TodoListDto'
+                  referenceV3: '#/components/schemas/CreateTodoListDto'
+                  referenceV2: '#/definitions/CreateTodoListDto'
               examples: {}
               encoding: {}
             text/json:
@@ -1238,7 +1238,7 @@ components:
           enum: []
           nullable: true
       enum: []
-    TodoListDto:
+    CreateTodoListDto:
       type: object
       allOf: []
       oneOf: []

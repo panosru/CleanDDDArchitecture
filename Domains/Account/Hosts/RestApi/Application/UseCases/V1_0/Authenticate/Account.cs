@@ -1,7 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.Authenticate
 {
     using System.Threading.Tasks;
-    using CleanDDDArchitecture.Hosts.RestApi.Core.Controllers;
     using Domains.Account.Application.UseCases.Authenticate;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -11,11 +10,12 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     /// </summary>
     [ApiVersion("1.0")]
     [ApiVersion("1.1")]
-    public sealed class Account : ApiController<AuthenticateUseCase>, IAuthenticateOutput
+    public sealed class Account
+        : ApiController<AuthenticateUseCase, Account>,
+          IAuthenticateOutput
     {
         public Account([FromServices] AuthenticateUseCase useCase)
-            : base(useCase)
-        { }
+            : base(useCase) => UseCase.SetOutput(this);
 
         #region IAuthenticateOutput Members
 
@@ -33,7 +33,9 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody] AuthenticateCommand command)
         {
-            await UseCase.ExecuteAsync(this, command)
+            await UseCase
+               .SetInput(command)
+               .Execute()
                .ConfigureAwait(false);
 
             return ViewModel;

@@ -19,8 +19,9 @@
 
     [ApiController]
     [Route("api/[controller]")]
-    public abstract class ApiController<TUseCase> : ControllerBase
-        where TUseCase : class, IUseCase
+    public abstract class ApiController<TUseCase, TUseCaseOutput> : ControllerBase
+        where TUseCase : class, IUseCase<TUseCaseOutput>
+        where TUseCaseOutput : class, IUseCaseOutput
     {
         protected readonly TUseCase UseCase;
         

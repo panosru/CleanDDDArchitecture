@@ -2,7 +2,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
 {
     using Aviant.DDD.Application.UseCases;
 
-    public class ConfirmEmailInput : IUseCaseInput
+    public class ConfirmEmailInput : UseCaseInput
     {
         public ConfirmEmailInput(string token, string email)
         {
