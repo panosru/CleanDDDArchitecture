@@ -78,13 +78,16 @@ paths:
       Put:
         tags:
         - name: Account
+        summary: Update account details
         parameters:
         - name: id
           in: Path
+          description: ''
           required: true
           schema:
             type: string
             format: uuid
+            description: ''
             allOf: []
             oneOf: []
             anyOf: []
@@ -109,6 +112,7 @@ paths:
           examples: {}
           content: {}
         requestBody:
+          description: ''
           content:
             application/json:
               schema: &o2
@@ -137,7 +141,73 @@ paths:
               encoding: {}
         responses:
           200:
-            description: Success
+            description: Returns updated account data.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: AccountUpdateResponse
+                    isLocal: true
+                    referenceV3: '#/components/schemas/AccountUpdateResponse'
+                    referenceV2: '#/definitions/AccountUpdateResponse'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: AccountUpdateResponse
+                    isLocal: true
+                    referenceV3: '#/components/schemas/AccountUpdateResponse'
+                    referenceV2: '#/definitions/AccountUpdateResponse'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: AccountUpdateResponse
+                    isLocal: true
+                    referenceV3: '#/components/schemas/AccountUpdateResponse'
+                    referenceV2: '#/definitions/AccountUpdateResponse'
+                examples: {}
+                encoding: {}
+            links: {}
+          204:
+            description: Account updated
+            headers: {}
+            content: {}
+            links: {}
+          400:
+            description: Bad request.
+            headers: {}
+            content: {}
+            links: {}
+          404:
+            description: Not Found.
             headers: {}
             content: {}
             links: {}
@@ -147,14 +217,17 @@ paths:
       Get:
         tags:
         - name: Account
+        summary: Get Account
         operationId: GetAccount
         parameters:
         - name: id
           in: Path
+          description: ''
           required: true
           schema:
             type: string
             format: uuid
+            description: ''
             allOf: []
             oneOf: []
             anyOf: []
@@ -180,7 +253,236 @@ paths:
           content: {}
         responses:
           200:
-            description: Success
+            description: The account.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: AccountGetByResponse
+                    isLocal: true
+                    referenceV3: '#/components/schemas/AccountGetByResponse'
+                    referenceV2: '#/definitions/AccountGetByResponse'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: AccountGetByResponse
+                    isLocal: true
+                    referenceV3: '#/components/schemas/AccountGetByResponse'
+                    referenceV2: '#/definitions/AccountGetByResponse'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: AccountGetByResponse
+                    isLocal: true
+                    referenceV3: '#/components/schemas/AccountGetByResponse'
+                    referenceV2: '#/definitions/AccountGetByResponse'
+                examples: {}
+                encoding: {}
+            links: {}
+          404:
+            description: Not Found.
+            headers: {}
+            content: {}
+            links: {}
+        callbacks: {}
+        security: []
+        servers: []
+    servers: []
+    parameters: []
+  /api/account:
+    operations:
+      Post:
+        tags:
+        - name: Account
+        summary: Create a new account
+        parameters:
+        - name: x-api-version
+          in: Header
+          description: The requested API version
+          schema:
+            type: string
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
+        requestBody:
+          description: ''
+          required: true
+          content:
+            application/json:
+              schema: &o3
+                allOf: []
+                oneOf: []
+                anyOf: []
+                required: []
+                properties: {}
+                additionalPropertiesAllowed: true
+                enum: []
+                reference:
+                  type: Schema
+                  id: CreateAccountDto
+                  isLocal: true
+                  referenceV3: '#/components/schemas/CreateAccountDto'
+                  referenceV2: '#/definitions/CreateAccountDto'
+              examples: {}
+              encoding: {}
+            text/json:
+              schema: *o3
+              examples: {}
+              encoding: {}
+            application/*+json:
+              schema: *o3
+              examples: {}
+              encoding: {}
+        responses:
+          200:
+            description: Account already exists
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: AccountCreateResponse
+                    isLocal: true
+                    referenceV3: '#/components/schemas/AccountCreateResponse'
+                    referenceV2: '#/definitions/AccountCreateResponse'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: AccountCreateResponse
+                    isLocal: true
+                    referenceV3: '#/components/schemas/AccountCreateResponse'
+                    referenceV2: '#/definitions/AccountCreateResponse'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: AccountCreateResponse
+                    isLocal: true
+                    referenceV3: '#/components/schemas/AccountCreateResponse'
+                    referenceV2: '#/definitions/AccountCreateResponse'
+                examples: {}
+                encoding: {}
+            links: {}
+          201:
+            description: Account created successfully
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: AccountCreateResponse
+                    isLocal: true
+                    referenceV3: '#/components/schemas/AccountCreateResponse'
+                    referenceV2: '#/definitions/AccountCreateResponse'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: AccountCreateResponse
+                    isLocal: true
+                    referenceV3: '#/components/schemas/AccountCreateResponse'
+                    referenceV2: '#/definitions/AccountCreateResponse'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: AccountCreateResponse
+                    isLocal: true
+                    referenceV3: '#/components/schemas/AccountCreateResponse'
+                    referenceV2: '#/definitions/AccountCreateResponse'
+                examples: {}
+                encoding: {}
+            links: {}
+          400:
+            description: Bad request.
             headers: {}
             content: {}
             links: {}
@@ -194,6 +496,7 @@ paths:
       Get:
         tags:
         - name: Account
+        summary: Confirm user email with token taken from authentication endpoint
         parameters:
         - name: Token
           in: Path
@@ -240,8 +543,79 @@ paths:
           examples: {}
           content: {}
         responses:
+          202:
+            description: Email confirmed successfully.
+            headers: {}
+            content: {}
+            links: {}
+          401:
+            description: Invalid email token.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
           200:
-            description: Success
+            description: Account confirmation.
+            headers: {}
+            content: {}
+            links: {}
+          400:
+            description: Bad request.
+            headers: {}
+            content: {}
+            links: {}
+          404:
+            description: Not Found.
             headers: {}
             content: {}
             links: {}
@@ -255,6 +629,7 @@ paths:
       Post:
         tags:
         - name: Account
+        summary: Authenticate a user and a bearer or an email confirmation token
         parameters:
         - name: x-api-version
           in: Header
@@ -271,9 +646,10 @@ paths:
           examples: {}
           content: {}
         requestBody:
+          description: ''
           content:
             application/json:
-              schema: &o3
+              schema: &o4
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -290,16 +666,92 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o3
+              schema: *o4
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o3
+              schema: *o4
               examples: {}
               encoding: {}
         responses:
-          200:
+          202:
             description: Success
+            headers: {}
+            content: {}
+            links: {}
+          401:
+            description: Invalid credentials or mail not confirmed.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
+          200:
+            description: Email confirmation required.
+            headers: {}
+            content: {}
+            links: {}
+          201:
+            description: Login successful.
+            headers: {}
+            content: {}
+            links: {}
+          400:
+            description: Bad request.
+            headers: {}
+            content: {}
+            links: {}
+          404:
+            description: Not found.
             headers: {}
             content: {}
             links: {}
@@ -313,6 +765,7 @@ paths:
       Get:
         tags:
         - name: Metal
+        summary: Metal info
         parameters:
         - name: x-api-version
           in: Header
@@ -329,27 +782,156 @@ paths:
           examples: {}
           content: {}
         responses:
+          default:
+            description: Error
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
           200:
-            description: Success
+            description: Metal data.
             headers: {}
             content: {}
+            links: {}
+          404:
+            description: Not Found.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
             links: {}
         callbacks: {}
         security: []
         servers: []
     servers: []
     parameters: []
-  /api/todoitems/updatedetails:
+  /api/todoitems/updatedetails/{id}:
     operations:
       Put:
         tags:
         - name: TodoItems
+        summary: Update todo item details
         parameters:
         - name: id
           in: Query
+          description: ''
           schema:
             type: integer
             format: int32
+            description: ''
+            allOf: []
+            oneOf: []
+            anyOf: []
+            required: []
+            properties: {}
+            additionalPropertiesAllowed: true
+            enum: []
+          examples: {}
+          content: {}
+        - name: id
+          in: Path
+          required: true
+          schema:
+            type: string
             allOf: []
             oneOf: []
             anyOf: []
@@ -374,9 +956,10 @@ paths:
           examples: {}
           content: {}
         requestBody:
+          description: ''
           content:
             application/json:
-              schema: &o4
+              schema: &o5
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -393,18 +976,186 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o4
+              schema: *o5
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o4
+              schema: *o5
               examples: {}
               encoding: {}
         responses:
+          default:
+            description: Error
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
           200:
-            description: Success
+            description: Todo item details updated successfully.
             headers: {}
             content: {}
+            links: {}
+          400:
+            description: Bad request.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
+          404:
+            description: Not Found.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
             links: {}
         callbacks: {}
         security: []
@@ -416,13 +1167,16 @@ paths:
       Put:
         tags:
         - name: TodoItems
+        summary: Update todo item name and status
         parameters:
         - name: id
           in: Path
+          description: ''
           required: true
           schema:
             type: integer
             format: int32
+            description: ''
             allOf: []
             oneOf: []
             anyOf: []
@@ -447,9 +1201,10 @@ paths:
           examples: {}
           content: {}
         requestBody:
+          description: ''
           content:
             application/json:
-              schema: &o5
+              schema: &o6
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -466,18 +1221,186 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o5
+              schema: *o6
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o5
+              schema: *o6
               examples: {}
               encoding: {}
         responses:
-          200:
-            description: Success
+          default:
+            description: Error
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
+          204:
+            description: Todo item updated
             headers: {}
             content: {}
+            links: {}
+          400:
+            description: Bad request.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
+          404:
+            description: Not Found.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
             links: {}
         callbacks: {}
         security: []
@@ -485,13 +1408,17 @@ paths:
       Get:
         tags:
         - name: TodoItems
+        summary: Get a todo item
+        operationId: GetTodoItem
         parameters:
         - name: id
           in: Path
+          description: ''
           required: true
           schema:
             type: integer
             format: int32
+            description: ''
             allOf: []
             oneOf: []
             anyOf: []
@@ -516,10 +1443,122 @@ paths:
           examples: {}
           content: {}
         responses:
+          default:
+            description: Error
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
           200:
-            description: Success
+            description: The todo item.
             headers: {}
             content: {}
+            links: {}
+          404:
+            description: Not Found.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
             links: {}
         callbacks: {}
         security: []
@@ -527,13 +1566,16 @@ paths:
       Delete:
         tags:
         - name: TodoItems
+        summary: Delete a todo item
         parameters:
         - name: id
           in: Path
+          description: ''
           required: true
           schema:
             type: integer
             format: int32
+            description: ''
             allOf: []
             oneOf: []
             anyOf: []
@@ -558,10 +1600,178 @@ paths:
           examples: {}
           content: {}
         responses:
+          default:
+            description: Error
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
           200:
-            description: Success
+            description: Todo item deleted successfully.
             headers: {}
             content: {}
+            links: {}
+          400:
+            description: Bad request.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
+          404:
+            description: Not Found.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
             links: {}
         callbacks: {}
         security: []
@@ -573,6 +1783,7 @@ paths:
       Post:
         tags:
         - name: TodoItems
+        summary: Create a new todo item
         parameters:
         - name: x-api-version
           in: Header
@@ -589,9 +1800,10 @@ paths:
           examples: {}
           content: {}
         requestBody:
+          description: ''
           content:
             application/json:
-              schema: &o6
+              schema: &o7
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -608,16 +1820,26 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o6
+              schema: *o7
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o6
+              schema: *o7
               examples: {}
               encoding: {}
         responses:
           200:
-            description: Success
+            description: Todo item already exists
+            headers: {}
+            content: {}
+            links: {}
+          201:
+            description: Todo item created successfully
+            headers: {}
+            content: {}
+            links: {}
+          400:
+            description: Bad request.
             headers: {}
             content: {}
             links: {}
@@ -631,13 +1853,16 @@ paths:
       Put:
         tags:
         - name: TodoLists
+        summary: Update a todo list
         parameters:
         - name: id
           in: Path
+          description: ''
           required: true
           schema:
             type: integer
             format: int32
+            description: ''
             allOf: []
             oneOf: []
             anyOf: []
@@ -662,9 +1887,10 @@ paths:
           examples: {}
           content: {}
         requestBody:
+          description: ''
           content:
             application/json:
-              schema: &o7
+              schema: &o8
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -681,18 +1907,186 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o7
+              schema: *o8
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o7
+              schema: *o8
               examples: {}
               encoding: {}
         responses:
-          200:
-            description: Success
+          default:
+            description: Error
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
+          204:
+            description: Todo list updated successfully.
             headers: {}
             content: {}
+            links: {}
+          400:
+            description: Bad request.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
+          404:
+            description: Not Found.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
             links: {}
         callbacks: {}
         security: []
@@ -700,6 +2094,7 @@ paths:
       Get:
         tags:
         - name: TodoLists
+        summary: Get all todo lists with their items
         parameters:
         - name: id
           in: Path
@@ -731,10 +2126,122 @@ paths:
           examples: {}
           content: {}
         responses:
+          default:
+            description: Error
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
           200:
-            description: Success
+            description: Todo list expored successfully.
             headers: {}
             content: {}
+            links: {}
+          404:
+            description: Not Found.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
             links: {}
         callbacks: {}
         security: []
@@ -742,13 +2249,16 @@ paths:
       Delete:
         tags:
         - name: TodoLists
+        summary: Delete a todo list
         parameters:
         - name: id
           in: Path
+          description: ''
           required: true
           schema:
             type: integer
             format: int32
+            description: ''
             allOf: []
             oneOf: []
             anyOf: []
@@ -773,10 +2283,178 @@ paths:
           examples: {}
           content: {}
         responses:
+          default:
+            description: Error
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
           200:
-            description: Success
+            description: Todo list deleted successfully.
             headers: {}
             content: {}
+            links: {}
+          400:
+            description: Bad request.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
+          404:
+            description: Not Found.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
             links: {}
         callbacks: {}
         security: []
@@ -788,6 +2466,7 @@ paths:
       Get:
         tags:
         - name: TodoLists
+        summary: Get all todo lists with their items
         parameters:
         - name: x-api-version
           in: Header
@@ -804,8 +2483,69 @@ paths:
           examples: {}
           content: {}
         responses:
+          default:
+            description: Error
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
           200:
-            description: Success
+            description: The list of all todo lists with their items.
+            headers: {}
+            content: {}
+            links: {}
+          404:
+            description: Not Found.
             headers: {}
             content: {}
             links: {}
@@ -815,6 +2555,7 @@ paths:
       Post:
         tags:
         - name: TodoLists
+        summary: Create new todo list
         parameters:
         - name: x-api-version
           in: Header
@@ -831,9 +2572,10 @@ paths:
           examples: {}
           content: {}
         requestBody:
+          description: ''
           content:
             application/json:
-              schema: &o8
+              schema: &o9
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -850,16 +2592,26 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o8
+              schema: *o9
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o8
+              schema: *o9
               examples: {}
               encoding: {}
         responses:
           200:
-            description: Success
+            description: Todo list already exists
+            headers: {}
+            content: {}
+            links: {}
+          201:
+            description: Todo list created successfully
+            headers: {}
+            content: {}
+            links: {}
+          400:
+            description: Bad request.
             headers: {}
             content: {}
             links: {}
@@ -873,6 +2625,7 @@ paths:
       Post:
         tags:
         - name: Weather
+        summary: Dummy weather syncing with external service (3 seconds delay)
         parameters:
         - name: x-api-version
           in: Header
@@ -889,9 +2642,10 @@ paths:
           examples: {}
           content: {}
         requestBody:
+          description: ''
           content:
             application/json:
-              schema: &o9
+              schema: &o10
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -908,18 +2662,186 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o9
+              schema: *o10
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o9
+              schema: *o10
               examples: {}
               encoding: {}
         responses:
+          default:
+            description: Error
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
           200:
-            description: Success
+            description: Synchornisation successfully comleted.
             headers: {}
             content: {}
+            links: {}
+          400:
+            description: Bad request.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
+          404:
+            description: Not Found.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
             links: {}
         callbacks: {}
         security: []
@@ -927,6 +2849,7 @@ paths:
       Get:
         tags:
         - name: Weather
+        summary: Performs weather forecast
         parameters:
         - name: x-api-version
           in: Header
@@ -943,10 +2866,122 @@ paths:
           examples: {}
           content: {}
         responses:
+          default:
+            description: Error
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
           200:
-            description: Success
+            description: Todo list already exists
             headers: {}
             content: {}
+            links: {}
+          404:
+            description: Not found.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
             links: {}
         callbacks: {}
         security: []
@@ -958,6 +2993,7 @@ paths:
       Post:
         tags:
         - name: Weather
+        summary: Adds an additional city for weather forecasting
         parameters:
         - name: x-api-version
           in: Header
@@ -974,9 +3010,10 @@ paths:
           examples: {}
           content: {}
         requestBody:
+          description: ''
           content:
             application/json:
-              schema: &o10
+              schema: &o11
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -993,18 +3030,130 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o10
+              schema: *o11
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o10
+              schema: *o11
               examples: {}
               encoding: {}
         responses:
-          200:
-            description: Success
+          default:
+            description: Error
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+            links: {}
+          201:
+            description: City added successfully
             headers: {}
             content: {}
+            links: {}
+          400:
+            description: Bad request.
+            headers: {}
+            content:
+              text/plain:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              application/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
+              text/json:
+                schema:
+                  allOf: []
+                  oneOf: []
+                  anyOf: []
+                  required: []
+                  properties: {}
+                  additionalPropertiesAllowed: true
+                  enum: []
+                  reference:
+                    type: Schema
+                    id: ProblemDetails
+                    isLocal: true
+                    referenceV3: '#/components/schemas/ProblemDetails'
+                    referenceV2: '#/definitions/ProblemDetails'
+                examples: {}
+                encoding: {}
             links: {}
         callbacks: {}
         security: []
@@ -1050,6 +3199,288 @@ components:
           properties: {}
           additionalPropertiesAllowed: true
           enum: []
+      enum: []
+    AccountUpdateResponse:
+      type: object
+      allOf: []
+      oneOf: []
+      anyOf: []
+      required: []
+      properties:
+        firstName:
+          type: string
+          readOnly: true
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        lastName:
+          type: string
+          readOnly: true
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        email:
+          type: string
+          readOnly: true
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+      enum: []
+    AccountGetByResponse:
+      type: object
+      allOf: []
+      oneOf: []
+      anyOf: []
+      required: []
+      properties:
+        username:
+          type: string
+          readOnly: true
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        firstName:
+          type: string
+          readOnly: true
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        lastName:
+          type: string
+          readOnly: true
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        email:
+          type: string
+          readOnly: true
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+      enum: []
+    CreateAccountDto:
+      type: object
+      allOf: []
+      oneOf: []
+      anyOf: []
+      required:
+      - email
+      - firstName
+      - lastName
+      - password
+      - userName
+      properties:
+        userName:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+        password:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+        firstName:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+        lastName:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+        email:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+      enum: []
+    AccountCreateResponse:
+      type: object
+      allOf: []
+      oneOf: []
+      anyOf: []
+      required: []
+      properties:
+        message:
+          type: string
+          readOnly: true
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        username:
+          type: string
+          readOnly: true
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        firstName:
+          type: string
+          readOnly: true
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        lastName:
+          type: string
+          readOnly: true
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        email:
+          type: string
+          readOnly: true
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+      enum: []
+    ProblemDetails:
+      type: object
+      allOf: []
+      oneOf: []
+      anyOf: []
+      required: []
+      properties:
+        type:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        title:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        detail:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+        instance:
+          type: string
+          allOf: []
+          oneOf: []
+          anyOf: []
+          required: []
+          properties: {}
+          additionalPropertiesAllowed: true
+          enum: []
+          nullable: true
+      additionalPropertiesAllowed: true
+      additionalProperties:
+        allOf: []
+        oneOf: []
+        anyOf: []
+        required: []
+        properties: {}
+        additionalPropertiesAllowed: true
+        enum: []
       enum: []
     AuthenticateCommand:
       type: object

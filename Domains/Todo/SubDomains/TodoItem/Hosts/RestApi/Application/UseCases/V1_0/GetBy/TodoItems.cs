@@ -1,6 +1,8 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Hosts.RestApi.Application.UseCases.V1_0.GetBy
 {
     using System.Threading.Tasks;
+    using CleanDDDArchitecture.Hosts.RestApi.Core;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using TodoItem.Application.UseCases.GetBy;
 
@@ -28,9 +30,12 @@
         /// <summary>
         ///     Get a todo item
         /// </summary>
+        /// <response code="200">The todo item.</response>
+        /// <response code="404">Not Found.</response>
         /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet("{id}")]
+        /// <returns>An asynchronous <see cref="IActionResult" />.</returns>
+        [HttpGet("{id:int}", Name = "GetTodoItem")]
+        [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Find))]
         public async Task<IActionResult> GetBy([FromRoute] int id)
         {
             await UseCase

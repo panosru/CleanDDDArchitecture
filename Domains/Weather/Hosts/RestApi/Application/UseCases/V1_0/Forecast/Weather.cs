@@ -1,6 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.UseCases.V1_0.Forecast
 {
     using System.Threading.Tasks;
+    using CleanDDDArchitecture.Hosts.RestApi.Core;
     using Domains.Weather.Application.UseCases.Forecast;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -8,10 +9,14 @@
     /// <summary>
     ///     Weather endpoints
     /// </summary>
+    [AllowAnonymous]
     public class Weather
         : ApiController<ForecastUseCase, Weather>,
           IForecastOutput
     {
+        /// <summary>
+        /// </summary>
+        /// <param name="useCase"></param>
         public Weather([FromServices] ForecastUseCase useCase)
             : base(useCase) => UseCase.SetOutput(this);
 
@@ -25,8 +30,14 @@
 
         #endregion
 
+        /// <summary>
+        ///     Performs weather forecast
+        /// </summary>
+        /// <response code="200">Todo list already exists</response>
+        /// <response code="404">Not found.</response>
+        /// <returns>The forecast for the next days</returns>
         [HttpGet]
-        [AllowAnonymous]
+        [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Get))]
         public async Task<IActionResult> Forecast()
         {
             await UseCase.Execute()

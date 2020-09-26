@@ -7,4 +7,4 @@ ConnectionStrings:
 eventsTopicName: "CleanDDDArchitectureEvents"
 eventsTopicGroupName: "cleandddarchitecture-api-events-consumer"
 FeatureManagement:
-  AccountCreate: false
+  AccountCreate: true

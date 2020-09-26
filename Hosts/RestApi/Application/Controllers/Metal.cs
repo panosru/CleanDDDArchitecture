@@ -1,9 +1,9 @@
 namespace CleanDDDArchitecture.Hosts.RestApi.Application.Controllers
 {
     using System.Diagnostics;
+    using Core;
     using Core.Controllers;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
@@ -17,9 +17,11 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Controllers
         /// <summary>
         ///     Metal info
         /// </summary>
-        /// <returns></returns>
+        /// <response code="200">Metal data.</response>
+        /// <response code="404">Not Found.</response>
+        /// <returns>Metal info data.</returns>
         [HttpGet("/metal")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Get))]
         public ActionResult<object> Get()
         {
             var assembly = typeof(Startup).Assembly;

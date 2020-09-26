@@ -2,7 +2,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
 {
     using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
-    using CleanDDDArchitecture.Hosts.RestApi.Core.Controllers;
+    using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Domains.Account.Application.Aggregates;
     using Domains.Account.Application.UseCases.Create;
@@ -15,12 +15,15 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     ///     Account endpoints
     /// </summary>
     [ApiVersion("1.0")]
-    [FeatureGate(Feature.AccountCreate)]
     [AllowAnonymous]
+    [FeatureGate(Feature.AccountCreate)]
     public sealed class Account
-        : Application.ApiController<AccountCreateUseCase, Account>,
+        : ApiController<AccountCreateUseCase, Account>,
           ICreateAccountOutput
     {
+        /// <summary>
+        /// </summary>
+        /// <param name="useCase"></param>
         public Account([FromServices] AccountCreateUseCase useCase)
             : base(useCase) => useCase.SetOutput(this);
 
@@ -34,7 +37,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
                 "GetAccount",
                 new
                     { id = accountAggregate.Id },
-                new AccountResponse(accountAggregate));
+                new AccountCreateResponse(accountAggregate));
 
         #endregion
 
@@ -47,15 +50,14 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         /// <param name="dto"></param>
         /// <returns>The newly registered account.</returns>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK, Type      = typeof(AccountResponse))]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AccountResponse))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type      = typeof(AccountCreateResponse))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AccountCreateResponse))]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Create))]
         public async Task<IActionResult> Create([FromBody] [Required] CreateAccountDto dto)
         {
             await UseCase
                .SetInput(dto)
-               .Execute()
-               .ConfigureAwait(false);
+               .Execute().ConfigureAwait(false);
 
             return ViewModel;
         }

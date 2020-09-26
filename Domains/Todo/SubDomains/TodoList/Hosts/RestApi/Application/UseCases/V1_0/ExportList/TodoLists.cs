@@ -1,7 +1,9 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application.UseCases.V1_0.ExportList
 {
     using System.Threading.Tasks;
+    using CleanDDDArchitecture.Hosts.RestApi.Core;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using TodoList.Application.UseCases.Export;
     using TodoList.Application.UseCases.Export.ViewModels;
@@ -9,10 +11,14 @@
     /// <summary>
     ///     Export todo list items into csv file
     /// </summary>
+    [AllowAnonymous]
     public class TodoLists
         : ApiController<ExportTodoListUseCase, TodoLists>,
           IExportTodoListOutput
     {
+        /// <summary>
+        /// </summary>
+        /// <param name="useCase"></param>
         public TodoLists([FromServices] ExportTodoListUseCase useCase)
             : base(useCase) => UseCase.SetOutput(this);
 
@@ -30,9 +36,11 @@
         /// <summary>
         ///     Get all todo lists with their items
         /// </summary>
-        /// <returns></returns>
-        [HttpGet("{id}")]
-        [AllowAnonymous]
+        /// <response code="200">Todo list expored successfully.</response>
+        /// <response code="404">Not Found.</response>
+        /// <returns>Returns todo list with items in csv file.</returns>
+        [HttpGet("{id:int}")]
+        [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Get))]
         public async Task<IActionResult> Export([FromRoute] int id)
         {
             await UseCase

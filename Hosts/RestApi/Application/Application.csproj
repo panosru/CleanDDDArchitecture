@@ -6,7 +6,7 @@
         <AssemblyName>CleanDDDArchitecture.Hosts.RestApi.Application</AssemblyName>
         <NoWarn>$(NoWarn);CS1591;CS8618;CS8625;CS8603;CS8604</NoWarn>
         <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
-        <!--<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <Nullable>enable</Nullable>
         <Version>1.0.$(Build).$(Revision)</Version>
     </PropertyGroup>
@@ -40,10 +40,5 @@
       <ProjectReference Include="..\..\..\Domains\Todo\Hosts\RestApi\Application\Application.csproj" />
       <ProjectReference Include="..\..\..\Domains\Weather\Hosts\RestApi\Application\Application.csproj" />
     </ItemGroup>
-
-    <PropertyGroup>
-        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\CleanDDDArchitecture.RestApi.xml</DocumentationFile>
-        <LangVersion>latest</LangVersion>
-    </PropertyGroup>
 
 </Project>

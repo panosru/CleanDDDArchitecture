@@ -1,8 +1,10 @@
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.ConfirmEmail
 {
     using System.Threading.Tasks;
+    using CleanDDDArchitecture.Hosts.RestApi.Core;
     using Domains.Account.Application.UseCases.ConfirmEmail;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
@@ -10,10 +12,14 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     /// </summary>
     [ApiVersion("1.0")]
     [ApiVersion("1.1")]
+    [AllowAnonymous]
     public sealed class Account
         : ApiController<ConfirmEmailUseCase, Account>,
           IConfirmEmailOutput
     {
+        /// <summary>
+        /// </summary>
+        /// <param name="useCase"></param>
         public Account([FromServices] ConfirmEmailUseCase useCase)
             : base(useCase) => UseCase.SetOutput(this);
 
@@ -30,10 +36,17 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         /// <summary>
         ///     Confirm user email with token taken from authentication endpoint
         /// </summary>
+        /// <response code="200">Account confirmation.</response>
+        /// <response code="202">Email confirmed successfully.</response>
+        /// <response code="401">Invalid email token.</response>
+        /// <response code="400">Bad request.</response>
+        /// <response code="404">Not Found.</response>
         /// <param name="command"></param>
-        /// <returns></returns>
-        [AllowAnonymous]
+        /// <returns>Account confirmation message.</returns>
         [HttpGet("confirm/{Token}/{Email}")]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Patch))]
         public async Task<IActionResult> ConfirmEmail([FromRoute] ConfirmEmailCommand command)
         {
             await UseCase
