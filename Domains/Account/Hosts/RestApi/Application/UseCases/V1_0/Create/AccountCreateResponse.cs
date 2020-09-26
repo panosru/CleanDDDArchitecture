@@ -2,9 +2,9 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
 {
     using Domains.Account.Application.Aggregates;
 
-    public class AccountResponse
+    public class AccountCreateResponse
     {
-        public AccountResponse(AccountAggregate accountAggregate)
+        public AccountCreateResponse(AccountAggregate accountAggregate)
         {
             Username  = accountAggregate.UserName;
             FirstName = accountAggregate.FirstName;

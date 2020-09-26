@@ -4,6 +4,7 @@
     using System.Diagnostics;
     using System.IO;
     using System.Reflection;
+    using AutoMapper.Internal;
     using Microsoft.AspNetCore.Mvc.ApiExplorer;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
@@ -94,10 +95,19 @@
 
         private static void SetCommentsPathForSwaggerJsonAndUi(SwaggerGenOptions options)
         {
-            //TODO: Fix
-            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            //options.IncludeXmlComments(xmlPath);
+            // var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            // var xmlPath  = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            // options.IncludeXmlComments(xmlPath);
+            
+            //TODO: Revisit
+            // For multiple Api's
+            var baseDir = new DirectoryInfo(AppContext.BaseDirectory);
+            baseDir.EnumerateFiles("*.RestApi.Application.xml")
+               .ForAll(
+                    file =>
+                    {
+                        options.IncludeXmlComments(file.FullName);
+                    });
         }
     }
 }

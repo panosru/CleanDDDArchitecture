@@ -1,4 +1,4 @@
-namespace CleanDDDArchitecture.Hosts.RestApi.Core.Controllers
+namespace CleanDDDArchitecture.Hosts.RestApi.Core
 {
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.AspNetCore.Mvc;

@@ -14,13 +14,15 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherS
     public class SyncWeatherServiceCommandHandler
         : CommandHandler<SyncWeatherServiceCommand>
     {
-        public override Task<Unit> Handle(SyncWeatherServiceCommand command, CancellationToken cancellationToken)
+        public override async Task<Unit> Handle(SyncWeatherServiceCommand command, CancellationToken cancellationToken)
         {
             // Perform some operations here
             if (false)
                 throw new Exception("Something went wrong!");
 
-            return Task.FromResult(Unit.Value); // Equivalent to void
+            await Task.Delay(3000, cancellationToken);
+            
+            return Unit.Value;
         }
     }
 }

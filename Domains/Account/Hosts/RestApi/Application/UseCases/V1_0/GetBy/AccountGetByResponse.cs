@@ -2,9 +2,9 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
 {
     using Domains.Account.Application.Identity;
 
-    public class AccountResponse
+    public class AccountGetByResponse
     {
-        public AccountResponse(AccountUser accountUser)
+        public AccountGetByResponse(AccountUser accountUser)
         {
             Username  = accountUser.UserName;
             FirstName = accountUser.FirstName;
