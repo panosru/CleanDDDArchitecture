@@ -12,8 +12,8 @@
     /// <summary>
     ///     Todo Lists endpoints
     /// </summary>
-    [FeatureGate(Feature.TodoListGetAll)]
     [AllowAnonymous]
+    [FeatureGate(Features.TodoListGetAll)]
     public class TodoLists
         : ApiController<GetAllUseCase, TodoLists>,
           IGetAllOutput

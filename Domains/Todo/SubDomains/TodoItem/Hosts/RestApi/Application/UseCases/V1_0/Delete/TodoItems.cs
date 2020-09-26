@@ -2,13 +2,15 @@
 {
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
-    using Microsoft.AspNetCore.Http;
+    using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.FeatureManagement.Mvc;
     using TodoItem.Application.UseCases.Delete;
 
     /// <summary>
     ///     Todo items endpoints
     /// </summary>
+    [FeatureGate(Features.TodoItemDelete)]
     public class TodoItems
         : ApiController<TodoItemDeleteUseCase, TodoItems>,
           ITodoItemDeleteOutput

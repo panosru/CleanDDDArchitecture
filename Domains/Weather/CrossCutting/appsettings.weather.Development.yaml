@@ -1,0 +1,6 @@
+---
+FeatureManagement:
+  WeatherAddCity: true
+  WeatherForecast: true
+  WeatherSyncService: true
+  WeatherForecastV11: true

@@ -11,3 +11,5 @@ Logging:
     Microsoft: Information
 SwaggerSettings:
   RoutePrefix: ''
+FeatureManagement:
+  Metal: true

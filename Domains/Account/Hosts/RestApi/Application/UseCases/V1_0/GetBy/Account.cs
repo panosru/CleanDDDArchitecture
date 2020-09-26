@@ -3,15 +3,18 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     using System;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
+    using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Domains.Account.Application.Identity;
     using Domains.Account.Application.UseCases.GetBy;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.FeatureManagement.Mvc;
 
     /// <summary>
     ///     Account endpoints
     /// </summary>
     [ApiVersion("1.0")]
+    [FeatureGate(Features.AccountGetBy)]
     public sealed class Account
         : ApiController<GetAccountUseCase, Account>,
           IGetAccountOutput

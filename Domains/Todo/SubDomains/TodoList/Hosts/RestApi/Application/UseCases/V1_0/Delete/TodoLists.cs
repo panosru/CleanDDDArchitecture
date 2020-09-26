@@ -2,14 +2,17 @@
 {
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
+    using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.FeatureManagement.Mvc;
     using TodoList.Application.UseCases.Delete;
 
     /// <summary>
     ///     Todo Lists endpoints
     /// </summary>
     [AllowAnonymous]
+    [FeatureGate(Features.TodoListDelete)]
     public class TodoLists
         : ApiController<DeleteTodoListUseCase, TodoLists>,
           IDeleteTodoUseCaseOutput

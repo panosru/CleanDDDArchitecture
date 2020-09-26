@@ -43,8 +43,11 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     {
         private const string CurrentDomain = "Account";
 
-        private static IConfiguration Configuration { get; } =
-            DependencyInjectionRegistry.GetDomainConfiguration(CurrentDomain.ToLower());
+        static AccountDependencyInjectionRegistry() => Configuration =
+            DependencyInjectionRegistry.GetDomainConfiguration(
+                CurrentDomain.ToLower());
+        
+        private static IConfiguration Configuration { get; }
 
         public static IServiceCollection AddAccountDomain(this IServiceCollection services)
         {

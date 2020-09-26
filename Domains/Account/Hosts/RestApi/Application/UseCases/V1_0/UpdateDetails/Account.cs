@@ -3,16 +3,19 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     using System;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
+    using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Domains.Account.Application.Aggregates;
     using Domains.Account.Application.UseCases.UpdateDetails;
     using Domains.Account.Application.UseCases.UpdateDetails.Dtos;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.FeatureManagement.Mvc;
 
     /// <summary>
     ///     Account endpoints
     /// </summary>
     [ApiVersion("1.0")]
+    [FeatureGate(Features.AccountUpdateDetails)]
     public sealed class Account
         : ApiController<UpdateDetailsUseCase, Account>,
           IUpdateDetailsOutput

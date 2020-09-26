@@ -2,13 +2,16 @@
 {
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
+    using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.FeatureManagement.Mvc;
     using TodoItem.Application.UseCases.GetBy;
 
     /// <summary>
     ///     Todo items endpoints
     /// </summary>
+    [FeatureGate(Features.TodoItemGetBy)]
     public class TodoItems
         : ApiController<TodoItemGetByUseCase, TodoItems>,
           ITodoItemGetByOutput

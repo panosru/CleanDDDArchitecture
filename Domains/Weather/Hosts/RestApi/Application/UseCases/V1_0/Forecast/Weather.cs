@@ -2,14 +2,17 @@
 {
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
+    using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Domains.Weather.Application.UseCases.Forecast;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.FeatureManagement.Mvc;
 
     /// <summary>
     ///     Weather endpoints
     /// </summary>
     [AllowAnonymous]
+    [FeatureGate(Features.WeatherForecast)]
     public class Weather
         : ApiController<ForecastUseCase, Weather>,
           IForecastOutput
