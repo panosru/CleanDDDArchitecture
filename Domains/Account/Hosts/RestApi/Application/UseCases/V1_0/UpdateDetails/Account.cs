@@ -6,7 +6,6 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Domains.Account.Application.Aggregates;
     using Domains.Account.Application.UseCases.UpdateDetails;
-    using Domains.Account.Application.UseCases.UpdateDetails.Dtos;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
@@ -56,9 +55,13 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
             [FromRoute] Guid             id,
             [FromBody]  UpdateAccountDto dto)
         {
-            await UseCase
-               .SetInput(id, dto)
-               .Execute().ConfigureAwait(false);
+            await UseCase.Execute(
+                    new UpdateDetailsInput(
+                        id,
+                        dto.FirstName,
+                        dto.LastName,
+                        dto.Email))
+               .ConfigureAwait(false);
 
             return ViewModel;
         }

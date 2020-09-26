@@ -1,10 +1,9 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update.Notifications
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update
 {
     using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Notifications;
-    using ViewModels;
 
     public class TodoCompletedNotification : Notification
     {

@@ -9,33 +9,26 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
     public class CreateTodoListUseCase
         : UseCase<CreateTodoListInput, ICreateTodoListOutput, ITodoDbContextWrite>
     {
-        public override async Task Execute()
+        public override async Task Execute(CreateTodoListInput input)
         {
-            Input.Validate();
+            input.Validate();
 
-            if (!Input.ValidationResult.IsValid)
+            if (!input.ValidationResult.IsValid)
             {
-                Output.Invalid(Input.ValidationResult.Errors.First().ToString());
+                Output.Invalid(input.ValidationResult.Errors.First().ToString());
                 return;
             }
 
             RequestResult requestResult = await Orchestrator.SendCommand(
                 new CreateTodoListCommand
                 {
-                    Title = Input.Title
+                    Title = input.Title
                 });
 
             if (requestResult.Succeeded)
                 Output.Ok(requestResult.Payload());
             else
                 Output.Invalid(requestResult.Messages.First());
-        }
-
-        public CreateTodoListUseCase SetInput(CreateTodoListDto dto)
-        {
-            Input = new CreateTodoListInput(dto.Title);
-
-            return this;
         }
     }
 }

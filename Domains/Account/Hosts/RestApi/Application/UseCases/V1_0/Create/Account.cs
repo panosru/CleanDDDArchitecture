@@ -55,9 +55,14 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Create))]
         public async Task<IActionResult> Create([FromBody] [Required] CreateAccountDto dto)
         {
-            await UseCase
-               .SetInput(dto)
-               .Execute().ConfigureAwait(false);
+            await UseCase.Execute(
+                new CreateAccountInput(
+                    dto.UserName,
+                    dto.Password,
+                    dto.FirstName,
+                    dto.LastName,
+                    dto.Email))
+               .ConfigureAwait(false);
 
             return ViewModel;
         }

@@ -1,4 +1,4 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Create.ViewModels
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Create
 {
     using Aviant.DDD.Application.Mappings;
     using Todo.Core.Entities;

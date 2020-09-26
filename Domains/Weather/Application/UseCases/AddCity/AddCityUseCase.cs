@@ -8,19 +8,19 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity
     public class AddCityUseCase
         : UseCase<AddCityInput, IAddCityOutput>
     {
-        public override async Task Execute()
+        public override async Task Execute(AddCityInput input)
         {
-            switch (Input.City)
+            switch (input.City)
             {
                 case "Athens":
                     RequestResult requestResult = await Orchestrator.SendCommand(
                         new AddCityCommand
                         {
-                            City = Input.City
+                            City = input.City
                         });
 
                     if (requestResult.Succeeded)
-                        Output.Ok(requestResult.Payload()?.ToString());
+                        Output.Ok(requestResult.Payload<string>());
                     else
                         Output.Invalid(requestResult.Messages.First());
                     break;
@@ -33,13 +33,6 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity
                     Output.Invalid("Wrong city!");
                     break;
             }
-        }
-
-        public AddCityUseCase SetInput(AddCityDto dto)
-        {
-            Input = new AddCityInput(dto.City);
-
-            return this;
         }
     }
 }

@@ -4,7 +4,6 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
-    using ViewModels;
 
     public class GetAllUseCase : UseCase<IGetAllOutput>
     {

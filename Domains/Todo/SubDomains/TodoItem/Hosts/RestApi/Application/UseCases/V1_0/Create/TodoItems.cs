@@ -7,7 +7,6 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
     using TodoItem.Application.UseCases.Create;
-    using TodoItem.Application.UseCases.Create.Dtos;
 
     /// <summary>
     ///     Todo items endpoints
@@ -47,9 +46,7 @@
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Create))]
         public async Task<IActionResult> Create([FromBody] TodoItemCreateDto dto)
         {
-            await UseCase
-               .SetInput(dto)
-               .Execute()
+            await UseCase.Execute(new TodoItemCreateInput(dto.ListId, dto.Title))
                .ConfigureAwait(false);
 
             return ViewModel;

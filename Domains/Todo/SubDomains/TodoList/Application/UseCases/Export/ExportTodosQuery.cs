@@ -10,7 +10,6 @@
     using Aviant.DDD.Application.Services;
     using Microsoft.EntityFrameworkCore;
     using Todo.Application.Persistence;
-    using ViewModels;
 
     public class ExportTodosQuery : Query<ExportTodosVm>
     {

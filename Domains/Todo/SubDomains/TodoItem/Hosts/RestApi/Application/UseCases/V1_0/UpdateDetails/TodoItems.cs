@@ -48,9 +48,12 @@
             if (id != dto.Id)
                 return BadRequest();
 
-            await UseCase
-               .SetInput(dto)
-               .Execute()
+            await UseCase.Execute(
+                    new TodoItemUpdateDetailsInput(
+                        dto.Id,
+                        dto.ListId,
+                        dto.Priority,
+                        dto.Note))
                .ConfigureAwait(false);
 
             return ViewModel;

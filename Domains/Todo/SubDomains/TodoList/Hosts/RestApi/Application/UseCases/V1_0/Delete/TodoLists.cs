@@ -43,9 +43,7 @@
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Delete))]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            await UseCase
-               .SetInput(id)
-               .Execute()
+            await UseCase.Execute(new DeleteTodoListInput(id))
                .ConfigureAwait(false);
 
             return ViewModel;
