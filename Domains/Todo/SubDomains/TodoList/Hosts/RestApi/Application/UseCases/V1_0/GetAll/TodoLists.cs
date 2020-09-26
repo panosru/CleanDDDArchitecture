@@ -1,8 +1,10 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application.UseCases.V1_0.GetAll
 {
     using System.Threading.Tasks;
+    using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
     using TodoList.Application.UseCases.GetAll;
@@ -33,8 +35,11 @@
         /// <summary>
         ///     Get all todo lists with their items
         /// </summary>
-        /// <returns></returns>
+        /// <response code="200">The list of all todo lists with their items.</response>
+        /// <response code="404">Not Found.</response>
+        /// <returns>An asynchronous <see cref="IActionResult" />.</returns>
         [HttpGet]
+        [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.List))]
         public async Task<IActionResult> GetAll()
         {
             await UseCase.Execute()

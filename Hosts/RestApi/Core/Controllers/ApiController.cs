@@ -17,6 +17,10 @@
             HttpContext.RequestServices.GetRequiredService<IOrchestrator>();
     }
 
+    /// <summary>
+    /// </summary>
+    /// <typeparam name="TUseCase"></typeparam>
+    /// <typeparam name="TUseCaseOutput"></typeparam>
     [ApiController]
     [Route("api/[controller]")]
     public abstract class ApiController<TUseCase, TUseCaseOutput> : ControllerBase
