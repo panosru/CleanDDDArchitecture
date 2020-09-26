@@ -2,7 +2,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
 {
     using Aviant.DDD.Application.UseCases;
 
-    public class TodoItemGetByInput : IUseCaseInput
+    public class TodoItemGetByInput : UseCaseInput
     {
         public TodoItemGetByInput(int id) => Id = id;
 

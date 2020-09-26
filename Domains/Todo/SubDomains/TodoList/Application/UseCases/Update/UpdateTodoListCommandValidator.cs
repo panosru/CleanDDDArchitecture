@@ -1,17 +1,20 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Update.Validators
+﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Update
 {
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Aviant.DDD.Application.Commands;
     using Core.Repositories;
     using FluentValidation;
     using Microsoft.EntityFrameworkCore;
 
-    public class UpdateTodoListCommandValidator : AbstractValidator<UpdateTodoListCommand>
+    public class UpdateTodoListCommandValidator : CommandValidator<UpdateTodoListCommand>
     {
         private readonly ITodoListRepositoryRead _todoListReadRepository;
 
-        public UpdateTodoListCommandValidator(ITodoListRepositoryRead todoListReadRepository)
+        public UpdateTodoListCommandValidator(
+            ITodoListRepositoryRead todoListReadRepository,
+            CascadeMode             cascadeMode = CascadeMode.Stop)
+            : base(cascadeMode)
         {
             _todoListReadRepository = todoListReadRepository;
 
@@ -31,7 +34,7 @@
         {
             return _todoListReadRepository
                .FindBy(l => l.Id      != model.Id)
-               .AllAsync(l => l.Title != title, cancellationToken: cancellationToken);
+               .AllAsync(l => l.Title != title, cancellationToken);
         }
     }
 }

@@ -2,7 +2,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate
 {
     using Aviant.DDD.Application.UseCases;
 
-    public class AuthenticateInput : IUseCaseInput
+    public class AuthenticateInput : UseCaseInput
     {
         public AuthenticateInput(string username, string password)
         {

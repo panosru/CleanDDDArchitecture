@@ -7,11 +7,12 @@
     /// <summary>
     ///     Todo items endpoints
     /// </summary>
-    public class TodoItems : ApiController<TodoItemGetByUseCase>, ITodoItemGetByOutput
+    public class TodoItems
+        : ApiController<TodoItemGetByUseCase, TodoItems>,
+          ITodoItemGetByOutput
     {
         public TodoItems([FromServices] TodoItemGetByUseCase useCase)
-            : base(useCase)
-        { }
+            : base(useCase) => UseCase.SetOutput(this);
 
         #region ITodoItemGetByOutput Members
 
@@ -32,7 +33,9 @@
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBy([FromRoute] int id)
         {
-            await UseCase.ExecuteAsync(this, id)
+            await UseCase
+               .SetInput(id)
+               .Execute()
                .ConfigureAwait(false);
 
             return ViewModel;

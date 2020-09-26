@@ -6,9 +6,10 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
     using Aviant.DDD.Application.UseCases;
     using ViewModels;
 
-    public class ExportTodoListUseCase : UseCase<ExportTodoListInput, IExportTodoListOutput>
+    public class ExportTodoListUseCase
+        : UseCase<ExportTodoListInput, IExportTodoListOutput>
     {
-        protected override async Task Execute()
+        public override async Task Execute()
         {
             RequestResult requestResult = await Orchestrator.SendQuery(
                 new ExportTodosQuery
@@ -24,9 +25,11 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
                         string.Join("\n\r", requestResult.Messages.ToArray())));
         }
 
-        protected override void SetInput<TInputData>(TInputData data)
+        public ExportTodoListUseCase SetInput(int id)
         {
-            Input = new ExportTodoListInput(GetDataByType<int>(data));
+            Input = new ExportTodoListInput(id);
+
+            return this;
         }
     }
 }

@@ -8,11 +8,12 @@
     /// <summary>
     ///     Todo items endpoints
     /// </summary>
-    public class TodoItems : ApiController<TodoItemCreateUseCase>, ITodoItemCreateOutput
+    public class TodoItems
+        : ApiController<TodoItemCreateUseCase, TodoItems>,
+          ITodoItemCreateOutput
     {
         public TodoItems([FromServices] TodoItemCreateUseCase useCase)
-            : base(useCase)
-        { }
+            : base(useCase) => UseCase.SetOutput(this);
 
         #region ITodoItemCreateOutput Members
 
@@ -33,7 +34,9 @@
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] TodoItemCreateDto dto)
         {
-            await UseCase.ExecuteAsync(this, dto)
+            await UseCase
+               .SetInput(dto)
+               .Execute()
                .ConfigureAwait(false);
 
             return ViewModel;

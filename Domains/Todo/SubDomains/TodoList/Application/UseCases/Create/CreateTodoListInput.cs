@@ -2,10 +2,12 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
 {
     using Aviant.DDD.Application.UseCases;
 
-    public class CreateTodoListInput : IUseCaseInput
+    public class CreateTodoListInput : UseCaseInput<CreateTodoListInput, CreateTodoListInputValidator>
     {
         public CreateTodoListInput(string title) => Title = title;
 
         public string Title { get; }
+
+        public override void Validate() => UseDefaultValidation(this);
     }
 }

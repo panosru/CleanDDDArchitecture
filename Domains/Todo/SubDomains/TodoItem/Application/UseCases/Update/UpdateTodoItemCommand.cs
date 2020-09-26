@@ -50,7 +50,7 @@
 
             if (entity == null) throw new NotFoundException(nameof(TodoItemEntity), command.Id);
 
-            entity.Title = command.Title;
+            entity.Title       = command.Title;
             entity.IsCompleted = command.Done;
 
             await _todoItemWriteRepository.Update(entity)

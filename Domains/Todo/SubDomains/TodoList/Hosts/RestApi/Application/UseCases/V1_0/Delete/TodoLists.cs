@@ -8,11 +8,12 @@
     /// <summary>
     ///     Todo Lists endpoints
     /// </summary>
-    public class TodoLists : ApiController<DeleteTodoListUseCase>, IDeleteTodoUseCaseOutput
+    public class TodoLists
+        : ApiController<DeleteTodoListUseCase, TodoLists>,
+          IDeleteTodoUseCaseOutput
     {
         public TodoLists([FromServices] DeleteTodoListUseCase useCase)
-            : base(useCase)
-        { }
+            : base(useCase) => UseCase.SetOutput(this);
 
         #region IDeleteTodoUseCaseOutput Members
 
@@ -31,7 +32,9 @@
         [AllowAnonymous]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            await UseCase.ExecuteAsync(this, id)
+            await UseCase
+               .SetInput(id)
+               .Execute()
                .ConfigureAwait(false);
 
             return ViewModel;

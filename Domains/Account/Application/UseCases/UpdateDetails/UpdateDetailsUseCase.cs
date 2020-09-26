@@ -1,5 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Aggregates;
@@ -10,14 +11,15 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
     public class UpdateDetailsUseCase
         : UseCase<UpdateDetailsInput, IUpdateDetailsOutput, AccountAggregate, AccountAggregateId>
     {
-        protected override async Task Execute()
+        public override async Task Execute()
         {
             RequestResult requestResult = await Orchestrator.SendCommand(
-                new UpdateAccount(
-                    new AccountAggregateId(Input.Id),
-                    Input.FirstName,
-                    Input.LastName,
-                    Input.Email)).ConfigureAwait(false);
+                    new UpdateAccount(
+                        new AccountAggregateId(Input.Id),
+                        Input.FirstName,
+                        Input.LastName,
+                        Input.Email))
+               .ConfigureAwait(false);
 
             if (requestResult.Succeeded)
                 Output.Ok(requestResult.Payload<AccountAggregate>());
@@ -25,15 +27,15 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
                 Output.Invalid(requestResult.Messages.First());
         }
 
-        protected override void SetInput<TInputData>(TInputData data)
+        public UpdateDetailsUseCase SetInput(Guid id, UpdateAccountDto dto)
         {
-            var dto = GetDataByType<UpdateAccountDto>(data);
-
             Input = new UpdateDetailsInput(
-                dto.Id,
+                id,
                 dto.FirstName,
                 dto.LastName,
                 dto.Email);
+
+            return this;
         }
     }
 }

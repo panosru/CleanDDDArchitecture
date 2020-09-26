@@ -7,17 +7,15 @@
     using Aviant.DDD.Application.Commands;
     using Aviant.DDD.Application.Notifications;
     using Core.Repositories;
-    using Notifications;
     using Todo.Core.Entities;
-    using ViewModels;
 
-    public class CreateTodoListCommand : Command<Lazy<TodoListCreatedViewModel>>
+    public class CreateTodoListCommand : Command<Lazy<CreatedTodoListViewModel>>
     {
         public string Title { get; set; }
     }
 
     public class CreateTodoListCommandHandler
-        : CommandHandler<CreateTodoListCommand, Lazy<TodoListCreatedViewModel>>
+        : CommandHandler<CreateTodoListCommand, Lazy<CreatedTodoListViewModel>>
     {
         private readonly IMapper _mapper;
 
@@ -35,7 +33,7 @@
             _mapper                  = mapper;
         }
 
-        public override async Task<Lazy<TodoListCreatedViewModel>> Handle(
+        public override async Task<Lazy<CreatedTodoListViewModel>> Handle(
             CreateTodoListCommand command,
             CancellationToken     cancellationToken)
         {
@@ -45,12 +43,12 @@
             await _todoListWriteRepository.Add(entity);
 
             _notificationDispatcher.AddPostCommitNotification(
-                new TodoCreatedNotification
+                new CreatedTodoListNotification
                 {
                     Name = entity.Title
                 });
 
-            return new Lazy<TodoListCreatedViewModel>(() => _mapper.Map<TodoListCreatedViewModel>(entity));
+            return new Lazy<CreatedTodoListViewModel>(() => _mapper.Map<CreatedTodoListViewModel>(entity));
         }
     }
 }
