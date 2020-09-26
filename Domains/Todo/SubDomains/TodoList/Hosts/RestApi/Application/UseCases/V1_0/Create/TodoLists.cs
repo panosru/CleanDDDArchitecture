@@ -48,9 +48,7 @@
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Create))]
         public async Task<IActionResult> Create([FromBody] CreateTodoListDto dto)
         {
-            await UseCase
-               .SetInput(dto)
-               .Execute()
+            await UseCase.Execute(new CreateTodoListInput(dto.Title))
                .ConfigureAwait(false);
 
             return ViewModel;

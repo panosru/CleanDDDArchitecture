@@ -9,13 +9,13 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
     public class ConfirmEmailUseCase
         : UseCase<ConfirmEmailInput, IConfirmEmailOutput>
     {
-        public override async Task Execute()
+        public override async Task Execute(ConfirmEmailInput input)
         {
             RequestResult requestResult = await Orchestrator.SendCommand(
                     new ConfirmEmailCommand
                     {
-                        Token = Input.Token,
-                        Email = Input.Email
+                        Token = input.Token,
+                        Email = input.Email
                     })
                .ConfigureAwait(false);
 
@@ -32,13 +32,6 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
             {
                 Output.Invalid(requestResult.Messages.First());
             }
-        }
-
-        public ConfirmEmailUseCase SetInput(ConfirmEmailCommand command)
-        {
-            Input = new ConfirmEmailInput(command.Token, command.Email);
-
-            return this;
         }
     }
 }

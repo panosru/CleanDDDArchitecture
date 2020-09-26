@@ -44,17 +44,15 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         /// <response code="401">Invalid email token.</response>
         /// <response code="400">Bad request.</response>
         /// <response code="404">Not Found.</response>
-        /// <param name="command"></param>
+        /// <param name="dto"></param>
         /// <returns>Account confirmation message.</returns>
         [HttpGet("confirm/{Token}/{Email}")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Patch))]
-        public async Task<IActionResult> ConfirmEmail([FromRoute] ConfirmEmailCommand command)
+        public async Task<IActionResult> ConfirmEmail([FromRoute] ConfirmEmailDto dto)
         {
-            await UseCase
-               .SetInput(command)
-               .Execute()
+            await UseCase.Execute(new ConfirmEmailInput(dto.Token, dto.Email))
                .ConfigureAwait(false);
 
             return ViewModel;

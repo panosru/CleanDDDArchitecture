@@ -1,9 +1,13 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Update
 {
-    public class UpdateTodoListDto
+    using System.ComponentModel.DataAnnotations;
+
+    public struct UpdateTodoListDto
     {
+        [Required]
         public int Id { get; set; }
 
+        [Required]
         public string Title { get; set; }
     }
 }

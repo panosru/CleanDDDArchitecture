@@ -7,7 +7,6 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
     using TodoItem.Application.UseCases.Update;
-    using TodoItem.Application.UseCases.Update.Dtos;
 
     /// <summary>
     ///     Todo items endpoints
@@ -49,9 +48,7 @@
             if (id != dto.Id)
                 return BadRequest();
 
-            await UseCase
-               .SetInput(dto)
-               .Execute()
+            await UseCase.Execute(new TodoItemUpdateInput(dto.Id, dto.Title, dto.Done))
                .ConfigureAwait(false);
 
             return ViewModel;

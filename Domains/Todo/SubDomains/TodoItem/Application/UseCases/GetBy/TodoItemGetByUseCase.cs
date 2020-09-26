@@ -8,25 +8,18 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
     public class TodoItemGetByUseCase
         : UseCase<TodoItemGetByInput, ITodoItemGetByOutput>
     {
-        public override async Task Execute()
+        public override async Task Execute(TodoItemGetByInput input)
         {
             RequestResult requestResult = await Orchestrator.SendQuery(
                 new GetTodoItemQuery
                 {
-                    Id = Input.Id
+                    Id = input.Id
                 });
 
             if (requestResult.Succeeded)
                 Output.Ok(requestResult.Payload());
             else
                 Output.Invalid(requestResult.Messages.First());
-        }
-
-        public TodoItemGetByUseCase SetInput(int id)
-        {
-            Input = new TodoItemGetByInput(id);
-
-            return this;
         }
     }
 }

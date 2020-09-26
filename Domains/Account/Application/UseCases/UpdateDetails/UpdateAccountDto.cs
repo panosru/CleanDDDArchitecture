@@ -1,8 +1,8 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails.Dtos
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails
 {
     using System.ComponentModel.DataAnnotations;
 
-    public class UpdateAccountDto
+    public struct UpdateAccountDto
     {
         [Required]
         public string FirstName { get; set; }

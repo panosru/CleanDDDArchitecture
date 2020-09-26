@@ -11,7 +11,6 @@
     using Dtos;
     using Microsoft.EntityFrameworkCore;
     using Todo.Application.Persistence;
-    using ViewModels;
 
     public class GetTodosQuery : Query<TodosVm>
     { }

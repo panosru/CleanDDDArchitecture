@@ -41,17 +41,15 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         /// <response code="401">Invalid credentials or mail not confirmed.</response>
         /// <response code="400">Bad request.</response>
         /// <response code="404">Not found.</response>
-        /// <param name="command"></param>
+        /// <param name="dto"></param>
         /// <returns>Bearer token.</returns>
         [HttpPost("authenticate")]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Post))]
-        public async Task<IActionResult> Authenticate([FromBody] AuthenticateCommand command)
+        public async Task<IActionResult> Authenticate([FromBody] AuthenticateDto dto)
         {
-            await UseCase
-               .SetInput(command)
-               .Execute()
+            await UseCase.Execute(new AuthenticateInput(dto.Username, dto.Password))
                .ConfigureAwait(false);
 
             return ViewModel;

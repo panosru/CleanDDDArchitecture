@@ -1,7 +1,10 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create
 {
-    public class CreateTodoListDto
+    using System.ComponentModel.DataAnnotations;
+
+    public struct CreateTodoListDto
     {
+        [Required]
         public string Title { get; set; }
     }
 }

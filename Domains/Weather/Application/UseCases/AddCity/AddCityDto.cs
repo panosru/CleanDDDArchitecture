@@ -1,7 +1,10 @@
 namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity
 {
-    public class AddCityDto
+    using System.ComponentModel.DataAnnotations;
+
+    public struct AddCityDto
     {
+        [Required]
         public string City { get; set; }
     }
 }

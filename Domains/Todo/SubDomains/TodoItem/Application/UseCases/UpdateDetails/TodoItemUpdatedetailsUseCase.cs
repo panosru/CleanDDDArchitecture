@@ -9,30 +9,19 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
     public class TodoItemUpdatedetailsUseCase
         : UseCase<TodoItemUpdateDetailsInput, ITodoItemUpdateDetailsOutput, ITodoDbContextWrite>
     {
-        public override async Task Execute()
+        public override async Task Execute(TodoItemUpdateDetailsInput input)
         {
             RequestResult requestResult = await Orchestrator.SendCommand(
                 new UpdateTodoItemDetailCommand
                 {
-                    Id       = Input.Id,
-                    ListId   = Input.ListId,
-                    Note     = Input.Note,
-                    Priority = Input.Priority
+                    Id       = input.Id,
+                    ListId   = input.ListId,
+                    Note     = input.Note,
+                    Priority = input.Priority
                 });
 
             if (!requestResult.Succeeded)
                 Output.Invalid(requestResult.Messages.First());
-        }
-
-        public TodoItemUpdatedetailsUseCase SetInput(TodoItemUpdateDetailsDto dto)
-        {
-            Input = new TodoItemUpdateDetailsInput(
-                dto.Id,
-                dto.ListId,
-                dto.Priority,
-                dto.Note);
-
-            return this;
         }
     }
 }
