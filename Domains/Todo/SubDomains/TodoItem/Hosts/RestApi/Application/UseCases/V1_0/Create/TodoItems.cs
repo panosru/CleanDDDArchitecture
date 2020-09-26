@@ -2,14 +2,17 @@
 {
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
+    using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.FeatureManagement.Mvc;
     using TodoItem.Application.UseCases.Create;
     using TodoItem.Application.UseCases.Create.Dtos;
 
     /// <summary>
     ///     Todo items endpoints
     /// </summary>
+    [FeatureGate(Features.TodoItemCreate)]
     public class TodoItems
         : ApiController<TodoItemCreateUseCase, TodoItems>,
           ITodoItemCreateOutput

@@ -16,7 +16,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     /// </summary>
     [ApiVersion("1.0")]
     [AllowAnonymous]
-    [FeatureGate(Feature.AccountCreate)]
+    [FeatureGate(Features.AccountCreate)]
     public sealed class Account
         : ApiController<AccountCreateUseCase, Account>,
           ICreateAccountOutput

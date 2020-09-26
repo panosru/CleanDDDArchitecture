@@ -2,10 +2,12 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
 {
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
+    using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Domains.Account.Application.UseCases.ConfirmEmail;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.FeatureManagement.Mvc;
 
     /// <summary>
     ///     Account endpoints
@@ -13,6 +15,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     [ApiVersion("1.0")]
     [ApiVersion("1.1")]
     [AllowAnonymous]
+    [FeatureGate(Features.AccountConfirmEmail)]
     public sealed class Account
         : ApiController<ConfirmEmailUseCase, Account>,
           IConfirmEmailOutput

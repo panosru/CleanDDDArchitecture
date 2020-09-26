@@ -3,8 +3,10 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Controllers
     using System.Diagnostics;
     using Core;
     using Core.Controllers;
+    using Core.Features;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.FeatureManagement.Mvc;
 
     /// <summary>
     ///     Metal endpoint
@@ -12,6 +14,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Controllers
     [ApiVersion("1.0")]
     [ApiVersion("1.1")]
     [AllowAnonymous]
+    [FeatureGate(Features.Metal)]
     public class Metal : ApiController
     {
         /// <summary>

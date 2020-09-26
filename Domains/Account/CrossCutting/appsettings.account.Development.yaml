@@ -8,3 +8,7 @@ eventsTopicName: "CleanDDDArchitectureEvents"
 eventsTopicGroupName: "cleandddarchitecture-api-events-consumer"
 FeatureManagement:
   AccountCreate: true
+  AccountAuthentication: true
+  AccountConfirmEmail: true
+  AccountGetBy: true
+  AccountUpdateDetails: true

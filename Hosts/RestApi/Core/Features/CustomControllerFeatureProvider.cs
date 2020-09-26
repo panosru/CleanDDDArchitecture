@@ -60,7 +60,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Core.Features
         private void RemoveDisabledFeatureFromControllers(object argumentValue, int index)
         {
             var typedArgument      = (CustomAttributeTypedArgument) argumentValue!;
-            var typedArgumentValue = (Feature) (int) typedArgument.Value!;
+            var typedArgumentValue = (Features) (int) typedArgument.Value!;
 
             var isFeatureEnabled = _featureManager
                .IsEnabledAsync(typedArgumentValue.ToString())

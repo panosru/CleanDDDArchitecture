@@ -2,15 +2,18 @@
 {
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
+    using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.FeatureManagement.Mvc;
     using TodoList.Application.UseCases.Update;
 
     /// <summary>
     ///     Todo Lists endpoints
     /// </summary>
     [AllowAnonymous]
+    [FeatureGate(Features.TodoListUpdate)]
     public class TodoLists
         : ApiController<UpdateTodoListUseCase, TodoLists>,
           IUpdateTodoListOutput
