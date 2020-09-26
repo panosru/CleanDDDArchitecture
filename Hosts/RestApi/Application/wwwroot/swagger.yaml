@@ -624,142 +624,6 @@ paths:
         servers: []
     servers: []
     parameters: []
-  /api/account/authenticate:
-    operations:
-      Post:
-        tags:
-        - name: Account
-        summary: Authenticate a user and a bearer or an email confirmation token
-        parameters:
-        - name: x-api-version
-          in: Header
-          description: The requested API version
-          schema:
-            type: string
-            allOf: []
-            oneOf: []
-            anyOf: []
-            required: []
-            properties: {}
-            additionalPropertiesAllowed: true
-            enum: []
-          examples: {}
-          content: {}
-        requestBody:
-          description: ''
-          content:
-            application/json:
-              schema: &o4
-                allOf: []
-                oneOf: []
-                anyOf: []
-                required: []
-                properties: {}
-                additionalPropertiesAllowed: true
-                enum: []
-                reference:
-                  type: Schema
-                  id: AuthenticateCommand
-                  isLocal: true
-                  referenceV3: '#/components/schemas/AuthenticateCommand'
-                  referenceV2: '#/definitions/AuthenticateCommand'
-              examples: {}
-              encoding: {}
-            text/json:
-              schema: *o4
-              examples: {}
-              encoding: {}
-            application/*+json:
-              schema: *o4
-              examples: {}
-              encoding: {}
-        responses:
-          202:
-            description: Success
-            headers: {}
-            content: {}
-            links: {}
-          401:
-            description: Invalid credentials or mail not confirmed.
-            headers: {}
-            content:
-              text/plain:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              application/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-              text/json:
-                schema:
-                  allOf: []
-                  oneOf: []
-                  anyOf: []
-                  required: []
-                  properties: {}
-                  additionalPropertiesAllowed: true
-                  enum: []
-                  reference:
-                    type: Schema
-                    id: ProblemDetails
-                    isLocal: true
-                    referenceV3: '#/components/schemas/ProblemDetails'
-                    referenceV2: '#/definitions/ProblemDetails'
-                examples: {}
-                encoding: {}
-            links: {}
-          200:
-            description: Email confirmation required.
-            headers: {}
-            content: {}
-            links: {}
-          201:
-            description: Login successful.
-            headers: {}
-            content: {}
-            links: {}
-          400:
-            description: Bad request.
-            headers: {}
-            content: {}
-            links: {}
-          404:
-            description: Not found.
-            headers: {}
-            content: {}
-            links: {}
-        callbacks: {}
-        security: []
-        servers: []
-    servers: []
-    parameters: []
   /metal:
     operations:
       Get:
@@ -959,7 +823,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o5
+              schema: &o4
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -976,11 +840,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o5
+              schema: *o4
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o5
+              schema: *o4
               examples: {}
               encoding: {}
         responses:
@@ -1204,7 +1068,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o6
+              schema: &o5
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -1221,11 +1085,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o6
+              schema: *o5
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o6
+              schema: *o5
               examples: {}
               encoding: {}
         responses:
@@ -1803,7 +1667,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o7
+              schema: &o6
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -1820,11 +1684,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o7
+              schema: *o6
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o7
+              schema: *o6
               examples: {}
               encoding: {}
         responses:
@@ -1890,7 +1754,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o8
+              schema: &o7
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -1907,11 +1771,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o8
+              schema: *o7
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o8
+              schema: *o7
               examples: {}
               encoding: {}
         responses:
@@ -2575,7 +2439,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o9
+              schema: &o8
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -2592,11 +2456,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o9
+              schema: *o8
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o9
+              schema: *o8
               examples: {}
               encoding: {}
         responses:
@@ -2645,7 +2509,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o10
+              schema: &o9
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -2662,11 +2526,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o10
+              schema: *o9
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o10
+              schema: *o9
               examples: {}
               encoding: {}
         responses:
@@ -3013,7 +2877,7 @@ paths:
           description: ''
           content:
             application/json:
-              schema: &o11
+              schema: &o10
                 allOf: []
                 oneOf: []
                 anyOf: []
@@ -3030,11 +2894,11 @@ paths:
               examples: {}
               encoding: {}
             text/json:
-              schema: *o11
+              schema: *o10
               examples: {}
               encoding: {}
             application/*+json:
-              schema: *o11
+              schema: *o10
               examples: {}
               encoding: {}
         responses:
@@ -3481,34 +3345,6 @@ components:
         properties: {}
         additionalPropertiesAllowed: true
         enum: []
-      enum: []
-    AuthenticateCommand:
-      type: object
-      allOf: []
-      oneOf: []
-      anyOf: []
-      required: []
-      properties:
-        username:
-          type: string
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-          nullable: true
-        password:
-          type: string
-          allOf: []
-          oneOf: []
-          anyOf: []
-          required: []
-          properties: {}
-          additionalPropertiesAllowed: true
-          enum: []
-          nullable: true
       enum: []
     PriorityLevel:
       type: integer

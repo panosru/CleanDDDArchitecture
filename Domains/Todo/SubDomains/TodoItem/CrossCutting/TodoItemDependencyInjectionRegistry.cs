@@ -5,14 +5,26 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.CrossCutting
     using Application.UseCases.GetBy;
     using Application.UseCases.Update;
     using Application.UseCases.UpdateDetails;
+    using Aviant.DDD.Infrastructure.CrossCutting;
     using Core.Repositories;
     using Infrastructure.Persistence.Configurations;
     using Infrastructure.Repositories;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Todo.Infrastructure.Persistence.Contexts;
 
     public static class TodoItemDependencyInjectionRegistry
     {
+        private const string CurrentDomain = "Todo";
+
+        private const string CurrentSubDomain = "TodoItem";
+
+        static TodoItemDependencyInjectionRegistry() => Configuration =
+            DependencyInjectionRegistry.GetDomainConfiguration(
+                $"{CurrentDomain}.{CurrentSubDomain}".ToLower());
+
+        private static IConfiguration Configuration { get; }
+        
         public static IServiceCollection AddTodoItemSubDomain(this IServiceCollection services)
         {
             services.AddScoped<ITodoItemRepositoryRead, TodoItemRepositoryRead>();
