@@ -28,13 +28,5 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherS
             else
                 Output.Invalid(requestResult.Messages.First());
         }
-
-        public async Task Execute2(CancellationToken cancellationToken = new CancellationToken())
-        {
-            await Task.Delay(5000, cancellationToken)
-               .ConfigureAwait(false);
-            
-            Console.WriteLine("After delay...");
-        }
     }
 }

@@ -23,6 +23,8 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherS
             await Task.Delay(3000, cancellationToken)
                .ConfigureAwait(false);
             
+            Console.WriteLine("Some test message");
+            
             return Unit.Value;
         }
     }
