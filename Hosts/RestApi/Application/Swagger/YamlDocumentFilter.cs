@@ -14,8 +14,10 @@
     /// <summary>
     ///     To use YAML serializer to generate YAML
     /// </summary>
-    public sealed class YamlDocumentFilter : IDocumentFilter
+    internal sealed class YamlDocumentFilter : IDocumentFilter
     {
+        /// <summary>
+        /// </summary>
         private readonly IWebHostEnvironment _hostingEnvironment;
 
         /// <summary>
@@ -41,23 +43,21 @@
 
                 var serializer = builder.Build();
 
-                using (var writer = new StringWriter())
-                {
-                    serializer.Serialize(writer, swaggerDoc);
+                using var writer = new StringWriter();
 
-                    var file = Path.Combine(_hostingEnvironment.WebRootPath, "swagger.yaml");
+                serializer.Serialize(writer, swaggerDoc);
 
-                    using (var stream = new StreamWriter(file))
-                    {
-                        var result = writer.ToString();
+                var file = Path.Combine(_hostingEnvironment.WebRootPath, "swagger.yaml");
 
-                        stream
-                           .WriteLine(
-                                result
-                                   .Replace("2.0",  "\"2.0\"", StringComparison.OrdinalIgnoreCase)
-                                   .Replace("ref:", "$ref:",   StringComparison.OrdinalIgnoreCase));
-                    }
-                }
+                using var stream = new StreamWriter(file);
+
+                var result = writer.ToString();
+
+                stream
+                   .WriteLine(
+                        result
+                           .Replace("2.0",  "\"2.0\"", StringComparison.OrdinalIgnoreCase)
+                           .Replace("ref:", "$ref:",   StringComparison.OrdinalIgnoreCase));
             }
             catch (Exception e)
             {
@@ -69,12 +69,24 @@
 
         #region Nested type: PropertiesIgnoreTypeInspector
 
-        private class PropertiesIgnoreTypeInspector : TypeInspectorSkeleton
+        /// <summary>
+        /// </summary>
+        private sealed class PropertiesIgnoreTypeInspector : TypeInspectorSkeleton
         {
+            /// <summary>
+            /// </summary>
             private readonly ITypeInspector _typeInspector;
 
+            /// <summary>
+            /// </summary>
+            /// <param name="typeInspector"></param>
             public PropertiesIgnoreTypeInspector(ITypeInspector typeInspector) => _typeInspector = typeInspector;
 
+            /// <summary>
+            /// </summary>
+            /// <param name="type"></param>
+            /// <param name="container"></param>
+            /// <returns></returns>
             public override IEnumerable<IPropertyDescriptor> GetProperties(Type type, object container)
             {
                 return _typeInspector.GetProperties(type, container)

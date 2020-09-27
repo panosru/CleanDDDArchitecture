@@ -1,6 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger
 {
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -8,10 +9,15 @@
     using Swashbuckle.AspNetCore.SwaggerUI;
 
     /// <inheritdoc cref="SwaggerUIOptions" />
-    public sealed class ConfigureSwaggerUiOptions : IConfigureOptions<SwaggerUIOptions>
+    [ExcludeFromCodeCoverage]
+    internal sealed class ConfigureSwaggerUiOptions : IConfigureOptions<SwaggerUIOptions>
     {
+        /// <summary>
+        /// </summary>
         private readonly IApiVersionDescriptionProvider _provider;
 
+        /// <summary>
+        /// </summary>
         private readonly SwaggerSettings _settings;
 
         /// <inheritdoc cref="ConfigureSwaggerUiOptions" />
@@ -19,15 +25,21 @@
             IApiVersionDescriptionProvider versionDescriptionProvider,
             IOptions<SwaggerSettings>      settings)
         {
-            Debug.Assert(versionDescriptionProvider != null, $"{nameof(versionDescriptionProvider)} != null");
-            Debug.Assert(settings                   != null, $"{nameof(versionDescriptionProvider)} != null");
+            Debug.Assert(
+                versionDescriptionProvider != null,
+                $"{nameof(versionDescriptionProvider)} != null");
+
+            Debug.Assert(
+                settings != null,
+                $"{nameof(versionDescriptionProvider)} != null");
 
             _provider = versionDescriptionProvider;
-            _settings = settings?.Value ?? new SwaggerSettings();
+            _settings = settings.Value ?? new SwaggerSettings();
         }
 
         #region IConfigureOptions<SwaggerUIOptions> Members
 
+        /// <inheritdoc />
         /// <summary>
         ///     Configure
         /// </summary>
@@ -41,10 +53,15 @@
                     description =>
                     {
                         options.SwaggerEndpoint(
-                            $"/{_settings.RoutePrefixWithSlash}{description.GroupName}/swagger.json",
+                            $"/{_settings.RoutePrefix}/{description.GroupName}/swagger.json",
                             description.GroupName.ToUpperInvariant());
 
-                        options.RoutePrefix = _settings.RoutePrefix;
+                        options.DocumentTitle = _settings.Name;
+                        options.RoutePrefix   = _settings.RoutePrefix;
+                        options.DocExpansion(DocExpansion.List);
+                        options.DefaultModelExpandDepth(0);
+                        options.DisplayRequestDuration();
+                        options.EnableFilter();
                     });
         }
 
