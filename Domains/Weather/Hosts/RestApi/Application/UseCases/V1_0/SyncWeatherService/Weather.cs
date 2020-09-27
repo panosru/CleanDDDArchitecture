@@ -32,7 +32,7 @@
 
         #endregion
         
-        public static readonly CancellationToken CancellationToken = new CancellationToken();
+        // public static readonly CancellationToken CancellationToken = new CancellationToken();
 
         /// <summary>
         ///     Dummy weather syncing with external service (3 seconds delay)
@@ -41,16 +41,17 @@
         /// <response code="400">Bad request.</response>
         /// <response code="404">Not Found.</response>
         /// <param name="dto"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns>Successful message.</returns>
         [HttpPost]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Patch))]
-        public async Task<IActionResult> Forecast([FromBody] SyncWeatherServiceDto dto)
+        public async Task<IActionResult> Forecast(
+            [FromBody] SyncWeatherServiceDto dto,
+            CancellationToken cancellationToken = default)
         {
-            // await UseCase.ExecuteAsync(new SyncWeatherServiceInput(dto.City))
-            //    .ConfigureAwait(false);
-
-            await UseCase.Execute2(CancellationToken).ConfigureAwait(false);
-
+            await UseCase.ExecuteAsync(new SyncWeatherServiceInput(dto.City), cancellationToken)
+               .ConfigureAwait(false);
+            
             return ViewModel;
         }
     }
