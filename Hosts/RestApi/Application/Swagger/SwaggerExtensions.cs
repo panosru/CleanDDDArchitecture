@@ -1,5 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger
 {
+    using System.Diagnostics.CodeAnalysis;
+    using Aviant.DDD.Infrastructure.CrossCutting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Versioning;
     using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
@@ -13,18 +15,20 @@
     /// <summary>
     ///     Service Collection(IServiceCollection) Extensions
     /// </summary>
-    public static class ServicesExtensions
+    [ExcludeFromCodeCoverage]
+    internal static class SwaggerExtensions
     {
         /// <summary>
         ///     Add AddVersionedApiExplorer and AddApiVersioning middlewares
         /// </summary>
         /// <param name="services"></param>
         /// <returns>IServiceCollection</returns>
-        public static IServiceCollection AddApiVersionWithExplorer(
-            this IServiceCollection services,
-            IConfiguration          configuration)
+        public static IServiceCollection AddApiVersionWithExplorer(this IServiceCollection services)
         {
-            services.Configure<SwaggerSettings>(configuration.GetSection(nameof(SwaggerSettings)));
+            var settings = DependencyInjectionRegistry.DefaultConfiguration
+               .GetSection(nameof(SwaggerSettings));
+
+            services.Configure<SwaggerSettings>(settings);
 
             return services
                .AddVersionedApiExplorer(
@@ -38,8 +42,14 @@
                     {
                         options.AssumeDefaultVersionWhenUnspecified = true;
                         options.ReportApiVersions                   = true;
-                        options.DefaultApiVersion                   = new ApiVersion(1, 0);
-                        options.ApiVersionReader                    = new HeaderApiVersionReader("x-api-version");
+
+                        options.DefaultApiVersion = new ApiVersion(
+                            settings.GetValue<int>("DefaultApiVersion:Major"),
+                            settings.GetValue<int>("DefaultApiVersion:Minor"));
+
+                        options.ApiVersionReader = new HeaderApiVersionReader(
+                            "x-api-version");
+
                         options.Conventions.Add(new VersionByNamespaceConvention());
                     });
         }

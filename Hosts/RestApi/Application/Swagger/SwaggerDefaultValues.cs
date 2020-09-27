@@ -1,5 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Microsoft.OpenApi.Models;
     using Swashbuckle.AspNetCore.SwaggerGen;
@@ -11,7 +12,8 @@
     ///     This <see cref="IOperationFilter" /> is only required due to bugs in the <see cref="SwaggerGenerator" />.
     ///     Once they are fixed and published, this class can be removed.
     /// </remarks>
-    public sealed class SwaggerDefaultValues : IOperationFilter
+    [ExcludeFromCodeCoverage]
+    internal sealed class SwaggerDefaultValues : IOperationFilter
     {
         #region IOperationFilter Members
 
@@ -26,17 +28,13 @@
 
             foreach (var parameter in operation.Parameters)
             {
-                var description = context.ApiDescription.ParameterDescriptions.First(p => p.Name == parameter.Name);
-                var routeInfo   = description.RouteInfo;
+                var description = context.ApiDescription.ParameterDescriptions.First(
+                    p => p.Name == parameter.Name);
+                var routeInfo = description.RouteInfo;
 
-                if (parameter.Description == null) parameter.Description = description.ModelMetadata?.Description;
+                parameter.Description ??= description.ModelMetadata?.Description;
 
                 if (routeInfo == null) continue;
-
-                //if (parameter.Default == null)
-                //{
-                //    parameter.Default = routeInfo.DefaultValue;
-                //}
 
                 parameter.Required |= !routeInfo.IsOptional;
             }

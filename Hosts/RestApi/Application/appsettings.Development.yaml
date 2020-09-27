@@ -9,7 +9,5 @@ Logging:
     Default: Debug
     System: Information
     Microsoft: Information
-SwaggerSettings:
-  RoutePrefix: ''
 FeatureManagement:
   Metal: true
