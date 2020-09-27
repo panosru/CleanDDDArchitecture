@@ -48,7 +48,7 @@
             if (id != dto.Id)
                 return BadRequest();
 
-            await UseCase.Execute(
+            await UseCase.ExecuteAsync(
                     new TodoItemUpdateDetailsInput(
                         dto.Id,
                         dto.ListId,

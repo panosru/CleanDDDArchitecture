@@ -1,5 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create
 {
+    using System.Threading;
+    using System.Threading.Tasks;
     using Aviant.DDD.Application.UseCases;
 
     public class CreateTodoListInput : UseCaseInput<CreateTodoListInput, CreateTodoListInputValidator>
@@ -8,6 +10,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
 
         public string Title { get; }
 
-        public override void Validate() => UseDefaultValidation(this);
+        public override Task ValidateAsync(CancellationToken cancellationToken = default) => 
+            UseDefaultValidation(this, cancellationToken);
     }
 }

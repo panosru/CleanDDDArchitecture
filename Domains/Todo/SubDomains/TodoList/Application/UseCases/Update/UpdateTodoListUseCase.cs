@@ -1,6 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Update
 {
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
@@ -9,14 +10,18 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
     public class UpdateTodoListUseCase
         : UseCase<UpdateTodoListInput, IUpdateTodoListOutput, ITodoDbContextWrite>
     {
-        public override async Task Execute(UpdateTodoListInput input)
+        public override async Task ExecuteAsync(
+            UpdateTodoListInput input,
+            CancellationToken   cancellationToken = default)
         {
-            RequestResult requestResult = await Orchestrator.SendCommand(
+            RequestResult requestResult = await Orchestrator.SendCommandAsync(
                 new UpdateTodoListCommand
                 {
                     Id    = input.Id,
                     Title = input.Title
-                });
+                },
+                cancellationToken)
+               .ConfigureAwait(false);
 
             if (!requestResult.Succeeded)
                 Output.Invalid(requestResult.Messages.First());

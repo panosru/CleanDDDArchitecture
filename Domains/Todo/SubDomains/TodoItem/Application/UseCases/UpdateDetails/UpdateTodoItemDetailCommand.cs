@@ -39,7 +39,8 @@
             UpdateTodoItemDetailCommand command,
             CancellationToken           cancellationToken)
         {
-            var entity = await _todoItemReadRepository.Find(command.Id);
+            var entity = await _todoItemReadRepository.FindAsync(command.Id, cancellationToken)
+               .ConfigureAwait(false);
 
             if (entity == null) throw new NotFoundException(nameof(TodoItemEntity), command.Id);
 
@@ -47,7 +48,8 @@
             entity.Priority = command.Priority;
             entity.Note     = command.Note;
 
-            await _todoItemWriteRepository.Update(entity);
+            await _todoItemWriteRepository.UpdateAsync(entity, cancellationToken)
+               .ConfigureAwait(false);
 
             return new Unit();
         }

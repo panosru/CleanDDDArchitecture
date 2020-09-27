@@ -1,6 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Export
 {
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
@@ -8,13 +9,17 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
     public class ExportTodoListUseCase
         : UseCase<ExportTodoListInput, IExportTodoListOutput>
     {
-        public override async Task Execute(ExportTodoListInput input)
+        public override async Task ExecuteAsync(
+            ExportTodoListInput input,
+            CancellationToken   cancellationToken = default)
         {
-            RequestResult requestResult = await Orchestrator.SendQuery(
+            RequestResult requestResult = await Orchestrator.SendQueryAsync(
                 new ExportTodosQuery
                 {
                     ListId = input.ListId
-                });
+                },
+                cancellationToken)
+               .ConfigureAwait(false);
 
             if (requestResult.Succeeded)
                 Output.Ok(requestResult.Payload<ExportTodosVm>());

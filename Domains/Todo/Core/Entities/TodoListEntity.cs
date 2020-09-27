@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Core.Entities;
     using Aviant.DDD.Core.Validators;
@@ -49,7 +50,7 @@
 
         #endregion
 
-        public override Task<bool> Validate()
+        public override Task<bool> ValidateAsync(CancellationToken cancellationToken = default)
         {
             var satisfied = AssertionsConcernValidator.IsSatisfiedBy(
                 AssertionsConcernValidator.IsGreaterThan(

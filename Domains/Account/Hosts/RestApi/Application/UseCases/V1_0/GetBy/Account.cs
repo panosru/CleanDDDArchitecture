@@ -50,7 +50,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Find))]
         public async Task<IActionResult> GetAccount([FromRoute] Guid id)
         {
-            await UseCase.Execute(new GetAccountInput(id))
+            await UseCase.ExecuteAsync(new GetAccountInput(id))
                .ConfigureAwait(false);
 
             return ViewModel;

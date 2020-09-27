@@ -45,7 +45,7 @@
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Get))]
         public async Task<IActionResult> Export([FromRoute] int id)
         {
-            await UseCase.Execute(new ExportTodoListInput(id))
+            await UseCase.ExecuteAsync(new ExportTodoListInput(id))
                .ConfigureAwait(false);
 
             return ViewModel;

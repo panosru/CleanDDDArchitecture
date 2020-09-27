@@ -19,7 +19,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
 
         public override Task<string> Handle(GetTodoItemQuery request, CancellationToken cancellationToken)
         {
-            var todoName = _todoItemReadRepository.GetFirst(request.Id)?.Result.Title;
+            var todoName = _todoItemReadRepository.GetFirstAsync(request.Id)?.Result.Title;
 
             return Task.FromResult(todoName);
         }

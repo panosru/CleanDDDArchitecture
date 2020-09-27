@@ -24,7 +24,8 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
 
         private async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)
         {
-            return await _todoListReadRepository.All(l => l.Title != title);
+            return await _todoListReadRepository.AllAsync(l => l.Title != title, cancellationToken)
+               .ConfigureAwait(false);
         }
     }
 }

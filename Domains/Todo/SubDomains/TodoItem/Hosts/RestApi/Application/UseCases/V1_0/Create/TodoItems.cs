@@ -46,7 +46,7 @@
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Create))]
         public async Task<IActionResult> Create([FromBody] TodoItemCreateDto dto)
         {
-            await UseCase.Execute(new TodoItemCreateInput(dto.ListId, dto.Title))
+            await UseCase.ExecuteAsync(new TodoItemCreateInput(dto.ListId, dto.Title))
                .ConfigureAwait(false);
 
             return ViewModel;

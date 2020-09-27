@@ -56,13 +56,14 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                         typeof(IOrchestrator<AccountAggregate, AccountAggregateId>).Name);
 
                 RequestResult requestResult = await orchestrator
-                   .SendCommand(
+                   .SendCommandAsync(
                         new CreateAccount(
                             accountDto.UserName,
                             accountDto.Password,
                             accountDto.FirstName,
                             accountDto.LastName,
-                            accountDto.Email));
+                            accountDto.Email))
+                   .ConfigureAwait(false);
 
                 if (!requestResult.Succeeded)
                     throw new Exception($"Unable to create default user \"{accountDto.UserName}\".");

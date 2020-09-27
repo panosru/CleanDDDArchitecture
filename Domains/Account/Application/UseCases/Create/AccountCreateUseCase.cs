@@ -1,6 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
 {
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using Aggregates;
     using Aviant.DDD.Application.Orchestration;
@@ -9,15 +10,18 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
     public class AccountCreateUseCase
         : UseCase<CreateAccountInput, ICreateAccountOutput, AccountAggregate, AccountAggregateId>
     {
-        public override async Task Execute(CreateAccountInput input)
+        public override async Task ExecuteAsync(
+            CreateAccountInput input,
+            CancellationToken  cancellationToken = default)
         {
-            RequestResult requestResult = await Orchestrator.SendCommand(
+            RequestResult requestResult = await Orchestrator.SendCommandAsync(
                     new CreateAccount(
                         input.UserName,
                         input.Password,
                         input.FirstName,
                         input.LastName,
-                        input.Email))
+                        input.Email),
+                    cancellationToken)
                .ConfigureAwait(false);
 
             if (requestResult.Succeeded)

@@ -31,13 +31,15 @@
 
         public override async Task<Unit> Handle(UpdateTodoListCommand command, CancellationToken cancellationToken)
         {
-            var entity = await _todoListReadRepository.Find(command.Id);
+            var entity = await _todoListReadRepository.FindAsync(command.Id, cancellationToken)
+               .ConfigureAwait(false);
 
             if (entity == null) throw new NotFoundException(nameof(TodoListEntity), command.Id);
 
             entity.Title = command.Title;
 
-            await _todoListWriteRepository.Update(entity);
+            await _todoListWriteRepository.UpdateAsync(entity, cancellationToken)
+               .ConfigureAwait(false);
 
             return new Unit();
         }

@@ -32,11 +32,13 @@
         {
             var entity = await _todoListReadRepository
                .FindBy(l => l.Id == command.Id)
-               .SingleOrDefaultAsync(cancellationToken);
+               .SingleOrDefaultAsync(cancellationToken)
+               .ConfigureAwait(false);
 
             if (entity == null) throw new NotFoundException(nameof(TodoListEntity), command.Id);
 
-            await _todoListWriteRepository.Delete(entity);
+            await _todoListWriteRepository.DeleteAsync(entity, cancellationToken)
+               .ConfigureAwait(false);
 
             return new Unit();
         }

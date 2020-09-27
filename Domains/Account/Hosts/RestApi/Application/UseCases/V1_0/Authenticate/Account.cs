@@ -49,7 +49,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Post))]
         public async Task<IActionResult> Authenticate([FromBody] AuthenticateDto dto)
         {
-            await UseCase.Execute(new AuthenticateInput(dto.Username, dto.Password))
+            await UseCase.ExecuteAsync(new AuthenticateInput(dto.Username, dto.Password))
                .ConfigureAwait(false);
 
             return ViewModel;

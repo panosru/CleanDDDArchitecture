@@ -27,11 +27,12 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Middlewares
         {
             try
             {
-                await _next(context);
+                await _next(context).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex);
+                await HandleExceptionAsync(context, ex)
+                   .ConfigureAwait(false);
             }
         }
 

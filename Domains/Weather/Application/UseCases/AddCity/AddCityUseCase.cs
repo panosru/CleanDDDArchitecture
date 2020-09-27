@@ -1,6 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity
 {
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
@@ -8,16 +9,19 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity
     public class AddCityUseCase
         : UseCase<AddCityInput, IAddCityOutput>
     {
-        public override async Task Execute(AddCityInput input)
+        public override async Task ExecuteAsync(
+            AddCityInput input, CancellationToken cancellationToken = default)
         {
             switch (input.City)
             {
                 case "Athens":
-                    RequestResult requestResult = await Orchestrator.SendCommand(
+                    RequestResult requestResult = await Orchestrator.SendCommandAsync(
                         new AddCityCommand
                         {
                             City = input.City
-                        });
+                        },
+                        cancellationToken)
+                       .ConfigureAwait(false);
 
                     if (requestResult.Succeeded)
                         Output.Ok(requestResult.Payload<string>());

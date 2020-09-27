@@ -1,6 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Delete
 {
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
@@ -9,13 +10,17 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
     public class DeleteTodoListUseCase
         : UseCase<DeleteTodoListInput, IDeleteTodoUseCaseOutput, ITodoDbContextWrite>
     {
-        public override async Task Execute(DeleteTodoListInput input)
+        public override async Task ExecuteAsync(
+            DeleteTodoListInput input,
+            CancellationToken   cancellationToken = default)
         {
-            RequestResult requestResult = await Orchestrator.SendCommand(
+            RequestResult requestResult = await Orchestrator.SendCommandAsync(
                 new DeleteTodoListCommand
                 {
                     Id = input.Id
-                });
+                },
+                cancellationToken)
+               .ConfigureAwait(false);
 
             if (!requestResult.Succeeded)
                 Output.Invalid(requestResult.Messages.First());

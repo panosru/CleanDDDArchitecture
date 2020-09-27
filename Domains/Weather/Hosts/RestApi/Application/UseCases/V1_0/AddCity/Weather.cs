@@ -50,7 +50,7 @@
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Post))]
         public async Task<IActionResult> AddCity([FromBody] AddCityDto dto)
         {
-            await UseCase.Execute(new AddCityInput(dto.City))
+            await UseCase.ExecuteAsync(new AddCityInput(dto.City))
                .ConfigureAwait(false);
 
             return ViewModel;
