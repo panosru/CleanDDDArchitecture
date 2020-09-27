@@ -43,7 +43,7 @@
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Get))]
         public async Task<IActionResult> Forecast()
         {
-            await UseCase.Execute()
+            await UseCase.ExecuteAsync()
                .ConfigureAwait(false);
 
             return ViewModel;

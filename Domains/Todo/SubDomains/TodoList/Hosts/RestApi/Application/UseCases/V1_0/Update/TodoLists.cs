@@ -50,7 +50,7 @@
             if (id != dto.Id)
                 return BadRequest();
 
-            await UseCase.Execute(new UpdateTodoListInput(dto.Id, dto.Title))
+            await UseCase.ExecuteAsync(new UpdateTodoListInput(dto.Id, dto.Title))
                .ConfigureAwait(false);
 
             return ViewModel;

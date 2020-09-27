@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Web;
     using Application.Identity;
@@ -31,12 +32,16 @@
 
         #region IIdentityService Members
 
-        public async Task<object?> Authenticate(string username, string password)
+        public async Task<object?> AuthenticateAsync(
+            string            username, 
+            string            password,
+            CancellationToken cancellationToken = default)
         {
             // Check if user with that username exists
             var user = await _userManager.Users.FirstOrDefaultAsync(
                     u =>
-                        u.UserName == username)
+                        u.UserName == username,
+                    cancellationToken)
                .ConfigureAwait(false);
 
             // Check if the user exists
@@ -78,9 +83,13 @@
             return new { token = GenerateJwtToken(user) };
         }
 
-        public async Task<IdentityResult> ConfirmEmail(string token, string email)
+        public async Task<IdentityResult> ConfirmEmailAsync(
+            string            token, 
+            string            email,
+            CancellationToken cancellationToken = default)
         {
-            var user = await _userManager.FindByEmailAsync(email).ConfigureAwait(false);
+            var user = await _userManager.FindByEmailAsync(email)
+               .ConfigureAwait(false);
 
             if (user is null)
                 return IdentityResult.Failure(new[] { "Invalid" });
@@ -88,7 +97,8 @@
             if (user.EmailConfirmed)
                 return IdentityResult.Failure(new[] { "Email already confirmed" });
 
-            var result = await _userManager.ConfirmEmailAsync(user, token).ConfigureAwait(false);
+            var result = await _userManager.ConfirmEmailAsync(user, token)
+               .ConfigureAwait(false);
 
             if (!result.Succeeded)
                 return IdentityResult.Failure(new[] { result.Errors.First().Description });
@@ -96,17 +106,22 @@
             return IdentityResult.Success();
         }
 
-        public async Task<string> GetUserNameAsync(Guid userId)
+        public async Task<string> GetUserNameAsync(
+            Guid              userId,
+            CancellationToken cancellationToken = default)
         {
             Console.WriteLine(userId);
 
-            var user = await _userManager.Users.FirstAsync(u => u.Id == userId)
+            var user = await _userManager.Users.FirstAsync(u => u.Id == userId, cancellationToken)
                .ConfigureAwait(false);
 
             return user.UserName;
         }
 
-        public async Task<(IdentityResult Result, Guid UserId)> CreateUserAsync(string username, string password)
+        public async Task<(IdentityResult Result, Guid UserId)> CreateUserAsync(
+            string            username, 
+            string            password,
+            CancellationToken cancellationToken = default)
         {
             var user = new AccountUser
             {
@@ -120,12 +135,14 @@
             return (result.ToApplicationResult(), user.Id);
         }
 
-        public async Task<IdentityResult> DeleteUserAsync(Guid userId)
+        public async Task<IdentityResult> DeleteUserAsync(
+            Guid              userId,
+            CancellationToken cancellationToken = default)
         {
             var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
 
             if (user != null)
-                return await DeleteUserAsync(user)
+                return await DeleteUserAsync(user, cancellationToken)
                    .ConfigureAwait(false);
 
             return IdentityResult.Success();
@@ -133,7 +150,9 @@
 
         #endregion
 
-        public async Task<IdentityResult> DeleteUserAsync(AccountUser user)
+        public async Task<IdentityResult> DeleteUserAsync(
+            AccountUser       user,
+            CancellationToken cancellationToken = default)
         {
             var result = await _userManager.DeleteAsync(user)
                .ConfigureAwait(false);

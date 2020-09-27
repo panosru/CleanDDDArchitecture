@@ -52,7 +52,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Patch))]
         public async Task<IActionResult> ConfirmEmail([FromRoute] ConfirmEmailDto dto)
         {
-            await UseCase.Execute(new ConfirmEmailInput(dto.Token, dto.Email))
+            await UseCase.ExecuteAsync(new ConfirmEmailInput(dto.Token, dto.Email))
                .ConfigureAwait(false);
 
             return ViewModel;

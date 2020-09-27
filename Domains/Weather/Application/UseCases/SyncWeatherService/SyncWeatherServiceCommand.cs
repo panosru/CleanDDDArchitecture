@@ -20,7 +20,8 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherS
             if (false)
                 throw new Exception("Something went wrong!");
 
-            await Task.Delay(3000, cancellationToken);
+            await Task.Delay(3000, cancellationToken)
+               .ConfigureAwait(false);
             
             return Unit.Value;
         }

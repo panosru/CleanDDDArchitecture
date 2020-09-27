@@ -15,14 +15,14 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Workers
         public EventsConsumerWorker(IEventConsumerFactory eventConsumerFactory) =>
             _eventConsumerFactory = eventConsumerFactory;
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             IEnumerable<IEventConsumer> consumers = new[]
             {
                 _eventConsumerFactory.Build<AccountAggregate, AccountAggregateId, AccountIdDeserializer>()
             };
 
-            var tc = Task.WhenAll(consumers.Select(c => c.ConsumeAsync(stoppingToken)));
+            var tc = Task.WhenAll(consumers.Select(c => c.ConsumeAsync(cancellationToken)));
             await tc.ConfigureAwait(false);
         }
     }
