@@ -41,13 +41,14 @@
             List<TodoItemRecord> records = await _context.TodoItems
                .Where(t => t.ListId == request.ListId)
                .ProjectTo<TodoItemRecord>(_mapper.ConfigurationProvider)
-               .ToListAsync(cancellationToken);
+               .ToListAsync(cancellationToken)
+               .ConfigureAwait(false);
 
             vm.Content     = _fileBuilder.BuildTodoItemsFile(records);
             vm.ContentType = "text/csv";
             vm.FileName    = "TodoItems.csv";
 
-            return await Task.FromResult(vm);
+            return await Task.FromResult(vm).ConfigureAwait(false);
         }
     }
 }

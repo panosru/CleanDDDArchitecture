@@ -41,7 +41,7 @@
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Find))]
         public async Task<IActionResult> GetBy([FromRoute] int id)
         {
-            await UseCase.Execute(new TodoItemGetByInput(id))
+            await UseCase.ExecuteAsync(new TodoItemGetByInput(id))
                .ConfigureAwait(false);
 
             return ViewModel;

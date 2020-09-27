@@ -40,7 +40,8 @@
                 Title  = command.Title
             };
 
-            await _todoItemWriteRepository.Add(entity);
+            await _todoItemWriteRepository.AddAsync(entity, cancellationToken)
+               .ConfigureAwait(false);
 
             return new Lazy<TodoItemViewModel>(() => _mapper.Map<TodoItemViewModel>(entity));
         }

@@ -32,7 +32,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
                 var token = Encoding.UTF8.GetString(
                     Convert.FromBase64String(HttpUtility.UrlDecode(command.Token)));
 
-                return await _identityIdentityService.ConfirmEmail(
+                return await _identityIdentityService.ConfirmEmailAsync(
                         token,
                         command.Email)
                    .ConfigureAwait(false);

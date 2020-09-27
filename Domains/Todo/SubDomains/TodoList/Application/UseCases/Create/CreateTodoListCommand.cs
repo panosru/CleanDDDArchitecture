@@ -40,7 +40,8 @@
             var entity = new TodoListEntity { Title = command.Title };
 
 
-            await _todoListWriteRepository.Add(entity);
+            await _todoListWriteRepository.AddAsync(entity, cancellationToken)
+               .ConfigureAwait(false);
 
             _notificationDispatcher.AddPostCommitNotification(
                 new CreatedTodoListNotification

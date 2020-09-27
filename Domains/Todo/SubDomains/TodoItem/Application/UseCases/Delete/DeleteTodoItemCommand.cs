@@ -29,11 +29,13 @@
 
         public override async Task<Unit> Handle(DeleteTodoItemCommand command, CancellationToken cancellationToken)
         {
-            var entity = await _todoItemReadRepository.Find(command.Id);
+            var entity = await _todoItemReadRepository.FindAsync(command.Id, cancellationToken)
+               .ConfigureAwait(false);
 
             if (entity == null) throw new NotFoundException(nameof(TodoItemEntity), command.Id);
 
-            await _todoItemWriteRepository.Delete(entity);
+            await _todoItemWriteRepository.DeleteAsync(entity, cancellationToken)
+               .ConfigureAwait(false);
 
             return new Unit();
         }

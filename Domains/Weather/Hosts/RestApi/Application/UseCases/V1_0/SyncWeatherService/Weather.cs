@@ -1,5 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.UseCases.V1_0.SyncWeatherService
 {
+    using System.Threading;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
@@ -30,6 +31,8 @@
         void ISyncWeatherServiceOutput.NoContent() => ViewModel = NoContent();
 
         #endregion
+        
+        public static readonly CancellationToken CancellationToken = new CancellationToken();
 
         /// <summary>
         ///     Dummy weather syncing with external service (3 seconds delay)
@@ -38,14 +41,15 @@
         /// <response code="400">Bad request.</response>
         /// <response code="404">Not Found.</response>
         /// <param name="dto"></param>
-        /// <param name="cancellationToken"></param>
         /// <returns>Successful message.</returns>
         [HttpPost]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Patch))]
         public async Task<IActionResult> Forecast([FromBody] SyncWeatherServiceDto dto)
         {
-            await UseCase.Execute(new SyncWeatherServiceInput(dto.City))
-               .ConfigureAwait(false);
+            // await UseCase.ExecuteAsync(new SyncWeatherServiceInput(dto.City))
+            //    .ConfigureAwait(false);
+
+            await UseCase.Execute2(CancellationToken).ConfigureAwait(false);
 
             return ViewModel;
         }

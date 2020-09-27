@@ -55,7 +55,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
             [FromRoute] Guid             id,
             [FromBody]  UpdateAccountDto dto)
         {
-            await UseCase.Execute(
+            await UseCase.ExecuteAsync(
                     new UpdateDetailsInput(
                         id,
                         dto.FirstName,

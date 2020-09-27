@@ -31,8 +31,11 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
 
                 try
                 {
-                    await AccountCrossCutting.GenerateDefaultUserIfNotExists(serviceProvider);
-                    await TodoCrossCutting.GenerateTodoMigrationsIfNewExists(serviceProvider);
+                    await AccountCrossCutting.GenerateDefaultUserIfNotExists(serviceProvider)
+                       .ConfigureAwait(false);
+                    
+                    await TodoCrossCutting.GenerateTodoMigrationsIfNewExists(serviceProvider)
+                       .ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -44,7 +47,8 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 }
             }
 
-            await host.RunAsync();
+            await host.RunAsync()
+               .ConfigureAwait(false);
         }
 
         /// <summary>

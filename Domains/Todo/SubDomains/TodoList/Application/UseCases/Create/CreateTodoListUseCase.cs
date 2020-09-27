@@ -1,6 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create
 {
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
@@ -9,9 +10,12 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
     public class CreateTodoListUseCase
         : UseCase<CreateTodoListInput, ICreateTodoListOutput, ITodoDbContextWrite>
     {
-        public override async Task Execute(CreateTodoListInput input)
+        public override async Task ExecuteAsync(
+            CreateTodoListInput input,
+            CancellationToken   cancellationToken = default)
         {
-            input.Validate();
+            await input.ValidateAsync(cancellationToken)
+               .ConfigureAwait(false);
 
             if (!input.ValidationResult.IsValid)
             {
@@ -19,11 +23,13 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
                 return;
             }
 
-            RequestResult requestResult = await Orchestrator.SendCommand(
+            RequestResult requestResult = await Orchestrator.SendCommandAsync(
                 new CreateTodoListCommand
                 {
                     Title = input.Title
-                });
+                },
+                cancellationToken)
+               .ConfigureAwait(false);
 
             if (requestResult.Succeeded)
                 Output.Ok(requestResult.Payload());
