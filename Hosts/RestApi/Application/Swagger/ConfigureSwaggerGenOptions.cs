@@ -2,8 +2,8 @@
 {
     using System;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
-    using System.Reflection;
     using AutoMapper.Internal;
     using Microsoft.AspNetCore.Mvc.ApiExplorer;
     using Microsoft.Extensions.DependencyInjection;
@@ -15,10 +15,15 @@
     /// <summary>
     ///     Implementation of IConfigureOptions&lt;SwaggerGenOptions&gt;
     /// </summary>
-    public sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
+    [ExcludeFromCodeCoverage]
+    internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
     {
+        /// <summary>
+        /// </summary>
         private readonly IApiVersionDescriptionProvider _provider;
 
+        /// <summary>
+        /// </summary>
         private readonly SwaggerSettings _settings;
 
         /// <summary>
@@ -30,8 +35,13 @@
             IApiVersionDescriptionProvider versionDescriptionProvider,
             IOptions<SwaggerSettings>      swaggerSettings)
         {
-            Debug.Assert(versionDescriptionProvider != null, $"{nameof(versionDescriptionProvider)} != null");
-            Debug.Assert(swaggerSettings            != null, $"{nameof(swaggerSettings)} != null");
+            Debug.Assert(
+                versionDescriptionProvider != null,
+                $"{nameof(versionDescriptionProvider)} != null");
+
+            Debug.Assert(
+                swaggerSettings != null,
+                $"{nameof(swaggerSettings)} != null");
 
             _provider = versionDescriptionProvider;
             _settings = swaggerSettings.Value ?? new SwaggerSettings();
@@ -44,8 +54,6 @@
         {
             options.DocumentFilter<YamlDocumentFilter>();
             options.OperationFilter<SwaggerDefaultValues>();
-
-            //options.DescribeAllEnumsAsStrings();
             options.IgnoreObsoleteActions();
             options.IgnoreObsoleteProperties();
 
@@ -53,27 +61,16 @@
                 "Bearer",
                 new OpenApiSecurityScheme
                 {
-                    In          = ParameterLocation.Header,
-                    Description = "Type into the textbox: Bearer {your JWT token}.",
-                    Name        = "Authorization",
-                    Type        = SecuritySchemeType.ApiKey
+                    Name         = "Authorization",
+                    Description  = "Type into the textbox: Bearer {your JWT token}.",
+                    Type         = SecuritySchemeType.ApiKey,
+                    BearerFormat = "JWT",
+                    In           = ParameterLocation.Header,
+                    Scheme       = "bearer"
                 });
 
-            options.AddSecurityRequirement(
-                new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id   = "Bearer"
-                            }
-                        },
-                        new string[] { }
-                    }
-                });
+            // Add auth header filter
+            options.OperationFilter<AuthenticationRequirement>();
 
             AddSwaggerDocumentForEachDiscoveredApiVersion(options);
             SetCommentsPathForSwaggerJsonAndUi(options);
@@ -81,33 +78,40 @@
 
         #endregion
 
+        /// <summary>
+        /// </summary>
+        /// <param name="options"></param>
         private void AddSwaggerDocumentForEachDiscoveredApiVersion(SwaggerGenOptions options)
         {
             foreach (var description in _provider.ApiVersionDescriptions)
             {
-                _settings.Info.Version = description.ApiVersion.ToString();
+                if (description.IsDeprecated) _settings.Info!.Description += " - DEPRECATED";
 
-                if (description.IsDeprecated) _settings.Info.Description += " - DEPRECATED";
-
-                options.SwaggerDoc(description.GroupName, _settings.Info);
+                options.SwaggerDoc(
+                    description.GroupName,
+                    new OpenApiInfo
+                    {
+                        Title          = _settings.Info!.Title,
+                        Description    = _settings.Info.Description,
+                        TermsOfService = _settings.Info.TermsOfService,
+                        Contact        = _settings.Info.Contact,
+                        License        = _settings.Info.License,
+                        Version        = description.ApiVersion.ToString()
+                    });
             }
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="options"></param>
         private static void SetCommentsPathForSwaggerJsonAndUi(SwaggerGenOptions options)
         {
-            // var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            // var xmlPath  = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            // options.IncludeXmlComments(xmlPath);
-            
-            //TODO: Revisit
             // For multiple Api's
             var baseDir = new DirectoryInfo(AppContext.BaseDirectory);
+
             baseDir.EnumerateFiles("*.RestApi.Application.xml")
                .ForAll(
-                    file =>
-                    {
-                        options.IncludeXmlComments(file.FullName);
-                    });
+                    file => options.IncludeXmlComments(file.FullName));
         }
     }
 }

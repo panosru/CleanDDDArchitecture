@@ -1,12 +1,14 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.AspNetCore.Builder;
 
     /// <summary>
     ///     Extending Swagger services
     /// </summary>
-    public static class MiddlewareExtensions
+    [ExcludeFromCodeCoverage]
+    internal static class MiddlewareExtensions
     {
         /// <summary>
         ///     Enabling Swagger UI.

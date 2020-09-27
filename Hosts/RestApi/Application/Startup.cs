@@ -129,7 +129,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             services.AddAccountAuth();
 
             services
-               .AddApiVersionWithExplorer(Configuration)
+               .AddApiVersionWithExplorer()
                .AddSwaggerOptions()
                .AddSwaggerGen();
 
