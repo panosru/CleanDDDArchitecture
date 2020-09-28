@@ -2,7 +2,6 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.Design;
     using System.Linq;
     using AutoMapper;
     using Aviant.DDD.Application.Behaviours;
@@ -29,16 +28,14 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Microsoft.Extensions.Hosting;
     using Services;
     using Swagger;
-    using IServiceContainer = Aviant.DDD.Core.Services.IServiceContainer;
 
     // using Workers;
 
     /// <summary>
     /// </summary>
-    public class Startup
+    public sealed class Startup
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="configuration"></param>
         /// <param name="currentEnvironment"></param>
@@ -46,12 +43,16 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             IConfiguration      configuration,
             IWebHostEnvironment currentEnvironment)
         {
-            Configuration = configuration;
-            CurrentEnvironment   = currentEnvironment;
+            Configuration      = configuration;
+            CurrentEnvironment = currentEnvironment;
         }
 
+        /// <summary>
+        /// </summary>
         private IConfiguration Configuration { get; }
-        
+
+        /// <summary>
+        /// </summary>
         private IWebHostEnvironment CurrentEnvironment { get; }
 
         /// <summary>
@@ -85,27 +86,24 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             services.AddTransient<IMediator, Mediator>();
 
             services.Scan(
-                scan =>
-                {
-                    scan.FromAssemblies(
-                            TodoCrossCutting.MediatorAssemblies()
-                               .Union(AccountCrossCutting.MediatorAssemblies())
-                               .Union(WeatherCrossCutting.MediatorAssemblies())
-                               .ToArray())
-                       .RegisterHandlers(typeof(IRequestHandler<>))
-                       .RegisterHandlers(typeof(IRequestHandler<,>))
-                       .RegisterHandlers(typeof(MediatR.INotificationHandler<>));
-                });
+                scan => scan.FromAssemblies(
+                        TodoCrossCutting.MediatorAssemblies()
+                           .Union(AccountCrossCutting.MediatorAssemblies())
+                           .Union(WeatherCrossCutting.MediatorAssemblies())
+                           .ToArray())
+                   .RegisterHandlers(typeof(IRequestHandler<>))
+                   .RegisterHandlers(typeof(IRequestHandler<,>))
+                   .RegisterHandlers(typeof(INotificationHandler<>)));
 
 
             services.AddTransient(
                 typeof(IPipelineBehavior<,>),
                 typeof(PerformanceBehaviour<,>));
-            
+
             services.AddTransient(
                 typeof(IPipelineBehavior<,>),
                 typeof(ValidationBehaviour<,>));
-            
+
             services.AddTransient(
                 typeof(IPipelineBehavior<,>),
                 typeof(UnhandledExceptionBehaviour<,>));
@@ -116,9 +114,9 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                .AddAccountDomain()
                .AddTodoDomain()
                .AddWeatherDomain();
-            
+
             services.AddFeatureFlags();
-            
+
             services.AddTransient<IDateTimeService, DateTimeService>();
 
             services.AddScoped<IMessages, Messages>();
@@ -141,20 +139,16 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                .AddHealthChecks()
                .AddAccountChecks()
                .AddTodoChecks();
-            
+
             services.AddRouting(
-                options =>
-                {
-                    options.LowercaseUrls = true;
-                });
-            
+                options => options.LowercaseUrls = true);
+
             services.AddControllersWithViews(
                 options =>
                 {
                     options.Filters.Add(new ApiExceptionFilter());
-                    //options.Filters.Add(new AuthorizeFilter());
-                }
-            );
+                    options.Filters.Add(new AuthorizeFilter());
+                });
         }
 
         /// <summary>
@@ -166,7 +160,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             IApplicationBuilder app,
             IServiceProvider    serviceProvider)
         {
-            ServiceLocator.Initialise(serviceProvider); 
+            ServiceLocator.Initialise(serviceProvider);
 
             if (CurrentEnvironment.IsDevelopment())
             {
@@ -200,12 +194,9 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             app.UseAccountAuth();
 
             app.UseEndpoints(
-                endpoints =>
-                {
-                    endpoints
-                       .MapDefaultControllerRoute()
-                       .RequireAuthorization();
-                });
+                endpoints => endpoints
+                   .MapDefaultControllerRoute()
+                   .RequireAuthorization());
         }
     }
 }

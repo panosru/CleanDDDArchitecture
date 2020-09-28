@@ -4,7 +4,7 @@
     using Application.UseCases.Export;
     using CsvHelper.Configuration;
 
-    public class TodoItemRecordMap : ClassMap<TodoItemRecord>
+    public sealed class TodoItemRecordMap : ClassMap<TodoItemRecord>
     {
         public TodoItemRecordMap()
         {

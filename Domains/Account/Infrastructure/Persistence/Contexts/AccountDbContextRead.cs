@@ -7,7 +7,7 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contex
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
 
-    public class AccountDbContextRead
+    public sealed class AccountDbContextRead
         : AuthorizationDbContextRead<AccountUser, AccountRole>, IAccountDbContextRead
     {
         public AccountDbContextRead(

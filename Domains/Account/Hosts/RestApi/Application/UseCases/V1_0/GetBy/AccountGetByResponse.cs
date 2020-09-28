@@ -1,9 +1,16 @@
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.GetBy
 {
     using Domains.Account.Application.Identity;
 
-    public class AccountGetByResponse
+    /// <summary>
+    /// </summary>
+    internal struct AccountGetByResponse
     {
+        /// <summary>
+        /// </summary>
+        /// <param name="accountUser"></param>
         public AccountGetByResponse(AccountUser accountUser)
         {
             Username  = accountUser.UserName;
@@ -12,12 +19,20 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
             Email     = accountUser.Email;
         }
 
+        /// <summary>
+        /// </summary>
         public string Username { get; }
 
+        /// <summary>
+        /// </summary>
         public string FirstName { get; }
 
+        /// <summary>
+        /// </summary>
         public string LastName { get; }
 
+        /// <summary>
+        /// </summary>
         public string Email { get; }
     }
 }

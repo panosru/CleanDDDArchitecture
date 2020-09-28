@@ -8,14 +8,20 @@
     using MediatR;
     using Todo.Core.Entities;
 
-    public class UpdateTodoListCommand : Command
+    internal sealed class UpdateTodoListCommand : Command
     {
-        public int Id { get; set; }
+        public UpdateTodoListCommand(int id, string title)
+        {
+            Id    = id;
+            Title = title;
+        }
 
-        public string Title { get; set; }
+        public int Id { get; }
+
+        public string Title { get; }
     }
 
-    public class UpdateTodoListCommandHandler : CommandHandler<UpdateTodoListCommand>
+    internal sealed class UpdateTodoListCommandHandler : CommandHandler<UpdateTodoListCommand>
     {
         private readonly ITodoListRepositoryRead _todoListReadRepository;
 

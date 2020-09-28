@@ -8,25 +8,28 @@
     using Microsoft.FeatureManagement.Mvc;
     using TodoItem.Application.UseCases.Create;
 
-    /// <summary>
-    ///     Todo items endpoints
-    /// </summary>
+    /// <inheritdoc
+    ///     cref="CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [FeatureGate(Features.TodoItemCreate)]
-    public class TodoItems
+    public sealed class TodoItems
         : ApiController<TodoItemCreateUseCase, TodoItems>,
           ITodoItemCreateOutput
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="useCase"></param>
+        /// <inheritdoc />
         public TodoItems([FromServices] TodoItemCreateUseCase useCase)
             : base(useCase) => UseCase.SetOutput(this);
 
         #region ITodoItemCreateOutput Members
 
+        /// <summary>
+        /// </summary>
+        /// <param name="message"></param>
         void ITodoItemCreateOutput.Invalid(string message) =>
             ViewModel = BadRequest(message);
 
+        /// <summary>
+        /// </summary>
+        /// <param name="object"></param>
         void ITodoItemCreateOutput.Ok(object? @object) =>
             ViewModel = Ok(@object);
 

@@ -1,3 +1,5 @@
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
 {
     using System.ComponentModel.DataAnnotations;

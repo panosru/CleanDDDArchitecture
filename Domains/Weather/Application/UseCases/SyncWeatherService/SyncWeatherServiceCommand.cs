@@ -6,25 +6,26 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherS
     using Aviant.DDD.Application.Commands;
     using MediatR;
 
-    public sealed class SyncWeatherServiceCommand : ICommand
-    {
-        public string City { get; set; }
-    }
+    internal sealed class SyncWeatherServiceCommand : ICommand
+    { }
 
-    public class SyncWeatherServiceCommandHandler
+    internal sealed class SyncWeatherServiceCommandHandler
         : CommandHandler<SyncWeatherServiceCommand>
     {
+        private Random Random { get; } = new Random();
+
         public override async Task<Unit> Handle(SyncWeatherServiceCommand command, CancellationToken cancellationToken)
         {
             // Perform some operations here
-            if (false)
-                throw new Exception("Something went wrong!");
-
             await Task.Delay(3000, cancellationToken)
                .ConfigureAwait(false);
-            
-            Console.WriteLine("Some test message");
-            
+
+            // 40% probability to fail
+            if (Random.Next(100) <= 40)
+                throw new Exception("Something gone really wrong...");
+
+            Console.WriteLine("Success message");
+
             return Unit.Value;
         }
     }

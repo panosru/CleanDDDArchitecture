@@ -5,12 +5,14 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Notifications;
 
-    public class CreatedTodoListNotification : Notification
+    internal sealed class CreatedTodoListNotification : Notification
     {
+        public CreatedTodoListNotification(string name) => Name = name;
+
         public string Name { get; set; }
     }
 
-    public class TodoCreatedNotificationHandler : NotificationHandler<CreatedTodoListNotification>
+    internal sealed class TodoCreatedNotificationHandler : NotificationHandler<CreatedTodoListNotification>
     {
         public override Task Handle(CreatedTodoListNotification notification, CancellationToken cancellationToken)
         {

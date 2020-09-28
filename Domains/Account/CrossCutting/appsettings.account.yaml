@@ -1,4 +1,19 @@
 ---
+eventsTopicName: "CleanDDDArchitectureEvents"
+eventsTopicGroupName: "cleandddarchitecture-api-events-consumer"
+
+ConnectionStrings:
+  eventstore: "tcp://guest:123123@127.0.0.1:1113"
+  kafka: "127.0.0.1:9191"
+  loki: "http://127.0.0.1:3100"
+
 Jwt:
   Key: "thisismysecretkey"
   Issuer: "test.com"
+
+FeatureManagement:
+  AccountCreate: true
+  AccountAuthentication: true
+  AccountConfirmEmail: true
+  AccountGetBy: true
+  AccountUpdateDetails: true

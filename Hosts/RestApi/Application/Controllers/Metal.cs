@@ -8,6 +8,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
 
+    /// <inheritdoc />
     /// <summary>
     ///     Metal endpoint
     /// </summary>
@@ -15,7 +16,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Controllers
     [ApiVersion("1.1")]
     [AllowAnonymous]
     [FeatureGate(Features.Metal)]
-    public class Metal : ApiController
+    public sealed class Metal : ApiController
     {
         /// <summary>
         ///     Metal info

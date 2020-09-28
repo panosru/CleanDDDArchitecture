@@ -1,0 +1,7 @@
+---
+FeatureManagement:
+  TodoListCreate: true
+  TodoListDelete: true
+  TodoListExportList: true
+  TodoListGetAll: true
+  TodoListUpdate: true

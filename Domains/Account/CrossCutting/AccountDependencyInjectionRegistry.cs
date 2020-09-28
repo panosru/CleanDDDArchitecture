@@ -10,7 +10,6 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using Application.UseCases.Authenticate;
     using Application.UseCases.ConfirmEmail;
     using Application.UseCases.Create;
-    using Application.UseCases.Create.Events;
     using Application.UseCases.GetBy;
     using Application.UseCases.UpdateDetails;
     using Aviant.DDD.Application.EventBus;
@@ -46,7 +45,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
         static AccountDependencyInjectionRegistry() => Configuration =
             DependencyInjectionRegistry.GetDomainConfiguration(
                 CurrentDomain.ToLower());
-        
+
         private static IConfiguration Configuration { get; }
 
         public static IServiceCollection AddAccountDomain(this IServiceCollection services)
@@ -61,7 +60,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                     options.UseNpgsql(
                         Configuration.GetConnectionString("DefaultWriteConnection"),
                         b =>
-                            b.MigrationsAssembly(typeof(AccountDbContextWrite).Assembly.FullName)));
+                            b.MigrationsAssembly(AccountCrossCutting.AccountInfrastructureAssembly.FullName)));
 
             services.AddScoped<IAccountDbContextWrite>(
                 provider =>
@@ -72,7 +71,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                     options.UseNpgsql(
                         Configuration.GetConnectionString("DefaultReadConnection"),
                         b =>
-                            b.MigrationsAssembly(typeof(IAccountDbContextRead).Assembly.FullName)));
+                            b.MigrationsAssembly(AccountCrossCutting.AccountApplicationAssembly.FullName)));
 
             services.AddScoped<IAccountDbContextRead>(
                 provider =>
@@ -83,7 +82,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
 
             services
                .AddDefaultIdentity<AccountUser>(
-                    options => { options.User.RequireUniqueEmail = true; })
+                    options => options.User.RequireUniqueEmail = true)
                .AddRoles<AccountRole>()
                .AddEntityFrameworkStores<AccountDbContextWrite>();
 
@@ -100,8 +99,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                     new JsonEventDeserializer(
                         new[]
                         {
-                            typeof(AccountCreatedEvent).Assembly,
-                            typeof(CreateAccount).Assembly
+                            AccountCrossCutting.AccountApplicationAssembly
                         }));
 
             var consumerConfig = new EventConsumerConfig(
@@ -165,20 +163,17 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                .AddAuthorization()
                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                .AddJwtBearer(
-                    options =>
+                    options => options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuer           = true,
-                            ValidateAudience         = true,
-                            ValidateLifetime         = true,
-                            ValidateIssuerSigningKey = true,
-                            ValidIssuer              = Configuration["Jwt:Issuer"],
-                            ValidAudience            = Configuration["Jwt:Issuer"],
-                            IssuerSigningKey =
-                                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
-                            ClockSkew = TimeSpan.Zero
-                        };
+                        ValidateIssuer           = true,
+                        ValidateAudience         = true,
+                        ValidateLifetime         = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer              = Configuration["Jwt:Issuer"],
+                        ValidAudience            = Configuration["Jwt:Issuer"],
+                        IssuerSigningKey =
+                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
+                        ClockSkew = TimeSpan.Zero
                     });
 
             return services;

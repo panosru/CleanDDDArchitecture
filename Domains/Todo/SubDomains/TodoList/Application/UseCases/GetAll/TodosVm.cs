@@ -1,9 +1,14 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll
+﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable MemberCanBeInternal
+
+#pragma warning disable 8618
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll
 {
     using System.Collections.Generic;
     using Dtos;
 
-    public class TodosVm
+    internal sealed class TodosVm
     {
         public IList<PriorityLevelDto> PriorityLevels { get; set; }
 

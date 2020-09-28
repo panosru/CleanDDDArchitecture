@@ -5,7 +5,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
     using Core.Repositories;
     using FluentValidation;
 
-    public class CreateTodoListInputValidator : AbstractValidator<CreateTodoListInput>
+    public sealed class CreateTodoListInputValidator : AbstractValidator<CreateTodoListInput>
     {
         private readonly ITodoListRepositoryRead _todoListReadRepository;
 

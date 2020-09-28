@@ -23,6 +23,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.CrossCutting
             DependencyInjectionRegistry.GetDomainConfiguration(
                 $"{CurrentDomain}.{CurrentSubDomain}".ToLower());
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
         private static IConfiguration Configuration { get; }
 
         public static IServiceCollection AddTodoListSubDomain(this IServiceCollection services)

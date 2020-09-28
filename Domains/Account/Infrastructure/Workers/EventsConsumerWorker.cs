@@ -8,7 +8,7 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Workers
     using Aviant.DDD.Core.EventBus;
     using Microsoft.Extensions.Hosting;
 
-    public class EventsConsumerWorker : BackgroundService
+    public sealed class EventsConsumerWorker : BackgroundService
     {
         private readonly IEventConsumerFactory _eventConsumerFactory;
 

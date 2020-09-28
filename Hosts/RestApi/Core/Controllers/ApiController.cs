@@ -5,7 +5,9 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.DependencyInjection;
 
+    /// <inheritdoc />
     /// <summary>
+    ///     API Controller
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
@@ -13,11 +15,13 @@
     {
         /// <summary>
         /// </summary>
-        protected IOrchestrator Orchestrator => 
+        protected IOrchestrator Orchestrator =>
             HttpContext.RequestServices.GetRequiredService<IOrchestrator>();
     }
 
+    /// <inheritdoc />
     /// <summary>
+    ///     API Controller
     /// </summary>
     /// <typeparam name="TUseCase"></typeparam>
     /// <typeparam name="TUseCaseOutput"></typeparam>
@@ -28,12 +32,9 @@
         where TUseCaseOutput : class, IUseCaseOutput
     {
         protected readonly TUseCase UseCase;
-        
-        protected IActionResult ViewModel { get; set; } = new NoContentResult();
 
-        protected ApiController(TUseCase useCase)
-        {
-            UseCase = useCase;
-        }
+        protected ApiController(TUseCase useCase) => UseCase = useCase;
+
+        protected IActionResult ViewModel { get; set; } = new NoContentResult();
     }
 }

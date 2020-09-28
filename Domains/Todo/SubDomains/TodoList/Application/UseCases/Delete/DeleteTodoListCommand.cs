@@ -9,12 +9,14 @@
     using Microsoft.EntityFrameworkCore;
     using Todo.Core.Entities;
 
-    public class DeleteTodoListCommand : Command
+    internal sealed class DeleteTodoListCommand : Command
     {
-        public int Id { get; set; }
+        public DeleteTodoListCommand(int id) => Id = id;
+
+        public int Id { get; }
     }
 
-    public class DeleteTodoListCommandHandler : CommandHandler<DeleteTodoListCommand>
+    internal sealed class DeleteTodoListCommandHandler : CommandHandler<DeleteTodoListCommand>
     {
         private readonly ITodoListRepositoryRead _todoListReadRepository;
 

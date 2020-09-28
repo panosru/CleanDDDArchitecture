@@ -6,12 +6,13 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.Forecast
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
 
-    public class ForecastUseCase : UseCase<IForecastOutput>
+    public sealed class ForecastUseCase : UseCase<IForecastOutput>
     {
         public override async Task ExecuteAsync(CancellationToken cancellationToken = default)
         {
             RequestResult requestResult = await Orchestrator.SendQueryAsync(
-                new GetWeatherForecastsQuery(), cancellationToken)
+                    new GetWeatherForecastsQuery(),
+                    cancellationToken)
                .ConfigureAwait(false);
 
             if (requestResult.Succeeded)

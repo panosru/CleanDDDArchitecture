@@ -15,7 +15,8 @@ namespace CleanDDDArchitecture.Domains.Weather.CrossCutting
         static WeatherDependencyInjectionRegistry() => Configuration =
             DependencyInjectionRegistry.GetDomainConfiguration(
                 CurrentDomain.ToLower());
-        
+
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
         private static IConfiguration Configuration { get; }
 
         public static IServiceCollection AddWeatherDomain(this IServiceCollection services)

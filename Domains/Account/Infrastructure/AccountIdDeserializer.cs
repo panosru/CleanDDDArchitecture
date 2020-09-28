@@ -5,7 +5,7 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure
     using Application.Aggregates;
     using Confluent.Kafka;
 
-    public class AccountIdDeserializer : IDeserializer<AccountAggregateId>
+    internal sealed class AccountIdDeserializer : IDeserializer<AccountAggregateId>
     {
         #region IDeserializer<AccountAggregateId> Members
 

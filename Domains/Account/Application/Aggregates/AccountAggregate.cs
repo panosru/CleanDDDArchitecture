@@ -1,3 +1,5 @@
+// ReSharper disable MemberCanBeInternal
+
 namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
 {
     using System;
@@ -7,12 +9,15 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
     using UseCases.Create.Events;
     using UseCases.UpdateDetails.Events;
 
-    public class AccountAggregate
+    public sealed class AccountAggregate
         : Aggregate<AccountAggregate, AccountAggregateId>,
           IActivationAudited
     {
+        // ReSharper disable once UnusedMember.Local
+        #pragma warning disable 8618
         private AccountAggregate()
         { }
+        #pragma warning restore 8618
 
         private AccountAggregate(
             AccountAggregateId aggregateId,
@@ -60,7 +65,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
 
         #endregion
 
-        public static AccountAggregate Create(
+        internal static AccountAggregate Create(
             string username,
             string password,
             string firstname,
@@ -89,7 +94,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
         //     return new AccountAggregate(id, userId, email);
         // }
 
-        public void ChangeDetails(
+        internal void ChangeDetails(
             string firstname,
             string lastname,
             string email)

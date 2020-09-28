@@ -9,9 +9,8 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
 
-    /// <summary>
-    ///     Account endpoints
-    /// </summary>
+    /// <inheritdoc
+    ///     cref="CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [ApiVersion("1.0")]
     [ApiVersion("1.1")]
     [AllowAnonymous]
@@ -20,14 +19,15 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         : ApiController<AuthenticateUseCase, Account>,
           IAuthenticateOutput
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="useCase"></param>
+        /// <inheritdoc />
         public Account([FromServices] AuthenticateUseCase useCase)
             : base(useCase) => UseCase.SetOutput(this);
 
         #region IAuthenticateOutput Members
 
+        /// <summary>
+        /// </summary>
+        /// <param name="object"></param>
         void IAuthenticateOutput.Ok(object? @object) =>
             ViewModel = Ok(@object);
 

@@ -6,7 +6,7 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Repositories
     using Aviant.DDD.Infrastructure.Persistence.Repository;
     using Persistence.Contexts;
 
-    public class AccountRepositoryRead
+    public sealed class AccountRepositoryRead
         : RepositoryRead<AccountDbContextRead, AccountUser, AccountRole, AccountAggregate, AccountAggregateId>,
           IAccountRepositoryRead
     {

@@ -7,7 +7,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
 
-    public class UpdateDetailsUseCase
+    public sealed class UpdateDetailsUseCase
         : UseCase<UpdateDetailsInput, IUpdateDetailsOutput, AccountAggregate, AccountAggregateId>
     {
         public override async Task ExecuteAsync(
@@ -15,7 +15,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
             CancellationToken  cancellationToken = default)
         {
             RequestResult requestResult = await Orchestrator.SendCommandAsync(
-                    new UpdateAccount(
+                    new UpdateAccountCommand(
                         new AccountAggregateId(input.Id),
                         input.FirstName,
                         input.LastName,

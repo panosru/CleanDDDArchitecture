@@ -2,6 +2,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
 {
     using System;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
     using Aviant.DDD.Infrastructure.CrossCutting;
     using Domains.Account.CrossCutting;
@@ -15,7 +16,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
 
     /// <summary>
     /// </summary>
-    public class Program
+    internal sealed class Program
     {
         /// <summary>
         /// </summary>
@@ -33,7 +34,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 {
                     await AccountCrossCutting.GenerateDefaultUserIfNotExists(serviceProvider)
                        .ConfigureAwait(false);
-                    
+
                     await TodoCrossCutting.GenerateTodoMigrationsIfNewExists(serviceProvider)
                        .ConfigureAwait(false);
                 }
@@ -67,6 +68,10 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                     });
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="hostBuilderContext"></param>
+        /// <param name="configurationBuilder"></param>
         private static void SetupConfiguration(
             WebHostBuilderContext hostBuilderContext,
             IConfigurationBuilder configurationBuilder)
@@ -81,20 +86,22 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 $"appsettings.{hostBuilderContext.HostingEnvironment.EnvironmentName}.yaml"
             };
 
-            foreach (var configFile in configFiles)
-            {
-                if (!File.Exists(
-                    Path.Combine(Directory.GetCurrentDirectory(), configFile)))
-                    continue;
-                
-                configurationBuilder.AddYamlFile(configFile, optional: false, reloadOnChange: true);
-            }
+            foreach (var configFile in configFiles
+               .Where(
+                    configFile =>
+                        File.Exists(
+                            Path.Combine(Directory.GetCurrentDirectory(), configFile))))
+                configurationBuilder.AddYamlFile(configFile, false, true);
 
             Log.Logger = new LoggerConfiguration()
                .ReadFrom.Configuration(DependencyInjectionRegistry.SetConfiguration(configurationBuilder))
                .CreateLogger();
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="hostBuilderContext"></param>
+        /// <param name="loggingBuilder"></param>
         private static void SetupLogging(WebHostBuilderContext hostBuilderContext, ILoggingBuilder loggingBuilder)
         {
             loggingBuilder.AddSerilog();

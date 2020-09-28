@@ -10,7 +10,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Core.Features
     using Microsoft.FeatureManagement;
     using Microsoft.FeatureManagement.Mvc;
 
-    public class CustomControllerFeatureProvider
+    public sealed class CustomControllerFeatureProvider
         : IApplicationFeatureProvider<ControllerFeature>
     {
         private readonly IFeatureManager _featureManager;

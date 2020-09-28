@@ -9,29 +9,34 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
 
-    /// <summary>
-    ///     Weather endpoints
-    /// </summary>
+    /// <inheritdoc
+    ///     cref="CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [AllowAnonymous]
     [FeatureGate(Features.WeatherAddCity)]
-    public class Weather
+    public sealed class Weather
         : ApiController<AddCityUseCase, Weather>,
           IAddCityOutput
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="useCase"></param>
+        /// <inheritdoc />
         public Weather([FromServices] AddCityUseCase useCase)
             : base(useCase) => UseCase.SetOutput(this);
 
         #region IAddCityOutput Members
 
+        /// <summary>
+        /// </summary>
+        /// <param name="message"></param>
         void IAddCityOutput.Invalid(string message) =>
             ViewModel = BadRequest(message);
 
+        /// <summary>
+        /// </summary>
+        /// <param name="city"></param>
         void IAddCityOutput.Ok(string city) =>
             ViewModel = Ok(new AddCityResponse(city).ToString());
 
+        /// <summary>
+        /// </summary>
         void IAddCityOutput.NotFound() =>
             ViewModel = NotFound();
 

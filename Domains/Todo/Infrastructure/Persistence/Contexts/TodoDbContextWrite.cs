@@ -5,10 +5,12 @@
     using Core.Entities;
     using Microsoft.EntityFrameworkCore;
 
-    public class TodoDbContextWrite
+    public sealed class TodoDbContextWrite
         : DbContextWrite<TodoDbContextWrite>, ITodoDbContextWrite
     {
+        #pragma warning disable 8618
         public TodoDbContextWrite(DbContextOptions<TodoDbContextWrite> options)
+            #pragma warning restore 8618
             : base(options)
         { }
 

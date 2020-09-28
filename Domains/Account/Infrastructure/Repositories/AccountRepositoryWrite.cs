@@ -6,7 +6,7 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Repositories
     using Aviant.DDD.Infrastructure.Persistence.Repository;
     using Persistence.Contexts;
 
-    public class AccountRepositoryWrite //TODO: Maybe should add methods for easy creation?
+    public sealed class AccountRepositoryWrite //TODO: Maybe should add methods for easy creation?
         : RepositoryWrite<AccountDbContextWrite, AccountUser, AccountRole, AccountAggregate, AccountAggregateId>,
           IAccountRepositoryWrite
     {

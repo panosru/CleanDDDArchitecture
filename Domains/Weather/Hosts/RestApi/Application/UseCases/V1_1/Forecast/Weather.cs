@@ -8,26 +8,29 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
 
-    /// <summary>
-    ///     Weather endpoints
-    /// </summary>
+    /// <inheritdoc
+    ///     cref="CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [AllowAnonymous]
     [FeatureGate(Features.WeatherForecastV11)]
-    public class Weather
+    public sealed class Weather
         : ApiController<ForecastUseCase, Weather>,
           IForecastOutput
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="useCase"></param>
+        /// <inheritdoc />
         public Weather([FromServices] ForecastUseCase useCase)
             : base(useCase) => UseCase.SetOutput(this);
 
         #region IForecastOutput Members
 
+        /// <summary>
+        /// </summary>
+        /// <param name="message"></param>
         void IForecastOutput.Invalid(string message) =>
             ViewModel = BadRequest(message);
 
+        /// <summary>
+        /// </summary>
+        /// <param name="object"></param>
         void IForecastOutput.Ok(object? @object) =>
             ViewModel = Ok(@object);
 

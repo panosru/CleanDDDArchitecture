@@ -6,16 +6,13 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
 
-    public class GetAllUseCase : UseCase<IGetAllOutput>
+    public sealed class GetAllUseCase : UseCase<IGetAllOutput>
     {
-        // private new IOrchestrator Orchestrator =>
-        //     ServiceLocator.ServiceContainer.GetRequiredService<IOrchestrator>();
-
         public override async Task ExecuteAsync(CancellationToken cancellationToken = default)
         {
             RequestResult requestResult = await Orchestrator.SendQueryAsync(
-                new GetTodosQuery(),
-                cancellationToken)
+                    new GetTodosQuery(),
+                    cancellationToken)
                .ConfigureAwait(false);
 
             if (requestResult.Succeeded)

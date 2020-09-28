@@ -9,12 +9,14 @@
     using Core.Repositories;
     using Todo.Core.Entities;
 
-    public class CreateTodoListCommand : Command<Lazy<CreatedTodoListViewModel>>
+    internal sealed class CreateTodoListCommand : Command<Lazy<CreatedTodoListViewModel>>
     {
-        public string Title { get; set; }
+        public CreateTodoListCommand(string title) => Title = title;
+
+        public string Title { get; }
     }
 
-    public class CreateTodoListCommandHandler
+    internal sealed class CreateTodoListCommandHandler
         : CommandHandler<CreateTodoListCommand, Lazy<CreatedTodoListViewModel>>
     {
         private readonly IMapper _mapper;
@@ -44,10 +46,7 @@
                .ConfigureAwait(false);
 
             _notificationDispatcher.AddPostCommitNotification(
-                new CreatedTodoListNotification
-                {
-                    Name = entity.Title
-                });
+                new CreatedTodoListNotification(entity.Title));
 
             return new Lazy<CreatedTodoListViewModel>(() => _mapper.Map<CreatedTodoListViewModel>(entity));
         }

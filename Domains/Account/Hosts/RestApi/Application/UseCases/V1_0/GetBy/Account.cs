@@ -10,26 +10,29 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
 
-    /// <summary>
-    ///     Account endpoints
-    /// </summary>
+    /// <inheritdoc
+    ///     cref="CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [ApiVersion("1.0")]
     [FeatureGate(Features.AccountGetBy)]
     public sealed class Account
         : ApiController<GetAccountUseCase, Account>,
           IGetAccountOutput
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="useCase"></param>
+        /// <inheritdoc />
         public Account([FromServices] GetAccountUseCase useCase)
             : base(useCase) => UseCase.SetOutput(this);
 
         #region IGetAccountOutput Members
 
+        /// <summary>
+        /// </summary>
+        /// <param name="message"></param>
         void IGetAccountOutput.Invalid(string message) =>
             ViewModel = BadRequest(message);
 
+        /// <summary>
+        /// </summary>
+        /// <param name="accountUser"></param>
         void IGetAccountOutput.Ok(AccountUser accountUser) =>
             ViewModel = Ok(new AccountGetByResponse(accountUser));
 
@@ -45,7 +48,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         /// <response code="404">Not Found.</response>
         /// <param name="id"></param>
         /// <returns>Account data.</returns>
-        [HttpGet("{id:guid}", Name = "GetAccount")]
+        [HttpGet("{id:guid}", Name                          = "GetAccount")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AccountGetByResponse))]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Find))]
         public async Task<IActionResult> GetAccount([FromRoute] Guid id)
