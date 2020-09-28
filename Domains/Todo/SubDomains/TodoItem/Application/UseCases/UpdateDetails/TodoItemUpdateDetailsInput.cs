@@ -3,7 +3,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
     using Aviant.DDD.Application.UseCases;
     using Aviant.DDD.Core.Enums;
 
-    public class TodoItemUpdateDetailsInput : UseCaseInput
+    public sealed class TodoItemUpdateDetailsInput : UseCaseInput
     {
         public TodoItemUpdateDetailsInput(
             int           id,
@@ -17,12 +17,12 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
             Note     = note;
         }
 
-        public int Id { get; }
+        internal int Id { get; }
 
-        public int ListId { get; }
+        internal int ListId { get; }
 
-        public PriorityLevel Priority { get; }
+        internal PriorityLevel Priority { get; }
 
-        public string Note { get; }
+        internal string Note { get; }
     }
 }

@@ -5,18 +5,31 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Hosts.RestApi.Ap
     using Microsoft.Extensions.DependencyInjection;
     using Todo.Application.Persistence;
 
+    /// <inheritdoc />
+    /// <summary>
+    ///     Todo Item endpoints
+    /// </summary>
     public abstract class ApiController : CleanDDDArchitecture.Hosts.RestApi.Core.Controllers.ApiController
     {
+        /// <summary>
+        /// </summary>
         protected new IOrchestrator<ITodoDbContextWrite> Orchestrator =>
             HttpContext.RequestServices.GetRequiredService<IOrchestrator<ITodoDbContextWrite>>();
     }
 
-    public class ApiController<TUseCase, TUseCaseOutput>
+    /// <inheritdoc />
+    /// <summary>
+    ///     Todo Item endpoint
+    /// </summary>
+    /// <typeparam name="TUseCase"></typeparam>
+    /// <typeparam name="TUseCaseOutput"></typeparam>
+    public abstract class ApiController<TUseCase, TUseCaseOutput>
         : CleanDDDArchitecture.Hosts.RestApi.Core.Controllers.ApiController<TUseCase, TUseCaseOutput>
         where TUseCase : class, IUseCase<TUseCaseOutput>
         where TUseCaseOutput : class, IUseCaseOutput
     {
-        public ApiController(TUseCase useCase)
+        /// <inheritdoc />
+        protected ApiController(TUseCase useCase)
             : base(useCase)
         { }
     }

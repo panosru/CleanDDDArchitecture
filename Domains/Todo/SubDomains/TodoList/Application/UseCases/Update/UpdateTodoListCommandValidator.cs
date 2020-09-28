@@ -7,7 +7,7 @@
     using FluentValidation;
     using Microsoft.EntityFrameworkCore;
 
-    public class UpdateTodoListCommandValidator : CommandValidator<UpdateTodoListCommand>
+    internal sealed class UpdateTodoListCommandValidator : CommandValidator<UpdateTodoListCommand>
     {
         private readonly ITodoListRepositoryRead _todoListReadRepository;
 

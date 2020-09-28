@@ -10,26 +10,29 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
 
-    /// <summary>
-    ///     Account endpoints
-    /// </summary>
+    /// <inheritdoc
+    ///     cref="CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [ApiVersion("1.0")]
     [FeatureGate(Features.AccountUpdateDetails)]
     public sealed class Account
         : ApiController<UpdateDetailsUseCase, Account>,
           IUpdateDetailsOutput
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="useCase"></param>
+        /// <inheritdoc />
         public Account([FromServices] UpdateDetailsUseCase useCase)
             : base(useCase) => UseCase.SetOutput(this);
 
         #region IUpdateDetailsOutput Members
 
+        /// <summary>
+        /// </summary>
+        /// <param name="message"></param>
         void IUpdateDetailsOutput.Invalid(string message) =>
             ViewModel = BadRequest(message);
 
+        /// <summary>
+        /// </summary>
+        /// <param name="accountAggregate"></param>
         void IUpdateDetailsOutput.Ok(AccountAggregate accountAggregate) =>
             ViewModel = CreatedAtAction(
                 "GetAccount",

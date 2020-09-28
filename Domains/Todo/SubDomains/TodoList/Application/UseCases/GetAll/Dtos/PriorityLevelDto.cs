@@ -1,6 +1,11 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll.Dtos
+﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable MemberCanBeInternal
+
+#pragma warning disable 8618
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll.Dtos
 {
-    public struct PriorityLevelDto
+    internal struct PriorityLevelDto
     {
         public int Value { get; set; }
 

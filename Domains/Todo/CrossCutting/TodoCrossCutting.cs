@@ -14,22 +14,26 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
 
     public static class TodoCrossCutting
     {
+        private static readonly Assembly TodoItemApplicationAssembly = typeof(TodoItemCreateUseCase).Assembly;
+
+        private static readonly Assembly TodoListApplicationAssembly = typeof(CreateTodoListUseCase).Assembly;
+
         public static IEnumerable<Profile> AutoMapperProfiles() => new List<Profile>
         {
-            new MappingProfile(typeof(TodoItemViewModel).Assembly),
-            new MappingProfile(typeof(CreatedTodoListViewModel).Assembly)
+            new MappingProfile(TodoItemApplicationAssembly),
+            new MappingProfile(TodoListApplicationAssembly)
         };
 
         public static IEnumerable<Assembly> ValidatorAssemblies() => new List<Assembly>
         {
-            typeof(CreateTodoItemCommandValidator).Assembly,
-            typeof(CreateTodoListInputValidator).Assembly
+            TodoItemApplicationAssembly,
+            TodoListApplicationAssembly
         };
 
         public static IEnumerable<Assembly> MediatorAssemblies() => new List<Assembly>
         {
-            typeof(CreateTodoItemCommand).Assembly,
-            typeof(CreateTodoListCommand).Assembly
+            TodoItemApplicationAssembly,
+            TodoListApplicationAssembly
         };
 
         public static async Task GenerateTodoMigrationsIfNewExists(IServiceProvider serviceProvider)

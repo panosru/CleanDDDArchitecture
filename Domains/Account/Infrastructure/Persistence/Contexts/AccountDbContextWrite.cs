@@ -7,7 +7,7 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contex
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
 
-    public class AccountDbContextWrite
+    public sealed class AccountDbContextWrite
         : AuthorizationDbContextWrite<AccountDbContextWrite, AccountUser, AccountRole>, IAccountDbContextWrite
     {
         public AccountDbContextWrite(

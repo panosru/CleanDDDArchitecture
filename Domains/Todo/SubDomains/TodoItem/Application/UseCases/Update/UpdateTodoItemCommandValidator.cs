@@ -2,7 +2,7 @@
 {
     using FluentValidation;
 
-    public class UpdateTodoItemCommandValidator : AbstractValidator<UpdateTodoItemCommand>
+    internal sealed class UpdateTodoItemCommandValidator : AbstractValidator<UpdateTodoItemCommand>
     {
         public UpdateTodoItemCommandValidator()
         {

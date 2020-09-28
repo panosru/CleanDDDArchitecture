@@ -1,10 +1,12 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll.Dtos
+﻿#pragma warning disable 8618
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll.Dtos
 {
     using AutoMapper;
     using Aviant.DDD.Application.Mappings;
     using Todo.Core.Entities;
 
-    public class TodoItemDto : IMapFrom<TodoItemEntity>
+    public sealed class TodoItemDto : IMapFrom<TodoItemEntity>
     {
         public int Id { get; set; }
 

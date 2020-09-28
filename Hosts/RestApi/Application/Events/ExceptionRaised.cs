@@ -5,14 +5,20 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Events
     using System.Threading.Tasks;
     using MediatR;
 
-    public class ExceptionRaised : IRequest //TODO: Move to Application exceptions event?
+    public sealed class ExceptionRaised : IRequest //TODO: Move to Application exceptions event?
     {
+        /// <summary>
+        /// </summary>
+        // ReSharper disable once MemberCanBeInternal
         public readonly string Error;
 
-        public ExceptionRaised(string error) => Error = error;
+        /// <summary>
+        /// </summary>
+        /// <param name="error"></param>
+        internal ExceptionRaised(string error) => Error = error;
     }
 
-    public class ExceptionRaisedHandler : IRequestHandler<ExceptionRaised>
+    public sealed class ExceptionRaisedHandler : IRequestHandler<ExceptionRaised>
     {
         #region IRequestHandler<ExceptionRaised> Members
 

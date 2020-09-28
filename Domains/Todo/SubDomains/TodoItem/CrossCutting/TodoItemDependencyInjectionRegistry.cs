@@ -23,8 +23,9 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.CrossCutting
             DependencyInjectionRegistry.GetDomainConfiguration(
                 $"{CurrentDomain}.{CurrentSubDomain}".ToLower());
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
         private static IConfiguration Configuration { get; }
-        
+
         public static IServiceCollection AddTodoItemSubDomain(this IServiceCollection services)
         {
             services.AddScoped<ITodoItemRepositoryRead, TodoItemRepositoryRead>();

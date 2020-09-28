@@ -3,7 +3,7 @@ namespace CleanDDDArchitecture.Domains.Todo.Infrastructure.Persistence
     using Core.Entities;
     using Microsoft.EntityFrameworkCore;
 
-    public static class ModelBuilderExtensions
+    internal static class ModelBuilderExtensions
     {
         public static void Seed(this ModelBuilder modelBuilder)
         {

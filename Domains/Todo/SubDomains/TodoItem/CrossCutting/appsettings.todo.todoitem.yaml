@@ -1,0 +1,7 @@
+---
+FeatureManagement:
+  TodoItemCreate: true
+  TodoItemDelete: true
+  TodoItemGetBy: true
+  TodoItemUpdate: true
+  TodoItemUpdateDetails: true

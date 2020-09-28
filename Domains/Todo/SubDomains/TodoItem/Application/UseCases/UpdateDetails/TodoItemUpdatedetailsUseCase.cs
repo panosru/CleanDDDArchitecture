@@ -7,7 +7,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
     using Aviant.DDD.Application.UseCases;
     using Todo.Application.Persistence;
 
-    public class TodoItemUpdatedetailsUseCase
+    public sealed class TodoItemUpdatedetailsUseCase
         : UseCase<TodoItemUpdateDetailsInput, ITodoItemUpdateDetailsOutput, ITodoDbContextWrite>
     {
         public override async Task ExecuteAsync(
@@ -15,14 +15,13 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
             CancellationToken          cancellationToken = default)
         {
             RequestResult requestResult = await Orchestrator.SendCommandAsync(
-                new UpdateTodoItemDetailCommand
-                {
-                    Id       = input.Id,
-                    ListId   = input.ListId,
-                    Note     = input.Note,
-                    Priority = input.Priority
-                },
-                cancellationToken)
+                    new UpdateTodoItemDetailCommand(
+                        input.Id,
+                        input.ListId,
+                        input.Priority,
+                        input.Note
+                    ),
+                    cancellationToken)
                .ConfigureAwait(false);
 
             if (!requestResult.Succeeded)

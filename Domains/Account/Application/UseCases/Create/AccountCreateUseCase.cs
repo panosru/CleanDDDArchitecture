@@ -7,7 +7,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
 
-    public class AccountCreateUseCase
+    public sealed class AccountCreateUseCase
         : UseCase<CreateAccountInput, ICreateAccountOutput, AccountAggregate, AccountAggregateId>
     {
         public override async Task ExecuteAsync(
@@ -15,7 +15,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
             CancellationToken  cancellationToken = default)
         {
             RequestResult requestResult = await Orchestrator.SendCommandAsync(
-                    new CreateAccount(
+                    new CreateAccountCommand(
                         input.UserName,
                         input.Password,
                         input.FirstName,

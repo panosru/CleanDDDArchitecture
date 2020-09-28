@@ -11,16 +11,26 @@
     using Core.Repositories;
     using Todo.Core.Entities;
 
-    public class UpdateTodoItemCommand : Command<TodoItemViewModel>
+    internal sealed class UpdateTodoItemCommand : Command<TodoItemViewModel>
     {
-        public int Id { get; set; }
+        public UpdateTodoItemCommand(
+            int    id,
+            string title,
+            bool   done)
+        {
+            Id    = id;
+            Title = title;
+            Done  = done;
+        }
 
-        public string Title { get; set; }
+        public int Id { get; }
 
-        public bool Done { get; set; }
+        public string Title { get; }
+
+        public bool Done { get; }
     }
 
-    public class UpdateTodoItemCommandHandler
+    internal sealed class UpdateTodoItemCommandHandler
         : CommandHandler<UpdateTodoItemCommand, TodoItemViewModel>
     {
         private readonly IMapper _mapper;
@@ -58,7 +68,7 @@
         }
     }
 
-    public class UserPreProcessor : RequestPreProcessor<UpdateTodoItemCommand>
+    internal sealed class UserPreProcessor : RequestPreProcessor<UpdateTodoItemCommand>
     {
         public override Task Process(
             UpdateTodoItemCommand request,
@@ -70,7 +80,7 @@
         }
     }
 
-    public class UserPostProcessor : RequestPostProcessor<UpdateTodoItemCommand, TodoItemViewModel>
+    internal sealed class UserPostProcessor : RequestPostProcessor<UpdateTodoItemCommand, TodoItemViewModel>
     {
         private readonly INotificationDispatcher _notificationDispatcher;
 

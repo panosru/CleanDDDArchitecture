@@ -1,10 +1,12 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update
+﻿#pragma warning disable 8618
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update
 {
     using AutoMapper;
     using Aviant.DDD.Application.Mappings;
     using Todo.Core.Entities;
 
-    public class TodoItemViewModel : IMapFrom<TodoItemEntity>
+    internal sealed class TodoItemViewModel : IMapFrom<TodoItemEntity>
     {
         public int Id { get; set; }
 

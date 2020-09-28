@@ -4,28 +4,27 @@
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
     using TodoList.Application.UseCases.Update;
 
-    /// <summary>
-    ///     Todo Lists endpoints
-    /// </summary>
+    /// <inheritdoc
+    ///     cref="CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [AllowAnonymous]
     [FeatureGate(Features.TodoListUpdate)]
-    public class TodoLists
+    public sealed class TodoLists
         : ApiController<UpdateTodoListUseCase, TodoLists>,
           IUpdateTodoListOutput
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="useCase"></param>
+        /// <inheritdoc />
         public TodoLists([FromServices] UpdateTodoListUseCase useCase)
             : base(useCase) => UseCase.SetOutput(this);
 
         #region IUpdateTodoListOutput Members
 
+        /// <summary>
+        /// </summary>
+        /// <param name="message"></param>
         void IUpdateTodoListOutput.Invalid(string message) =>
             ViewModel = BadRequest(message);
 

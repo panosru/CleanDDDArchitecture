@@ -7,12 +7,14 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy
     using Identity;
     using Microsoft.AspNetCore.Identity;
 
-    public class GetAccountQuery : Query<AccountUser>
+    internal sealed class GetAccountQuery : Query<AccountUser>
     {
-        public Guid Id { get; set; }
+        public GetAccountQuery(Guid id) => Id = id;
+
+        public Guid Id { get; }
     }
 
-    public class GetAccountQueryHandler : QueryHandler<GetAccountQuery, AccountUser>
+    internal sealed class GetAccountQueryHandler : QueryHandler<GetAccountQuery, AccountUser>
     {
         private readonly UserManager<AccountUser> _accountUserManager;
 

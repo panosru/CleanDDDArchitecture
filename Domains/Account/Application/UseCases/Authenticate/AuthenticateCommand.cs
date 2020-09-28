@@ -1,26 +1,38 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate
 {
+    using System.Security.Authentication;
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Commands;
     using Aviant.DDD.Application.Identity;
 
-    public class AuthenticateCommand : Command<object>
+    internal sealed class AuthenticateCommand : Command<object>
     {
-        public string Username { get; set; }
+        public AuthenticateCommand(string username, string password)
+        {
+            Username = username;
+            Password = password;
+        }
 
-        public string Password { get; set; }
+        public string Username { get; }
+
+        public string Password { get; }
     }
 
-    public class AuthenticateCommandHandler : CommandHandler<AuthenticateCommand, object>
+    internal sealed class AuthenticateCommandHandler : CommandHandler<AuthenticateCommand, object>
     {
         private readonly IIdentityService _identityIdentityService;
 
         public AuthenticateCommandHandler(IIdentityService identityIdentityService) =>
             _identityIdentityService = identityIdentityService;
 
-        public override async Task<object> Handle(AuthenticateCommand command, CancellationToken cancellationToken) =>
-            await _identityIdentityService.AuthenticateAsync(command.Username, command.Password)
+        public override async Task<object> Handle(AuthenticateCommand command, CancellationToken cancellationToken)
+        {
+            var user = await _identityIdentityService
+               .AuthenticateAsync(command.Username, command.Password, cancellationToken)
                .ConfigureAwait(false);
+
+            return user ?? throw new AuthenticationException();
+        }
     }
 }

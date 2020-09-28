@@ -9,18 +9,30 @@
     using MediatR;
     using Todo.Core.Entities;
 
-    public class UpdateTodoItemDetailCommand : Command
+    internal sealed class UpdateTodoItemDetailCommand : Command
     {
-        public int Id { get; set; }
+        public UpdateTodoItemDetailCommand(
+            int           id,
+            int           listId,
+            PriorityLevel priority,
+            string        note)
+        {
+            Id       = id;
+            ListId   = listId;
+            Priority = priority;
+            Note     = note;
+        }
 
-        public int ListId { get; set; }
+        public int Id { get; }
 
-        public PriorityLevel Priority { get; set; }
+        public int ListId { get; }
 
-        public string Note { get; set; }
+        public PriorityLevel Priority { get; }
+
+        public string Note { get; }
     }
 
-    public class UpdateTodoItemDetailCommandHandler
+    internal sealed class UpdateTodoItemDetailCommandHandler
         : CommandHandler<UpdateTodoItemDetailCommand>
     {
         private readonly ITodoItemRepositoryRead _todoItemReadRepository;

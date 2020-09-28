@@ -10,8 +10,10 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Middlewares
 
     /// <summary>
     /// </summary>
-    public class CustomExceptionHandler
+    internal sealed class CustomExceptionHandler
     {
+        /// <summary>
+        /// </summary>
         private readonly RequestDelegate _next;
 
         /// <summary>
@@ -36,7 +38,12 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Middlewares
             }
         }
 
-        private Task HandleExceptionAsync(HttpContext context, Exception exception)
+        /// <summary>
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             var code = HttpStatusCode.InternalServerError;
 

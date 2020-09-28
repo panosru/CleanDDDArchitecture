@@ -7,7 +7,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
     using Aviant.DDD.Application.UseCases;
     using Todo.Application.Persistence;
 
-    public class UpdateTodoListUseCase
+    public sealed class UpdateTodoListUseCase
         : UseCase<UpdateTodoListInput, IUpdateTodoListOutput, ITodoDbContextWrite>
     {
         public override async Task ExecuteAsync(
@@ -15,12 +15,8 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
             CancellationToken   cancellationToken = default)
         {
             RequestResult requestResult = await Orchestrator.SendCommandAsync(
-                new UpdateTodoListCommand
-                {
-                    Id    = input.Id,
-                    Title = input.Title
-                },
-                cancellationToken)
+                    new UpdateTodoListCommand(input.Id, input.Title),
+                    cancellationToken)
                .ConfigureAwait(false);
 
             if (!requestResult.Succeeded)

@@ -5,7 +5,7 @@
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Todo.Core.Entities;
 
-    public class TodoItemConfiguration : EntityConfiguration<TodoItemEntity, int>
+    public sealed class TodoItemConfiguration : EntityConfiguration<TodoItemEntity, int>
     {
         public override void Configure(EntityTypeBuilder<TodoItemEntity> builder)
         {

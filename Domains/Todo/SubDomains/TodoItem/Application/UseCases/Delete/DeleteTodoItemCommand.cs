@@ -8,12 +8,14 @@
     using MediatR;
     using Todo.Core.Entities;
 
-    public class DeleteTodoItemCommand : Command
+    internal sealed class DeleteTodoItemCommand : Command
     {
-        public int Id { get; set; }
+        public DeleteTodoItemCommand(int id) => Id = id;
+
+        public int Id { get; }
     }
 
-    public class DeleteTodoItemCommandHandler : CommandHandler<DeleteTodoItemCommand>
+    internal sealed class DeleteTodoItemCommandHandler : CommandHandler<DeleteTodoItemCommand>
     {
         private readonly ITodoItemRepositoryRead _todoItemReadRepository;
 

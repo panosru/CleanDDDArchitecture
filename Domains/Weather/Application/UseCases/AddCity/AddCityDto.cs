@@ -1,3 +1,5 @@
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+
 namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity
 {
     using System.ComponentModel.DataAnnotations;

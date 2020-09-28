@@ -5,7 +5,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Infrastructure.R
     using Todo.Core.Entities;
     using Todo.Infrastructure.Persistence.Contexts;
 
-    public class TodoItemRepositoryWrite //TODO: Add MarkComplete & UnmarkComplete methods?
+    public sealed class TodoItemRepositoryWrite //TODO: Add MarkComplete & UnmarkComplete methods?
         : RepositoryWrite<TodoDbContextWrite, TodoItemEntity, int>, ITodoItemRepositoryWrite
     {
         public TodoItemRepositoryWrite(TodoDbContextWrite context)

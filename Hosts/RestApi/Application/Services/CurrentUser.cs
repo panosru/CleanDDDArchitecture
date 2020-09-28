@@ -8,8 +8,10 @@
 
     /// <summary>
     /// </summary>
-    public class CurrentUser : ICurrentUserService
+    public sealed class CurrentUser : ICurrentUserService
     {
+        /// <summary>
+        /// </summary>
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         /// <summary>

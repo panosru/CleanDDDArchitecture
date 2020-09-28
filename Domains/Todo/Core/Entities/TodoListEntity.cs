@@ -7,14 +7,16 @@
     using Aviant.DDD.Core.Entities;
     using Aviant.DDD.Core.Validators;
 
-    public class TodoListEntity
+    public sealed class TodoListEntity
         : Entity<int>,
           ICreationAudited,
           IModificationAudited,
           IDeletionAudited,
           ISoftDelete
     {
+        #pragma warning disable 8618
         public string Title { get; set; }
+        #pragma warning restore 8618
 
         public string? Colour { get; set; }
 

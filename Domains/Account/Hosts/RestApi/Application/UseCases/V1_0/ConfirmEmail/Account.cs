@@ -9,9 +9,8 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
 
-    /// <summary>
-    ///     Account endpoints
-    /// </summary>
+    /// <inheritdoc
+    ///     cref="CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [ApiVersion("1.0")]
     [ApiVersion("1.1")]
     [AllowAnonymous]
@@ -20,17 +19,20 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         : ApiController<ConfirmEmailUseCase, Account>,
           IConfirmEmailOutput
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="useCase"></param>
+        /// <inheritdoc />
         public Account([FromServices] ConfirmEmailUseCase useCase)
             : base(useCase) => UseCase.SetOutput(this);
 
         #region IConfirmEmailOutput Members
 
+        /// <summary>
+        /// </summary>
+        /// <param name="message"></param>
         void IConfirmEmailOutput.Invalid(string message) =>
             ViewModel = BadRequest(message);
 
+        /// <summary>
+        /// </summary>
         void IConfirmEmailOutput.Ok() =>
             ViewModel = Ok();
 

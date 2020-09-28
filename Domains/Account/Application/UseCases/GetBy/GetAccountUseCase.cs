@@ -6,7 +6,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy
     using Aviant.DDD.Application.UseCases;
     using Identity;
 
-    public class GetAccountUseCase
+    public sealed class GetAccountUseCase
         : UseCase<GetAccountInput, IGetAccountOutput>
     {
         public override async Task ExecuteAsync(
@@ -14,10 +14,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy
             CancellationToken cancellationToken = default)
         {
             RequestResult requestResult = await Orchestrator.SendQueryAsync(
-                    new GetAccountQuery
-                    {
-                        Id = input.Id
-                    },
+                    new GetAccountQuery(input.Id),
                     cancellationToken)
                .ConfigureAwait(false);
 

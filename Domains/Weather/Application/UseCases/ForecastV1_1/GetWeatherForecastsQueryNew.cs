@@ -8,10 +8,10 @@
     using Aviant.DDD.Application.Queries;
     using Services;
 
-    public class GetWeatherForecastsQueryNew : Query<IEnumerable<WeatherForecastService>>
+    internal sealed class GetWeatherForecastsQueryNew : Query<IEnumerable<WeatherForecastService>>
     { }
 
-    public class
+    internal sealed class
         GetWeatherForecastsQueryNewHandler
         : QueryHandler<GetWeatherForecastsQueryNew, IEnumerable<WeatherForecastService>>
     {
@@ -29,12 +29,10 @@
 
             IEnumerable<WeatherForecastService> vm = Enumerable.Range(1, 5)
                .Select(
-                    index => new WeatherForecastService
-                    {
-                        Date         = DateTime.Now.AddDays(index),
-                        TemperatureC = rng.Next(-20, 55),
-                        Summary      = Summaries[rng.Next(Summaries.Length)]
-                    });
+                    index => new WeatherForecastService(
+                        DateTime.Now.AddDays(index),
+                        rng.Next(-20, 55),
+                        Summaries[rng.Next(Summaries.Length)]));
 
             return Task.FromResult(vm);
         }

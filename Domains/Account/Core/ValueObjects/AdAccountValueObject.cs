@@ -4,9 +4,11 @@
     using Aviant.DDD.Core.ValueObjects;
     using Exceptions;
 
-    public class AdAccountValueObject : ValueObject //TODO: Utilise this VO for Account Creation 
+    internal sealed class AdAccountValueObject : ValueObject //TODO: Utilise this VO for Account Creation
     {
+        #pragma warning disable 8618
         private AdAccountValueObject()
+            #pragma warning restore 8618
         { }
 
         public string Domain { get; private set; }

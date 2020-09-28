@@ -6,7 +6,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
 
-    public class ExportTodoListUseCase
+    public sealed class ExportTodoListUseCase
         : UseCase<ExportTodoListInput, IExportTodoListOutput>
     {
         public override async Task ExecuteAsync(
@@ -14,11 +14,8 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
             CancellationToken   cancellationToken = default)
         {
             RequestResult requestResult = await Orchestrator.SendQueryAsync(
-                new ExportTodosQuery
-                {
-                    ListId = input.ListId
-                },
-                cancellationToken)
+                    new ExportTodosQuery(input.ListId),
+                    cancellationToken)
                .ConfigureAwait(false);
 
             if (requestResult.Succeeded)

@@ -7,7 +7,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
     using Aviant.DDD.Application.UseCases;
     using Todo.Application.Persistence;
 
-    public class TodoItemDeleteUseCase
+    public sealed class TodoItemDeleteUseCase
         : UseCase<TodoItemDeleteInput, ITodoItemDeleteOutput, ITodoDbContextWrite>
     {
         public override async Task ExecuteAsync(
@@ -15,11 +15,8 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
             CancellationToken   cancellationToken = default)
         {
             RequestResult requestResult = await Orchestrator.SendCommandAsync(
-                new DeleteTodoItemCommand
-                {
-                    Id = input.Id
-                },
-                cancellationToken)
+                    new DeleteTodoItemCommand(input.Id),
+                    cancellationToken)
                .ConfigureAwait(false);
 
             if (!requestResult.Succeeded)

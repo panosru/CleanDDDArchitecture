@@ -5,8 +5,14 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Features
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.FeatureManagement;
 
-    public static class FeatureExtension
+    /// <summary>
+    /// </summary>
+    internal static class FeatureExtension
     {
+        /// <summary>
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public static IServiceCollection AddFeatureFlags(this IServiceCollection services)
         {
             services.AddFeatureManagement(DependencyInjectionRegistry.ConfigurationWithDomains);

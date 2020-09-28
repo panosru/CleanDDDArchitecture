@@ -11,12 +11,14 @@
     using Microsoft.EntityFrameworkCore;
     using Todo.Application.Persistence;
 
-    public class ExportTodosQuery : Query<ExportTodosVm>
+    internal sealed class ExportTodosQuery : Query<ExportTodosVm>
     {
-        public int ListId { get; set; }
+        public ExportTodosQuery(int listId) => ListId = listId;
+
+        public int ListId { get; }
     }
 
-    public class ExportTodosQueryHandler : QueryHandler<ExportTodosQuery, ExportTodosVm>
+    internal sealed class ExportTodosQueryHandler : QueryHandler<ExportTodosQuery, ExportTodosVm>
     {
         private readonly ITodoDbContextWrite _context;
 

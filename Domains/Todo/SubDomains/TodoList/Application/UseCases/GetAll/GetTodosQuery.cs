@@ -12,10 +12,10 @@
     using Microsoft.EntityFrameworkCore;
     using Todo.Application.Persistence;
 
-    public class GetTodosQuery : Query<TodosVm>
+    internal sealed class GetTodosQuery : Query<TodosVm>
     { }
 
-    public class GetTodosQueryHandler : QueryHandler<GetTodosQuery, TodosVm>
+    internal sealed class GetTodosQueryHandler : QueryHandler<GetTodosQuery, TodosVm>
     {
         private readonly ITodoDbContextRead _context;
 

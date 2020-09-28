@@ -7,7 +7,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Event
     using Identity;
     using Microsoft.AspNetCore.Identity;
 
-    public class AccountCreatedEventConsumer : EventHandler<AccountCreatedEvent>
+    internal sealed class AccountCreatedEventConsumer : EventHandler<AccountCreatedEvent>
     {
         private readonly UserManager<AccountUser> _userManager;
 

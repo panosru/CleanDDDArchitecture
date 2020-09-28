@@ -1,9 +1,13 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Export
+﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
+
+#pragma warning disable 8618
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Export
 {
     using Aviant.DDD.Application.Mappings;
     using Todo.Core.Entities;
 
-    public class TodoItemRecord : IMapFrom<TodoItemEntity>
+    public sealed class TodoItemRecord : IMapFrom<TodoItemEntity>
     {
         public string Title { get; set; }
 

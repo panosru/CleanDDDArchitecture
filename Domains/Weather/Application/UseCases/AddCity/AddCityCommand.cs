@@ -1,25 +1,21 @@
 namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity
 {
-    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Commands;
 
-    public class AddCityCommand : Command<string>
+    internal sealed class AddCityCommand : Command<string>
     {
-        public string City { get; set; }
+        public AddCityCommand(string city) => City = city;
+
+        public string City { get; }
     }
 
-    public class AddCityCommandHandler
+    internal sealed class AddCityCommandHandler
         : CommandHandler<AddCityCommand, string>
     {
-        public override Task<string> Handle(AddCityCommand command, CancellationToken cancellationToken)
-        {
-            // Do some operations here
-            if (false)
-                throw new Exception("Something went terribly wrong!");
-
-            return Task.FromResult(command.City);
-        }
+        public override Task<string> Handle(AddCityCommand command, CancellationToken cancellationToken) =>
+            // Do some magic here
+            Task.FromResult(command.City);
     }
 }

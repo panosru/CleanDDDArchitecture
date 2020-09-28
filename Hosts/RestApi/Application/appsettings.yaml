@@ -1,12 +1,11 @@
 ---
+AllowedHosts: "*"
 UseInMemoryDatabase: false
 ConnectionStrings:
-  DefaultWriteConnection: Server=(localdb)\mssqllocaldb;Database=CleanDDDArchitectureDb;Trusted_Connection=True;MultipleActiveResultSets=true;
-  DefaultReadConnection: Server=(localdb)\mssqllocaldb;Database=CleanDDDArchitectureDb;Trusted_Connection=True;MultipleActiveResultSets=true;
-Logging:
-  LogLevel:
-    Default: Warning
-AllowedHosts: "*"
+  DefaultWriteConnection: User ID =panosru;Password=123123;Server=localhost;Port=5432;Database=CleanDDDArchitecture;Integrated Security=true;Pooling=true;
+  DefaultReadConnection: User ID =panosru;Password=123123;Server=localhost;Port=5432;Database=CleanDDDArchitecture;Integrated Security=true;Pooling=true;
+  mongo: mongodb://127.0.0.1:27017
+
 SwaggerSettings:
   Name: CleanDDD API
   RoutePrefix: docs
@@ -24,6 +23,11 @@ SwaggerSettings:
     License:
       Name: MIT
       Url: https://opensource.org/licenses/MIT
+
+Logging:
+  LogLevel:
+  Default: Warning
+
 Serilog:
   MinimumLevel:
     Default: Debug
@@ -42,3 +46,6 @@ Serilog:
     - FromLogContext
     - WithMachineName
     - WithThreadId
+
+FeatureManagement:
+  Metal: true

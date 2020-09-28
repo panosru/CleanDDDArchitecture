@@ -5,7 +5,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Infrastructure.R
     using Todo.Core.Entities;
     using Todo.Infrastructure.Persistence.Contexts;
 
-    public class TodoListRepositoryWrite
+    public sealed class TodoListRepositoryWrite
         : RepositoryWrite<TodoDbContextWrite, TodoListEntity, int>,
           ITodoListRepositoryWrite
     {

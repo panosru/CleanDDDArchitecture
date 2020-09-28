@@ -2,7 +2,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
 {
     using Aviant.DDD.Application.UseCases;
 
-    public class CreateAccountInput : UseCaseInput
+    public sealed class CreateAccountInput : UseCaseInput
     {
         public CreateAccountInput(
             string userName,
@@ -18,14 +18,14 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
             Email     = email;
         }
 
-        public string UserName { get; }
+        internal string UserName { get; }
 
-        public string Password { get; }
+        internal string Password { get; }
 
-        public string FirstName { get; }
+        internal string FirstName { get; }
 
-        public string LastName { get; }
+        internal string LastName { get; }
 
-        public string Email { get; }
+        internal string Email { get; }
     }
 }

@@ -8,14 +8,20 @@
     using Core.Repositories;
     using Todo.Core.Entities;
 
-    public class CreateTodoItemCommand : Command<Lazy<TodoItemViewModel>>
+    internal sealed class CreateTodoItemCommand : Command<Lazy<TodoItemViewModel>>
     {
-        public int ListId { get; set; }
+        public CreateTodoItemCommand(int listId, string title)
+        {
+            ListId = listId;
+            Title  = title;
+        }
 
-        public string Title { get; set; }
+        public int ListId { get; }
+
+        public string Title { get; }
     }
 
-    public class CreateTodoItemCommandHandler
+    internal sealed class CreateTodoItemCommandHandler
         : CommandHandler<CreateTodoItemCommand, Lazy<TodoItemViewModel>>
     {
         private readonly IMapper _mapper;

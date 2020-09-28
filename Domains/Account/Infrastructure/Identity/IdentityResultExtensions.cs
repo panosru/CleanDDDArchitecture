@@ -3,7 +3,7 @@
     using System.Linq;
     using Aviant.DDD.Application.Identity;
 
-    public static class IdentityResultExtensions
+    internal static class IdentityResultExtensions
     {
         public static IdentityResult ToApplicationResult(this Microsoft.AspNetCore.Identity.IdentityResult result)
         {
