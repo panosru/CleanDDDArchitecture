@@ -31,7 +31,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove=".gitignore" />
         <None Remove="Pages\Shared\.gitkeep" />
     </ItemGroup>
 
