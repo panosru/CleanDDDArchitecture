@@ -7,7 +7,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
 
-    public class ConfirmEmailUseCase
+    public sealed class ConfirmEmailUseCase
         : UseCase<ConfirmEmailInput, IConfirmEmailOutput>
     {
         public override async Task ExecuteAsync(
@@ -15,11 +15,9 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
             CancellationToken cancellationToken = default)
         {
             RequestResult requestResult = await Orchestrator.SendCommandAsync(
-                    new ConfirmEmailCommand
-                    {
-                        Token = input.Token,
-                        Email = input.Email
-                    },
+                    new ConfirmEmailCommand(
+                        input.Token,
+                        input.Email),
                     cancellationToken)
                .ConfigureAwait(false);
 

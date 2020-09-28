@@ -1,4 +1,8 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.Core.Entities
+﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
+
+#pragma warning disable 8618
+
+namespace CleanDDDArchitecture.Domains.Todo.Core.Entities
 {
     using System;
     using Aviant.DDD.Core.Entities;
@@ -19,7 +23,7 @@
 
         public DateTime? Reminder { get; set; }
 
-        public bool IsCompleted { get; set; } = false;
+        public bool IsCompleted { get; set; }
 
         public PriorityLevel Priority { get; set; } = PriorityLevel.Medium;
 

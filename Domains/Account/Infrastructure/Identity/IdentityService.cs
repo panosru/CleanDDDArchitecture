@@ -16,7 +16,7 @@
     using Microsoft.IdentityModel.Tokens;
     using IdentityResult = Aviant.DDD.Application.Identity.IdentityResult;
 
-    public class IdentityService : IIdentityService //TODO: This requires a major refactor 
+    public sealed class IdentityService : IIdentityService //TODO: This requires a major refactor
     {
         private readonly IConfiguration _config;
 
@@ -33,7 +33,7 @@
         #region IIdentityService Members
 
         public async Task<object?> AuthenticateAsync(
-            string            username, 
+            string            username,
             string            password,
             CancellationToken cancellationToken = default)
         {
@@ -84,7 +84,7 @@
         }
 
         public async Task<IdentityResult> ConfirmEmailAsync(
-            string            token, 
+            string            token,
             string            email,
             CancellationToken cancellationToken = default)
         {
@@ -119,7 +119,7 @@
         }
 
         public async Task<(IdentityResult Result, Guid UserId)> CreateUserAsync(
-            string            username, 
+            string            username,
             string            password,
             CancellationToken cancellationToken = default)
         {

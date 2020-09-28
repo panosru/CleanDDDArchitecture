@@ -9,26 +9,29 @@
     using Microsoft.FeatureManagement.Mvc;
     using TodoList.Application.UseCases.Create;
 
-    /// <summary>
-    ///     Todo Lists endpoints
-    /// </summary>
+    /// <inheritdoc
+    ///     cref="CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [AllowAnonymous]
     [FeatureGate(Features.TodoListCreate)]
-    public class TodoLists
+    public sealed class TodoLists
         : ApiController<CreateTodoListUseCase, TodoLists>,
           ICreateTodoListOutput
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="useCase"></param>
+        /// <inheritdoc />
         public TodoLists([FromServices] CreateTodoListUseCase useCase)
             : base(useCase) => UseCase.SetOutput(this);
 
         #region ICreateTodoListOutput Members
 
+        /// <summary>
+        /// </summary>
+        /// <param name="message"></param>
         void ICreateTodoListOutput.Invalid(string message) =>
             ViewModel = BadRequest(message);
 
+        /// <summary>
+        /// </summary>
+        /// <param name="object"></param>
         void ICreateTodoListOutput.Ok(object? @object) =>
             ViewModel = Ok(@object);
 

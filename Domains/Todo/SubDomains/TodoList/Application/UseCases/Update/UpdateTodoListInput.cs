@@ -2,7 +2,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
 {
     using Aviant.DDD.Application.UseCases;
 
-    public class UpdateTodoListInput : UseCaseInput
+    public sealed class UpdateTodoListInput : UseCaseInput
     {
         public UpdateTodoListInput(int id, string title)
         {
@@ -10,8 +10,8 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
             Title = title;
         }
 
-        public int Id { get; }
+        internal int Id { get; }
 
-        public string Title { get; }
+        internal string Title { get; }
     }
 }

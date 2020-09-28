@@ -5,7 +5,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
 
-    public class AuthenticateUseCase
+    public sealed class AuthenticateUseCase
         : UseCase<AuthenticateInput, IAuthenticateOutput>
     {
         public override async Task ExecuteAsync(
@@ -13,11 +13,9 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate
             CancellationToken cancellationToken = default)
         {
             RequestResult requestResult = await Orchestrator.SendCommandAsync(
-                    new AuthenticateCommand
-                    {
-                        Username = input.Username,
-                        Password = input.Password
-                    },
+                    new AuthenticateCommand(
+                        input.Username,
+                        input.Password),
                     cancellationToken)
                .ConfigureAwait(false);
 

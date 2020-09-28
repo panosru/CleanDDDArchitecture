@@ -5,28 +5,33 @@
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
     using TodoList.Application.UseCases.GetAll;
 
-    /// <summary>
-    ///     Todo Lists endpoints
-    /// </summary>
+    /// <inheritdoc
+    ///     cref="CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [AllowAnonymous]
     [FeatureGate(Features.TodoListGetAll)]
-    public class TodoLists
+    public sealed class TodoLists
         : ApiController<GetAllUseCase, TodoLists>,
           IGetAllOutput
     {
+        /// <inheritdoc />
         public TodoLists([FromServices] GetAllUseCase useCase)
             : base(useCase) => UseCase.SetOutput(this);
 
         #region IGetAllOutput Members
 
+        /// <summary>
+        /// </summary>
+        /// <param name="message"></param>
         void IGetAllOutput.Invalid(string message) =>
             ViewModel = BadRequest(message);
 
+        /// <summary>
+        /// </summary>
+        /// <param name="object"></param>
         void IGetAllOutput.Ok(object? @object) =>
             ViewModel = Ok(@object);
 
@@ -41,8 +46,7 @@
         /// <returns>An asynchronous <see cref="IActionResult" />.</returns>
         [HttpGet]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.List))]
-        public async Task<IActionResult> GetAll(
-            CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken = default)
         {
             await UseCase.ExecuteAsync(cancellationToken)
                .ConfigureAwait(false);

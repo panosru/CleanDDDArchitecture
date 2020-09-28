@@ -9,49 +9,46 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
 
-    /// <summary>
-    ///     Weather endpoints
-    /// </summary>
+    /// <inheritdoc
+    ///     cref="CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [AllowAnonymous]
     [FeatureGate(Features.WeatherSyncService)]
-    public class Weather
+    public sealed class Weather
         : ApiController<SyncWeatherServiceUseCase, Weather>, ISyncWeatherServiceOutput
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="useCase"></param>
+        /// <inheritdoc />
         public Weather([FromServices] SyncWeatherServiceUseCase useCase)
             : base(useCase) => UseCase.SetOutput(this);
 
         #region ISyncWeatherServiceOutput Members
 
+        /// <summary>
+        /// </summary>
+        /// <param name="message"></param>
         void ISyncWeatherServiceOutput.Invalid(string message) =>
             ViewModel = BadRequest(message);
 
+        /// <summary>
+        /// </summary>
         void ISyncWeatherServiceOutput.NoContent() => ViewModel = NoContent();
 
         #endregion
-        
-        // public static readonly CancellationToken CancellationToken = new CancellationToken();
 
         /// <summary>
         ///     Dummy weather syncing with external service (3 seconds delay)
         /// </summary>
-        /// <response code="200">Synchornisation successfully comleted.</response>
+        /// <response code="200">Synchronization successfully completed.</response>
         /// <response code="400">Bad request.</response>
         /// <response code="404">Not Found.</response>
-        /// <param name="dto"></param>
         /// <param name="cancellationToken"></param>
         /// <returns>Successful message.</returns>
         [HttpPost]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Patch))]
-        public async Task<IActionResult> Forecast(
-            [FromBody] SyncWeatherServiceDto dto,
-            CancellationToken cancellationToken = default)
+        public async Task<IActionResult> Forecast(CancellationToken cancellationToken = default)
         {
-            await UseCase.ExecuteAsync(new SyncWeatherServiceInput(dto.City), cancellationToken)
+            await UseCase.ExecuteAsync(cancellationToken)
                .ConfigureAwait(false);
-            
+
             return ViewModel;
         }
     }

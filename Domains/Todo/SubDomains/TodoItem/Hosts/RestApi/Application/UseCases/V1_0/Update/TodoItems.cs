@@ -3,27 +3,26 @@
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
     using TodoItem.Application.UseCases.Update;
 
-    /// <summary>
-    ///     Todo items endpoints
-    /// </summary>
+    /// <inheritdoc
+    ///     cref="CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [FeatureGate(Features.TodoItemUpdate)]
-    public class TodoItems
+    public sealed class TodoItems
         : ApiController<TodoItemUpdateUseCase, TodoItems>,
           ITodoItemUpdateOutput
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="useCase"></param>
+        /// <inheritdoc />
         public TodoItems([FromServices] TodoItemUpdateUseCase useCase)
             : base(useCase) => UseCase.SetOutput(this);
 
         #region ITodoItemUpdateOutput Members
 
+        /// <summary>
+        /// </summary>
+        /// <param name="message"></param>
         void ITodoItemUpdateOutput.Invalid(string message) =>
             ViewModel = BadRequest(message);
 

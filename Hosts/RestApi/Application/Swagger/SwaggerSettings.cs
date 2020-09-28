@@ -1,4 +1,6 @@
-﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger
+﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
+
+namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger
 {
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.OpenApi.Models;

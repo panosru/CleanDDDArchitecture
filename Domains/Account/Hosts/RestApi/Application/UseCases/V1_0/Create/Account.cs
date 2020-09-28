@@ -11,9 +11,8 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
 
-    /// <summary>
-    ///     Account endpoints
-    /// </summary>
+    /// <inheritdoc
+    ///     cref="CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [ApiVersion("1.0")]
     [AllowAnonymous]
     [FeatureGate(Features.AccountCreate)]
@@ -21,17 +20,21 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         : ApiController<AccountCreateUseCase, Account>,
           ICreateAccountOutput
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="useCase"></param>
+        /// <inheritdoc />
         public Account([FromServices] AccountCreateUseCase useCase)
             : base(useCase) => useCase.SetOutput(this);
 
         #region ICreateAccountOutput Members
 
+        /// <summary>
+        /// </summary>
+        /// <param name="message"></param>
         void ICreateAccountOutput.Invalid(string message) =>
             ViewModel = BadRequest(message);
 
+        /// <summary>
+        /// </summary>
+        /// <param name="accountAggregate"></param>
         void ICreateAccountOutput.Ok(AccountAggregate accountAggregate) =>
             ViewModel = CreatedAtAction(
                 "GetAccount",
@@ -56,12 +59,12 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         public async Task<IActionResult> Create([FromBody] [Required] CreateAccountDto dto)
         {
             await UseCase.ExecuteAsync(
-                new CreateAccountInput(
-                    dto.UserName,
-                    dto.Password,
-                    dto.FirstName,
-                    dto.LastName,
-                    dto.Email))
+                    new CreateAccountInput(
+                        dto.UserName,
+                        dto.Password,
+                        dto.FirstName,
+                        dto.LastName,
+                        dto.Email))
                .ConfigureAwait(false);
 
             return ViewModel;

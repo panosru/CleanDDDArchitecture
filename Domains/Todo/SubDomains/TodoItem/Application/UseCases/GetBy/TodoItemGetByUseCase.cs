@@ -6,7 +6,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.UseCases;
 
-    public class TodoItemGetByUseCase
+    public sealed class TodoItemGetByUseCase
         : UseCase<TodoItemGetByInput, ITodoItemGetByOutput>
     {
         public override async Task ExecuteAsync(
@@ -14,11 +14,8 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
             CancellationToken  cancellationToken = default)
         {
             RequestResult requestResult = await Orchestrator.SendQueryAsync(
-                new GetTodoItemQuery
-                {
-                    Id = input.Id
-                },
-                cancellationToken)
+                    new GetTodoItemQuery(input.Id),
+                    cancellationToken)
                .ConfigureAwait(false);
 
             if (requestResult.Succeeded)

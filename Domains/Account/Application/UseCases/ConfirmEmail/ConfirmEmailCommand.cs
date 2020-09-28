@@ -8,14 +8,20 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
     using Aviant.DDD.Application.Commands;
     using Aviant.DDD.Application.Identity;
 
-    public class ConfirmEmailCommand : Command<IdentityResult>
+    internal sealed class ConfirmEmailCommand : Command<IdentityResult>
     {
-        public string Token { get; set; }
+        public ConfirmEmailCommand(string token, string email)
+        {
+            Token = token;
+            Email = email;
+        }
 
-        public string Email { get; set; }
+        public string Token { get; }
+
+        public string Email { get; }
     }
 
-    public class ConfirmEmailCommandCommandCommandHandler
+    internal sealed class ConfirmEmailCommandCommandCommandHandler
         : CommandHandler<ConfirmEmailCommand, IdentityResult>
     {
         private readonly IIdentityService _identityIdentityService;
@@ -34,7 +40,8 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
 
                 return await _identityIdentityService.ConfirmEmailAsync(
                         token,
-                        command.Email)
+                        command.Email,
+                        cancellationToken)
                    .ConfigureAwait(false);
             }
             catch (Exception e)

@@ -8,23 +8,23 @@
     using Microsoft.FeatureManagement.Mvc;
     using TodoList.Application.UseCases.Delete;
 
-    /// <summary>
-    ///     Todo Lists endpoints
-    /// </summary>
+    /// <inheritdoc
+    ///     cref="CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [AllowAnonymous]
     [FeatureGate(Features.TodoListDelete)]
-    public class TodoLists
+    public sealed class TodoLists
         : ApiController<DeleteTodoListUseCase, TodoLists>,
           IDeleteTodoUseCaseOutput
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="useCase"></param>
+        /// <inheritdoc />
         public TodoLists([FromServices] DeleteTodoListUseCase useCase)
             : base(useCase) => UseCase.SetOutput(this);
 
         #region IDeleteTodoUseCaseOutput Members
 
+        /// <summary>
+        /// </summary>
+        /// <param name="message"></param>
         void IDeleteTodoUseCaseOutput.Invalid(string message) =>
             ViewModel = BadRequest(message);
 

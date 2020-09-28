@@ -3,7 +3,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
     using System;
     using Aviant.DDD.Application.UseCases;
 
-    public class UpdateDetailsInput : UseCaseInput
+    public sealed class UpdateDetailsInput : UseCaseInput
     {
         public UpdateDetailsInput(
             Guid   id,
@@ -17,12 +17,12 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
             Email     = email;
         }
 
-        public Guid Id { get; }
+        internal Guid Id { get; }
 
-        public string FirstName { get; }
+        internal string FirstName { get; }
 
-        public string LastName { get; }
+        internal string LastName { get; }
 
-        public string Email { get; }
+        internal string Email { get; }
     }
 }

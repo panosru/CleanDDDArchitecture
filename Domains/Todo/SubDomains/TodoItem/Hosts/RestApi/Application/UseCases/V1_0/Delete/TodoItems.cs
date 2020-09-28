@@ -7,19 +7,22 @@
     using Microsoft.FeatureManagement.Mvc;
     using TodoItem.Application.UseCases.Delete;
 
-    /// <summary>
-    ///     Todo items endpoints
-    /// </summary>
+    /// <inheritdoc
+    ///     cref="CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [FeatureGate(Features.TodoItemDelete)]
-    public class TodoItems
+    public sealed class TodoItems
         : ApiController<TodoItemDeleteUseCase, TodoItems>,
           ITodoItemDeleteOutput
     {
+        /// <inheritdoc />
         public TodoItems([FromServices] TodoItemDeleteUseCase useCase)
             : base(useCase) => UseCase.SetOutput(this);
 
         #region ITodoItemDeleteOutput Members
 
+        /// <summary>
+        /// </summary>
+        /// <param name="message"></param>
         void ITodoItemDeleteOutput.Invalid(string message) =>
             ViewModel = BadRequest(message);
 

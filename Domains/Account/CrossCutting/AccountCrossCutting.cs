@@ -17,13 +17,17 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
 
     public static class AccountCrossCutting
     {
+        internal static readonly Assembly AccountApplicationAssembly = typeof(AccountCreateUseCase).Assembly;
+
+        internal static readonly Assembly AccountInfrastructureAssembly = typeof(AccountDbContextWrite).Assembly;
+
         public static IEnumerable<Profile> AutoMapperProfiles() => new List<Profile>();
 
         public static IEnumerable<Assembly> ValidatorAssemblies() => new List<Assembly>();
 
         public static IEnumerable<Assembly> MediatorAssemblies() => new List<Assembly>
         {
-            typeof(CreateAccount).Assembly
+            AccountApplicationAssembly
         };
 
         public static async Task GenerateDefaultUserIfNotExists(IServiceProvider serviceProvider)
@@ -57,7 +61,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
 
                 RequestResult requestResult = await orchestrator
                    .SendCommandAsync(
-                        new CreateAccount(
+                        new CreateAccountCommand(
                             accountDto.UserName,
                             accountDto.Password,
                             accountDto.FirstName,

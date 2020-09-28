@@ -1,12 +1,22 @@
 namespace CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.UseCases.V1_0.AddCity
 {
-    public class AddCityResponse
+    /// <summary>
+    /// </summary>
+    internal struct AddCityResponse
     {
+        /// <summary>
+        /// </summary>
+        /// <param name="city"></param>
         public AddCityResponse(string city) =>
             Message = $"City \"{city}\" has added";
 
-        public string Message { get; }
+        /// <summary>
+        /// </summary>
+        private string Message { get; }
 
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
         public override string ToString() => Message;
     }
 }

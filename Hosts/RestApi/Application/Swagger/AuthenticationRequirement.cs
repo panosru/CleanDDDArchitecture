@@ -12,7 +12,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger
     ///     Swagger filter to add the bearer into each request.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    internal class AuthenticationRequirement : IOperationFilter
+    internal sealed class AuthenticationRequirement : IOperationFilter
     {
         #region IOperationFilter Members
 

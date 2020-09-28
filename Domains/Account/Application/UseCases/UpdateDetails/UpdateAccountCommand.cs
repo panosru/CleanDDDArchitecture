@@ -6,9 +6,9 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
     using Aggregates;
     using Aviant.DDD.Application.Commands;
 
-    public class UpdateAccount : Command<AccountAggregate, AccountAggregateId>
+    internal sealed class UpdateAccountCommand : Command<AccountAggregate, AccountAggregateId>
     {
-        public UpdateAccount(
+        public UpdateAccountCommand(
             AccountAggregateId aggregateId,
             string             firstName,
             string             lastName,
@@ -29,15 +29,21 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
         public string Email { get; }
     }
 
-    public class UpdateAccountHandler : CommandHandler<UpdateAccount, AccountAggregate, AccountAggregateId>
+    internal sealed class UpdateAccountHandler
+        : CommandHandler<UpdateAccountCommand, AccountAggregate, AccountAggregateId>
     {
-        public override async Task<AccountAggregate> Handle(UpdateAccount command, CancellationToken cancellationToken)
+        public override async Task<AccountAggregate> Handle(
+            UpdateAccountCommand command,
+            CancellationToken    cancellationToken)
         {
-            var account = await EventsService.RehydrateAsync(command.AggregateId)
+            var account = await EventsService
+               .RehydrateAsync(command.AggregateId, cancellationToken)
                .ConfigureAwait(false);
 
             if (account is null)
-                throw new ArgumentOutOfRangeException(nameof(UpdateAccount.AggregateId), "Invalid account aggregateId");
+                throw new ArgumentOutOfRangeException(
+                    nameof(UpdateAccountCommand.AggregateId),
+                    "Invalid account aggregateId");
 
             account.ChangeDetails(command.FirstName, command.LastName, command.Email);
 
