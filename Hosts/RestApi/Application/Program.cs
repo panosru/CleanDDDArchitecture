@@ -1,6 +1,7 @@
 namespace CleanDDDArchitecture.Hosts.RestApi.Application
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -9,6 +10,8 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Domains.Todo.CrossCutting;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Configuration.CommandLine;
+    using Microsoft.Extensions.Configuration.EnvironmentVariables;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
@@ -93,9 +96,41 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                             Path.Combine(Directory.GetCurrentDirectory(), configFile))))
                 configurationBuilder.AddYamlFile(configFile, false, true);
 
+            MoveEnvironmentVariablesToEnd(configurationBuilder);
+
             Log.Logger = new LoggerConfiguration()
                .ReadFrom.Configuration(DependencyInjectionRegistry.SetConfiguration(configurationBuilder))
                .CreateLogger();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="configurationBuilder"></param>
+        private static void MoveEnvironmentVariablesToEnd(IConfigurationBuilder configurationBuilder)
+        {
+            // Items that needs to be moved to the end (FIFO)
+            var fifo = new List<IConfigurationSource>
+            {
+                // Get EnvironmentVariablesConfigurationSource item
+                configurationBuilder.Sources
+                   .First(
+                        i =>
+                            i.GetType() == typeof(EnvironmentVariablesConfigurationSource)),
+
+                // Get CommandLineConfigurationSource item
+                configurationBuilder.Sources
+                   .First(
+                        i =>
+                            i.GetType() == typeof(CommandLineConfigurationSource))
+            };
+
+            fifo.ForEach(
+                item =>
+                {
+                    // Move to the end
+                    configurationBuilder.Sources.Remove(item);
+                    configurationBuilder.Sources.Add(item);
+                });
         }
 
         /// <summary>
