@@ -1,43 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
-    <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>CleanDDDArchitecture.Hosts.RestApi.Application</RootNamespace>
-        <AssemblyName>CleanDDDArchitecture.Hosts.RestApi.Application</AssemblyName>
-        <NoWarn>$(NoWarn);CS1591;CS8618;CS8625;CS8603;CS8604</NoWarn>
-        <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <Nullable>enable</Nullable>
-        <Version>1.0.$(Build).$(Revision)</Version>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.8">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.6.3" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.6.3" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.6.3" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="5.6.3" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <_ContentIncludedByDefault Remove="wwwroot\api\specification.json" />
-        <_ContentIncludedByDefault Remove="wwwroot\favicon.ico" />
-        <_ContentIncludedByDefault Remove="Pages\Error.cshtml" />
-        <_ContentIncludedByDefault Remove="Pages\_ViewImports.cshtml" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Remove="Pages\Shared\.gitkeep" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\..\Domains\Account\Hosts\RestApi\Application\Application.csproj" />
-      <ProjectReference Include="..\..\..\Domains\Todo\Hosts\RestApi\Application\Application.csproj" />
-      <ProjectReference Include="..\..\..\Domains\Weather\Hosts\RestApi\Application\Application.csproj" />
-    </ItemGroup>
-
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>CleanDDDArchitecture.Hosts.RestApi.Application</RootNamespace>
+    <AssemblyName>CleanDDDArchitecture.Hosts.RestApi.Application</AssemblyName>
+    <NoWarn>$(NoWarn);CS1591;CS8618;CS8625;CS8603;CS8604</NoWarn>
+    <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Nullable>enable</Nullable>
+    <Version>1.0.$(Build).$(Revision)</Version>
+    <UserSecretsId>e280dc2a-db97-4d06-b65a-609faf78d5d1</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="5.6.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\api\specification.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\favicon.ico" />
+    <_ContentIncludedByDefault Remove="Pages\Error.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\_ViewImports.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Pages\Shared\.gitkeep" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Domains\Account\Hosts\RestApi\Application\Application.csproj" />
+    <ProjectReference Include="..\..\..\Domains\Todo\Hosts\RestApi\Application\Application.csproj" />
+    <ProjectReference Include="..\..\..\Domains\Weather\Hosts\RestApi\Application\Application.csproj" />
+  </ItemGroup>
 </Project>
