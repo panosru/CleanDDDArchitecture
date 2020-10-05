@@ -45,3 +45,16 @@ Serilog:
 
 FeatureManagement:
   Metal: true
+  
+# Use secrets.json for these:
+ConnectionStrings:
+  DefaultWriteConnection: User ID =panosru;Password=123123;Server=localhost;Port=5432;Database=CleanDDDArchitecture;Integrated Security=true;Pooling=true;
+  DefaultReadConnection: User ID =panosru;Password=123123;Server=localhost;Port=5432;Database=CleanDDDArchitecture;Integrated Security=true;Pooling=true;
+  eventstore: tcp://guest:123123@127.0.0.1:1113
+  kafka: 127.0.0.1:9191
+  loki: http://127.0.0.1:3100
+  mongo: mongodb://127.0.0.1:27017
+
+Jwt:
+  Key: thisismysecretkey
+  Issuer: test.com
