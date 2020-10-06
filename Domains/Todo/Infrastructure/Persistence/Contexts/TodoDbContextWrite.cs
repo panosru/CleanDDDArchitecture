@@ -10,9 +10,9 @@
     {
         #pragma warning disable 8618
         public TodoDbContextWrite(DbContextOptions<TodoDbContextWrite> options)
-            #pragma warning restore 8618
             : base(options)
         { }
+        #pragma warning restore 8618
 
         #region ITodoDbContextWrite Members
 
