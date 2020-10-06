@@ -10,9 +10,9 @@ namespace CleanDDDArchitecture.Domains.Todo.Infrastructure.Persistence.Contexts
     {
         #pragma warning disable 8618
         public TodoDbContextRead(DbContextOptions<TodoDbContextRead> options)
-            #pragma warning restore 8618
             : base(options)
         { }
+        #pragma warning restore 8618
 
         #region ITodoDbContextRead Members
 

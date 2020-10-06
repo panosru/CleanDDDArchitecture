@@ -1,3 +1,5 @@
+// ReSharper disable MemberCanBeInternal
+
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Events
 {
     using Aggregates;

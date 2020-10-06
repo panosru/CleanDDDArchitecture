@@ -8,8 +8,8 @@
     {
         #pragma warning disable 8618
         private AdAccountValueObject()
-            #pragma warning restore 8618
         { }
+        #pragma warning restore 8618
 
         public string Domain { get; private set; }
 
