@@ -16,7 +16,6 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using Aviant.DDD.Application.Identity;
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.Persistance;
-    using Aviant.DDD.Application.Processors;
     using Aviant.DDD.Application.Services;
     using Aviant.DDD.Core.EventBus;
     using Aviant.DDD.Core.Services;
@@ -127,8 +126,6 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
             services.AddEventsService<AccountAggregate, AccountAggregateId>();
 
             services.AddScoped<ServiceFactory>(ctx => ctx.GetRequiredService);
-
-            services.Decorate(typeof(INotificationHandler<>), typeof(RetryProcessor<>));
 
             services.AddSingleton<IEventConsumerFactory, EventConsumerFactory>();
 

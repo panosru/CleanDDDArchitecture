@@ -8,6 +8,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Aviant.DDD.Application.EventBus;
     using Aviant.DDD.Application.Identity;
     using Aviant.DDD.Application.Notifications;
+    using Aviant.DDD.Application.Processors;
     using Aviant.DDD.Application.Services;
     using Aviant.DDD.Core.Messages;
     using Aviant.DDD.Core.Services;
@@ -28,8 +29,6 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Microsoft.Extensions.Hosting;
     using Services;
     using Swagger;
-
-    // using Workers;
 
     /// <summary>
     /// </summary>
@@ -95,6 +94,9 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                    .RegisterHandlers(typeof(IRequestHandler<,>))
                    .RegisterHandlers(typeof(INotificationHandler<>)));
 
+            services.Decorate(
+                typeof(INotificationHandler<>),
+                typeof(RetryProcessor<>));
 
             services.AddTransient(
                 typeof(IPipelineBehavior<,>),
