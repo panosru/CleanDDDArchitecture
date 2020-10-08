@@ -4,8 +4,8 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
 {
     using System;
     using Aviant.DDD.Core.Aggregates;
+    using Aviant.DDD.Core.DomainEvents;
     using Aviant.DDD.Core.Entities;
-    using Aviant.DDD.Core.Events;
     using UseCases.Create.Events;
     using UseCases.UpdateDetails.Events;
 
@@ -34,7 +34,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
             LastName  = lastName;
             Email     = email;
 
-            AddEvent(new AccountCreatedEvent(this));
+            AddEvent(new AccountCreatedDomainEvent(this));
         }
 
         // private AccountAggregate(
@@ -103,14 +103,14 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
             LastName  = lastname;
             Email     = email;
 
-            AddEvent(new AccountUpdatedEvent(this));
+            AddEvent(new AccountUpdatedDomainEvent(this));
         }
 
-        protected override void Apply(IEvent<AccountAggregateId> @event)
+        protected override void Apply(IDomainEvent<AccountAggregateId> domainEvent)
         {
-            switch (@event)
+            switch (domainEvent)
             {
-                case AccountCreatedEvent c:
+                case AccountCreatedDomainEvent c:
                     Id        = c.AggregateId;
                     UserName  = c.UserName;
                     Password  = c.Password;
@@ -119,7 +119,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
                     Email     = c.Email;
                     break;
 
-                case AccountUpdatedEvent u:
+                case AccountUpdatedDomainEvent u:
                     FirstName = u.FirstName;
                     LastName  = u.LastName;
                     Email     = u.Email;
