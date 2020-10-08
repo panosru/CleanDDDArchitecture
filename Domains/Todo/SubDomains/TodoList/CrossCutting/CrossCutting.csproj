@@ -1,10 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.CrossCutting</RootNamespace>
         <AssemblyName>CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.CrossCutting</AssemblyName>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
