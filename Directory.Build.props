@@ -1,5 +1,7 @@
 <Project>
     <PropertyGroup Label="Common">
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <Nullable>enable</Nullable>
         <Authors>Panagiotis Kosmidis</Authors>
         <Copyright>Copyright © $(Authors) $([System.DateTime]::Now.Year)</Copyright>
         <Trademark>$(Authors)™</Trademark>

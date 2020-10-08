@@ -1,12 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>CleanDDDArchitecture.Domains.Todo.Hosts.RestApi.Application</RootNamespace>
         <AssemblyName>CleanDDDArchitecture.Domains.Todo.Hosts.RestApi.Application</AssemblyName>
         <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
