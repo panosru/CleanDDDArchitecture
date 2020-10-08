@@ -37,7 +37,8 @@
                .SingleOrDefaultAsync(cancellationToken)
                .ConfigureAwait(false);
 
-            if (entity == null) throw new NotFoundException(nameof(TodoListEntity), command.Id);
+            if (entity is null)
+                throw new NotFoundException(nameof(TodoListEntity), command.Id);
 
             await _todoListWriteRepository.DeleteAsync(entity, cancellationToken)
                .ConfigureAwait(false);

@@ -56,7 +56,8 @@
             var entity = await _todoItemReadRepository.GetAsync(command.Id, cancellationToken)
                .ConfigureAwait(false);
 
-            if (entity == null) throw new NotFoundException(nameof(TodoItemEntity), command.Id);
+            if (entity is null)
+                throw new NotFoundException(nameof(TodoItemEntity), command.Id);
 
             entity.Title       = command.Title;
             entity.IsCompleted = command.Done;

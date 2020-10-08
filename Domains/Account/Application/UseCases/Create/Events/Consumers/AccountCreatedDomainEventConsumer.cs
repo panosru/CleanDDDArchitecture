@@ -15,7 +15,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Event
 
         public override async Task Handle(
             EventReceived<AccountCreatedDomainEvent> @event,
-            CancellationToken                  cancellationToken)
+            CancellationToken                        cancellationToken)
         {
             // It is the responsibility of previous steps validators to make sure that the creation of the user
             // will not fail (for example password property rules etc.)
