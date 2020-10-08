@@ -9,7 +9,9 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
 
     internal sealed class AccountUpdatedDomainEventConsumer : DomainEventHandler<AccountUpdatedDomainEvent>
     {
-        public override Task Handle(EventReceived<AccountUpdatedDomainEvent> @event, CancellationToken cancellationToken) =>
+        public override Task Handle(
+            EventReceived<AccountUpdatedDomainEvent> @event,
+            CancellationToken                        cancellationToken) =>
             throw new ArgumentOutOfRangeException();
 
         public override IAsyncPolicy RetryPolicy() =>
