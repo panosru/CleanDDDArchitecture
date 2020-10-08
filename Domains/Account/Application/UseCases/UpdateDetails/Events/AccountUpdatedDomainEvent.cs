@@ -3,17 +3,17 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails.Events
 {
     using Aggregates;
-    using Aviant.DDD.Core.Events;
+    using Aviant.DDD.Core.DomainEvents;
 
-    public sealed class AccountUpdatedEvent : Event<AccountAggregate, AccountAggregateId>
+    public sealed class AccountUpdatedDomainEvent : DomainEvent<AccountAggregate, AccountAggregateId>
     {
         // ReSharper disable once UnusedMember.Local
         #pragma warning disable 8618
-        private AccountUpdatedEvent()
+        private AccountUpdatedDomainEvent()
         { }
         #pragma warning restore 8618
 
-        public AccountUpdatedEvent(AccountAggregate accountAggregate)
+        public AccountUpdatedDomainEvent(AccountAggregate accountAggregate)
             : base(accountAggregate)
         {
             FirstName = accountAggregate.FirstName;
