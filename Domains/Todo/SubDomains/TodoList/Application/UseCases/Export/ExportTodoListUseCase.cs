@@ -13,7 +13,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
             ExportTodoListInput input,
             CancellationToken   cancellationToken = default)
         {
-            RequestResult requestResult = await Orchestrator.SendQueryAsync(
+            OrchestratorResponse requestResult = await Orchestrator.SendQueryAsync(
                     new ExportTodosQuery(input.ListId),
                     cancellationToken)
                .ConfigureAwait(false);

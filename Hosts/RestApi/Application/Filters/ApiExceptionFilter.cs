@@ -107,7 +107,7 @@
             //     Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
             // };
 
-            var details = new RequestResult
+            var details = new OrchestratorResponse
             {
                 Succeeded = false
             };
