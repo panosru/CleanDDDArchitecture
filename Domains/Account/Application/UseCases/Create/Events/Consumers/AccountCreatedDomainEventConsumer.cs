@@ -2,19 +2,19 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Event
 {
     using System.Threading;
     using System.Threading.Tasks;
+    using Aviant.DDD.Core.DomainEvents;
     using Aviant.DDD.Core.EventBus;
-    using Aviant.DDD.Core.Events;
     using Identity;
     using Microsoft.AspNetCore.Identity;
 
-    internal sealed class AccountCreatedEventConsumer : EventHandler<AccountCreatedEvent>
+    internal sealed class AccountCreatedDomainEventConsumer : DomainEventHandler<AccountCreatedDomainEvent>
     {
         private readonly UserManager<AccountUser> _userManager;
 
-        public AccountCreatedEventConsumer(UserManager<AccountUser> userManager) => _userManager = userManager;
+        public AccountCreatedDomainEventConsumer(UserManager<AccountUser> userManager) => _userManager = userManager;
 
         public override async Task Handle(
-            EventReceived<AccountCreatedEvent> @event,
+            EventReceived<AccountCreatedDomainEvent> @event,
             CancellationToken                  cancellationToken)
         {
             // It is the responsibility of previous steps validators to make sure that the creation of the user

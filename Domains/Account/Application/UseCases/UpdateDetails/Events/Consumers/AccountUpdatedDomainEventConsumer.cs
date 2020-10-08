@@ -3,12 +3,13 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
     using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using Aviant.DDD.Core.DomainEvents;
     using Aviant.DDD.Core.EventBus;
     using Polly;
 
-    internal sealed class AccountUpdatedEventConsumer : Aviant.DDD.Core.Events.EventHandler<AccountUpdatedEvent>
+    internal sealed class AccountUpdatedDomainEventConsumer : DomainEventHandler<AccountUpdatedDomainEvent>
     {
-        public override Task Handle(EventReceived<AccountUpdatedEvent> @event, CancellationToken cancellationToken) =>
+        public override Task Handle(EventReceived<AccountUpdatedDomainEvent> @event, CancellationToken cancellationToken) =>
             throw new ArgumentOutOfRangeException();
 
         public override IAsyncPolicy RetryPolicy() =>

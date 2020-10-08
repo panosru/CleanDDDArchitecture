@@ -3,17 +3,17 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Events
 {
     using Aggregates;
-    using Aviant.DDD.Core.Events;
+    using Aviant.DDD.Core.DomainEvents;
 
-    public sealed class AccountCreatedEvent : Event<AccountAggregate, AccountAggregateId>
+    public sealed class AccountCreatedDomainEvent : DomainEvent<AccountAggregate, AccountAggregateId>
     {
         // ReSharper disable once UnusedMember.Local
         #pragma warning disable 8618
-        private AccountCreatedEvent()
+        private AccountCreatedDomainEvent()
         { }
         #pragma warning restore 8618
 
-        public AccountCreatedEvent(AccountAggregate accountAggregate)
+        public AccountCreatedDomainEvent(AccountAggregate accountAggregate)
             : base(accountAggregate)
         {
             Id        = accountAggregate.Id;
