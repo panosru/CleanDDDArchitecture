@@ -14,8 +14,8 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     /// <inheritdoc
     ///     cref="CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [ApiVersion("1.0")]
-    [AllowAnonymous]
     [FeatureGate(Features.AccountCreate)]
+    [AllowAnonymous]
     public sealed class Account
         : ApiController<AccountCreateUseCase, Account>,
           ICreateAccountOutput
