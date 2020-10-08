@@ -37,16 +37,6 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
             AddEvent(new AccountCreatedDomainEvent(this));
         }
 
-        // private AccountAggregate(
-        //     AccountAggregateId aggregateId,
-        //     Guid               userId,
-        //     string             email)
-        //     : base(aggregateId)
-        // {
-        //     UserId = userId;
-        //     Email  = email;
-        // }
-
         public string UserName { get; private set; }
 
         public string Password { get; private set; }
@@ -83,17 +73,6 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
                 email);
         }
 
-        // public static AccountAggregate Create(Guid userId, string email)
-        // {
-        //     var unixTimestamp = (int) DateTime.UtcNow
-        //        .Subtract(new DateTime(1970, 1, 1))
-        //        .TotalSeconds;
-        //
-        //     var id = new AccountAggregateId(unixTimestamp);
-        //
-        //     return new AccountAggregate(id, userId, email);
-        // }
-
         internal void ChangeDetails(
             string firstname,
             string lastname,
@@ -106,9 +85,9 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
             AddEvent(new AccountUpdatedDomainEvent(this));
         }
 
-        protected override void Apply(IDomainEvent<AccountAggregateId> domainEvent)
+        protected override void Apply(IDomainEvent<AccountAggregateId> @event)
         {
-            switch (domainEvent)
+            switch (@event)
             {
                 case AccountCreatedDomainEvent c:
                     Id        = c.AggregateId;

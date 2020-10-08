@@ -5,7 +5,6 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Versioning;
     using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Options;
     using Swashbuckle.AspNetCore.Swagger;
