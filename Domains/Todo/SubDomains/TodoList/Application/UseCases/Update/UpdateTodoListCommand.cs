@@ -40,7 +40,8 @@
             var entity = await _todoListReadRepository.GetAsync(command.Id, cancellationToken)
                .ConfigureAwait(false);
 
-            if (entity == null) throw new NotFoundException(nameof(TodoListEntity), command.Id);
+            if (entity is null)
+                throw new NotFoundException(nameof(TodoListEntity), command.Id);
 
             entity.Title = command.Title;
 
