@@ -148,7 +148,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             services.AddControllersWithViews(
                 options =>
                 {
-                    options.Filters.Add(new ApiExceptionFilter());
+                    options.Filters.Add(new ApiExceptionFilterAttribute());
                     options.Filters.Add(new AuthorizeFilter());
                 });
         }

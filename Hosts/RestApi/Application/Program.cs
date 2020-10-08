@@ -23,6 +23,11 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     {
         /// <summary>
         /// </summary>
+        private Program()
+        { }
+
+        /// <summary>
+        /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
         public static async Task Main(string[] args)

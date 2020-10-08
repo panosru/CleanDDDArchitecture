@@ -17,7 +17,7 @@
     /// <inheritdoc />
     /// <summary>
     /// </summary>
-    internal sealed class ApiExceptionFilter : ExceptionFilterAttribute
+    internal sealed class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     {
         /// <summary>
         /// </summary>
@@ -25,7 +25,7 @@
 
         /// <summary>
         /// </summary>
-        public ApiExceptionFilter() =>
+        public ApiExceptionFilterAttribute() =>
             // Register known exception types and handlers.
             _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
             {
