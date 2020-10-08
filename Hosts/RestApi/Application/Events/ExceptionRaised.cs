@@ -20,8 +20,6 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Events
 
     public sealed class ExceptionRaisedHandler : IRequestHandler<ExceptionRaised>
     {
-        #region IRequestHandler<ExceptionRaised> Members
-
         public Task<Unit> Handle(ExceptionRaised request, CancellationToken cancellationToken)
         {
             Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%");
@@ -30,7 +28,5 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Events
 
             return Task.FromResult(Unit.Value);
         }
-
-        #endregion
     }
 }
