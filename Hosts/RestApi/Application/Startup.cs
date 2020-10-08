@@ -4,10 +4,10 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
+    using Aviant.DDD.Application.ApplicationEvents;
     using Aviant.DDD.Application.Behaviours;
     using Aviant.DDD.Application.EventBus;
     using Aviant.DDD.Application.Identity;
-    using Aviant.DDD.Application.Notifications;
     using Aviant.DDD.Application.Processors;
     using Aviant.DDD.Application.Services;
     using Aviant.DDD.Core.Messages;
@@ -122,7 +122,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             services.AddTransient<IDateTimeService, DateTimeService>();
 
             services.AddScoped<IMessages, Messages>();
-            services.AddScoped<INotificationDispatcher, NotificationDispatcher>();
+            services.AddScoped<IApplicationEventDispatcher, ApplicationEventDispatcher>();
 
             services.AddSingleton<IServiceContainer, HttpContextServiceProviderProxy>();
 

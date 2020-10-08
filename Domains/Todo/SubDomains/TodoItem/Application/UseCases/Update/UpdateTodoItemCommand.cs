@@ -4,9 +4,9 @@
     using System.Threading;
     using System.Threading.Tasks;
     using AutoMapper;
+    using Aviant.DDD.Application.ApplicationEvents;
     using Aviant.DDD.Application.Commands;
     using Aviant.DDD.Application.Exceptions;
-    using Aviant.DDD.Application.Notifications;
     using Aviant.DDD.Application.Processors;
     using Core.Repositories;
     using Todo.Core.Entities;
@@ -82,10 +82,10 @@
 
     internal sealed class UserPostProcessor : RequestPostProcessor<UpdateTodoItemCommand, TodoItemViewModel>
     {
-        private readonly INotificationDispatcher _notificationDispatcher;
+        private readonly IApplicationEventDispatcher _applicationEventDispatcher;
 
-        public UserPostProcessor(INotificationDispatcher notificationDispatcher) =>
-            _notificationDispatcher = notificationDispatcher;
+        public UserPostProcessor(IApplicationEventDispatcher applicationEventDispatcher) =>
+            _applicationEventDispatcher = applicationEventDispatcher;
 
         public override Task Process(
             UpdateTodoItemCommand request,
@@ -94,8 +94,8 @@
         {
             if (response.IsCompleted)
             {
-                Console.WriteLine("TodoCompletedNotification added");
-                _notificationDispatcher.AddPostCommitNotification(new TodoCompletedNotification(response));
+                Console.WriteLine("TodoCompletedApplicationEvent added");
+                _applicationEventDispatcher.AddPostCommitNotification(new TodoCompletedApplicationEvent(response));
             }
 
             return Task.CompletedTask;
