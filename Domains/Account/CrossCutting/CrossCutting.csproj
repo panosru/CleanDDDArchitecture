@@ -1,10 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>CleanDDDArchitecture.Domains.Account.CrossCutting</RootNamespace>
         <AssemblyName>CleanDDDArchitecture.Domains.Account.CrossCutting</AssemblyName>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
