@@ -59,7 +59,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                     throw new NullReferenceException(
                         typeof(IOrchestrator<AccountAggregate, AccountAggregateId>).Name);
 
-                RequestResult requestResult = await orchestrator
+                OrchestratorResponse requestResult = await orchestrator
                    .SendCommandAsync(
                         new CreateAccountCommand(
                             accountDto.UserName,

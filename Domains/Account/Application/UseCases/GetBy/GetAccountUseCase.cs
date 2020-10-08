@@ -13,7 +13,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy
             GetAccountInput   input,
             CancellationToken cancellationToken = default)
         {
-            RequestResult requestResult = await Orchestrator.SendQueryAsync(
+            OrchestratorResponse requestResult = await Orchestrator.SendQueryAsync(
                     new GetAccountQuery(input.Id),
                     cancellationToken)
                .ConfigureAwait(false);

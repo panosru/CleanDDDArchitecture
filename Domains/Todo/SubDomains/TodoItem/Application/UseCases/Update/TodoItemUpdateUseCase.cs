@@ -14,7 +14,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
             TodoItemUpdateInput input,
             CancellationToken   cancellationToken = default)
         {
-            RequestResult requestResult = await Orchestrator.SendCommandAsync(
+            OrchestratorResponse requestResult = await Orchestrator.SendCommandAsync(
                     new UpdateTodoItemCommand(
                         input.Id,
                         input.Title,

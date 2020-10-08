@@ -10,7 +10,7 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.ForecastV1_1
     {
         public override async Task ExecuteAsync(CancellationToken cancellationToken = default)
         {
-            RequestResult requestResult = await Orchestrator.SendQueryAsync(
+            OrchestratorResponse requestResult = await Orchestrator.SendQueryAsync(
                     new GetWeatherForecastsQueryNew(),
                     cancellationToken)
                .ConfigureAwait(false);

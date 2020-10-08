@@ -10,7 +10,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
     {
         public override async Task ExecuteAsync(CancellationToken cancellationToken = default)
         {
-            RequestResult requestResult = await Orchestrator.SendQueryAsync(
+            OrchestratorResponse requestResult = await Orchestrator.SendQueryAsync(
                     new GetTodosQuery(),
                     cancellationToken)
                .ConfigureAwait(false);

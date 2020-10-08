@@ -23,7 +23,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
                 return;
             }
 
-            RequestResult requestResult = await Orchestrator.SendCommandAsync(
+            OrchestratorResponse requestResult = await Orchestrator.SendCommandAsync(
                     new CreateTodoListCommand(input.Title),
                     cancellationToken)
                .ConfigureAwait(false);

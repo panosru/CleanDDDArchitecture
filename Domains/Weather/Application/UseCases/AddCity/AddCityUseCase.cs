@@ -16,7 +16,7 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity
             switch (input.City)
             {
                 case "Athens":
-                    RequestResult requestResult = await Orchestrator.SendCommandAsync(
+                    OrchestratorResponse requestResult = await Orchestrator.SendCommandAsync(
                             new AddCityCommand(input.City),
                             cancellationToken)
                        .ConfigureAwait(false);
