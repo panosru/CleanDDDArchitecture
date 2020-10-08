@@ -4,8 +4,8 @@
     using System.Threading;
     using System.Threading.Tasks;
     using AutoMapper;
+    using Aviant.DDD.Application.ApplicationEvents;
     using Aviant.DDD.Application.Commands;
-    using Aviant.DDD.Application.Notifications;
     using Core.Repositories;
     using Todo.Core.Entities;
 
@@ -19,20 +19,20 @@
     internal sealed class CreateTodoListCommandHandler
         : CommandHandler<CreateTodoListCommand, Lazy<CreatedTodoListViewModel>>
     {
-        private readonly IMapper _mapper;
+        private readonly IApplicationEventDispatcher _applicationEventDispatcher;
 
-        private readonly INotificationDispatcher _notificationDispatcher;
+        private readonly IMapper _mapper;
 
         private readonly ITodoListRepositoryWrite _todoListWriteRepository;
 
         public CreateTodoListCommandHandler(
-            ITodoListRepositoryWrite todoListWriteRepository,
-            INotificationDispatcher  notificationDispatcher,
-            IMapper                  mapper)
+            ITodoListRepositoryWrite    todoListWriteRepository,
+            IApplicationEventDispatcher applicationEventDispatcher,
+            IMapper                     mapper)
         {
-            _todoListWriteRepository = todoListWriteRepository;
-            _notificationDispatcher  = notificationDispatcher;
-            _mapper                  = mapper;
+            _todoListWriteRepository    = todoListWriteRepository;
+            _applicationEventDispatcher = applicationEventDispatcher;
+            _mapper                     = mapper;
         }
 
         public override async Task<Lazy<CreatedTodoListViewModel>> Handle(
@@ -45,8 +45,8 @@
             await _todoListWriteRepository.InsertAsync(entity, cancellationToken)
                .ConfigureAwait(false);
 
-            _notificationDispatcher.AddPostCommitNotification(
-                new CreatedTodoListNotification(entity.Title));
+            _applicationEventDispatcher.AddPostCommitNotification(
+                new CreatedTodoListApplicationEvent(entity.Title));
 
             return new Lazy<CreatedTodoListViewModel>(() => _mapper.Map<CreatedTodoListViewModel>(entity));
         }
