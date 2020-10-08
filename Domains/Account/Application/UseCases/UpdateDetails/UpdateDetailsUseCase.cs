@@ -14,7 +14,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
             UpdateDetailsInput input,
             CancellationToken  cancellationToken = default)
         {
-            RequestResult requestResult = await Orchestrator.SendCommandAsync(
+            OrchestratorResponse requestResult = await Orchestrator.SendCommandAsync(
                     new UpdateAccountCommand(
                         new AccountAggregateId(input.Id),
                         input.FirstName,

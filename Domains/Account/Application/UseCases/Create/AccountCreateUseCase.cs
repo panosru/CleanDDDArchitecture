@@ -14,7 +14,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
             CreateAccountInput input,
             CancellationToken  cancellationToken = default)
         {
-            RequestResult requestResult = await Orchestrator.SendCommandAsync(
+            OrchestratorResponse requestResult = await Orchestrator.SendCommandAsync(
                     new CreateAccountCommand(
                         input.UserName,
                         input.Password,

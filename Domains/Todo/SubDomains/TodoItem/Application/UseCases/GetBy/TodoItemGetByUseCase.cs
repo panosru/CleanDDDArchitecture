@@ -13,7 +13,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
             TodoItemGetByInput input,
             CancellationToken  cancellationToken = default)
         {
-            RequestResult requestResult = await Orchestrator.SendQueryAsync(
+            OrchestratorResponse requestResult = await Orchestrator.SendQueryAsync(
                     new GetTodoItemQuery(input.Id),
                     cancellationToken)
                .ConfigureAwait(false);

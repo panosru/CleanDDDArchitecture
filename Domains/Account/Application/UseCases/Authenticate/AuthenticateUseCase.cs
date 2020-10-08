@@ -12,7 +12,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate
             AuthenticateInput input,
             CancellationToken cancellationToken = default)
         {
-            RequestResult requestResult = await Orchestrator.SendCommandAsync(
+            OrchestratorResponse requestResult = await Orchestrator.SendCommandAsync(
                     new AuthenticateCommand(
                         input.Username,
                         input.Password),

@@ -11,7 +11,7 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherS
     {
         public override async Task ExecuteAsync(CancellationToken cancellationToken = default)
         {
-            RequestResult requestResult = await Orchestrator.SendCommandAsync(
+            OrchestratorResponse requestResult = await Orchestrator.SendCommandAsync(
                     new SyncWeatherServiceCommand(),
                     cancellationToken)
                .ConfigureAwait(false);

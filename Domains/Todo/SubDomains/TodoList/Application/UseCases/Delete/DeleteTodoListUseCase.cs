@@ -14,7 +14,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
             DeleteTodoListInput input,
             CancellationToken   cancellationToken = default)
         {
-            RequestResult requestResult = await Orchestrator.SendCommandAsync(
+            OrchestratorResponse requestResult = await Orchestrator.SendCommandAsync(
                     new DeleteTodoListCommand(input.Id),
                     cancellationToken)
                .ConfigureAwait(false);

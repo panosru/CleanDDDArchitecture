@@ -14,7 +14,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
             ConfirmEmailInput input,
             CancellationToken cancellationToken = default)
         {
-            RequestResult requestResult = await Orchestrator.SendCommandAsync(
+            OrchestratorResponse requestResult = await Orchestrator.SendCommandAsync(
                     new ConfirmEmailCommand(
                         input.Token,
                         input.Email),
