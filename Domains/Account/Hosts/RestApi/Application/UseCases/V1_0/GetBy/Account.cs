@@ -6,6 +6,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Domains.Account.Application.Identity;
     using Domains.Account.Application.UseCases.GetBy;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
@@ -14,6 +15,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     ///     cref="CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [ApiVersion("1.0")]
     [FeatureGate(Features.AccountGetBy)]
+    [AllowAnonymous]
     public sealed class Account
         : ApiController<GetAccountUseCase, Account>,
           IGetAccountOutput
