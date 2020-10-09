@@ -45,7 +45,7 @@
             await _todoListWriteRepository.InsertAsync(entity, cancellationToken)
                .ConfigureAwait(false);
 
-            _applicationEventDispatcher.AddPostCommitNotification(
+            _applicationEventDispatcher.AddPostCommitEvent(
                 new CreatedTodoListApplicationEvent(entity.Title));
 
             return new Lazy<CreatedTodoListViewModel>(() => _mapper.Map<CreatedTodoListViewModel>(entity));
