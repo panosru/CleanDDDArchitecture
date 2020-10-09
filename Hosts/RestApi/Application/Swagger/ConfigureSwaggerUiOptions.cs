@@ -58,7 +58,7 @@
 
                         options.DocumentTitle = _settings.Name;
                         options.RoutePrefix   = _settings.RoutePrefix;
-                        options.DocExpansion(DocExpansion.List);
+                        options.DocExpansion(DocExpansion.None);
                         options.DefaultModelExpandDepth(0);
                         options.DisplayRequestDuration();
                         options.EnableFilter();
