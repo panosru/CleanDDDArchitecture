@@ -27,13 +27,19 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
 
     internal sealed class TodoCreatedApplicationEventHandler2 : ApplicationEventHandler<CreatedTodoListApplicationEvent>
     {
+        private Random Random { get; } = new Random();
+
         public override Task Handle(
             CreatedTodoListApplicationEvent @event,
             CancellationToken               cancellationToken)
         {
             Console.WriteLine($"from 2 {@event.Name}");
 
-            throw new ArgumentException("Test2");
+            // 80% probability to fail
+            if (Random.Next(100) <= 80)
+                throw new ArgumentException("Test2");
+
+            return Task.CompletedTask;
         }
 
         public override IAsyncPolicy RetryPolicy() =>
