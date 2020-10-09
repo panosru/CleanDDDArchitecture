@@ -7,6 +7,8 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
 
     public sealed class CreateTodoListInputValidator : AbstractValidator<CreateTodoListInput>
     {
+        private const int MaxTitleLength = 8;
+
         private readonly ITodoListRepositoryRead _todoListReadRepository;
 
         public CreateTodoListInputValidator(ITodoListRepositoryRead todoListReadRepository)
@@ -16,8 +18,8 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
             RuleFor(v => v.Title)
                .NotEmpty()
                .WithMessage("Title is required.")
-               .MaximumLength(200)
-               .WithMessage("Title must not exceed 200 characters.")
+               .MaximumLength(MaxTitleLength)
+               .WithMessage($"Title must not exceed {MaxTitleLength} characters.")
                .MustAsync(BeUniqueTitle)
                .WithMessage("The specified title already exists.");
         }

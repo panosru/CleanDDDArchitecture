@@ -42,11 +42,14 @@
             var entity = new TodoListEntity { Title = command.Title };
 
 
+            _applicationEventDispatcher.AddPreCommitEvent(
+                new CreatedTodoListApplicationEvent(entity.Title));
+
             await _todoListWriteRepository.InsertAsync(entity, cancellationToken)
                .ConfigureAwait(false);
 
-            _applicationEventDispatcher.AddPostCommitEvent(
-                new CreatedTodoListApplicationEvent(entity.Title));
+            // _applicationEventDispatcher.AddPostCommitEvent(
+            //     new CreatedTodoListApplicationEvent(entity.Title));
 
             return new Lazy<CreatedTodoListViewModel>(() => _mapper.Map<CreatedTodoListViewModel>(entity));
         }
