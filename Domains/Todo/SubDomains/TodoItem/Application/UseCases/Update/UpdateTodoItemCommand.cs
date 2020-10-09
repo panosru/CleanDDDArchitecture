@@ -96,7 +96,7 @@
             if (response.IsCompleted)
             {
                 Console.WriteLine("TodoCompletedApplicationEvent added");
-                _applicationEventDispatcher.AddPostCommitNotification(new TodoCompletedApplicationEvent(response));
+                _applicationEventDispatcher.AddPostCommitEvent(new TodoCompletedApplicationEvent(response));
             }
 
             return Task.CompletedTask;
