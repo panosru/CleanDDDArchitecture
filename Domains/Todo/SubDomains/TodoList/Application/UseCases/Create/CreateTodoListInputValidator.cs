@@ -19,7 +19,8 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
                .NotEmpty()
                .WithMessage("Title is required.")
                .MaximumLength(MaxTitleLength)
-               .WithMessage($"Title must not exceed {MaxTitleLength} characters.")
+               .WithMessage(
+                    "Title must not exceed {MaxLength} characters, yours had the length of {TotalLength} characters.")
                .MustAsync(BeUniqueTitle)
                .WithMessage("The specified title already exists.");
         }
