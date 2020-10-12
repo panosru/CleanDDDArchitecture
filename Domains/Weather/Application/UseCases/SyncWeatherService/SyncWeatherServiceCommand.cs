@@ -5,6 +5,7 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherS
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Commands;
     using MediatR;
+    using Polly;
 
     internal sealed class SyncWeatherServiceCommand : ICommand
     { }
@@ -28,5 +29,12 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherS
 
             return Unit.Value;
         }
+
+        public override IAsyncPolicy RetryPolicy() =>
+            Policy
+               .Handle<Exception>()
+               .WaitAndRetryAsync(
+                    2,
+                    i => TimeSpan.FromSeconds(i));
     }
 }

@@ -95,8 +95,12 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                    .RegisterHandlers(typeof(INotificationHandler<>)));
 
             services.Decorate(
+                typeof(IRequestHandler<,>),
+                typeof(RetryCommandProcessor<,>));
+
+            services.Decorate(
                 typeof(INotificationHandler<>),
-                typeof(RetryProcessor<>));
+                typeof(RetryEventProcessor<>));
 
             services.AddTransient(
                 typeof(IPipelineBehavior<,>),
