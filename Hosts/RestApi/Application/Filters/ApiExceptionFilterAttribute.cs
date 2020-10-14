@@ -5,6 +5,7 @@
     using System.Linq;
     using Aviant.DDD.Application.Exceptions;
     using Aviant.DDD.Application.Orchestration;
+    using Aviant.DDD.Application.Services;
     using Aviant.DDD.Core.Services;
     using Aviant.DDD.Infrastructure.CrossCutting;
     using Events;
@@ -13,6 +14,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.Hosting;
+    using Newtonsoft.Json;
 
     /// <inheritdoc />
     /// <summary>
@@ -48,7 +50,16 @@
             Console.WriteLine("###########");
             Console.WriteLine(context.Exception);
             Console.WriteLine("###########");
-            Mediator.Send(new ExceptionRaised(context.Exception.Message));
+
+            Mediator.Publish(
+                new ExceptionRaised(
+                    context.Exception.Source,
+                    context.Exception.Message,
+                    context.Exception.StackTrace,
+                    JsonConvert.SerializeObject(context.Exception))
+                {
+                    Occured = context.Exception.Occurred()
+                });
 
             HandleException(context);
 
@@ -139,5 +150,17 @@
 
             context.ExceptionHandled = true;
         }
+    }
+
+    internal static class ExceptionContextExtension
+    {
+        public static DateTime Occurred(this Exception exception) =>
+            (DateTime?) exception
+               .GetType()
+               .GetProperty("Occurred")
+              ?.GetValue(exception)
+         ?? ServiceLocator.ServiceContainer.GetService<IDateTimeService>(
+                    typeof(IDateTimeService))
+               .Now(true);
     }
 }
