@@ -3,6 +3,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using AutoMapper;
     using Aviant.DDD.Application.ApplicationEvents;
     using Aviant.DDD.Application.Behaviours;
@@ -86,7 +87,8 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
 
             services.Scan(
                 scan => scan.FromAssemblies(
-                        TodoCrossCutting.MediatorAssemblies()
+                        new List<Assembly> { typeof(Startup).Assembly }
+                           .Union(TodoCrossCutting.MediatorAssemblies())
                            .Union(AccountCrossCutting.MediatorAssemblies())
                            .Union(WeatherCrossCutting.MediatorAssemblies())
                            .ToArray())
@@ -96,7 +98,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
 
             services.Decorate(
                 typeof(IRequestHandler<,>),
-                typeof(RetryCommandProcessor<,>));
+                typeof(RetryRequestProcessor<,>));
 
             services.Decorate(
                 typeof(INotificationHandler<>),
