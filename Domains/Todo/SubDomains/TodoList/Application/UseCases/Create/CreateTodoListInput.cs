@@ -1,16 +1,19 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create
 {
-    using System.Threading;
-    using System.Threading.Tasks;
     using Aviant.DDD.Application.UseCases;
 
-    public sealed class CreateTodoListInput : UseCaseInput<CreateTodoListInput, CreateTodoListInputValidator>
+    /// <inheritdoc />
+    /// <summary>
+    ///     Create Todo List Input Data Object
+    /// </summary>
+    public sealed class CreateTodoListInput : UseCaseInput
     {
+        /// <summary>
+        ///     Create Todo List Input Constructor
+        /// </summary>
+        /// <param name="title">The title of the todo list</param>
         public CreateTodoListInput(string title) => Title = title;
 
         internal string Title { get; }
-
-        public override Task ValidateAsync(CancellationToken cancellationToken = default) =>
-            UseDefaultValidation(this, cancellationToken);
     }
 }

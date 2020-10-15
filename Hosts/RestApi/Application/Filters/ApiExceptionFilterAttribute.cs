@@ -2,9 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using Aviant.DDD.Application.Exceptions;
-    using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Application.Services;
     using Aviant.DDD.Core.Services;
     using Aviant.DDD.Infrastructure.CrossCutting;
@@ -113,19 +111,10 @@
         {
             var exception = context.Exception as ValidationException;
 
-            // var details = new ValidationProblemDetails(exception?.Failures)
-            // {
-            //     Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
-            // };
-
-            var details = new OrchestratorResponse
+            var details = new ValidationProblemDetails(exception?.Failures)
             {
-                Succeeded = false
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
             };
-
-            foreach (var failureValue in exception?.Failures!
-               .SelectMany(failure => failure.Value))
-                details.Messages.Add(failureValue);
 
             context.Result = new BadRequestObjectResult(details);
 
