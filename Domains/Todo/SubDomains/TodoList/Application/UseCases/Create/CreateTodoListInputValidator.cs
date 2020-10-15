@@ -2,15 +2,22 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
 {
     using System.Threading;
     using System.Threading.Tasks;
+    using Core.Enums;
     using Core.Repositories;
     using FluentValidation;
 
+    /// <inheritdoc />
+    /// <summary>
+    ///     The validator object for the Create Todo List Input Data
+    /// </summary>
     public sealed class CreateTodoListInputValidator : AbstractValidator<CreateTodoListInput>
     {
-        private const int MaxTitleLength = 8;
-
         private readonly ITodoListRepositoryRead _todoListReadRepository;
 
+        /// <summary>
+        ///     Constructor for the current validator
+        /// </summary>
+        /// <param name="todoListReadRepository">The Read Repository of the TodoList</param>
         public CreateTodoListInputValidator(ITodoListRepositoryRead todoListReadRepository)
         {
             _todoListReadRepository = todoListReadRepository;
@@ -18,7 +25,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
             RuleFor(v => v.Title)
                .NotEmpty()
                .WithMessage("Title is required.")
-               .MaximumLength(MaxTitleLength)
+               .MaximumLength((int) ValidationSettings.TitleMaxLength)
                .WithMessage(
                     "Title must not exceed {MaxLength} characters, yours had the length of {TotalLength} characters.")
                .MustAsync(BeUniqueTitle)
