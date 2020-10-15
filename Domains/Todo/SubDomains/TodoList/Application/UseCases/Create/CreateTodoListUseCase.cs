@@ -7,21 +7,19 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
     using Aviant.DDD.Application.UseCases;
     using Todo.Application.Persistence;
 
+    /// <inheritdoc />
+    /// <summary>
+    ///     Create todo list use case
+    /// </summary>
     public sealed class CreateTodoListUseCase
         : UseCase<CreateTodoListInput, ICreateTodoListOutput, ITodoDbContextWrite>
     {
+        /// <inheritdoc />
         public override async Task ExecuteAsync(
             CreateTodoListInput input,
             CancellationToken   cancellationToken = default)
         {
-            await input.ValidateAsync(cancellationToken)
-               .ConfigureAwait(false);
-
-            if (!input.ValidationResult.IsValid)
-            {
-                Output.Invalid(input.ValidationResult.Errors.First().ToString());
-                return;
-            }
+            await ValidateInput(input, cancellationToken);
 
             OrchestratorResponse requestResult = await Orchestrator.SendCommandAsync(
                     new CreateTodoListCommand(input.Title),

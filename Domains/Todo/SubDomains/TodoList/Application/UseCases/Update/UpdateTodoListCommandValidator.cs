@@ -3,17 +3,22 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Commands;
+    using Core.Enums;
     using Core.Repositories;
     using FluentValidation;
     using Microsoft.EntityFrameworkCore;
 
-    internal sealed class UpdateTodoListCommandValidator : CommandValidator<UpdateTodoListCommand>
+    /// <summary>
+    ///     The validator of update todo list command
+    /// </summary>
+    public sealed class UpdateTodoListCommandValidator : CommandValidator<UpdateTodoListCommand>
     {
         private readonly ITodoListRepositoryRead _todoListReadRepository;
 
+        /// <inheritdoc />
         public UpdateTodoListCommandValidator(
             ITodoListRepositoryRead todoListReadRepository,
-            CascadeMode             cascadeMode = CascadeMode.Stop)
+            CascadeMode             cascadeMode = CascadeMode.Continue)
             : base(cascadeMode)
         {
             _todoListReadRepository = todoListReadRepository;
@@ -21,8 +26,9 @@
             RuleFor(v => v.Title)
                .NotEmpty()
                .WithMessage("Title is required.")
-               .MaximumLength(200)
-               .WithMessage("Title must not exceed 200 characters.")
+               .MaximumLength((int) ValidationSettings.TitleMaxLength)
+               .WithMessage(
+                    "Title must not exceed {MaxLength} characters, yours had the length of {TotalLength} characters.")
                .MustAsync(BeUniqueTitle)
                .WithMessage("The specified title already exists.");
         }

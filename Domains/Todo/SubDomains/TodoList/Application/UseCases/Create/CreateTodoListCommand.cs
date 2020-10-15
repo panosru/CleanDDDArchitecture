@@ -9,6 +9,9 @@
     using Core.Repositories;
     using Todo.Core.Entities;
 
+    /// <summary>
+    ///     The Command to create a todo list
+    /// </summary>
     internal sealed class CreateTodoListCommand : Command<Lazy<CreatedTodoListViewModel>>
     {
         public CreateTodoListCommand(string title) => Title = title;
