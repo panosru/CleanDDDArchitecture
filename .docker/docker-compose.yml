@@ -3,30 +3,40 @@ version: '3.8'
 services:
   eventstore_db:
     image: eventstore/eventstore:latest
-    command: --dev --enable-external-tcp --ext-ip=0.0.0.0 --int-ip=0.0.0.0 --disable-external-tcp-tls
     environment:
       EVENTSTORE_CLUSTER_SIZE: 1
+      EVENTSTORE_RUN_PROJECTIONS: All
+      EVENTSTORE_START_STANDARD_PROJECTIONS: 1
       EVENTSTORE_INT_TCP_PORT: 1112
       EVENTSTORE_EXT_TCP_PORT: 1113
       EVENTSTORE_INT_HTTP_PORT: 2112
       EVENTSTORE_EXT_HTTP_PORT: 2113
+      EVENTSTORE_INSECURE: 1
+      EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP: 1
     ports:
       - 1113:1113
       - 2113:2113
-    restart: always
+    restart: unless-stopped
+    volumes:
+      - type: volume
+        source: eventstore-data
+        target: /var/lib/eventstore
+      - type: volume
+        source: eventstore-logs
+        target: /var/log/eventstore
 
-  zoo1:
+  zoo:
     image: library/zookeeper:3.4.14
-    hostname: zoo1
+    hostname: zoo
     ports:
       - "2181:2181"
     environment:
       ZOO_MY_ID: 1
       ZOO_PORT: 2181
-      ZOO_SERVERS: server.1=zoo1:2888:3888
+      ZOO_SERVERS: server.1=zoo:2888:3888
       ALLOW_ANONYMOUS_LOGIN: "yes"
     volumes:
-      - zoo1_data:/data
+      - zoo_data:/data
     tmpfs: "/datalog"
 
   kafka1:
@@ -38,7 +48,7 @@ services:
       KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka1:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
-      KAFKA_ZOOKEEPER_CONNECT: "zoo1:2181"
+      KAFKA_ZOOKEEPER_CONNECT: "zoo:2181"
       KAFKA_BROKER_ID: 1
       KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -46,17 +56,17 @@ services:
     volumes:
       - kafka1_data:/var/lib/kafka/data
     depends_on:
-      - zoo1
+      - zoo
 
   kowl:
     image: quay.io/cloudhut/kowl:master
     restart: on-failure
     hostname: kowl
     volumes:
-      - ./config.yaml:/etc/kowl/config.yaml
+      - ./config.yml:/etc/kowl/config.yml
     ports:
       - "8080:8080"
-    entrypoint: ./kowl --config.filepath=/etc/kowl/config.yaml
+    entrypoint: ./kowl --config.filepath=/etc/kowl/config.yml
     depends_on:
       - kafka1
 
@@ -96,7 +106,11 @@ services:
       - loki
 
 volumes:
-  zoo1_data:
+  eventstore-data:
+    driver: local
+  eventstore-logs:
+    driver: local
+  zoo_data:
     driver: local
   kafka1_data:
     driver: local
