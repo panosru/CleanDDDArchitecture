@@ -11,7 +11,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
 
     public sealed class AccountAggregate
         : Aggregate<AccountAggregate, AccountAggregateId>,
-          IActivationAudited
+          IActivationStatus
     {
         // ReSharper disable once UnusedMember.Local
         #pragma warning disable 8618
