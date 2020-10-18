@@ -1,0 +1,39 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  contrib-readme-job:
+    runs-on: ubuntu-latest
+    name: A job to automate contrib list
+    steps:
+      - name: Contribute List
+        # You may pin to the exact commit or the version.
+        # uses: akhilmhdh/contributors-readme-action@91b97a109db8e973e87e236e887db27f076e4a29
+        uses: akhilmhdh/contributors-readme-action@v2.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # Size of square images in the stack
+          image_size: 100 # optional, default is 100
+          # Path of the readme file you want to update
+          readme_path: CONTRIBUTORS.md # optional, default is README.md
+          # Number of columns in a row
+          columns_per_row: 6 # optional, default is 6
+          # Type of collaborators options: all/direct/outside
+          collaborators: direct # optional, default is direct
+          # Commit message of the github action
+          commit_message: contrib-readme-action # optional, default is contrib-readme-action has updated readme
+          # Username on commit
+          committer_username: contrib-readme-bot # optional, default is contrib-readme-bot
+          # email id of committer
+          committer_email: contrib-readme-action@noreply.com # optional, default is contrib-readme-action@noreply.com
