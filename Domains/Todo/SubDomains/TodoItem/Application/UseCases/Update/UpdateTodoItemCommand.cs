@@ -69,7 +69,7 @@
         }
     }
 
-    internal sealed class UserPreProcessor : RequestPreProcessor<UpdateTodoItemCommand>
+    internal sealed class UpdateTodoItemCommandPreProcessor : RequestPreProcessor<UpdateTodoItemCommand>
     {
         public override Task Process(
             UpdateTodoItemCommand request,
@@ -81,11 +81,11 @@
         }
     }
 
-    internal sealed class UserPostProcessor : RequestPostProcessor<UpdateTodoItemCommand, TodoItemViewModel>
+    internal sealed class UpdateTodoItemCommandPostProcessor : RequestPostProcessor<UpdateTodoItemCommand, TodoItemViewModel>
     {
         private readonly IApplicationEventDispatcher _applicationEventDispatcher;
 
-        public UserPostProcessor(IApplicationEventDispatcher applicationEventDispatcher) =>
+        public UpdateTodoItemCommandPostProcessor(IApplicationEventDispatcher applicationEventDispatcher) =>
             _applicationEventDispatcher = applicationEventDispatcher;
 
         public override Task Process(
@@ -93,11 +93,11 @@
             TodoItemViewModel     response,
             CancellationToken     cancellationToken)
         {
-            if (response.IsCompleted)
-            {
-                Console.WriteLine("TodoCompletedApplicationEvent added");
-                _applicationEventDispatcher.AddPostCommitEvent(new TodoCompletedApplicationEvent(response));
-            }
+            if (!response.IsCompleted)
+                return Task.CompletedTask;
+
+            Console.WriteLine($"{nameof(TodoCompletedApplicationEvent)} added");
+            _applicationEventDispatcher.AddPostCommitEvent(new TodoCompletedApplicationEvent(response));
 
             return Task.CompletedTask;
         }
