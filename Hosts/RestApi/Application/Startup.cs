@@ -22,11 +22,13 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Filters;
     using FluentValidation;
     using MediatR;
+    using MediatR.Pipeline;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc.Authorization;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Hosting;
     using Services;
     using Swagger;
@@ -87,14 +89,22 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
 
             services.Scan(
                 scan => scan.FromAssemblies(
-                        new List<Assembly> { typeof(Startup).Assembly }
+                        new List<Assembly>
+                            {
+                                typeof(Startup).Assembly,
+                                typeof(LoggerBehaviour<>).Assembly
+                            }
                            .Union(TodoCrossCutting.MediatorAssemblies())
                            .Union(AccountCrossCutting.MediatorAssemblies())
                            .Union(WeatherCrossCutting.MediatorAssemblies())
                            .ToArray())
                    .RegisterHandlers(typeof(IRequestHandler<>))
                    .RegisterHandlers(typeof(IRequestHandler<,>))
-                   .RegisterHandlers(typeof(INotificationHandler<>)));
+                   .RegisterHandlers(typeof(INotificationHandler<>))
+                   .RegisterHandlers(typeof(IRequestPreProcessor<>))
+                   .RegisterHandlers(typeof(IRequestPostProcessor<,>))
+                   .RegisterHandlers(typeof(IRequestExceptionHandler<,,>))
+                   .RegisterHandlers(typeof(IRequestExceptionAction<,>)));
 
             services.Decorate(
                 typeof(IRequestHandler<,>),
@@ -116,6 +126,21 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 typeof(IPipelineBehavior<,>),
                 typeof(UnhandledExceptionBehaviour<,>));
 
+            services.AddTransient(
+                typeof(IPipelineBehavior<,>),
+                typeof(RequestPreProcessorBehavior<,>));
+
+            services.AddTransient(
+                typeof(IPipelineBehavior<,>),
+                typeof(RequestPostProcessorBehavior<,>));
+
+            services.AddTransient(
+                typeof(IPipelineBehavior<,>),
+                typeof(RequestExceptionActionProcessorBehavior<,>));
+
+            services.AddTransient(
+                typeof(IPipelineBehavior<,>),
+                typeof(RequestExceptionProcessorBehavior<,>));
 
             // Add Infrastructure
             services
@@ -155,7 +180,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 options =>
                 {
                     options.Filters.Add(new ApiExceptionFilterAttribute());
-                    options.Filters.Add(new AuthorizeFilter());
+                    // options.Filters.Add(new AuthorizeFilter());
                 });
         }
 
