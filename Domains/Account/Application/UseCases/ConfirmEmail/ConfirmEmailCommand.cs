@@ -21,12 +21,12 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
         public string Email { get; }
     }
 
-    internal sealed class ConfirmEmailCommandCommandCommandHandler
+    internal sealed class ConfirmEmailCommandHandler
         : CommandHandler<ConfirmEmailCommand, IdentityResult>
     {
         private readonly IIdentityService _identityIdentityService;
 
-        public ConfirmEmailCommandCommandCommandHandler(IIdentityService identityIdentityService) =>
+        public ConfirmEmailCommandHandler(IIdentityService identityIdentityService) =>
             _identityIdentityService = identityIdentityService;
 
         public override async Task<IdentityResult> Handle(
