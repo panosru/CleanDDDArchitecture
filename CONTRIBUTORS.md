@@ -36,14 +36,7 @@
         <a href="https://github.com/jasongt">
             <img src="https://avatars3.githubusercontent.com/u/61503095?v=4" width="100;" alt="jasongt"/>
             <br />
-            <sub><b>jasongt</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/davidhenley">
-            <img src="https://avatars0.githubusercontent.com/u/15056748?v=4" width="100;" alt="davidhenley"/>
-            <br />
-            <sub><b>David Henley</b></sub>
+            <sub><b>Jasongt</b></sub>
         </a>
     </td>
     <td align="center">
@@ -59,20 +52,20 @@
             <br />
             <sub><b>Marcos Meli</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/mhornbacher">
             <img src="https://avatars1.githubusercontent.com/u/12478828?v=4" width="100;" alt="mhornbacher"/>
             <br />
             <sub><b>Menachem Hornbacher</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/ckoenig95">
             <img src="https://avatars3.githubusercontent.com/u/14260016?v=4" width="100;" alt="ckoenig95"/>
             <br />
-            <sub><b>Christian König</b></sub>
+            <sub><b>Christian KC6nig</b></sub>
         </a>
     </td>
     <td align="center">
@@ -93,7 +86,7 @@
         <a href="https://github.com/mfehlhaber">
             <img src="https://avatars3.githubusercontent.com/u/7903462?v=4" width="100;" alt="mfehlhaber"/>
             <br />
-            <sub><b>mfehlhaber</b></sub>
+            <sub><b>Mfehlhaber</b></sub>
         </a>
     </td>
     <td align="center">
@@ -102,20 +95,20 @@
             <br />
             <sub><b>Moien Tajik</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/NicklasHugoy">
             <img src="https://avatars3.githubusercontent.com/u/2963350?v=4" width="100;" alt="NicklasHugoy"/>
             <br />
-            <sub><b>Nicklas Hjortshøj Hugøy</b></sub>
+            <sub><b>Nicklas HjortshC8j HugC8y</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/parc1vaL">
             <img src="https://avatars2.githubusercontent.com/u/13039772?v=4" width="100;" alt="parc1vaL"/>
             <br />
-            <sub><b>parc1vaL</b></sub>
+            <sub><b>Parc1vaL</b></sub>
         </a>
     </td></tr>
 </table>
