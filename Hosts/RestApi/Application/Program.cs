@@ -64,9 +64,8 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private static IHostBuilder CreateHostBuilder(string[] args)
-        {
-            return Host.CreateDefaultBuilder(args)
+        private static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
                .ConfigureWebHostDefaults(
                     webBuilder =>
                     {
@@ -74,7 +73,6 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                         webBuilder.ConfigureLogging(SetupLogging);
                         webBuilder.UseStartup<Startup>();
                     });
-        }
 
         /// <summary>
         /// </summary>
