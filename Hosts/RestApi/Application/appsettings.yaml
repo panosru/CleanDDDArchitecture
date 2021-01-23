@@ -55,6 +55,10 @@ ConnectionStrings:
   loki: http://127.0.0.1:3100
   mongo: mongodb://127.0.0.1:27017
 
+Auth0:
+  Domain: localhost
+  Audience: Demo
+
 Jwt:
   Key: thisismysecretkey
   Issuer: test.com
