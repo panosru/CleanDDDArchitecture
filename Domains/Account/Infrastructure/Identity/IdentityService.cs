@@ -171,7 +171,7 @@
                 new Claim(JwtRegisteredClaimNames.Sub,    user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.NameId, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Email,  user.Email),
-                // new Claim("DateOfJoing", userInfo.DateOfJoing.ToString("yyyy-MM-dd")),
+                // new Claim("DateOfJoin", userInfo.DateOfJoin.ToString("yyyy-MM-dd")),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
