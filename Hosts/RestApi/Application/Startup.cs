@@ -180,7 +180,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 options =>
                 {
                     options.Filters.Add(new ApiExceptionFilterAttribute());
-                    // options.Filters.Add(new AuthorizeFilter());
+                    options.Filters.Add(new AuthorizeFilter());
                 });
         }
 
