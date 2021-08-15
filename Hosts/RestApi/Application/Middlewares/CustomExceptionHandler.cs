@@ -64,7 +64,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Middlewares
             }
 
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode  = (int) code;
+            context.Response.StatusCode  = (int)code;
 
             if (string.IsNullOrEmpty(result)) result = JsonConvert.SerializeObject(new { error = exception.Message });
 

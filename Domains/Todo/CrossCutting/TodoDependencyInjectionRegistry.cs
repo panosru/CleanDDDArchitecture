@@ -45,7 +45,7 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
 
             services.AddScoped<ITodoDbContextWrite>(
                 provider =>
-                    provider.GetService<TodoDbContextWrite>());
+                    provider.GetService<TodoDbContextWrite>()!);
 
 
             services.AddDbContext<TodoDbContextRead>(
@@ -57,7 +57,7 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
 
             services.AddScoped<ITodoDbContextRead>(
                 provider =>
-                    provider.GetService<TodoDbContextRead>());
+                    provider.GetService<TodoDbContextRead>()!);
 
             services.AddTodoItemSubDomain();
             services.AddTodoListSubDomain();

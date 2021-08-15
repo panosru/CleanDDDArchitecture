@@ -4,7 +4,6 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
     using System.Threading.Tasks;
     using AutoMapper.Internal;
     using FluentValidation;
-    using FluentValidation.Validators;
     using Identity;
     using Microsoft.AspNetCore.Identity;
 

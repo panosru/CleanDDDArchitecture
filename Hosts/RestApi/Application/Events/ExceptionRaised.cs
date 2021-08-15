@@ -5,8 +5,14 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Events
     using System.Threading.Tasks;
     using Aviant.DDD.Application.ApplicationEvents;
 
+    /// <summary>
+    /// Application Exception Raised Event
+    /// </summary>
     internal sealed class ExceptionRaised : ApplicationEvent
     {
+        /// <summary>
+        /// What assembly is to blame for the exception
+        /// </summary>
         public readonly string AssemblyToBlame;
 
         /// <summary>
@@ -14,10 +20,23 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Events
         // ReSharper disable once MemberCanBeInternal
         public readonly string ErrorMessage;
 
+        /// <summary>
+        /// Stack trace of the exception
+        /// </summary>
         public readonly string StackTrace;
 
+        /// <summary>
+        /// Serialized Exception
+        /// </summary>
         public readonly string SerializedException;
 
+        /// <summary>
+        /// Exception Raised Constructor
+        /// </summary>
+        /// <param name="assemblyToBlame"></param>
+        /// <param name="errorMessage"></param>
+        /// <param name="stackTrace"></param>
+        /// <param name="serializedException"></param>
         public ExceptionRaised(
             string   assemblyToBlame,
             string   errorMessage,
@@ -31,8 +50,17 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Events
         }
     }
 
+    /// <summary>
+    /// Handler for the Exception Raised event
+    /// </summary>
     internal sealed class ExceptionRaisedHandler : ApplicationEventHandler<ExceptionRaised>
     {
+        /// <summary>
+        /// Exception Raised handle method
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public override Task Handle(ExceptionRaised request, CancellationToken cancellationToken)
         {
             Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%");

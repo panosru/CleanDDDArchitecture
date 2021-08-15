@@ -53,7 +53,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         /// <param name="dto"></param>
         /// <returns>The newly registered account.</returns>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK, Type      = typeof(AccountCreateResponse))]
+        [ProducesResponseType(StatusCodes.Status200OK,      Type = typeof(AccountCreateResponse))]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AccountCreateResponse))]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Create))]
         public async Task<IActionResult> Create([FromBody] [Required] CreateAccountDto dto)
