@@ -11,8 +11,8 @@
 
     /// <inheritdoc
     ///     cref="CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
-    [AllowAnonymous]
     [FeatureGate(Features.TodoListGetAll)]
+    [AllowAnonymous]
     public sealed class TodoLists
         : ApiController<GetAllUseCase, TodoLists>,
           IGetAllOutput

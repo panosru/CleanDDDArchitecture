@@ -176,6 +176,11 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             services.AddRouting(
                 options => options.LowercaseUrls = true);
 
+            if (CurrentEnvironment.IsDevelopment())
+            {
+                services.AddDatabaseDeveloperPageExceptionFilter();
+            }
+
             services.AddControllersWithViews(
                 options =>
                 {
@@ -198,7 +203,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             if (CurrentEnvironment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseMigrationsEndPoint();
             }
             else
             {

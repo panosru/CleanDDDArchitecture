@@ -15,7 +15,6 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     ///     cref="CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [ApiVersion("1.0")]
     [FeatureGate(Features.AccountGetBy)]
-    [AllowAnonymous]
     public sealed class Account
         : ApiController<GetAccountUseCase, Account>,
           IGetAccountOutput

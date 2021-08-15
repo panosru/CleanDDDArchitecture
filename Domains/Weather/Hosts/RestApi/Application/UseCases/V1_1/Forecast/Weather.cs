@@ -4,13 +4,11 @@
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Domains.Weather.Application.UseCases.ForecastV1_1;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
 
     /// <inheritdoc
     ///     cref="CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
-    [AllowAnonymous]
     [FeatureGate(Features.WeatherForecastV11)]
     public sealed class Weather
         : ApiController<ForecastUseCase, Weather>,

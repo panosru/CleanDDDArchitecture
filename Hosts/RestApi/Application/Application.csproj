@@ -10,7 +10,7 @@
     <UserSecretsId>e280dc2a-db97-4d06-b65a-609faf78d5d1</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.2">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -28,6 +28,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Pages\Shared\.gitkeep" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\swagger.yaml" />
+    <Content Include="wwwroot\swagger.yaml" Watch="false" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Domains\Account\Hosts\RestApi\Application\Application.csproj" />
