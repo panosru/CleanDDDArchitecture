@@ -141,10 +141,18 @@
         }
     }
 
+    /// <summary>
+    /// Context Extension Exception
+    /// </summary>
     internal static class ExceptionContextExtension
     {
+        /// <summary>
+        /// Datetime of the Occurred Exception
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <returns></returns>
         public static DateTime Occurred(this Exception exception) =>
-            (DateTime?) exception
+            (DateTime?)exception
                .GetType()
                .GetProperty("Occurred")
               ?.GetValue(exception)
