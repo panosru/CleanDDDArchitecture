@@ -55,6 +55,7 @@
             options.DocumentFilter<YamlDocumentFilter>();
             options.OperationFilter<SwaggerDefaultValues>();
             options.IgnoreObsoleteActions();
+
             options.IgnoreObsoleteProperties();
 
             options.AddSecurityDefinition(
@@ -62,13 +63,12 @@
                 new OpenApiSecurityScheme
                 {
                     Name         = "Authorization",
-                    Description  = "Type into the textbox: Bearer {your JWT token}.",
-                    Type         = SecuritySchemeType.ApiKey,
                     BearerFormat = "JWT",
+                    Scheme       = "Bearer",
+                    Description  = "Specify the authorization token.",
                     In           = ParameterLocation.Header,
-                    Scheme       = "bearer"
+                    Type         = SecuritySchemeType.Http,
                 });
-
             // Add auth header filter
             options.OperationFilter<AuthenticationRequirement>();
 
