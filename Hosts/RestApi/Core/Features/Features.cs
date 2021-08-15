@@ -12,6 +12,8 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Core.Features
 
         AccountGetBy,
 
+        AccountProfile,
+
         AccountUpdateDetails,
 
         TodoItemCreate,
