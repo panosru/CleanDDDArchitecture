@@ -45,8 +45,8 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger
             {
                 Reference = new OpenApiReference
                 {
+                    Id   = "Bearer",
                     Type = ReferenceType.SecurityScheme,
-                    Id   = "bearer"
                 }
             };
 

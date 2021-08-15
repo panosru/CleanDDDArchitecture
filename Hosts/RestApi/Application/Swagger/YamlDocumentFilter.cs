@@ -38,7 +38,7 @@
             try
             {
                 var builder = new SerializerBuilder();
-                builder.WithNamingConvention(new CamelCaseNamingConvention());
+                builder.WithNamingConvention(CamelCaseNamingConvention.Instance);
                 builder.WithTypeInspector(innerInspector => new PropertiesIgnoreTypeInspector(innerInspector));
 
                 var serializer = builder.Build();
@@ -87,7 +87,7 @@
             /// <param name="type"></param>
             /// <param name="container"></param>
             /// <returns></returns>
-            public override IEnumerable<IPropertyDescriptor> GetProperties(Type type, object container)
+            public override IEnumerable<IPropertyDescriptor> GetProperties(Type type, object? container)
             {
                 return _typeInspector.GetProperties(type, container)
                    .Where(p => p.Name != "extensions" && p.Name != "operation-aggregateId");
