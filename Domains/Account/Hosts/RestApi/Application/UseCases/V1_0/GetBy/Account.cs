@@ -6,7 +6,6 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
     using Domains.Account.Application.Identity;
     using Domains.Account.Application.UseCases.GetBy;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
@@ -49,7 +48,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         /// <response code="404">Not Found.</response>
         /// <param name="id"></param>
         /// <returns>Account data.</returns>
-        [HttpGet("{id:guid}", Name                          = "GetAccount")]
+        [HttpGet("{id:guid}", Name = "GetAccount")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AccountGetByResponse))]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Find))]
         public async Task<IActionResult> GetAccount([FromRoute] Guid id)

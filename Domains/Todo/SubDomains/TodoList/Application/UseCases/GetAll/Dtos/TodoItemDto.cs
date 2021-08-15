@@ -29,7 +29,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
                     d =>
                         d.Priority,
                     opt =>
-                        opt.MapFrom(s => (int) s.Priority));
+                        opt.MapFrom(s => (int)s.Priority));
         }
 
         #endregion

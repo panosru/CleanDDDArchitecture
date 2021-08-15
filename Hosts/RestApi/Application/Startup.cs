@@ -28,7 +28,6 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Microsoft.AspNetCore.Mvc.Authorization;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Hosting;
     using Services;
     using Swagger;
@@ -177,9 +176,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 options => options.LowercaseUrls = true);
 
             if (CurrentEnvironment.IsDevelopment())
-            {
                 services.AddDatabaseDeveloperPageExceptionFilter();
-            }
 
             services.AddControllersWithViews(
                 options =>

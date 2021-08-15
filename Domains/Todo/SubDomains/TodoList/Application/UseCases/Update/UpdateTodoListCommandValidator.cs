@@ -26,7 +26,7 @@
             RuleFor(v => v.Title)
                .NotEmpty()
                .WithMessage("Title is required.")
-               .MaximumLength((int) ValidationSettings.TitleMaxLength)
+               .MaximumLength((int)ValidationSettings.TitleMaxLength)
                .WithMessage(
                     "Title must not exceed {MaxLength} characters, yours had the length of {TotalLength} characters.")
                .MustAsync(BeUniqueTitle)

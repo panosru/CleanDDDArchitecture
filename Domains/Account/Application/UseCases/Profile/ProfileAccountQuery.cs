@@ -1,6 +1,5 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Profile
 {
-    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Identity;

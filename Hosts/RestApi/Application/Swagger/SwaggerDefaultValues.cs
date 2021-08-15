@@ -32,7 +32,7 @@
                     p => p.Name == parameter.Name);
                 var routeInfo = description.RouteInfo;
 
-                parameter.Description ??= description.ModelMetadata?.Description;
+                parameter.Description ??= description.ModelMetadata.Description;
 
                 if (routeInfo == null) continue;
 
