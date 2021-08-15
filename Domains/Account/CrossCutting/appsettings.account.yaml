@@ -7,4 +7,5 @@ FeatureManagement:
   AccountAuthentication: true
   AccountConfirmEmail: true
   AccountGetBy: true
+  AccountProfile: true
   AccountUpdateDetails: true

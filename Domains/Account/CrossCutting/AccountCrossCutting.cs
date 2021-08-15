@@ -23,7 +23,10 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
 
         public static IEnumerable<Profile> AutoMapperProfiles() => new List<Profile>();
 
-        public static IEnumerable<Assembly> ValidatorAssemblies() => new List<Assembly>();
+        public static IEnumerable<Assembly> ValidatorAssemblies() => new List<Assembly>
+        {
+            AccountApplicationAssembly
+        };
 
         public static IEnumerable<Assembly> MediatorAssemblies() => new List<Assembly>
         {

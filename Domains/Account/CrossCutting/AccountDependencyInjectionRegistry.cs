@@ -11,6 +11,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using Application.UseCases.ConfirmEmail;
     using Application.UseCases.Create;
     using Application.UseCases.GetBy;
+    using Application.UseCases.Profile;
     using Application.UseCases.UpdateDetails;
     using Aviant.DDD.Application.EventBus;
     using Aviant.DDD.Application.Identity;
@@ -63,7 +64,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
 
             services.AddScoped<IAccountDbContextWrite>(
                 provider =>
-                    provider.GetService<AccountDbContextWrite>());
+                    provider.GetService<AccountDbContextWrite>()!);
 
             services.AddDbContext<AccountDbContextRead>(
                 options =>
@@ -74,14 +75,23 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
 
             services.AddScoped<IAccountDbContextRead>(
                 provider =>
-                    provider.GetService<AccountDbContextRead>());
+                    provider.GetService<AccountDbContextRead>()!);
 
             services.AddScoped<IAccountRepositoryRead, AccountRepositoryRead>();
             services.AddScoped<IAccountRepositoryWrite, AccountRepositoryWrite>();
 
             services
                .AddDefaultIdentity<AccountUser>(
-                    options => options.User.RequireUniqueEmail = true)
+                    options =>
+                    {
+                        options.User.RequireUniqueEmail = true;
+
+                        options.Password.RequireDigit           = true;
+                        options.Password.RequiredLength         = 5;
+                        options.Password.RequireLowercase       = true;
+                        options.Password.RequireUppercase       = true;
+                        options.Password.RequireNonAlphanumeric = true;
+                    })
                .AddRoles<AccountRole>()
                .AddEntityFrameworkStores<AccountDbContextWrite>();
 
@@ -142,6 +152,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
             services.AddScoped(typeof(AccountCreateUseCase));
             services.AddScoped(typeof(UpdateDetailsUseCase));
             services.AddScoped(typeof(GetAccountUseCase));
+            services.AddScoped(typeof(ProfileAccountUseCase));
 
             services
                .AddScoped<IOrchestrator<AccountAggregate, AccountAggregateId>,
