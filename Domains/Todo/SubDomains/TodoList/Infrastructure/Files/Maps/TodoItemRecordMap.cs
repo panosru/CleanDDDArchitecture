@@ -11,8 +11,8 @@
             AutoMap(CultureInfo.InvariantCulture);
 
             Map(m => m.Done)
-               .ConvertUsing(
-                    c => c.Done
+               .Convert(
+                    args => args.Value.Done
                         ? "Yes"
                         : "No");
         }
