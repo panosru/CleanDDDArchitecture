@@ -2,6 +2,7 @@
 
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Events
 {
+    using System.Collections.Generic;
     using Aggregates;
     using Aviant.DDD.Core.DomainEvents;
 
@@ -16,12 +17,14 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Event
         public AccountCreatedDomainEvent(AccountAggregate accountAggregate)
             : base(accountAggregate)
         {
-            Id        = accountAggregate.Id;
-            UserName  = accountAggregate.UserName;
-            Password  = accountAggregate.Password;
-            FirstName = accountAggregate.FirstName;
-            LastName  = accountAggregate.LastName;
-            Email     = accountAggregate.Email;
+            Id             = accountAggregate.Id;
+            UserName       = accountAggregate.UserName;
+            Password       = accountAggregate.Password;
+            FirstName      = accountAggregate.FirstName;
+            LastName       = accountAggregate.LastName;
+            Email          = accountAggregate.Email;
+            Roles          = accountAggregate.Roles;
+            EmailConfirmed = accountAggregate.EmailConfirmed;
         }
 
         public AccountAggregateId Id { get; private set; }
@@ -35,5 +38,9 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Event
         public string LastName { get; private set; }
 
         public string Email { get; private set; }
+
+        public IEnumerable<string> Roles { get; private set; }
+
+        public bool EmailConfirmed { get; private set; }
     }
 }
