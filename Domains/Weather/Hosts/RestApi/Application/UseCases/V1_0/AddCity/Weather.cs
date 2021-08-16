@@ -11,7 +11,6 @@
 
     /// <inheritdoc
     ///     cref="CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
-    [AllowAnonymous]
     [FeatureGate(Features.WeatherAddCity)]
     public sealed class Weather
         : ApiController<AddCityUseCase, Weather>,
