@@ -3,7 +3,6 @@
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.FeatureManagement.Mvc;
     using TodoItem.Application.UseCases.GetBy;
@@ -11,7 +10,6 @@
     /// <inheritdoc
     ///     cref="CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [FeatureGate(Features.TodoItemGetBy)]
-    [AllowAnonymous]
     public sealed class TodoItems
         : ApiController<TodoItemGetByUseCase, TodoItems>,
           ITodoItemGetByOutput
