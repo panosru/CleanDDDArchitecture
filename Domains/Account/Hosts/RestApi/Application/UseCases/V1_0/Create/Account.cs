@@ -14,8 +14,8 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     /// <inheritdoc
     ///     cref="CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
     [ApiVersion("1.0")]
-    [FeatureGate(Features.AccountCreate)]
     [AllowAnonymous]
+    [FeatureGate(Features.AccountCreate)]
     public sealed class Account
         : ApiController<AccountCreateUseCase, Account>,
           ICreateAccountOutput
@@ -64,7 +64,9 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
                         dto.Password,
                         dto.FirstName,
                         dto.LastName,
-                        dto.Email))
+                        dto.Email,
+                        dto.Roles.Split(','),
+                        dto.EmailConfirmed))
                .ConfigureAwait(false);
 
             return ViewModel;

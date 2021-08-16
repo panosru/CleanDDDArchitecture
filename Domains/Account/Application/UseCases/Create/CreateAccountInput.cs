@@ -1,5 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
 {
+    using System.Collections.Generic;
     using Aviant.DDD.Application.UseCases;
 
     public sealed class CreateAccountInput : UseCaseInput
@@ -9,13 +10,17 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
             string password,
             string firstName,
             string lastName,
-            string email)
+            string email,
+            IEnumerable<string> roles,
+            bool emailConfirmed)
         {
-            UserName  = userName;
-            Password  = password;
-            FirstName = firstName;
-            LastName  = lastName;
-            Email     = email;
+            UserName       = userName;
+            Password       = password;
+            FirstName      = firstName;
+            LastName       = lastName;
+            Email          = email;
+            Roles          = roles;
+            EmailConfirmed = emailConfirmed;
         }
 
         internal string UserName { get; }
@@ -27,5 +32,9 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
         internal string LastName { get; }
 
         internal string Email { get; }
+
+        internal IEnumerable<string> Roles { get; }
+
+        internal bool EmailConfirmed { get; }
     }
 }
