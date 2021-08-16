@@ -10,6 +10,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using Application.UseCases.Create;
     using AutoMapper;
     using Aviant.DDD.Application.Orchestration;
+    using Core;
     using Infrastructure.Persistence.Contexts;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
@@ -40,17 +41,20 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
             if (context.Database.IsNpgsql())
                 await context.Database.MigrateAsync().ConfigureAwait(false);
 
+            await PopulateDefaultAccountRoles(serviceProvider).ConfigureAwait(false);
+
             // Get UserManager Service
             var userManager = serviceProvider.GetRequiredService<UserManager<AccountUser>>();
 
             // Create default user data
-            var accountDto = new CreateAccountDto
+            CreateAccountDto accountDto = new()
             {
                 UserName  = "admin",
                 Email     = "admin@localhost.com",
                 FirstName = "Panagiotis",
                 LastName  = "Kosmidis",
-                Password  = "Administrator1!"
+                Password  = "Administrator1!",
+                Roles     = Role.Root.ToString()
             };
 
             if (userManager.Users.All(u => u.UserName != accountDto.UserName))
@@ -69,12 +73,28 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                             accountDto.Password,
                             accountDto.FirstName,
                             accountDto.LastName,
-                            accountDto.Email))
+                            accountDto.Email,
+                            accountDto.Roles.Split(','),
+                            true))
                    .ConfigureAwait(false);
 
                 if (!requestResult.Succeeded)
                     throw new Exception($"Unable to create default user \"{accountDto.UserName}\".");
             }
+        }
+
+        private static async Task PopulateDefaultAccountRoles(IServiceProvider serviceProvider)
+        {
+            // Get RoleManager Service
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<AccountRole>>();
+
+            foreach (var role in (Role[])Enum.GetValues(typeof(Role)))
+                await roleManager.CreateAsync(
+                        new AccountRole
+                        {
+                            Name = role.ToString()
+                        })
+                   .ConfigureAwait(false);
         }
     }
 }

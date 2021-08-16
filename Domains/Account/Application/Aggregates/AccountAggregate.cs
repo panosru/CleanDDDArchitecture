@@ -3,6 +3,7 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
 {
     using System;
+    using System.Collections.Generic;
     using Aviant.DDD.Core.Aggregates;
     using Aviant.DDD.Core.DomainEvents;
     using Aviant.DDD.Core.Entities;
@@ -20,19 +21,23 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
         #pragma warning restore 8618
 
         private AccountAggregate(
-            AccountAggregateId aggregateId,
-            string             userName,
-            string             password,
-            string             firstName,
-            string             lastName,
-            string             email)
+            AccountAggregateId  aggregateId,
+            string              userName,
+            string              password,
+            string              firstName,
+            string              lastName,
+            string              email,
+            IEnumerable<string> roles,
+            bool emailConfirmed)
             : base(aggregateId)
         {
-            UserName  = userName;
-            Password  = password;
-            FirstName = firstName;
-            LastName  = lastName;
-            Email     = email;
+            UserName       = userName;
+            Password       = password;
+            FirstName      = firstName;
+            LastName       = lastName;
+            Email          = email;
+            Roles          = roles;
+            EmailConfirmed = emailConfirmed;
 
             AddEvent(new AccountCreatedDomainEvent(this));
         }
@@ -47,6 +52,10 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
 
         public string Email { get; private set; }
 
+        public IEnumerable<string> Roles { get; private set; }
+
+        public bool EmailConfirmed { get; private set; }
+
         #region IActivationAudited Members
 
         public bool IsActive { get; set; } = true;
@@ -60,9 +69,11 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
             string password,
             string firstname,
             string lastname,
-            string email)
+            string email,
+            IEnumerable<string> roles,
+            bool emailConfirmed)
         {
-            var id = new AccountAggregateId(Guid.NewGuid());
+            AccountAggregateId id = new(Guid.NewGuid());
 
             return new AccountAggregate(
                 id,
@@ -70,7 +81,9 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
                 password,
                 firstname,
                 lastname,
-                email);
+                email,
+                roles,
+                emailConfirmed);
         }
 
         internal void ChangeDetails(
@@ -90,12 +103,14 @@ namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates
             switch (@event)
             {
                 case AccountCreatedDomainEvent c:
-                    Id        = c.AggregateId;
-                    UserName  = c.UserName;
-                    Password  = c.Password;
-                    FirstName = c.FirstName;
-                    LastName  = c.LastName;
-                    Email     = c.Email;
+                    Id             = c.AggregateId;
+                    UserName       = c.UserName;
+                    Password       = c.Password;
+                    FirstName      = c.FirstName;
+                    LastName       = c.LastName;
+                    Email          = c.Email;
+                    Roles          = c.Roles;
+                    EmailConfirmed = c.EmailConfirmed;
                     break;
 
                 case AccountUpdatedDomainEvent u:

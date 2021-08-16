@@ -22,7 +22,9 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
                         input.Password,
                         input.FirstName,
                         input.LastName,
-                        input.Email),
+                        input.Email,
+                        input.Roles,
+                        input.EmailConfirmed),
                     cancellationToken)
                .ConfigureAwait(false);
 

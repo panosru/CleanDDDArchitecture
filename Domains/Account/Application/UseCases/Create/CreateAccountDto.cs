@@ -18,5 +18,10 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
 
         [Required]
         public string Email { get; set; }
+
+        [Required]
+        public string Roles { get; set; }
+
+        public bool EmailConfirmed { get; set; } // default: false
     }
 }

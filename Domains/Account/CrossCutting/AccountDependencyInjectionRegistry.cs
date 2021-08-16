@@ -2,6 +2,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
 {
     using System;
     using System.IdentityModel.Tokens.Jwt;
+    using System.Security.Claims;
     using System.Text;
     using Application.Aggregates;
     using Application.Identity;
@@ -32,6 +33,8 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -93,6 +96,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                         options.Password.RequireNonAlphanumeric = true;
                     })
                .AddRoles<AccountRole>()
+               .AddRoleManager<RoleManager<AccountRole>>()
                .AddEntityFrameworkStores<AccountDbContextWrite>();
 
             services.AddIdentityServer()
@@ -100,8 +104,8 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
 
             services.AddTransient<IIdentityService, IdentityService>();
 
-            services.AddAuthentication()
-               .AddIdentityServerJwt();
+            // services.AddAuthentication()
+            //    .AddIdentityServerJwt();
 
             services
                .AddSingleton<IEventDeserializer>(
@@ -168,7 +172,22 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
         public static IServiceCollection AddAccountAuth(this IServiceCollection services)
         {
             services
-               .AddAuthorization()
+               .AddDistributedMemoryCache()
+               .AddSession(
+                    options =>
+                    {
+                        options.IdleTimeout        = TimeSpan.FromMinutes(30);
+                        options.Cookie.HttpOnly    = true;
+                        options.Cookie.IsEssential = true;
+                    })
+               .AddAuthorization(
+                    config => config.AddPolicy(
+                        "UserPolicy",
+                        policyBuilder =>
+                        {
+                            policyBuilder.RequireClaim(ClaimTypes.Email);
+                            policyBuilder.RequireClaim(ClaimTypes.DateOfBirth);
+                        }))
                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                .AddJwtBearer(
                     options => options.TokenValidationParameters = new TokenValidationParameters
@@ -182,7 +201,8 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                         IssuerSigningKey =
                             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
                         ClockSkew = TimeSpan.Zero
-                    });
+                    })
+               .AddIdentityServerJwt();
 
             return services;
         }
@@ -192,8 +212,20 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
 
         public static void UseAccountAuth(this IApplicationBuilder app)
         {
+            app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.Use(
+                async (context, next) =>
+                {
+                    var token = context.Session.GetString("Token");
+
+                    if (!string.IsNullOrEmpty(token))
+                        context.Request.Headers.Add("Authorization", "Bearer " + token);
+
+                    await next();
+                });
         }
     }
 }
