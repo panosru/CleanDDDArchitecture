@@ -112,7 +112,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
         private static void MoveEnvironmentVariablesToEnd(IConfigurationBuilder configurationBuilder)
         {
             // Items that needs to be moved to the end (FIFO)
-            var fifo = new List<IConfigurationSource>
+            List<IConfigurationSource> fifo = new()
             {
                 // Get EnvironmentVariablesConfigurationSource item
                 configurationBuilder.Sources
