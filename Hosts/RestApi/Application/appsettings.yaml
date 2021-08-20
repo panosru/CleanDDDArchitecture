@@ -47,18 +47,26 @@ FeatureManagement:
   Metal: true
   
 # Use secrets.json for these:
-ConnectionStrings:
-  DefaultWriteConnection: User ID =panosru;Password=123123;Server=localhost;Port=5432;Database=CleanDDDArchitecture;Integrated Security=true;Pooling=true;
-  DefaultReadConnection: User ID =panosru;Password=123123;Server=localhost;Port=5432;Database=CleanDDDArchitecture;Integrated Security=true;Pooling=true;
-  eventstore: tcp://guest:123123@127.0.0.1:1113
-  kafka: 127.0.0.1:9191
-  loki: http://127.0.0.1:3100
-  mongo: mongodb://127.0.0.1:27017
-
-Auth0:
-  Domain: localhost
-  Audience: Demo
-
-Jwt:
-  Key: thisismysecretkey
-  Issuer: test.com
+#  {
+#    "ConnectionStrings": {
+#      "DefaultWriteConnection": "User ID =panosru;Password=123123;Server=localhost;Port=5432;Database=CleanDDDArchitecture;Integrated Security=true;Pooling=true;",
+#      "DefaultReadConnection": "User ID =panosru;Password=123123;Server=localhost;Port=5432;Database=CleanDDDArchitecture;Integrated Security=true;Pooling=true;",
+#      "eventstore": "tcp://guest:123123@127.0.0.1:1113",
+#      "kafka": "127.0.0.1:9191",
+#      "loki": "http://127.0.0.1:3100",
+#      "mongo": "mongodb://127.0.0.1:27017"
+#    },
+#
+#    "Auth0": {
+#      "Domain": "localhost",
+#      "Audience": "Demo"
+#    },
+#
+#    "Jwt": {
+#      "Key512Bit": "D35B8F8E10EEDFB687CF62EE9706790EA2F8D34C79DA9D89A9151CD563ECAD82",
+#      "Key256Bit": "337436763979244226452948404D6351",
+#      "Issuer": "https://localhost:6001",
+#      "Audience": "CleanDDDArchitecture.Hosts.RestApi.ApplicationAPI",
+#      "Subject": "DemoJwtSubject"
+#    }
+#  }

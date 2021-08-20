@@ -27,7 +27,7 @@
         {
             get
             {
-                var id = _httpContextAccessor.HttpContext?.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+                var id = _httpContextAccessor.HttpContext?.User.FindFirstValue(JwtRegisteredClaimNames.NameId);
 
                 return id is null
                     ? Guid.Empty

@@ -11,6 +11,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using AutoMapper;
     using Aviant.DDD.Application.Orchestration;
     using Core;
+    using Core.Identity;
     using Infrastructure.Persistence.Contexts;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
@@ -54,7 +55,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                 FirstName = "Panagiotis",
                 LastName  = "Kosmidis",
                 Password  = "Administrator1!",
-                Roles     = Role.Root.ToString()
+                Roles     = Roles.Root.ToString()
             };
 
             if (userManager.Users.All(u => u.UserName != accountDto.UserName))
@@ -88,7 +89,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
             // Get RoleManager Service
             var roleManager = serviceProvider.GetRequiredService<RoleManager<AccountRole>>();
 
-            foreach (var role in (Role[])Enum.GetValues(typeof(Role)))
+            foreach (var role in (Roles[])Enum.GetValues(typeof(Roles)))
                 await roleManager.CreateAsync(
                         new AccountRole
                         {

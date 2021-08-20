@@ -11,7 +11,7 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contex
         : AuthorizationDbContextRead<AccountUser, AccountRole>, IAccountDbContextRead
     {
         public AccountDbContextRead(
-            DbContextOptions                  options,
+            DbContextOptions<AccountDbContextRead> options,
             IOptions<OperationalStoreOptions> operationalStoreOptions)
             : base(options, operationalStoreOptions)
         { }
