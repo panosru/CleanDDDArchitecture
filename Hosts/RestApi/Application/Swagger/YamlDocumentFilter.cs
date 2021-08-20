@@ -37,19 +37,19 @@
         {
             try
             {
-                var builder = new SerializerBuilder();
+                SerializerBuilder builder = new();
                 builder.WithNamingConvention(CamelCaseNamingConvention.Instance);
                 builder.WithTypeInspector(innerInspector => new PropertiesIgnoreTypeInspector(innerInspector));
 
                 var serializer = builder.Build();
 
-                using var writer = new StringWriter();
+                using StringWriter writer = new();
 
                 serializer.Serialize(writer, swaggerDoc);
 
                 var file = Path.Combine(_hostingEnvironment.WebRootPath, "swagger.yaml");
 
-                using var stream = new StreamWriter(file);
+                using StreamWriter stream = new(file);
 
                 var result = writer.ToString();
 
