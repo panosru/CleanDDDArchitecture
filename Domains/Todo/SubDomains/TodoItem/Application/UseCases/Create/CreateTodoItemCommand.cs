@@ -40,7 +40,7 @@
             CreateTodoItemCommand command,
             CancellationToken     cancellationToken)
         {
-            var entity = new TodoItemEntity
+            TodoItemEntity entity = new()
             {
                 ListId = command.ListId,
                 Title  = command.Title

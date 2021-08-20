@@ -107,7 +107,7 @@
         private static void SetCommentsPathForSwaggerJsonAndUi(SwaggerGenOptions options)
         {
             // For multiple Api's
-            var baseDir = new DirectoryInfo(AppContext.BaseDirectory);
+            DirectoryInfo baseDir = new(AppContext.BaseDirectory);
 
             baseDir.EnumerateFiles("*.RestApi.Application.xml")
                .ForAll(
