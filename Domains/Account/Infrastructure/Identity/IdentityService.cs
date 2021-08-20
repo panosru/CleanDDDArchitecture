@@ -1,9 +1,8 @@
 ﻿namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Identity
 {
     using System;
-    using System.IdentityModel.Tokens.Jwt;
+    using System.Collections.Specialized;
     using System.Linq;
-    using System.Security.Claims;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
@@ -13,7 +12,6 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
-    using Microsoft.IdentityModel.Tokens;
     using IdentityResult = Aviant.DDD.Application.Identity.IdentityResult;
 
     public sealed class IdentityService : IIdentityService //TODO: This requires a major refactor
@@ -21,6 +19,8 @@
         private readonly IConfiguration _config;
 
         private readonly UserManager<AccountUser> _userManager;
+
+        private readonly TokenService _tokenService = new();
 
         public IdentityService(
             UserManager<AccountUser> userManager,
@@ -80,7 +80,19 @@
                                    .ConfigureAwait(false))))
                 };
 
-            return new { token = GenerateJwtToken(user) };
+            return new
+            {
+                token = _tokenService.BuildToken(
+                    new NameValueCollection
+                    {
+                        { "Key256Bit", _config["Jwt:Key256Bit"] },
+                        { "Key512Bit", _config["Jwt:Key512Bit"] }
+                    },
+                    _config["Jwt:Subject"],
+                    _config["Jwt:Issuer"],
+                    _config["Jwt:Audience"],
+                    user)
+            };
         }
 
         public async Task<IdentityResult> ConfirmEmailAsync(
@@ -100,10 +112,9 @@
             var result = await _userManager.ConfirmEmailAsync(user, token)
                .ConfigureAwait(false);
 
-            if (!result.Succeeded)
-                return IdentityResult.Failure(new[] { result.Errors.First().Description });
-
-            return IdentityResult.Success();
+            return !result.Succeeded
+                ? IdentityResult.Failure(new[] { result.Errors.First().Description })
+                : IdentityResult.Success();
         }
 
         public async Task<string> GetUserNameAsync(
@@ -123,7 +134,7 @@
             string            password,
             CancellationToken cancellationToken = default)
         {
-            var user = new AccountUser
+            AccountUser user = new()
             {
                 UserName = username,
                 Email    = username
@@ -158,35 +169,6 @@
                .ConfigureAwait(false);
 
             return result.ToApplicationResult();
-        }
-
-        private string GenerateJwtToken(AccountUser user)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var securityKey  = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials  = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
-
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub,    user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.NameId, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Email,  user.Email),
-                // new Claim("DateOfJoin", userInfo.DateOfJoin.ToString("yyyy-MM-dd")),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject            = new ClaimsIdentity(claims),
-                Expires            = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = credentials,
-                Audience           = _config["Jwt:Issuer"],
-                Issuer             = _config["Jwt:Issuer"]
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return tokenHandler.WriteToken(token);
         }
     }
 }

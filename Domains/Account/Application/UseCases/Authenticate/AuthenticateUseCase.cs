@@ -20,8 +20,10 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate
                .ConfigureAwait(false);
 
             if (requestResult.Succeeded
-             && !(requestResult.Payload() is null))
+             && requestResult.Payload() is not null)
                 Output.Ok(requestResult.Payload());
+            else
+                Output.Unauthorized();
         }
     }
 }

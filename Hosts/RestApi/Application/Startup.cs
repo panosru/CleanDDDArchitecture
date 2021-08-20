@@ -141,6 +141,16 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 typeof(IPipelineBehavior<,>),
                 typeof(RequestExceptionProcessorBehavior<,>));
 
+            services
+               .AddDistributedMemoryCache()
+               .AddSession(
+                    options =>
+                    {
+                        options.IdleTimeout        = TimeSpan.FromMinutes(30);
+                        options.Cookie.HttpOnly    = true;
+                        options.Cookie.IsEssential = true;
+                    });
+
             // Add Infrastructure
             services
                .AddAccountDomain()
@@ -155,8 +165,6 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             services.AddScoped<IApplicationEventDispatcher, ApplicationEventDispatcher>();
 
             services.AddSingleton<IServiceContainer, HttpContextServiceProviderProxy>();
-
-            services.AddAccountAuth();
 
             services
                .AddApiVersionWithExplorer()
@@ -223,6 +231,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                     DefaultContentType    = "application/yaml"
                 });
 
+            app.UseSession();
 
             app.UseRouting();
 

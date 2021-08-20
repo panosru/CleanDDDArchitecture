@@ -1,6 +1,6 @@
-namespace CleanDDDArchitecture.Domains.Account.Core
+namespace CleanDDDArchitecture.Domains.Account.Core.Identity
 {
-    public enum Role
+    public enum Roles
     {
         Root,
 
