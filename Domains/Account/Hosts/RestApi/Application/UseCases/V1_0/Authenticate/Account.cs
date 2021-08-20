@@ -1,5 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.Authenticate
 {
+    using System.Net;
+    using System.Net.Http;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
@@ -30,6 +32,13 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         /// <param name="object"></param>
         void IAuthenticateOutput.Ok(object? @object) =>
             ViewModel = Ok(@object);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <exception cref="HttpRequestException"></exception>
+        void IAuthenticateOutput.Unauthorized() =>
+            throw new HttpRequestException(HttpStatusCode.Unauthorized.ToString());
 
         #endregion
 

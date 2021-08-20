@@ -103,9 +103,49 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                .AddApiAuthorization<AccountUser, AccountDbContextWrite>();
 
             services.AddTransient<IIdentityService, IdentityService>();
+            services.AddScoped<ITokenService, TokenService>();
 
-            // services.AddAuthentication()
-            //    .AddIdentityServerJwt();
+            services
+               .AddAuthentication(
+                    options =>
+                    {
+                        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                        options.DefaultChallengeScheme    = JwtBearerDefaults.AuthenticationScheme;
+                    })
+               .AddJwtBearer(
+                    options =>
+                    {
+                        options.RequireHttpsMetadata = false;
+                        options.SaveToken            = true;
+
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuerSigningKey = true,
+                            ValidateIssuer           = true,
+                            ValidateAudience         = true,
+                            ValidateLifetime         = true,
+                            ValidIssuer              = Configuration["Jwt:Issuer"],
+                            ValidAudience            = Configuration["Jwt:Audience"],
+                            TokenDecryptionKey = new SymmetricSecurityKey(
+                                Encoding.ASCII.GetBytes(Configuration["Jwt:Key256Bit"])),
+                            IssuerSigningKey = new SymmetricSecurityKey(
+                                Encoding.ASCII.GetBytes(Configuration["Jwt:Key512Bit"])),
+                            // By setting ClockSkew to zero, the tokens are expiring at
+                            // the exact token expiration time and not 5 minutes later
+                            ClockSkew = TimeSpan.Zero
+                        };
+                    })
+               .AddIdentityServerJwt();
+
+            services
+               .AddAuthorization(
+                    options => options.AddPolicy(
+                        "UserPolicy",
+                        policy =>
+                        {
+                            policy.RequireClaim(ClaimTypes.Email);
+                            policy.RequireClaim(ClaimTypes.DateOfBirth);
+                        }));
 
             services
                .AddSingleton<IEventDeserializer>(
@@ -115,7 +155,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                             AccountCrossCutting.AccountApplicationAssembly
                         }));
 
-            var consumerConfig = new EventConsumerConfig(
+            EventConsumerConfig consumerConfig = new(
                 Configuration.GetConnectionString("kafka"),
                 Configuration["eventsTopicName"],
                 Configuration["eventsTopicGroupName"]);
@@ -169,50 +209,11 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
             return services;
         }
 
-        public static IServiceCollection AddAccountAuth(this IServiceCollection services)
-        {
-            services
-               .AddDistributedMemoryCache()
-               .AddSession(
-                    options =>
-                    {
-                        options.IdleTimeout        = TimeSpan.FromMinutes(30);
-                        options.Cookie.HttpOnly    = true;
-                        options.Cookie.IsEssential = true;
-                    })
-               .AddAuthorization(
-                    config => config.AddPolicy(
-                        "UserPolicy",
-                        policyBuilder =>
-                        {
-                            policyBuilder.RequireClaim(ClaimTypes.Email);
-                            policyBuilder.RequireClaim(ClaimTypes.DateOfBirth);
-                        }))
-               .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-               .AddJwtBearer(
-                    options => options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer           = true,
-                        ValidateAudience         = true,
-                        ValidateLifetime         = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer              = Configuration["Jwt:Issuer"],
-                        ValidAudience            = Configuration["Jwt:Issuer"],
-                        IssuerSigningKey =
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
-                        ClockSkew = TimeSpan.Zero
-                    })
-               .AddIdentityServerJwt();
-
-            return services;
-        }
-
         public static IHealthChecksBuilder AddAccountChecks(this IHealthChecksBuilder builder) =>
             builder.AddDbContextCheck<AccountDbContextWrite>();
 
         public static void UseAccountAuth(this IApplicationBuilder app)
         {
-            app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
 
