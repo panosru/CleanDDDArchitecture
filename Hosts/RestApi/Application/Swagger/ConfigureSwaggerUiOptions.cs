@@ -1,6 +1,5 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger
 {
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Microsoft.AspNetCore.Builder;
@@ -25,14 +24,6 @@
             IApiVersionDescriptionProvider versionDescriptionProvider,
             IOptions<SwaggerSettings>      settings)
         {
-            Debug.Assert(
-                versionDescriptionProvider != null,
-                $"{nameof(versionDescriptionProvider)} != null");
-
-            Debug.Assert(
-                settings != null,
-                $"{nameof(versionDescriptionProvider)} != null");
-
             _provider = versionDescriptionProvider;
             _settings = settings.Value ?? new SwaggerSettings();
         }
