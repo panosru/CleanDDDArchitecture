@@ -29,6 +29,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Middlewares;
     using Services;
     using Swagger;
 
@@ -216,6 +217,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 // The default HSTS value is 30 days. You may want to change this for production scenarios,
                 // see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
+                app.UseCustomExceptionHandler();
             }
 
             app.UseHealthChecks("/health");
