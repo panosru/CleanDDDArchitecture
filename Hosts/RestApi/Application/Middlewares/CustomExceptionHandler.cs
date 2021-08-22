@@ -74,7 +74,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Middlewares
 
     /// <summary>
     /// </summary>
-    public static class CustomExceptionHandlerExtensions
+    internal static class CustomExceptionHandlerExtensions
     {
         /// <summary>
         /// </summary>
