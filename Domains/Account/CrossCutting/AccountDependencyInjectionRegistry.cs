@@ -140,6 +140,16 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                                 return Task.CompletedTask;
                             },
 
+                            OnForbidden = context =>
+                            {
+                                context.Fail(
+                                    new IdentityException(
+                                        "You are not authorised to access this resource",
+                                        HttpStatusCode.Forbidden));
+
+                                return Task.CompletedTask;
+                            },
+
                             OnChallenge = async context =>
                             {
                                 // this is a default method
