@@ -1,9 +1,13 @@
 namespace CleanDDDArchitecture.Domains.Account.CrossCutting
 {
     using System;
+    using System.Collections.Generic;
     using System.IdentityModel.Tokens.Jwt;
+    using System.Linq;
+    using System.Net;
     using System.Security.Claims;
     using System.Text;
+    using System.Threading.Tasks;
     using Application.Aggregates;
     using Application.Identity;
     using Application.Persistence;
@@ -25,6 +29,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using Aviant.DDD.Infrastructure.Persistence;
     using Aviant.DDD.Infrastructure.Persistence.EventStore;
     using Aviant.DDD.Infrastructure.Persistence.Kafka;
+    using Core.Exceptions;
     using Infrastructure.Identity;
     using Infrastructure.Persistence.Contexts;
     using Infrastructure.Repositories;
@@ -40,6 +45,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Microsoft.IdentityModel.Tokens;
+    using Newtonsoft.Json.Linq;
 
     public static class AccountDependencyInjectionRegistry
     {
@@ -50,6 +56,13 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                 CurrentDomain.ToLower());
 
         private static IConfiguration Configuration { get; }
+
+        private static readonly IEnumerable<string> MandatoryClaims = new[]
+        {
+            JwtRegisteredClaimNames.NameId,
+            JwtRegisteredClaimNames.UniqueName,
+            JwtRegisteredClaimNames.Email
+        };
 
         public static IServiceCollection AddAccountDomain(this IServiceCollection services)
         {
@@ -103,7 +116,6 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                .AddApiAuthorization<AccountUser, AccountDbContextWrite>();
 
             services.AddTransient<IIdentityService, IdentityService>();
-            services.AddScoped<ITokenService, TokenService>();
 
             services
                .AddAuthentication(
@@ -115,6 +127,46 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                .AddJwtBearer(
                     options =>
                     {
+                        options.Events = new JwtBearerEvents
+                        {
+                            OnTokenValidated = context =>
+                            {
+                                // Ensure that mandatory claims are set
+                                if (!MandatoryClaims.All(
+                                    mandatoryClaim => context.Principal!.HasClaim(
+                                        claim => claim.Type == mandatoryClaim)))
+                                    context.Fail("Missing claims.");
+
+                                return Task.CompletedTask;
+                            },
+
+                            OnChallenge = async context =>
+                            {
+                                // this is a default method
+                                // the response statusCode and headers are set here
+                                context.HandleResponse();
+
+                                if (context.AuthenticateFailure is not null)
+                                {
+                                    JObject payload = new()
+                                    {
+                                        ["error"]     = context.Error,
+                                        ["error_description"] = context.ErrorDescription,
+                                        ["message"] = context.AuthenticateFailure.Message
+                                    };
+
+                                    context.Response.ContentType = "application/json";
+
+                                    context.Response.StatusCode = context.AuthenticateFailure is IdentityException
+                                        exception
+                                        ? exception.ErrorCode
+                                        : (int)HttpStatusCode.Unauthorized;
+
+                                    await context.HttpContext.Response.WriteAsync(payload.ToString());
+                                }
+                            }
+                        };
+
                         options.RequireHttpsMetadata = false;
                         options.SaveToken            = true;
 
