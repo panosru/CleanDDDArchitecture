@@ -10,7 +10,6 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using Application.UseCases.Create;
     using AutoMapper;
     using Aviant.DDD.Application.Orchestration;
-    using Core;
     using Core.Identity;
     using Infrastructure.Persistence.Contexts;
     using Microsoft.AspNetCore.Identity;
