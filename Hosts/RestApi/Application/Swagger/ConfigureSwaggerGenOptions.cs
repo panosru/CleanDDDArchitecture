@@ -1,7 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger
 {
     using System;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using AutoMapper.Internal;
@@ -35,14 +34,6 @@
             IApiVersionDescriptionProvider versionDescriptionProvider,
             IOptions<SwaggerSettings>      swaggerSettings)
         {
-            Debug.Assert(
-                versionDescriptionProvider != null,
-                $"{nameof(versionDescriptionProvider)} != null");
-
-            Debug.Assert(
-                swaggerSettings != null,
-                $"{nameof(swaggerSettings)} != null");
-
             _provider = versionDescriptionProvider;
             _settings = swaggerSettings.Value ?? new SwaggerSettings();
         }
