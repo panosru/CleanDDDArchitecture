@@ -6,7 +6,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
 
     /// <summary>
     /// </summary>
-    internal struct AccountProfileResponse
+    internal readonly struct AccountProfileResponse
     {
         /// <summary>
         /// </summary>

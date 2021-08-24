@@ -14,7 +14,6 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Aviant.DDD.Core.Messages;
     using Aviant.DDD.Core.Services;
     using Aviant.DDD.Infrastructure.CrossCutting;
-    using Aviant.DDD.Infrastructure.Services;
     using Domains.Account.CrossCutting;
     using Domains.Todo.CrossCutting;
     using Domains.Weather.CrossCutting;
