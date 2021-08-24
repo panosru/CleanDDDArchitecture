@@ -5,6 +5,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using Aviant.DDD.Core.Timing;
     using Aviant.DDD.Infrastructure.CrossCutting;
     using Domains.Account.CrossCutting;
     using Domains.Todo.CrossCutting;
@@ -71,6 +72,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                     {
                         webBuilder.ConfigureAppConfiguration(SetupConfiguration);
                         webBuilder.ConfigureLogging(SetupLogging);
+                        webBuilder.ConfigureServices(SetupServices);
                         webBuilder.UseStartup<Startup>();
                     });
 
@@ -104,6 +106,17 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             Log.Logger = new LoggerConfiguration()
                .ReadFrom.Configuration(DependencyInjectionRegistry.SetConfiguration(configurationBuilder))
                .CreateLogger();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="hostBuilderContext"></param>
+        /// <param name="services"></param>
+        private static void SetupServices(
+            WebHostBuilderContext hostBuilderContext,
+            IServiceCollection    services)
+        {
+            Clock.Provider = ClockProviders.Utc;
         }
 
         /// <summary>
