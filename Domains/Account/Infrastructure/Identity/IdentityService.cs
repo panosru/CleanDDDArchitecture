@@ -11,6 +11,7 @@
     using System.Web;
     using Application.Identity;
     using Aviant.DDD.Application.Identity;
+    using Aviant.DDD.Core.Timing;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
@@ -116,6 +117,8 @@
                 encryptingCredentials: encryptingCredentials,
                 notBefore: DateTime.UtcNow,
                 issuedAt: DateTime.UtcNow);
+                notBefore: Clock.Now,
+                issuedAt: Clock.Now);
 
             return new
             {
