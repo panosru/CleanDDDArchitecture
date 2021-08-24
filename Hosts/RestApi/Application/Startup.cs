@@ -160,8 +160,6 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
 
             services.AddFeatureFlags();
 
-            services.AddTransient<IDateTimeService, DateTimeService>();
-
             services.AddScoped<IMessages, Messages>();
             services.AddScoped<IApplicationEventDispatcher, ApplicationEventDispatcher>();
 

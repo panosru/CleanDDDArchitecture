@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using Aviant.DDD.Application.Exceptions;
-    using Aviant.DDD.Application.Services;
     using Aviant.DDD.Core.Services;
+    using Aviant.DDD.Core.Timing;
     using Aviant.DDD.Infrastructure.CrossCutting;
     using Events;
     using MediatR;
@@ -156,8 +156,6 @@
                .GetType()
                .GetProperty("Occurred")
               ?.GetValue(exception)
-         ?? ServiceLocator.ServiceContainer.GetService<IDateTimeService>(
-                    typeof(IDateTimeService))
-               .Now(true);
+         ?? Clock.Now;
     }
 }
