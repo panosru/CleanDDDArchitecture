@@ -1,0 +1,19 @@
+﻿@page "/"
+@model IndexModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@using CleanDDDArchitecture.Hosts.WebApp.Core.Localisation
+@inject IViewLocalizer _localizer
+@inject IHtmlLocalizer<SharedResource> _sharedLocalizer
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome!</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<h3>@_localizer["NAME", "Panagiotis", "Kosmidis"]</h3>
+@_sharedLocalizer["_TEST_", "foo", "bar"]
+<hr />
+<a asp-area="Foo" asp-page="Demo" asp-route-slug="test-slug">Testing</a>

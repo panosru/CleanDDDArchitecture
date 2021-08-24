@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>CleanDDDArchitecture.Hosts.WebApp.Tests.Ui</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Hosts.WebApp.Tests.Ui</AssemblyName>
+    </PropertyGroup>
+
+</Project>
