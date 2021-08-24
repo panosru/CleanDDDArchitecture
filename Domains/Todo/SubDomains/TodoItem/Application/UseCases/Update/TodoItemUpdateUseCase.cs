@@ -23,7 +23,9 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
                     cancellationToken)
                .ConfigureAwait(false);
 
-            if (!requestResult.Succeeded)
+            if (requestResult.Succeeded)
+                Output.Ok(requestResult.Payload());
+            else
                 Output.Invalid(requestResult.Messages.First());
         }
     }

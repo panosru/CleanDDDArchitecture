@@ -26,6 +26,12 @@
         void ITodoItemUpdateOutput.Invalid(string message) =>
             ViewModel = BadRequest(message);
 
+        /// <summary>
+        /// </summary>
+        /// <param name="object"></param>
+        void ITodoItemUpdateOutput.Ok(object? @object) =>
+            ViewModel = Ok(@object);
+
         #endregion
 
 
