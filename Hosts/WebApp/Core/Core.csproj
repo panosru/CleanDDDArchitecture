@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+    <PropertyGroup>
+        <RootNamespace>CleanDDDArchitecture.Hosts.WebApp.Core</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Hosts.WebApp.Core</AssemblyName>
+        <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <SupportedPlatform Include="browser" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.9" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.9" />
+        <PackageReference Include="Westwind.AspnetCore.LiveReload" Version="0.3.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Pages\Components" />
+      <Folder Include="Pages\Shared" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Resources\Pages\Index.el.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Index.el.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Pages\Index.en.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Index.en.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>
