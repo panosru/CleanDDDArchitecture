@@ -1,0 +1,13 @@
+@model Dictionary<string, string>
+<small class="culture-selector"><i class="fas fa-globe"></i>
+    @if ("en" == Model["CurrentCulture"])
+    {
+        <a class="text-dark" href="@Model["ReturnUrl"]" title="Δείτε Ελληνικό περιεχόμενο">Ελληνικά</a>
+    }
+
+    @if ("el" == Model["CurrentCulture"])
+    {
+        <a class="text-dark" href="@Model["ReturnUrl"]" title="Show English content">English</a>
+    }
+</small>
+<strong>@Model["CurrentCulture"]</strong>
