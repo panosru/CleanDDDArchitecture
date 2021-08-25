@@ -5,6 +5,7 @@ namespace CleanDDDArchitecture.Domains.Weather.CrossCutting
     using Application.UseCases.SyncWeatherService;
     using Aviant.DDD.Application.Orchestration;
     using Aviant.DDD.Infrastructure.CrossCutting;
+    using Infrastructure;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -21,6 +22,8 @@ namespace CleanDDDArchitecture.Domains.Weather.CrossCutting
 
         public static IServiceCollection AddWeatherDomain(this IServiceCollection services)
         {
+            services.AddScoped(_ => new WeatherDomainConfiguration(Configuration));
+
             services.AddScoped<IOrchestrator, Orchestrator>();
 
             services.AddScoped(typeof(AddCityUseCase));
