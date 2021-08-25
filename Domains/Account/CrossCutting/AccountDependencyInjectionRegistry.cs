@@ -29,7 +29,9 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using Aviant.DDD.Infrastructure.Persistence;
     using Aviant.DDD.Infrastructure.Persistence.EventStore;
     using Aviant.DDD.Infrastructure.Persistence.Kafka;
+    using Core;
     using Core.Exceptions;
+    using Infrastructure;
     using Infrastructure.Identity;
     using Infrastructure.Persistence.Contexts;
     using Infrastructure.Repositories;
@@ -66,6 +68,8 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
 
         public static IServiceCollection AddAccountDomain(this IServiceCollection services)
         {
+            services.AddTransient<IAccountDomainConfiguration>(_ => new AccountDomainConfiguration(Configuration));
+
             // By default, Microsoft has some legacy claim mapping that converts
             // standard JWT claims into proprietary ones. This removes those mappings.
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();

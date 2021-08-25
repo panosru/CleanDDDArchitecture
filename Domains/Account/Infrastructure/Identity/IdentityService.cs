@@ -12,23 +12,21 @@
     using Application.Identity;
     using Aviant.DDD.Application.Identity;
     using Aviant.DDD.Core.Timing;
+    using Core;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.IdentityModel.Tokens;
     using IdentityResult = Aviant.DDD.Application.Identity.IdentityResult;
 
     public sealed class IdentityService : IIdentityService //TODO: This requires a major refactor
     {
-        private readonly IConfiguration _config;
+        private readonly IAccountDomainConfiguration _config;
 
         private readonly UserManager<AccountUser> _userManager;
 
-        private const double ExpiryDurationMinutes = 30;
-
         public IdentityService(
-            UserManager<AccountUser> userManager,
-            IConfiguration           config)
+            UserManager<AccountUser>   userManager,
+            IAccountDomainConfiguration config)
         {
             _userManager = userManager;
             _config      = config;
@@ -87,9 +85,9 @@
             // Creating claims based on the system and user information
             Claim[] claims =
             {
-                new(JwtRegisteredClaimNames.Sub, _config["Jwt:Subject"]),
+                new(JwtRegisteredClaimNames.Sub, _config.GetValue("Jwt:Subject")),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString(CultureInfo.InvariantCulture)),
+                new(JwtRegisteredClaimNames.Iat, Clock.Now.ToString(CultureInfo.InvariantCulture)),
                 new(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
                 new(JwtRegisteredClaimNames.UniqueName, user.UserName),
                 new(JwtRegisteredClaimNames.Email, user.Email),
@@ -97,8 +95,8 @@
                 new(JwtRegisteredClaimNames.FamilyName, user.LastName)
             };
 
-            SymmetricSecurityKey tokenDecryptionKey = new(Encoding.ASCII.GetBytes(_config["Jwt:Key256Bit"]));
-            SymmetricSecurityKey issuerSigningKey   = new(Encoding.ASCII.GetBytes(_config["Jwt:Key512Bit"]));
+            SymmetricSecurityKey tokenDecryptionKey = new(Encoding.ASCII.GetBytes(_config.GetValue("Jwt:Key256Bit")));
+            SymmetricSecurityKey issuerSigningKey   = new(Encoding.ASCII.GetBytes(_config.GetValue("Jwt:Key512Bit")));
             SigningCredentials   credentials        = new(issuerSigningKey, SecurityAlgorithms.HmacSha256Signature);
 
             EncryptingCredentials encryptingCredentials = new(
@@ -109,14 +107,12 @@
             JwtSecurityTokenHandler tokenHandler = new();
 
             var token = tokenHandler.CreateJwtSecurityToken(
-                _config["Jwt:Issuer"],
-                _config["Jwt:Audience"],
+                _config.GetValue("Jwt:Issuer"),
+                _config.GetValue("Jwt:Audience"),
                 new ClaimsIdentity(claims),
-                expires: DateTime.UtcNow.AddMinutes(ExpiryDurationMinutes),
+                expires: Clock.Now.AddMinutes(double.Parse(_config.GetValue("Jwt:ExpirationDurationInMunuts"))),
                 signingCredentials: credentials,
                 encryptingCredentials: encryptingCredentials,
-                notBefore: DateTime.UtcNow,
-                issuedAt: DateTime.UtcNow);
                 notBefore: Clock.Now,
                 issuedAt: Clock.Now);
 
