@@ -2,6 +2,9 @@
 eventsTopicName: "CleanDDDArchitectureEvents"
 eventsTopicGroupName: "cleandddarchitecture-api-events-consumer"
 
+Jwt:
+  ExpirationDurationInMunuts: 30
+
 FeatureManagement:
   AccountCreate: true
   AccountAuthentication: true
