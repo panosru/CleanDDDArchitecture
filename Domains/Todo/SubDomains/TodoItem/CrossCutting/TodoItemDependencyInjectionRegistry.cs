@@ -7,6 +7,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.CrossCutting
     using Application.UseCases.UpdateDetails;
     using Aviant.DDD.Infrastructure.CrossCutting;
     using Core.Repositories;
+    using Infrastructure;
     using Infrastructure.Persistence.Configurations;
     using Infrastructure.Repositories;
     using Microsoft.Extensions.Configuration;
@@ -28,6 +29,8 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.CrossCutting
 
         public static IServiceCollection AddTodoItemSubDomain(this IServiceCollection services)
         {
+            services.AddScoped(_ => new TodoItemDomainConfiguration(Configuration));
+
             services.AddScoped<ITodoItemRepositoryRead, TodoItemRepositoryRead>();
             services.AddScoped<ITodoItemRepositoryWrite, TodoItemRepositoryWrite>();
 

@@ -7,6 +7,7 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
     using Aviant.DDD.Infrastructure.CrossCutting;
     using Aviant.DDD.Infrastructure.Persistence;
     using Aviant.DDD.Infrastructure.Services;
+    using Infrastructure;
     using Infrastructure.Persistence.Contexts;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
@@ -25,6 +26,8 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
 
         public static IServiceCollection AddTodoDomain(this IServiceCollection services)
         {
+            services.AddScoped(_ => new TodoDomainConfiguration(Configuration));
+
             if (Configuration.GetValue<bool>("UseInMemoryDatabase"))
             {
                 // services.AddDbContext<TodoDbContextWrite>(
