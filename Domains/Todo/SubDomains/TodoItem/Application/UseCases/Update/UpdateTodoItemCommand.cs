@@ -9,6 +9,7 @@
     using Aviant.DDD.Application.Exceptions;
     using Aviant.DDD.Application.Processors;
     using Core.Repositories;
+    using FluentValidation;
     using Todo.Core.Entities;
 
     internal sealed class UpdateTodoItemCommand : Command<TodoItemViewModel>
@@ -23,83 +24,110 @@
             Done  = done;
         }
 
-        public int Id { get; }
+        private int Id { get; }
 
-        public string Title { get; }
+        private string Title { get; }
 
-        public bool Done { get; }
-    }
+        private bool Done { get; }
 
-    internal sealed class UpdateTodoItemCommandHandler
-        : CommandHandler<UpdateTodoItemCommand, TodoItemViewModel>
-    {
-        private readonly IMapper _mapper;
+        #region Nested type: UpdateTodoItemCommandHandler
 
-        private readonly ITodoItemRepositoryRead _todoItemReadRepository;
-
-        private readonly ITodoItemRepositoryWrite _todoItemWriteRepository;
-
-        public UpdateTodoItemCommandHandler(
-            ITodoItemRepositoryRead  todoItemReadRepository,
-            ITodoItemRepositoryWrite todoItemWriteRepository,
-            IMapper                  mapper)
+        internal sealed class UpdateTodoItemCommandHandler
+            : CommandHandler<UpdateTodoItemCommand, TodoItemViewModel>
         {
-            _todoItemReadRepository  = todoItemReadRepository;
-            _todoItemWriteRepository = todoItemWriteRepository;
-            _mapper                  = mapper;
+            private readonly IMapper _mapper;
+
+            private readonly ITodoItemRepositoryRead _todoItemReadRepository;
+
+            private readonly ITodoItemRepositoryWrite _todoItemWriteRepository;
+
+            public UpdateTodoItemCommandHandler(
+                ITodoItemRepositoryRead  todoItemReadRepository,
+                ITodoItemRepositoryWrite todoItemWriteRepository,
+                IMapper                  mapper)
+            {
+                _todoItemReadRepository  = todoItemReadRepository;
+                _todoItemWriteRepository = todoItemWriteRepository;
+                _mapper                  = mapper;
+            }
+
+            public override async Task<TodoItemViewModel> Handle(
+                UpdateTodoItemCommand command,
+                CancellationToken     cancellationToken)
+            {
+                var entity = await _todoItemReadRepository.GetAsync(command.Id, cancellationToken)
+                   .ConfigureAwait(false);
+
+                if (entity is null)
+                    throw new NotFoundException(nameof(TodoItemEntity), command.Id);
+
+                entity.Title       = command.Title;
+                entity.IsCompleted = command.Done;
+
+                await _todoItemWriteRepository.UpdateAsync(entity, cancellationToken)
+                   .ConfigureAwait(false);
+
+                return _mapper.Map<TodoItemViewModel>(entity);
+            }
         }
 
-        public override async Task<TodoItemViewModel> Handle(
-            UpdateTodoItemCommand command,
-            CancellationToken     cancellationToken)
+        #endregion
+
+        #region Nested type: UpdateTodoItemCommandPostProcessor
+
+        internal sealed class UpdateTodoItemCommandPostProcessor
+            : RequestPostProcessor<UpdateTodoItemCommand, TodoItemViewModel>
         {
-            var entity = await _todoItemReadRepository.GetAsync(command.Id, cancellationToken)
-               .ConfigureAwait(false);
+            private readonly IApplicationEventDispatcher _applicationEventDispatcher;
 
-            if (entity is null)
-                throw new NotFoundException(nameof(TodoItemEntity), command.Id);
+            public UpdateTodoItemCommandPostProcessor(IApplicationEventDispatcher applicationEventDispatcher) =>
+                _applicationEventDispatcher = applicationEventDispatcher;
 
-            entity.Title       = command.Title;
-            entity.IsCompleted = command.Done;
+            public override Task Process(
+                UpdateTodoItemCommand request,
+                TodoItemViewModel     response,
+                CancellationToken     cancellationToken)
+            {
+                if (!response.IsCompleted)
+                    return Task.CompletedTask;
 
-            await _todoItemWriteRepository.UpdateAsync(entity, cancellationToken)
-               .ConfigureAwait(false);
+                Console.WriteLine($"{nameof(TodoCompletedApplicationEvent)} added");
+                _applicationEventDispatcher.AddPostCommitEvent(new TodoCompletedApplicationEvent(response));
 
-            return _mapper.Map<TodoItemViewModel>(entity);
-        }
-    }
-
-    internal sealed class UpdateTodoItemCommandPreProcessor : RequestPreProcessor<UpdateTodoItemCommand>
-    {
-        public override Task Process(
-            UpdateTodoItemCommand request,
-            CancellationToken     cancellationToken)
-        {
-            Console.WriteLine($"Pre handle {request.Title} {request.Done} with ID {request.Id}");
-
-            return Task.CompletedTask;
-        }
-    }
-
-    internal sealed class UpdateTodoItemCommandPostProcessor : RequestPostProcessor<UpdateTodoItemCommand, TodoItemViewModel>
-    {
-        private readonly IApplicationEventDispatcher _applicationEventDispatcher;
-
-        public UpdateTodoItemCommandPostProcessor(IApplicationEventDispatcher applicationEventDispatcher) =>
-            _applicationEventDispatcher = applicationEventDispatcher;
-
-        public override Task Process(
-            UpdateTodoItemCommand request,
-            TodoItemViewModel     response,
-            CancellationToken     cancellationToken)
-        {
-            if (!response.IsCompleted)
                 return Task.CompletedTask;
-
-            Console.WriteLine($"{nameof(TodoCompletedApplicationEvent)} added");
-            _applicationEventDispatcher.AddPostCommitEvent(new TodoCompletedApplicationEvent(response));
-
-            return Task.CompletedTask;
+            }
         }
+
+        #endregion
+
+        #region Nested type: UpdateTodoItemCommandPreProcessor
+
+        internal sealed class UpdateTodoItemCommandPreProcessor : RequestPreProcessor<UpdateTodoItemCommand>
+        {
+            public override Task Process(
+                UpdateTodoItemCommand request,
+                CancellationToken     cancellationToken)
+            {
+                Console.WriteLine($"Pre handle {request.Title} {request.Done} with ID {request.Id}");
+
+                return Task.CompletedTask;
+            }
+        }
+
+        #endregion
+
+        #region Nested type: UpdateTodoItemCommandValidator
+
+        internal sealed class UpdateTodoItemCommandValidator : AbstractValidator<UpdateTodoItemCommand>
+        {
+            public UpdateTodoItemCommandValidator()
+            {
+                RuleFor(v => v.Title)
+                   .MaximumLength(200)
+                   .NotEmpty();
+            }
+        }
+
+        #endregion
     }
 }

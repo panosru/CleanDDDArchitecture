@@ -13,37 +13,41 @@
     {
         public DeleteTodoListCommand(int id) => Id = id;
 
-        public int Id { get; }
-    }
+        private int Id { get; }
 
-    internal sealed class DeleteTodoListCommandHandler : CommandHandler<DeleteTodoListCommand>
-    {
-        private readonly ITodoListRepositoryRead _todoListReadRepository;
+        #region Nested type: DeleteTodoListCommandHandler
 
-        private readonly ITodoListRepositoryWrite _todoListWriteRepository;
-
-        public DeleteTodoListCommandHandler(
-            ITodoListRepositoryRead  todoListReadRepository,
-            ITodoListRepositoryWrite todoListWriteRepository)
+        internal sealed class DeleteTodoListCommandHandler : CommandHandler<DeleteTodoListCommand>
         {
-            _todoListReadRepository  = todoListReadRepository;
-            _todoListWriteRepository = todoListWriteRepository;
+            private readonly ITodoListRepositoryRead _todoListReadRepository;
+
+            private readonly ITodoListRepositoryWrite _todoListWriteRepository;
+
+            public DeleteTodoListCommandHandler(
+                ITodoListRepositoryRead  todoListReadRepository,
+                ITodoListRepositoryWrite todoListWriteRepository)
+            {
+                _todoListReadRepository  = todoListReadRepository;
+                _todoListWriteRepository = todoListWriteRepository;
+            }
+
+            public override async Task<Unit> Handle(DeleteTodoListCommand command, CancellationToken cancellationToken)
+            {
+                var entity = await _todoListReadRepository
+                   .FindBy(l => l.Id == command.Id)
+                   .SingleOrDefaultAsync(cancellationToken)
+                   .ConfigureAwait(false);
+
+                if (entity is null)
+                    throw new NotFoundException(nameof(TodoListEntity), command.Id);
+
+                await _todoListWriteRepository.DeleteAsync(entity, cancellationToken)
+                   .ConfigureAwait(false);
+
+                return new Unit();
+            }
         }
 
-        public override async Task<Unit> Handle(DeleteTodoListCommand command, CancellationToken cancellationToken)
-        {
-            var entity = await _todoListReadRepository
-               .FindBy(l => l.Id == command.Id)
-               .SingleOrDefaultAsync(cancellationToken)
-               .ConfigureAwait(false);
-
-            if (entity is null)
-                throw new NotFoundException(nameof(TodoListEntity), command.Id);
-
-            await _todoListWriteRepository.DeleteAsync(entity, cancellationToken)
-               .ConfigureAwait(false);
-
-            return new Unit();
-        }
+        #endregion
     }
 }

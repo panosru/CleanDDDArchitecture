@@ -22,32 +22,36 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
 
         public AccountAggregateId AggregateId { get; }
 
-        public string FirstName { get; }
+        private string FirstName { get; }
 
-        public string LastName { get; }
+        private string LastName { get; }
 
-        public string Email { get; }
-    }
+        private string Email { get; }
 
-    internal sealed class UpdateAccountHandler
-        : CommandHandler<UpdateAccountCommand, AccountAggregate, AccountAggregateId>
-    {
-        public override async Task<AccountAggregate> Handle(
-            UpdateAccountCommand command,
-            CancellationToken    cancellationToken)
+        #region Nested type: UpdateAccountHandler
+
+        internal sealed class UpdateAccountHandler
+            : CommandHandler<UpdateAccountCommand, AccountAggregate, AccountAggregateId>
         {
-            var account = await EventsService
-               .RehydrateAsync(command.AggregateId, cancellationToken)
-               .ConfigureAwait(false);
+            public override async Task<AccountAggregate> Handle(
+                UpdateAccountCommand command,
+                CancellationToken    cancellationToken)
+            {
+                var account = await EventsService
+                   .RehydrateAsync(command.AggregateId, cancellationToken)
+                   .ConfigureAwait(false);
 
-            if (account is null)
-                throw new ArgumentOutOfRangeException(
-                    nameof(UpdateAccountCommand.AggregateId),
-                    "Invalid account aggregateId");
+                if (account is null)
+                    throw new ArgumentOutOfRangeException(
+                        nameof(AggregateId),
+                        "Invalid account aggregateId");
 
-            account.ChangeDetails(command.FirstName, command.LastName, command.Email);
+                account.ChangeDetails(command.FirstName, command.LastName, command.Email);
 
-            return account;
+                return account;
+            }
         }
+
+        #endregion
     }
 }

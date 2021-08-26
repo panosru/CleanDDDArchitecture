@@ -8,33 +8,39 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherS
     using Polly;
 
     internal sealed class SyncWeatherServiceCommand : ICommand
-    { }
-
-    internal sealed class SyncWeatherServiceCommandHandler
-        : CommandHandler<SyncWeatherServiceCommand>
     {
-        private Random Random { get; } = new Random();
+        #region Nested type: SyncWeatherServiceCommandHandler
 
-        public override async Task<Unit> Handle(SyncWeatherServiceCommand command, CancellationToken cancellationToken)
+        internal sealed class SyncWeatherServiceCommandHandler
+            : CommandHandler<SyncWeatherServiceCommand>
         {
-            // Perform some operations here
-            await Task.Delay(3000, cancellationToken)
-               .ConfigureAwait(false);
+            private Random Random { get; } = new Random();
 
-            // 40% probability to fail
-            if (Random.Next(100) <= 40)
-                throw new Exception("Something gone really wrong...");
+            public override async Task<Unit> Handle(
+                SyncWeatherServiceCommand command,
+                CancellationToken         cancellationToken)
+            {
+                // Perform some operations here
+                await Task.Delay(3000, cancellationToken)
+                   .ConfigureAwait(false);
 
-            Console.WriteLine("Success message");
+                // 40% probability to fail
+                if (Random.Next(100) <= 40)
+                    throw new Exception("Something gone really wrong...");
 
-            return Unit.Value;
+                Console.WriteLine("Success message");
+
+                return Unit.Value;
+            }
+
+            public override IAsyncPolicy RetryPolicy() =>
+                Policy
+                   .Handle<Exception>()
+                   .WaitAndRetryAsync(
+                        2,
+                        i => TimeSpan.FromSeconds(i));
         }
 
-        public override IAsyncPolicy RetryPolicy() =>
-            Policy
-               .Handle<Exception>()
-               .WaitAndRetryAsync(
-                    2,
-                    i => TimeSpan.FromSeconds(i));
+        #endregion
     }
 }
