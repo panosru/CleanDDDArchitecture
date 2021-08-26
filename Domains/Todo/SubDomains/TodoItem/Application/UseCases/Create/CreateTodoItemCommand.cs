@@ -6,6 +6,7 @@
     using AutoMapper;
     using Aviant.DDD.Application.Commands;
     using Core.Repositories;
+    using FluentValidation;
     using Todo.Core.Entities;
 
     internal sealed class CreateTodoItemCommand : Command<Lazy<TodoItemViewModel>>
@@ -16,40 +17,58 @@
             Title  = title;
         }
 
-        public int ListId { get; }
+        private int ListId { get; }
 
-        public string Title { get; }
-    }
+        private string Title { get; }
 
-    internal sealed class CreateTodoItemCommandHandler
-        : CommandHandler<CreateTodoItemCommand, Lazy<TodoItemViewModel>>
-    {
-        private readonly IMapper _mapper;
+        #region Nested type: CreateTodoItemCommandHandler
 
-        private readonly ITodoItemRepositoryWrite _todoItemWriteRepository;
-
-        public CreateTodoItemCommandHandler(
-            ITodoItemRepositoryWrite todoItemWriteRepository,
-            IMapper                  mapper)
+        internal sealed class CreateTodoItemCommandHandler
+            : CommandHandler<CreateTodoItemCommand, Lazy<TodoItemViewModel>>
         {
-            _todoItemWriteRepository = todoItemWriteRepository;
-            _mapper                  = mapper;
-        }
+            private readonly IMapper _mapper;
 
-        public override async Task<Lazy<TodoItemViewModel>> Handle(
-            CreateTodoItemCommand command,
-            CancellationToken     cancellationToken)
-        {
-            TodoItemEntity entity = new()
+            private readonly ITodoItemRepositoryWrite _todoItemWriteRepository;
+
+            public CreateTodoItemCommandHandler(
+                ITodoItemRepositoryWrite todoItemWriteRepository,
+                IMapper                  mapper)
             {
-                ListId = command.ListId,
-                Title  = command.Title
-            };
+                _todoItemWriteRepository = todoItemWriteRepository;
+                _mapper                  = mapper;
+            }
 
-            await _todoItemWriteRepository.InsertAsync(entity, cancellationToken)
-               .ConfigureAwait(false);
+            public override async Task<Lazy<TodoItemViewModel>> Handle(
+                CreateTodoItemCommand command,
+                CancellationToken     cancellationToken)
+            {
+                TodoItemEntity entity = new()
+                {
+                    ListId = command.ListId,
+                    Title  = command.Title
+                };
 
-            return new Lazy<TodoItemViewModel>(() => _mapper.Map<TodoItemViewModel>(entity));
+                await _todoItemWriteRepository.InsertAsync(entity, cancellationToken)
+                   .ConfigureAwait(false);
+
+                return new Lazy<TodoItemViewModel>(() => _mapper.Map<TodoItemViewModel>(entity));
+            }
         }
+
+        #endregion
+
+        #region Nested type: CreateTodoItemCommandValidator
+
+        internal sealed class CreateTodoItemCommandValidator : AbstractValidator<CreateTodoItemCommand>
+        {
+            public CreateTodoItemCommandValidator()
+            {
+                RuleFor(v => v.Title)
+                   .MaximumLength(200)
+                   .NotEmpty();
+            }
+        }
+
+        #endregion
     }
 }

@@ -9,13 +9,13 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
     public sealed class CreateAccountCommand : Command<AccountAggregate, AccountAggregateId>
     {
         public CreateAccountCommand(
-            string username,
-            string password,
-            string firstName,
-            string lastName,
-            string email,
+            string              username,
+            string              password,
+            string              firstName,
+            string              lastName,
+            string              email,
             IEnumerable<string> roles,
-            bool emailConfirmed)
+            bool                emailConfirmed)
         {
             UserName       = username;
             Password       = password;
@@ -26,35 +26,39 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
             EmailConfirmed = emailConfirmed;
         }
 
-        internal string UserName { get; }
+        private string UserName { get; }
 
-        internal string Password { get; }
+        private string Password { get; }
 
-        internal string FirstName { get; }
+        private string FirstName { get; }
 
-        internal string LastName { get; }
+        private string LastName { get; }
 
-        internal string Email { get; }
+        private string Email { get; }
 
-        internal IEnumerable<string> Roles { get; }
+        private IEnumerable<string> Roles { get; }
 
-        internal bool EmailConfirmed { get; }
-    }
+        private bool EmailConfirmed { get; }
 
-    public sealed class CreateAccountHandler
-        : CommandHandler<CreateAccountCommand, AccountAggregate, AccountAggregateId>
-    {
-        public override Task<AccountAggregate> Handle(
-            CreateAccountCommand command,
-            CancellationToken    cancellationToken) =>
-            Task.FromResult(
-                AccountAggregate.Create(
-                    command.UserName,
-                    command.Password,
-                    command.FirstName,
-                    command.LastName,
-                    command.Email,
-                    command.Roles,
-                    command.EmailConfirmed));
+        #region Nested type: CreateAccountHandler
+
+        public sealed class CreateAccountHandler
+            : CommandHandler<CreateAccountCommand, AccountAggregate, AccountAggregateId>
+        {
+            public override Task<AccountAggregate> Handle(
+                CreateAccountCommand command,
+                CancellationToken    cancellationToken) =>
+                Task.FromResult(
+                    AccountAggregate.Create(
+                        command.UserName,
+                        command.Password,
+                        command.FirstName,
+                        command.LastName,
+                        command.Email,
+                        command.Roles,
+                        command.EmailConfirmed));
+        }
+
+        #endregion
     }
 }

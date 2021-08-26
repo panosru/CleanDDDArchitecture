@@ -9,30 +9,34 @@
     using Services;
 
     internal sealed class GetWeatherForecastsQuery : Query<IEnumerable<WeatherForecastService>>
-    { }
-
-    internal sealed class GetWeatherForecastsQueryHandler
-        : QueryHandler<GetWeatherForecastsQuery, IEnumerable<WeatherForecastService>>
     {
-        private static readonly string[] Summaries =
+        #region Nested type: GetWeatherForecastsQueryHandler
+
+        internal sealed class GetWeatherForecastsQueryHandler
+            : QueryHandler<GetWeatherForecastsQuery, IEnumerable<WeatherForecastService>>
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+            private static readonly string[] Summaries =
+            {
+                "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+            };
 
-        public override Task<IEnumerable<WeatherForecastService>> Handle(
-            GetWeatherForecastsQuery request,
-            CancellationToken        cancellationToken)
-        {
-            var rng = new Random();
+            public override Task<IEnumerable<WeatherForecastService>> Handle(
+                GetWeatherForecastsQuery request,
+                CancellationToken        cancellationToken)
+            {
+                var rng = new Random();
 
-            IEnumerable<WeatherForecastService> vm = Enumerable.Range(1, 5)
-               .Select(
-                    index => new WeatherForecastService(
-                        DateTime.Now.AddDays(index),
-                        rng.Next(-20, 55),
-                        Summaries[rng.Next(Summaries.Length)]));
+                IEnumerable<WeatherForecastService> vm = Enumerable.Range(1, 5)
+                   .Select(
+                        index => new WeatherForecastService(
+                            DateTime.Now.AddDays(index),
+                            rng.Next(-20, 55),
+                            Summaries[rng.Next(Summaries.Length)]));
 
-            return Task.FromResult(vm);
+                return Task.FromResult(vm);
+            }
         }
+
+        #endregion
     }
 }

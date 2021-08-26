@@ -9,23 +9,27 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
     {
         public GetTodoItemQuery(int id) => Id = id;
 
-        public int Id { get; }
-    }
+        private int Id { get; }
 
-    internal sealed class GetTodoItemQueryHandler : QueryHandler<GetTodoItemQuery, string>
-    {
-        private readonly ITodoItemRepositoryRead _todoItemReadRepository;
+        #region Nested type: GetTodoItemQueryHandler
 
-        public GetTodoItemQueryHandler(ITodoItemRepositoryRead todoItemReadRepository) =>
-            _todoItemReadRepository = todoItemReadRepository;
-
-        public override async Task<string> Handle(GetTodoItemQuery request, CancellationToken cancellationToken)
+        internal sealed class GetTodoItemQueryHandler : QueryHandler<GetTodoItemQuery, string>
         {
-            var todoName = await _todoItemReadRepository
-               .FirstOrDefaultAsync(request.Id, cancellationToken)
-               .ConfigureAwait(false);
+            private readonly ITodoItemRepositoryRead _todoItemReadRepository;
 
-            return todoName.Title;
+            public GetTodoItemQueryHandler(ITodoItemRepositoryRead todoItemReadRepository) =>
+                _todoItemReadRepository = todoItemReadRepository;
+
+            public override async Task<string> Handle(GetTodoItemQuery request, CancellationToken cancellationToken)
+            {
+                var todoName = await _todoItemReadRepository
+                   .FirstOrDefaultAsync(request.Id, cancellationToken)
+                   .ConfigureAwait(false);
+
+                return todoName.Title;
+            }
         }
+
+        #endregion
     }
 }

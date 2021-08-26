@@ -23,48 +23,52 @@
             Note     = note;
         }
 
-        public int Id { get; }
+        private int Id { get; }
 
-        public int ListId { get; }
+        private int ListId { get; }
 
-        public PriorityLevel Priority { get; }
+        private PriorityLevel Priority { get; }
 
-        public string Note { get; }
-    }
+        private string Note { get; }
 
-    internal sealed class UpdateTodoItemDetailCommandHandler
-        : CommandHandler<UpdateTodoItemDetailCommand>
-    {
-        private readonly ITodoItemRepositoryRead _todoItemReadRepository;
+        #region Nested type: UpdateTodoItemDetailCommandHandler
 
-        private readonly ITodoItemRepositoryWrite _todoItemWriteRepository;
-
-        public UpdateTodoItemDetailCommandHandler(
-            ITodoItemRepositoryRead  todoItemReadRepository,
-            ITodoItemRepositoryWrite todoItemWriteRepository)
+        internal sealed class UpdateTodoItemDetailCommandHandler
+            : CommandHandler<UpdateTodoItemDetailCommand>
         {
-            _todoItemReadRepository  = todoItemReadRepository;
-            _todoItemWriteRepository = todoItemWriteRepository;
+            private readonly ITodoItemRepositoryRead _todoItemReadRepository;
+
+            private readonly ITodoItemRepositoryWrite _todoItemWriteRepository;
+
+            public UpdateTodoItemDetailCommandHandler(
+                ITodoItemRepositoryRead  todoItemReadRepository,
+                ITodoItemRepositoryWrite todoItemWriteRepository)
+            {
+                _todoItemReadRepository  = todoItemReadRepository;
+                _todoItemWriteRepository = todoItemWriteRepository;
+            }
+
+            public override async Task<Unit> Handle(
+                UpdateTodoItemDetailCommand command,
+                CancellationToken           cancellationToken)
+            {
+                var entity = await _todoItemReadRepository.GetAsync(command.Id, cancellationToken)
+                   .ConfigureAwait(false);
+
+                if (entity is null)
+                    throw new NotFoundException(nameof(TodoItemEntity), command.Id);
+
+                entity.ListId   = command.ListId;
+                entity.Priority = command.Priority;
+                entity.Note     = command.Note;
+
+                await _todoItemWriteRepository.UpdateAsync(entity, cancellationToken)
+                   .ConfigureAwait(false);
+
+                return new Unit();
+            }
         }
 
-        public override async Task<Unit> Handle(
-            UpdateTodoItemDetailCommand command,
-            CancellationToken           cancellationToken)
-        {
-            var entity = await _todoItemReadRepository.GetAsync(command.Id, cancellationToken)
-               .ConfigureAwait(false);
-
-            if (entity is null)
-                throw new NotFoundException(nameof(TodoItemEntity), command.Id);
-
-            entity.ListId   = command.ListId;
-            entity.Priority = command.Priority;
-            entity.Note     = command.Note;
-
-            await _todoItemWriteRepository.UpdateAsync(entity, cancellationToken)
-               .ConfigureAwait(false);
-
-            return new Unit();
-        }
+        #endregion
     }
 }
