@@ -2,8 +2,13 @@
 
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails.Events
 {
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Aggregates;
     using Aviant.DDD.Core.DomainEvents;
+    using Aviant.DDD.Core.EventBus;
+    using Polly;
 
     public sealed class AccountUpdatedDomainEvent : DomainEvent<AccountAggregate, AccountAggregateId>
     {
@@ -26,5 +31,24 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
         public string LastName { get; private set; }
 
         public string Email { get; private set; }
+
+        #region Nested type: AccountUpdatedDomainEventConsumer
+
+        internal sealed class AccountUpdatedDomainEventConsumer : DomainEventHandler<AccountUpdatedDomainEvent>
+        {
+            public override Task Handle(
+                EventReceived<AccountUpdatedDomainEvent> @event,
+                CancellationToken                        cancellationToken) =>
+                throw new ArgumentOutOfRangeException();
+
+            public override IAsyncPolicy RetryPolicy() =>
+                Policy
+                   .Handle<ArgumentOutOfRangeException>()
+                   .WaitAndRetryAsync(
+                        3,
+                        i => TimeSpan.FromSeconds(i));
+        }
+
+        #endregion
     }
 }
