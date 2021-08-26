@@ -13,35 +13,39 @@
     using Todo.Application.Persistence;
 
     internal sealed class GetTodosQuery : Query<TodosVm>
-    { }
-
-    internal sealed class GetTodosQueryHandler : QueryHandler<GetTodosQuery, TodosVm>
     {
-        private readonly ITodoDbContextRead _context;
+        #region Nested type: GetTodosQueryHandler
 
-        private readonly IMapper _mapper;
-
-        public GetTodosQueryHandler(ITodoDbContextRead context, IMapper mapper)
+        internal sealed class GetTodosQueryHandler : QueryHandler<GetTodosQuery, TodosVm>
         {
-            _context = context;
-            _mapper  = mapper;
-        }
+            private readonly ITodoDbContextRead _context;
 
-        public override async Task<TodosVm> Handle(GetTodosQuery request, CancellationToken cancellationToken)
-        {
-            return new TodosVm
+            private readonly IMapper _mapper;
+
+            public GetTodosQueryHandler(ITodoDbContextRead context, IMapper mapper)
             {
-                PriorityLevels = Enum.GetValues(typeof(PriorityLevel))
-                   .Cast<PriorityLevel>()
-                   .Select(p => new PriorityLevelDto { Value = (int)p, Name = p.ToString() })
-                   .ToList(),
+                _context = context;
+                _mapper  = mapper;
+            }
 
-                Lists = await _context.TodoLists
-                   .ProjectTo<TodoListDto>(_mapper.ConfigurationProvider)
-                   .OrderBy(t => t.Title)
-                   .ToListAsync(cancellationToken)
-                   .ConfigureAwait(false)
-            };
+            public override async Task<TodosVm> Handle(GetTodosQuery request, CancellationToken cancellationToken)
+            {
+                return new TodosVm
+                {
+                    PriorityLevels = Enum.GetValues(typeof(PriorityLevel))
+                       .Cast<PriorityLevel>()
+                       .Select(p => new PriorityLevelDto { Value = (int)p, Name = p.ToString() })
+                       .ToList(),
+
+                    Lists = await _context.TodoLists
+                       .ProjectTo<TodoListDto>(_mapper.ConfigurationProvider)
+                       .OrderBy(t => t.Title)
+                       .ToListAsync(cancellationToken)
+                       .ConfigureAwait(false)
+                };
+            }
         }
+
+        #endregion
     }
 }

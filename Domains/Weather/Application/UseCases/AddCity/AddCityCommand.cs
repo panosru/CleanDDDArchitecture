@@ -8,14 +8,18 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity
     {
         public AddCityCommand(string city) => City = city;
 
-        public string City { get; }
-    }
+        private string City { get; }
 
-    internal sealed class AddCityCommandHandler
-        : CommandHandler<AddCityCommand, string>
-    {
-        public override Task<string> Handle(AddCityCommand command, CancellationToken cancellationToken) =>
-            // Do some magic here
-            Task.FromResult(command.City);
+        #region Nested type: AddCityCommandHandler
+
+        internal sealed class AddCityCommandHandler
+            : CommandHandler<AddCityCommand, string>
+        {
+            public override Task<string> Handle(AddCityCommand command, CancellationToken cancellationToken) =>
+                // Do some magic here
+                Task.FromResult(command.City);
+        }
+
+        #endregion
     }
 }

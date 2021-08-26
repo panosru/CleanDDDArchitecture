@@ -16,38 +16,42 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
             Email = email;
         }
 
-        public string Token { get; }
+        private string Token { get; }
 
-        public string Email { get; }
-    }
+        private string Email { get; }
 
-    internal sealed class ConfirmEmailCommandHandler
-        : CommandHandler<ConfirmEmailCommand, IdentityResult>
-    {
-        private readonly IIdentityService _identityIdentityService;
+        #region Nested type: ConfirmEmailCommandHandler
 
-        public ConfirmEmailCommandHandler(IIdentityService identityIdentityService) =>
-            _identityIdentityService = identityIdentityService;
-
-        public override async Task<IdentityResult> Handle(
-            ConfirmEmailCommand command,
-            CancellationToken   cancellationToken)
+        internal sealed class ConfirmEmailCommandHandler
+            : CommandHandler<ConfirmEmailCommand, IdentityResult>
         {
-            try
-            {
-                var token = Encoding.UTF8.GetString(
-                    Convert.FromBase64String(HttpUtility.UrlDecode(command.Token)));
+            private readonly IIdentityService _identityIdentityService;
 
-                return await _identityIdentityService.ConfirmEmailAsync(
-                        token,
-                        command.Email,
-                        cancellationToken)
-                   .ConfigureAwait(false);
-            }
-            catch (Exception e)
+            public ConfirmEmailCommandHandler(IIdentityService identityIdentityService) =>
+                _identityIdentityService = identityIdentityService;
+
+            public override async Task<IdentityResult> Handle(
+                ConfirmEmailCommand command,
+                CancellationToken   cancellationToken)
             {
-                return IdentityResult.Failure(new[] { e.Message });
+                try
+                {
+                    var token = Encoding.UTF8.GetString(
+                        Convert.FromBase64String(HttpUtility.UrlDecode(command.Token)));
+
+                    return await _identityIdentityService.ConfirmEmailAsync(
+                            token,
+                            command.Email,
+                            cancellationToken)
+                       .ConfigureAwait(false);
+                }
+                catch (Exception e)
+                {
+                    return IdentityResult.Failure(new[] { e.Message });
+                }
             }
         }
+
+        #endregion
     }
 }

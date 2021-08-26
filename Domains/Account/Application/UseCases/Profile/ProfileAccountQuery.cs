@@ -10,23 +10,25 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Profile
 
     internal sealed class ProfileAccountQuery : Query<AccountUser>
     {
-        // public GetAccountQuery() => Id = id;
-        //
-        // public Guid Id { get; }
-    }
+        #region Nested type: GetAccountQueryHandler
 
-    internal sealed class GetAccountQueryHandler : QueryHandler<ProfileAccountQuery, AccountUser>
-    {
-        private readonly UserManager<AccountUser> _accountUserManager;
+        internal sealed class GetAccountQueryHandler : QueryHandler<ProfileAccountQuery, AccountUser>
+        {
+            private readonly UserManager<AccountUser> _accountUserManager;
 
-        private static ICurrentUserService CurrentUserService =>
-            ServiceLocator.ServiceContainer.GetService<ICurrentUserService>(
-                typeof(ICurrentUserService));
+            public GetAccountQueryHandler(UserManager<AccountUser> accountUserManager) =>
+                _accountUserManager = accountUserManager;
 
-        public GetAccountQueryHandler(UserManager<AccountUser> accountUserManager) =>
-            _accountUserManager = accountUserManager;
+            private static ICurrentUserService CurrentUserService =>
+                ServiceLocator.ServiceContainer.GetService<ICurrentUserService>(
+                    typeof(ICurrentUserService));
 
-        public override Task<AccountUser> Handle(ProfileAccountQuery request, CancellationToken cancellationToken) =>
-            _accountUserManager.FindByIdAsync(CurrentUserService.UserId.ToString());
+            public override Task<AccountUser> Handle(
+                ProfileAccountQuery request,
+                CancellationToken   cancellationToken) =>
+                _accountUserManager.FindByIdAsync(CurrentUserService.UserId.ToString());
+        }
+
+        #endregion
     }
 }

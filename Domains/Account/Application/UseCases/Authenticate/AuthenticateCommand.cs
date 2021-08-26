@@ -14,25 +14,29 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate
             Password = password;
         }
 
-        public string Username { get; }
+        private string Username { get; }
 
-        public string Password { get; }
-    }
+        private string Password { get; }
 
-    internal sealed class AuthenticateCommandHandler : CommandHandler<AuthenticateCommand, object>
-    {
-        private readonly IIdentityService _identityIdentityService;
+        #region Nested type: AuthenticateCommandHandler
 
-        public AuthenticateCommandHandler(IIdentityService identityIdentityService) =>
-            _identityIdentityService = identityIdentityService;
-
-        public override async Task<object> Handle(AuthenticateCommand command, CancellationToken cancellationToken)
+        internal sealed class AuthenticateCommandHandler : CommandHandler<AuthenticateCommand, object>
         {
-            var user = await _identityIdentityService
-               .AuthenticateAsync(command.Username, command.Password, cancellationToken)
-               .ConfigureAwait(false);
+            private readonly IIdentityService _identityIdentityService;
 
-            return user ?? throw new AuthenticationException();
+            public AuthenticateCommandHandler(IIdentityService identityIdentityService) =>
+                _identityIdentityService = identityIdentityService;
+
+            public override async Task<object> Handle(AuthenticateCommand command, CancellationToken cancellationToken)
+            {
+                var user = await _identityIdentityService
+                   .AuthenticateAsync(command.Username, command.Password, cancellationToken)
+                   .ConfigureAwait(false);
+
+                return user ?? throw new AuthenticationException();
+            }
         }
+
+        #endregion
     }
 }

@@ -4,54 +4,101 @@
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Commands;
     using Aviant.DDD.Application.Exceptions;
+    using Core.Enums;
     using Core.Repositories;
+    using FluentValidation;
     using MediatR;
+    using Microsoft.EntityFrameworkCore;
     using Todo.Core.Entities;
 
     /// <summary>
     ///     The command to update a todo list
     /// </summary>
-    public sealed class UpdateTodoListCommand : Command
+    internal sealed class UpdateTodoListCommand : Command
     {
-        internal UpdateTodoListCommand(int id, string title)
+        public UpdateTodoListCommand(int id, string title)
         {
             Id    = id;
             Title = title;
         }
 
-        internal int Id { get; }
+        private int Id { get; }
 
-        internal string Title { get; }
-    }
+        private string Title { get; }
 
-    internal sealed class UpdateTodoListCommandHandler : CommandHandler<UpdateTodoListCommand>
-    {
-        private readonly ITodoListRepositoryRead _todoListReadRepository;
+        #region Nested type: UpdateTodoListCommandHandler
 
-        private readonly ITodoListRepositoryWrite _todoListWriteRepository;
-
-        public UpdateTodoListCommandHandler(
-            ITodoListRepositoryRead  todoListReadRepository,
-            ITodoListRepositoryWrite todoListWriteRepository)
+        internal sealed class UpdateTodoListCommandHandler : CommandHandler<UpdateTodoListCommand>
         {
-            _todoListReadRepository  = todoListReadRepository;
-            _todoListWriteRepository = todoListWriteRepository;
+            private readonly ITodoListRepositoryRead _todoListReadRepository;
+
+            private readonly ITodoListRepositoryWrite _todoListWriteRepository;
+
+            public UpdateTodoListCommandHandler(
+                ITodoListRepositoryRead  todoListReadRepository,
+                ITodoListRepositoryWrite todoListWriteRepository)
+            {
+                _todoListReadRepository  = todoListReadRepository;
+                _todoListWriteRepository = todoListWriteRepository;
+            }
+
+            public override async Task<Unit> Handle(UpdateTodoListCommand command, CancellationToken cancellationToken)
+            {
+                var entity = await _todoListReadRepository.GetAsync(command.Id, cancellationToken)
+                   .ConfigureAwait(false);
+
+                if (entity is null)
+                    throw new NotFoundException(nameof(TodoListEntity), command.Id);
+
+                entity.Title = command.Title;
+
+                await _todoListWriteRepository.UpdateAsync(entity, cancellationToken)
+                   .ConfigureAwait(false);
+
+                return new Unit();
+            }
         }
 
-        public override async Task<Unit> Handle(UpdateTodoListCommand command, CancellationToken cancellationToken)
+        #endregion
+
+        #region Nested type: UpdateTodoListCommandValidator
+
+        /// <summary>
+        ///     The validator of update todo list command
+        /// </summary>
+        public sealed class UpdateTodoListCommandValidator : CommandValidator<UpdateTodoListCommand>
         {
-            var entity = await _todoListReadRepository.GetAsync(command.Id, cancellationToken)
-               .ConfigureAwait(false);
+            private readonly ITodoListRepositoryRead _todoListReadRepository;
 
-            if (entity is null)
-                throw new NotFoundException(nameof(TodoListEntity), command.Id);
+            /// <inheritdoc />
+            public UpdateTodoListCommandValidator(
+                ITodoListRepositoryRead todoListReadRepository,
+                CascadeMode             cascadeMode = CascadeMode.Continue)
+                : base(cascadeMode)
+            {
+                _todoListReadRepository = todoListReadRepository;
 
-            entity.Title = command.Title;
+                RuleFor(v => v.Title)
+                   .NotEmpty()
+                   .WithMessage("Title is required.")
+                   .MaximumLength((int)ValidationSettings.TitleMaxLength)
+                   .WithMessage(
+                        "Title must not exceed {MaxLength} characters, yours had the length of {TotalLength} characters.")
+                   .MustAsync(BeUniqueTitle)
+                   .WithMessage("The specified title already exists.");
+            }
 
-            await _todoListWriteRepository.UpdateAsync(entity, cancellationToken)
-               .ConfigureAwait(false);
-
-            return new Unit();
+            private Task<bool> BeUniqueTitle(
+                UpdateTodoListCommand model,
+                string                title,
+                CancellationToken     cancellationToken)
+            {
+                return _todoListReadRepository
+                   .FindBy(l => l.Id      != model.Id)
+                   .AllAsync(l => l.Title != title, cancellationToken);
+            }
         }
+
+        #endregion
     }
 }

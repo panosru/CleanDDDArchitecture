@@ -11,17 +11,21 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy
     {
         public GetAccountQuery(Guid id) => Id = id;
 
-        public Guid Id { get; }
-    }
+        private Guid Id { get; }
 
-    internal sealed class GetAccountQueryHandler : QueryHandler<GetAccountQuery, AccountUser>
-    {
-        private readonly UserManager<AccountUser> _accountUserManager;
+        #region Nested type: GetAccountQueryHandler
 
-        public GetAccountQueryHandler(UserManager<AccountUser> accountUserManager) =>
-            _accountUserManager = accountUserManager;
+        internal sealed class GetAccountQueryHandler : QueryHandler<GetAccountQuery, AccountUser>
+        {
+            private readonly UserManager<AccountUser> _accountUserManager;
 
-        public override Task<AccountUser> Handle(GetAccountQuery request, CancellationToken cancellationToken) =>
-            _accountUserManager.FindByIdAsync(request.Id.ToString());
+            public GetAccountQueryHandler(UserManager<AccountUser> accountUserManager) =>
+                _accountUserManager = accountUserManager;
+
+            public override Task<AccountUser> Handle(GetAccountQuery request, CancellationToken cancellationToken) =>
+                _accountUserManager.FindByIdAsync(request.Id.ToString());
+        }
+
+        #endregion
     }
 }
