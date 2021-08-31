@@ -9,6 +9,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Aviant.DDD.Application.Behaviours;
     using Aviant.DDD.Application.EventBus;
     using Aviant.DDD.Application.Identity;
+    using Aviant.DDD.Application.Jobs;
     using Aviant.DDD.Application.Processors;
     using Aviant.DDD.Application.Services;
     using Aviant.DDD.Core.Messages;
@@ -31,6 +32,9 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Middlewares;
     using Services;
     using Swagger;
+    using Hangfire;
+    using Hangfire.Dashboard;
+    using Hangfire.PostgreSql;
 
     /// <summary>
     /// </summary>
@@ -151,6 +155,33 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                         options.Cookie.IsEssential = true;
                     });
 
+
+            services.AddSingleton<IJobRunner, JobRunner>();
+
+            services.AddHangfire(
+                    config => config
+                       .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                       .UseSimpleAssemblyNameTypeSerializer()
+                       .UseRecommendedSerializerSettings()
+                       .UsePostgreSqlStorage(
+                            Configuration.GetConnectionString("Hangfire"),
+                            new PostgreSqlStorageOptions
+                            {
+                                QueuePollInterval = TimeSpan.FromSeconds(15)
+                            })
+                       .UseFilter(
+                            new AutomaticRetryAttribute
+                            {
+                                Attempts = 5
+                            }))
+               .AddHangfireServer(
+                    options =>
+                    {
+                        options.ServerName  = $"{Environment.MachineName}.{Guid.NewGuid().ToString()}";
+                        options.WorkerCount = Environment.ProcessorCount * 5;
+                        options.Queues      = new[] { "main", "second", "default" };
+                    });
+
             // Add Infrastructure
             services
                .AddAccountDomain()
@@ -217,6 +248,17 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 app.UseCustomExceptionHandler();
             }
 
+            app.UseHangfireDashboard(
+                "/jobs",
+                new DashboardOptions
+                {
+                    DashboardTitle = "Jobs",
+                    Authorization = new[]
+                    {
+                        new LocalRequestsOnlyAuthorizationFilter()
+                    }
+                });
+
             app.UseHealthChecks("/health");
 
             app.UseSwaggerDocuments();
@@ -237,9 +279,14 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
             app.UseAccountAuth();
 
             app.UseEndpoints(
-                endpoints => endpoints
-                   .MapDefaultControllerRoute()
-                   .RequireAuthorization());
+                endpoints =>
+                {
+                    endpoints
+                       .MapDefaultControllerRoute()
+                       .RequireAuthorization();
+
+                    endpoints.MapHangfireDashboard();
+                });
         }
     }
 }

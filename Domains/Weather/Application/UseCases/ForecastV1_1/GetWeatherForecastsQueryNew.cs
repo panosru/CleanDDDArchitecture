@@ -6,6 +6,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Queries;
+    using Polly;
     using Services;
 
     internal sealed class GetWeatherForecastsQueryNew : Query<IEnumerable<WeatherForecastService>>
@@ -26,7 +27,11 @@
                 GetWeatherForecastsQueryNew request,
                 CancellationToken           cancellationToken)
             {
-                var rng = new Random();
+                Random rng = new();
+
+                // 40% probability to fail
+                if (rng.Next(100) <= 40)
+                    throw new Exception("Something gone really wrong...");
 
                 IEnumerable<WeatherForecastService> vm = Enumerable.Range(1, 5)
                    .Select(
@@ -37,6 +42,13 @@
 
                 return Task.FromResult(vm);
             }
+
+            public override IAsyncPolicy RetryPolicy() =>
+                Policy
+                   .Handle<Exception>()
+                   .WaitAndRetryAsync(
+                        2,
+                        i => TimeSpan.FromSeconds(i));
         }
 
         #endregion
