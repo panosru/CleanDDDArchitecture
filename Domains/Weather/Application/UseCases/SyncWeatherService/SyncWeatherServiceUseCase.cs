@@ -1,25 +1,33 @@
 namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherService
 {
-    using System.Linq;
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Aviant.DDD.Application.Orchestration;
+    using Aviant.DDD.Application.Jobs;
     using Aviant.DDD.Application.UseCases;
 
     public sealed class SyncWeatherServiceUseCase
         : UseCase<ISyncWeatherServiceOutput>
     {
-        public override async Task ExecuteAsync(CancellationToken cancellationToken = default)
-        {
-            OrchestratorResponse requestResult = await Orchestrator.SendCommandAsync(
-                    new SyncWeatherServiceCommand(),
-                    cancellationToken)
-               .ConfigureAwait(false);
+        private readonly IJobRunner _jobRunner;
 
-            if (requestResult.Succeeded)
+        /// <inheritdoc />
+        public SyncWeatherServiceUseCase(IJobRunner jobRunner) => _jobRunner = jobRunner;
+
+        public override Task ExecuteAsync(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                _jobRunner.Run<SyncWeatherServiceJob, SyncWeatherServiceJobOptions>();
+
                 Output.NoContent();
-            else
-                Output.Invalid(requestResult.Messages.First());
+            }
+            catch (Exception e)
+            {
+                Output.Invalid(e.Message);
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

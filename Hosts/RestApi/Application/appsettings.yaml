@@ -22,7 +22,8 @@ SwaggerSettings:
 
 Logging:
   LogLevel:
-  Default: Warning
+    Default: Warning
+    Hangfire: Information
 
 Serilog:
   MinimumLevel:
@@ -51,6 +52,7 @@ FeatureManagement:
 #    "ConnectionStrings": {
 #      "DefaultWriteConnection": "User ID =panosru;Password=123123;Server=localhost;Port=5432;Database=CleanDDDArchitecture;Integrated Security=true;Pooling=true;",
 #      "DefaultReadConnection": "User ID =panosru;Password=123123;Server=localhost;Port=5432;Database=CleanDDDArchitecture;Integrated Security=true;Pooling=true;",
+#      "Hangfire": "User ID =panosru;Password=123123;Server=localhost;Port=5432;Database=Hangfire;Integrated Security=true;Pooling=true;",
 #      "eventstore": "tcp://guest:123123@127.0.0.1:1113",
 #      "kafka": "127.0.0.1:9191",
 #      "loki": "http://127.0.0.1:3100",
