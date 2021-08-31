@@ -53,8 +53,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                 Email     = "admin@localhost.com",
                 FirstName = "Panagiotis",
                 LastName  = "Kosmidis",
-                Password  = "Administrator1!",
-                Roles     = Roles.Root.ToString()
+                Password  = "Administrator1!"
             };
 
             if (userManager.Users.All(u => u.UserName != accountDto.UserName))
@@ -74,7 +73,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                             accountDto.FirstName,
                             accountDto.LastName,
                             accountDto.Email,
-                            accountDto.Roles.Split(','),
+                            new[] { Enum.GetName(typeof(Roles), Roles.Root)! },
                             true))
                    .ConfigureAwait(false);
 
