@@ -4,6 +4,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
+    using Core.Identity;
     using Domains.Account.Application.Aggregates;
     using Domains.Account.Application.UseCases.Create;
     using Microsoft.AspNetCore.Authorization;
@@ -65,8 +66,8 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
                         dto.FirstName,
                         dto.LastName,
                         dto.Email,
-                        dto.Roles.Split(','),
-                        dto.EmailConfirmed))
+                        new[] { nameof(Roles.Member) },
+                        false))
                .ConfigureAwait(false);
 
             return ViewModel;
