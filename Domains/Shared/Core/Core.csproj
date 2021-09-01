@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>CleanDDDArchitecture.Domains.Shared.Core</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Domains.Shared.Core</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Library\Aviant.DDD\src\Core\Core.csproj" />
+    </ItemGroup>
+
+</Project>

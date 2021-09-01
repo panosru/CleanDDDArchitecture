@@ -15,7 +15,9 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Aviant.DDD.Core.Messages;
     using Aviant.DDD.Core.Services;
     using Aviant.DDD.Infrastructure.CrossCutting;
+    using Core;
     using Domains.Account.CrossCutting;
+    using Domains.Shared.Core;
     using Domains.Todo.CrossCutting;
     using Domains.Weather.CrossCutting;
     using Features;
@@ -179,7 +181,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                     {
                         options.ServerName  = $"{Environment.MachineName}.{Guid.NewGuid().ToString()}";
                         options.WorkerCount = Environment.ProcessorCount * 5;
-                        options.Queues      = new[] { "main", "second", "default" };
+                        options.Queues      = new[] { JobQueue.Main, JobQueue.Second, JobQueue.Default };
                     });
 
             // Add Infrastructure
