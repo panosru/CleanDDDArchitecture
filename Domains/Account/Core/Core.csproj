@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Library\Aviant.DDD\src\Core\Core.csproj" />
+      <ProjectReference Include="..\..\Shared\Core\Core.csproj" />
     </ItemGroup>
 
 </Project>

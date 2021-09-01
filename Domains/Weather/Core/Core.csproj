@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <RootNamespace>CleanDDDArchitecture.Domains.Todo.Core</RootNamespace>
-        <AssemblyName>CleanDDDArchitecture.Domains.Todo.Core</AssemblyName>
+        <RootNamespace>CleanDDDArchitecture.Domains.Weather.Core</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Domains.Weather.Core</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
