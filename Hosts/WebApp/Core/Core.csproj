@@ -13,7 +13,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.9" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.9" />
-        <PackageReference Include="Westwind.AspnetCore.LiveReload" Version="0.3.2" />
+        <PackageReference Include="Westwind.AspnetCore.LiveReload" Version="0.3.5" />
     </ItemGroup>
 
     <ItemGroup>
