@@ -4,12 +4,13 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherS
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Jobs;
     using Hangfire;
+    using Shared.Core;
 
-    public sealed class SyncWeatherServiceJobOptions : IJobOptions
+    internal sealed class SyncWeatherServiceJobOptions : IJobOptions
     { }
 
-    [Queue("second")]
-    public class SyncWeatherServiceJob : IJob<SyncWeatherServiceJobOptions>
+    [Queue(JobQueue.Main)]
+    internal class SyncWeatherServiceJob : IJob<SyncWeatherServiceJobOptions>
     {
         /// <inheritdoc />
         public async Task Perform(SyncWeatherServiceJobOptions jobOptions)
