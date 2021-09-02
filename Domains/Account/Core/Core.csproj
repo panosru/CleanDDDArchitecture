@@ -9,4 +9,8 @@
       <ProjectReference Include="..\..\Shared\Core\Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Identity" />
+    </ItemGroup>
+
 </Project>
