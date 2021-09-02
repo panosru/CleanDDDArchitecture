@@ -257,7 +257,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                     DashboardTitle = "Jobs",
                     Authorization = new[]
                     {
-                        new LocalRequestsOnlyAuthorizationFilter()
+                        new HangfireAuthorizationFilter()
                     }
                 });
 

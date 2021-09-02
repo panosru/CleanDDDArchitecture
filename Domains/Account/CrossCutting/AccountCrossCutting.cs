@@ -10,11 +10,11 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using Application.UseCases.Create;
     using AutoMapper;
     using Aviant.DDD.Application.Orchestration;
-    using Core.Identity;
     using Infrastructure.Persistence.Contexts;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
+    using Shared.Core.Identity;
 
     public static class AccountCrossCutting
     {
@@ -73,7 +73,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                             accountDto.FirstName,
                             accountDto.LastName,
                             accountDto.Email,
-                            new[] { Enum.GetName(typeof(Roles), Roles.Root)! },
+                            new[] { Roles.Root },
                             true))
                    .ConfigureAwait(false);
 
@@ -87,11 +87,11 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
             // Get RoleManager Service
             var roleManager = serviceProvider.GetRequiredService<RoleManager<AccountRole>>();
 
-            foreach (var role in (Roles[])Enum.GetValues(typeof(Roles)))
+            foreach (var role in typeof(Roles).GetFields(BindingFlags.Static | BindingFlags.Public))
                 await roleManager.CreateAsync(
                         new AccountRole
                         {
-                            Name = role.ToString()
+                            Name = role.GetValue(new Roles())?.ToString()
                         })
                    .ConfigureAwait(false);
         }
