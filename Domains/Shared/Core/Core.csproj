@@ -9,4 +9,10 @@
         <ProjectReference Include="..\..\..\Library\Aviant.DDD\src\Core\Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="EasyCaching.Core" Version="1.4.0" />
+      <PackageReference Include="EasyCaching.InMemory" Version="1.4.0" />
+      <PackageReference Include="EasyCaching.Redis" Version="1.4.0" />
+    </ItemGroup>
+
 </Project>
