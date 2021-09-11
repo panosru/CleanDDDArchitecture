@@ -3,7 +3,6 @@
   <PropertyGroup>
     <RootNamespace>CleanDDDArchitecture.Hosts.RestApi.Application</RootNamespace>
     <AssemblyName>CleanDDDArchitecture.Hosts.RestApi.Application</AssemblyName>
-    <NoWarn>$(NoWarn);CS1591;CS8618;CS8625;CS8603;CS8604</NoWarn>
     <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Version>1.0.$(Build).$(Revision)</Version>
