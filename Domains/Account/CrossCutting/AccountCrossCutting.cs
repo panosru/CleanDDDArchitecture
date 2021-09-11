@@ -88,12 +88,13 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
             var roleManager = serviceProvider.GetRequiredService<RoleManager<AccountRole>>();
 
             foreach (var role in typeof(Roles).GetFields(BindingFlags.Static | BindingFlags.Public))
-                await roleManager.CreateAsync(
-                        new AccountRole
-                        {
-                            Name = role.GetValue(new Roles())?.ToString()
-                        })
-                   .ConfigureAwait(false);
+                if (!await roleManager.RoleExistsAsync(role.GetValue(new Roles())?.ToString()).ConfigureAwait(false))
+                    await roleManager.CreateAsync(
+                            new AccountRole
+                            {
+                                Name = role.GetValue(new Roles())?.ToString()
+                            })
+                       .ConfigureAwait(false);
         }
     }
 }
