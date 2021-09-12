@@ -2,6 +2,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
 {
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -15,8 +16,9 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Microsoft.Extensions.Configuration.EnvironmentVariables;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Logging;
     using Serilog;
+    using Serilog.Debugging;
+    using Console = Colorful.Console;
 
     /// <summary>
     /// </summary>
@@ -33,32 +35,44 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
         /// <returns></returns>
         public static async Task Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
-
-            using (var scope = host.Services.CreateScope())
+            try
             {
-                var serviceProvider = scope.ServiceProvider;
+                Console.WriteLine("Starting Web Host", Color.Green);
+                var host = CreateHostBuilder(args).Build();
 
-                try
+                using (var scope = host.Services.CreateScope())
                 {
-                    await AccountCrossCutting.GenerateDefaultUserIfNotExists(serviceProvider)
-                       .ConfigureAwait(false);
+                    var serviceProvider = scope.ServiceProvider;
 
-                    await TodoCrossCutting.GenerateTodoMigrationsIfNewExists(serviceProvider)
-                       .ConfigureAwait(false);
+                    try
+                    {
+                        await AccountCrossCutting.GenerateDefaultUserIfNotExists(serviceProvider)
+                           .ConfigureAwait(false);
+
+                        await TodoCrossCutting.GenerateTodoMigrationsIfNewExists(serviceProvider)
+                           .ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, "An error occurred while migrating or seeding the database");
+
+                        throw;
+                    }
                 }
-                catch (Exception ex)
-                {
-                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 
-                    logger.LogError(ex, "An error occurred while migrating or seeding the database");
+                SelfLog.Enable(Console.Error);
 
-                    throw;
-                }
+                await host.RunAsync()
+                   .ConfigureAwait(false);
             }
-
-            await host.RunAsync()
-               .ConfigureAwait(false);
+            catch (Exception e)
+            {
+                Log.Fatal(e, "Host terminated unexpectedly!");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         /// <summary>
@@ -71,7 +85,9 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                     webBuilder =>
                     {
                         webBuilder.ConfigureAppConfiguration(SetupConfiguration);
-                        webBuilder.ConfigureLogging(SetupLogging);
+
+                        webBuilder.UseSerilog(
+                            (context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
                         webBuilder.ConfigureServices(SetupServices);
                         webBuilder.UseStartup<Startup>();
                     });
@@ -103,9 +119,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
 
             MoveEnvironmentVariablesToEnd(configurationBuilder);
 
-            Log.Logger = new LoggerConfiguration()
-               .ReadFrom.Configuration(DependencyInjectionRegistry.SetConfiguration(configurationBuilder))
-               .CreateLogger();
+            DependencyInjectionRegistry.SetConfiguration(configurationBuilder);
         }
 
         /// <summary>
@@ -147,15 +161,6 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                     configurationBuilder.Sources.Remove(item);
                     configurationBuilder.Sources.Add(item);
                 });
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="hostBuilderContext"></param>
-        /// <param name="loggingBuilder"></param>
-        private static void SetupLogging(WebHostBuilderContext hostBuilderContext, ILoggingBuilder loggingBuilder)
-        {
-            loggingBuilder.AddSerilog();
         }
     }
 }

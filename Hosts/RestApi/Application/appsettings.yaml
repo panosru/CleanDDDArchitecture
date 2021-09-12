@@ -20,29 +20,43 @@ SwaggerSettings:
       Name: MIT
       Url: https://opensource.org/licenses/MIT
 
-Logging:
-  LogLevel:
-    Default: Warning
-    Hangfire: Information
-
 Serilog:
+  Using:
+    - Serilog.Sinks.Console
+    - Serilog.Sinks.File
+    - Serilog.Sinks.Grafana.Loki
   MinimumLevel:
     Default: Debug
     Override:
       Microsoft: Warning
       System: Warning
-  WriteTo:
-    - Name: RollingFile
-      Args:
-        pathFormat: logs\log-{Date}.txt
-        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] {Message}{NewLine}{Exception}"
-        rollingInterval: Day
-        rollOnFileSizeLimit: true
-        fileSizeLimitBytes: '10485760'
   Enrich:
     - FromLogContext
     - WithMachineName
     - WithThreadId
+    - WithAssemblyName
+    - WithAssemblyVersion
+  WriteTo:
+    - Name: Console
+      Args:
+        theme: "Serilog.Sinks.SystemConsole.Themes.AnsiConsoleTheme::Code, Serilog.Sinks.Console"
+        outputTemplate: "{Timestamp:dd-MM-yyyy HH:mm:ss} [{Level:u3}] [{SourceContext}] {Message}{NewLine}{Exception}"
+    - Name: GrafanaLoki
+      Args:
+        uri: http://localhost:3100
+        labels:
+          - key: app
+            value: web_app
+        outputTemplate: "[{ThreadId}] [{TraceId:l}] [{Time}] {Message}{NewLine}{Exception}"
+        createLevelLabel: true
+        useInternalTimestamp: true
+#    - Name: File
+#      Args:
+#        path: logs/log-.txt
+#        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] [{SourceContext}] {Message}{NewLine}{Exception}"
+#        rollingInterval: Day
+#        rollOnFileSizeLimit: true
+#        fileSizeLimitBytes: '10485760'
 
 FeatureManagement:
   Metal: true

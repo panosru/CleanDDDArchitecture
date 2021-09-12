@@ -3,9 +3,3 @@
 IdentityServer:
   Key:
     Type: Development
-
-Logging:
-  LogLevel:
-    Default: Debug
-    System: Information
-    Microsoft: Information
