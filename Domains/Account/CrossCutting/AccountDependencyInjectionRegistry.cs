@@ -45,7 +45,6 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using Microsoft.IdentityModel.Tokens;
     using Newtonsoft.Json.Linq;
 
@@ -232,14 +231,8 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
 
 
             services.AddSingleton<IEventStoreConnectionWrapper>(
-                    ctx =>
-                    {
-                        var logger = ctx.GetRequiredService<ILogger<EventStoreConnectionWrapper>>();
-
-                        return new EventStoreConnectionWrapper(
-                            new Uri(Configuration.GetConnectionString("eventstore")),
-                            logger);
-                    })
+                    _ => new EventStoreConnectionWrapper(
+                        new Uri(Configuration.GetConnectionString("eventstore"))))
                .AddEventsRepository<AccountAggregate, AccountAggregateId>();
 
 

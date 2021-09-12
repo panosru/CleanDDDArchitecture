@@ -15,7 +15,6 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Aviant.DDD.Core.Messages;
     using Aviant.DDD.Core.Services;
     using Aviant.DDD.Infrastructure.CrossCutting;
-    using Core;
     using Domains.Account.CrossCutting;
     using Domains.Shared.Core;
     using Domains.Todo.CrossCutting;
@@ -35,8 +34,9 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
     using Services;
     using Swagger;
     using Hangfire;
-    using Hangfire.Dashboard;
     using Hangfire.PostgreSql;
+    using Serilog;
+    using Serilog.Events;
 
     /// <summary>
     /// </summary>
@@ -47,11 +47,11 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
         /// <param name="configuration"></param>
         /// <param name="currentEnvironment"></param>
         public Startup(
-            IConfiguration      configuration,
-            IWebHostEnvironment currentEnvironment)
+            IConfiguration       configuration,
+            IWebHostEnvironment  currentEnvironment)
         {
-            Configuration      = configuration;
-            CurrentEnvironment = currentEnvironment;
+            Configuration             = configuration;
+            CurrentEnvironment        = currentEnvironment;
         }
 
         /// <summary>
@@ -249,6 +249,26 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
                 app.UseHsts();
                 app.UseCustomExceptionHandler();
             }
+
+            app.UseSerilogRequestLogging(
+                options =>
+                {
+                    // Customize the message template
+                    options.MessageTemplate = "Handled {RequestPath}";
+
+                    // Emit debug-level events instead of the defaults
+                    options.GetLevel = (
+                        _ /* httpContext */,
+                        _ /* elapsed */,
+                        _ /* Exception */) => LogEventLevel.Debug;
+
+                    // Attach additional properties to the request completion event
+                    options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+                    {
+                        diagnosticContext.Set("RequestHost",   httpContext.Request.Host.Value);
+                        diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
+                    };
+                });
 
             app.UseHangfireDashboard(
                 "/jobs",

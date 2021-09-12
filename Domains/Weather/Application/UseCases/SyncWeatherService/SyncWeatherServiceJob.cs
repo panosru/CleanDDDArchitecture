@@ -4,6 +4,7 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherS
     using System.Threading.Tasks;
     using Aviant.DDD.Application.Jobs;
     using Hangfire;
+    using Serilog;
     using Shared.Core;
 
     internal sealed class SyncWeatherServiceJobOptions : IJobOptions
@@ -16,7 +17,7 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherS
         public async Task Perform(SyncWeatherServiceJobOptions jobOptions)
         {
             await Task.Delay(TimeSpan.FromSeconds(10));
-            Console.WriteLine("Weather service syncronised!!");
+            Log.Information("Weather service syncronised!!");
         }
     }
 }
