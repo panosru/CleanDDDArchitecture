@@ -1,7 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.UpdateDetails
 {
     using Aviant.DDD.Application.UseCases;
-    using Aviant.DDD.Core.Enums;
+    using Aviant.DDD.Core.Configuration;
 
     public sealed class TodoItemUpdateDetailsInput : UseCaseInput
     {
