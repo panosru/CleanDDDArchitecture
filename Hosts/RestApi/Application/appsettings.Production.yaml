@@ -5,9 +5,3 @@ IdentityServer:
     StoreName: My
     StoreLocation: CurrentUser
     Name: CN=MyApplication
-
-Logging:
-  LogLevel:
-    Default: Debug
-    System: Information
-    Microsoft: Information
