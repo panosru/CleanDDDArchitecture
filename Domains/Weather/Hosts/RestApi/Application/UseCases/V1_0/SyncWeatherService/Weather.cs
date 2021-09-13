@@ -1,5 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.UseCases.V1_0.SyncWeatherService
 {
+    using System.Net.Mime;
     using System.Threading;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
@@ -42,6 +43,7 @@
         /// <returns>Successful message.</returns>
         [HttpPost]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Patch))]
+        [Produces(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> Forecast(CancellationToken cancellationToken = default)
         {
             await UseCase.ExecuteAsync(cancellationToken)

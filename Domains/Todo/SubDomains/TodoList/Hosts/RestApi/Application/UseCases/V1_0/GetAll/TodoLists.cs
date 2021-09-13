@@ -1,5 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application.UseCases.V1_0.GetAll
 {
+    using System.Net.Mime;
     using System.Threading;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
@@ -44,6 +45,7 @@
         /// <returns>An asynchronous <see cref="IActionResult" />.</returns>
         [HttpGet]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.List))]
+        [Produces(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken = default)
         {
             await UseCase.ExecuteAsync(cancellationToken)

@@ -1,5 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.Profile
 {
+    using System.Net.Mime;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
@@ -49,6 +50,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         [HttpGet("profile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AccountProfileResponse))]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Get))]
+        [Produces(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> GetAccountProfile()
         {
             await UseCase.ExecuteAsync()

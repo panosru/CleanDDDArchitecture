@@ -1,5 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application.UseCases.V1_0.Update
 {
+    using System.Net.Mime;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
@@ -40,6 +41,8 @@
         /// <returns>updated todo list data.</returns>
         [HttpPut("{id:int}")]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Update))]
+        [Produces(MediaTypeNames.Application.Json)]
+        [Consumes(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> Update(
             [FromRoute] int               id,
             [FromBody]  UpdateTodoListDto dto)
