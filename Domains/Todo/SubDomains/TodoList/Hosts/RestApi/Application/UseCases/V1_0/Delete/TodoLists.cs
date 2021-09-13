@@ -1,5 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application.UseCases.V1_0.Delete
 {
+    using System.Net.Mime;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
@@ -39,6 +40,7 @@
         /// <returns>The deleted todo list id.</returns>
         [HttpDelete("{id:int}")]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Delete))]
+        [Produces(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             await UseCase.ExecuteAsync(new DeleteTodoListInput(id))

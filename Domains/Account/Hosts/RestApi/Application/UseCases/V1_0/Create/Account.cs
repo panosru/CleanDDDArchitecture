@@ -1,6 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.Create
 {
     using System.ComponentModel.DataAnnotations;
+    using System.Net.Mime;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
@@ -57,6 +58,8 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         [ProducesResponseType(StatusCodes.Status200OK,      Type = typeof(AccountCreateResponse))]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AccountCreateResponse))]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Create))]
+        [Produces(MediaTypeNames.Application.Json)]
+        [Consumes(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> Create([FromBody] [Required] CreateAccountDto dto)
         {
             await UseCase.ExecuteAsync(

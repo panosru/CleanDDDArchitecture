@@ -1,6 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.GetBy
 {
     using System;
+    using System.Net.Mime;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
@@ -51,6 +52,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         [HttpGet("{id:guid}", Name = "GetAccount")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AccountGetByResponse))]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Find))]
+        [Produces(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> GetAccount([FromRoute] Guid id)
         {
             await UseCase.ExecuteAsync(new GetAccountInput(id))

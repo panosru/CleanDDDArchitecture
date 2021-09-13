@@ -1,5 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.UseCases.V1_1.Forecast
 {
+    using System.Net.Mime;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
@@ -42,6 +43,7 @@
         /// <returns>The forecast for the next days</returns>
         [HttpGet]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Get))]
+        [Produces(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> Forecast()
         {
             await UseCase.ExecuteAsync()
