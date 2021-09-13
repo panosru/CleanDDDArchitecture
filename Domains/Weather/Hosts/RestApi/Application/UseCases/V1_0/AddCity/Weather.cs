@@ -1,5 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.UseCases.V1_0.AddCity
 {
+    using System.Net.Mime;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
@@ -51,6 +52,8 @@
         [HttpPost("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AddCityResponse))]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Post))]
+        [Produces(MediaTypeNames.Application.Json)]
+        [Consumes(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> AddCity([FromBody] AddCityDto dto)
         {
             await UseCase.ExecuteAsync(new AddCityInput(dto.City))

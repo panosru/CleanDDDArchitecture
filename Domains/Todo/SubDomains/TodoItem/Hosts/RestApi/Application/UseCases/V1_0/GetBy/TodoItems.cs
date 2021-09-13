@@ -1,5 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Hosts.RestApi.Application.UseCases.V1_0.GetBy
 {
+    using System.Net.Mime;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
@@ -44,6 +45,7 @@
         /// <returns>An asynchronous <see cref="IActionResult" />.</returns>
         [HttpGet("{id:int}", Name = "GetTodoItem")]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Find))]
+        [Produces(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> GetBy([FromRoute] int id)
         {
             await UseCase.ExecuteAsync(new TodoItemGetByInput(id))

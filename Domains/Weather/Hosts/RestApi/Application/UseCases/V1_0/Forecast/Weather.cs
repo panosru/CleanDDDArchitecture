@@ -1,5 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.UseCases.V1_0.Forecast
 {
+    using System.Net.Mime;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
@@ -43,6 +44,7 @@
         /// <response code="404">Not found.</response>
         /// <returns>The forecast for the next days</returns>
         [HttpGet]
+        [Produces(MediaTypeNames.Application.Json)]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Get))]
         public async Task<IActionResult> Forecast()
         {

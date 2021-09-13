@@ -1,6 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.UpdateDetails
 {
     using System;
+    using System.Net.Mime;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
@@ -54,6 +55,8 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         [HttpPut("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AccountUpdateResponse))]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Edit))]
+        [Produces(MediaTypeNames.Application.Json)]
+        [Consumes(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> Update(
             [FromRoute] Guid             id,
             [FromBody]  UpdateAccountDto dto)

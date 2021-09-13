@@ -2,6 +2,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
 {
     using System.Net;
     using System.Net.Http;
+    using System.Net.Mime;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
@@ -56,6 +57,8 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCase
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Post))]
+        [Produces(MediaTypeNames.Application.Json)]
+        [Consumes(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> Authenticate([FromBody] AuthenticateDto dto)
         {
             await UseCase.ExecuteAsync(new AuthenticateInput(dto.Username, dto.Password))

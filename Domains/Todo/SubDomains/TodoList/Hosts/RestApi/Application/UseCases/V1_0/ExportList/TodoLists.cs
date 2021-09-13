@@ -1,5 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application.UseCases.V1_0.ExportList
 {
+    using System.Net.Mime;
     using System.Threading.Tasks;
     using CleanDDDArchitecture.Hosts.RestApi.Core;
     using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
@@ -43,6 +44,7 @@
         /// <returns>Returns todo list with items in csv file.</returns>
         [HttpGet("{id:int}")]
         [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Get))]
+        [Produces(MediaTypeNames.Application.Json)]
         public async Task<IActionResult> Export([FromRoute] int id)
         {
             await UseCase.ExecuteAsync(new ExportTodoListInput(id))
