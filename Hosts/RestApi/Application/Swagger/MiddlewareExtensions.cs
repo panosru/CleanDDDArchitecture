@@ -17,7 +17,8 @@
         /// <param name="app">IApplicationBuilder</param>
         public static void UseSwaggerDocuments(this IApplicationBuilder app)
         {
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "TEST") return;
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "TEST")
+                return;
 
             app.UseSwagger();
 

@@ -2,7 +2,7 @@
 {
     using System;
 
-    internal sealed class AdAccountInvalidException : Exception
+    public sealed class AdAccountInvalidException : Exception
     {
         public AdAccountInvalidException(string adAccount, Exception ex)
             : base($"AD Account \"{adAccount}\" is invalid.", ex)

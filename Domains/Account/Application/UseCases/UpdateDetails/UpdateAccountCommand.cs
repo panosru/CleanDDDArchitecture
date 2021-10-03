@@ -1,9 +1,9 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails
 {
-    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Aggregates;
+    using Ardalis.GuardClauses;
     using Aviant.DDD.Application.Commands;
 
     internal sealed class UpdateAccountCommand : Command<AccountAggregate, AccountAggregateId>
@@ -41,10 +41,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
                    .RehydrateAsync(command.AggregateId, cancellationToken)
                    .ConfigureAwait(false);
 
-                if (account is null)
-                    throw new ArgumentOutOfRangeException(
-                        nameof(AggregateId),
-                        "Invalid account aggregateId");
+                Guard.Against.Null(account, nameof(command.AggregateId));
 
                 account.ChangeDetails(command.FirstName, command.LastName, command.Email);
 

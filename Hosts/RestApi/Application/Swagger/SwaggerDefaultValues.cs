@@ -24,7 +24,8 @@
         /// <param name="context">The current operation filter context.</param>
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            if (operation.Parameters is null) return;
+            if (operation.Parameters is null)
+                return;
 
             foreach (var parameter in operation.Parameters)
             {
@@ -34,7 +35,8 @@
 
                 parameter.Description ??= description.ModelMetadata.Description;
 
-                if (routeInfo is null) continue;
+                if (routeInfo is null)
+                    continue;
 
                 parameter.Required |= !routeInfo.IsOptional;
             }
