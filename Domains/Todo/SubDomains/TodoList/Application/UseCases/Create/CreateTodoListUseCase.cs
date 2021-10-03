@@ -19,7 +19,8 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
             CreateTodoListInput input,
             CancellationToken   cancellationToken = default)
         {
-            await ValidateInput(input, cancellationToken);
+            await ValidateInputAsync(input, cancellationToken)
+               .ConfigureAwait(false);
 
             OrchestratorResponse requestResult = await Orchestrator.SendCommandAsync(
                     new CreateTodoListCommand(input.Title),

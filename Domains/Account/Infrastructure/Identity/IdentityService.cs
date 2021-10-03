@@ -47,7 +47,8 @@
                .ConfigureAwait(false);
 
             // Check if the user exists
-            if (user is null) return null;
+            if (user is null)
+                return null;
 
             // Check if the user is locked out
             if (_userManager.SupportsUserLockout
