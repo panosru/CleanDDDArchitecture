@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Shared.Core.Identity
 {
-    public sealed class Roles
+    public static class Roles
     {
         public const string Root = "root";
 

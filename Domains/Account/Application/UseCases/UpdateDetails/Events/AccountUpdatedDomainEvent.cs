@@ -39,7 +39,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
             public override Task Handle(
                 EventReceived<AccountUpdatedDomainEvent> @event,
                 CancellationToken                        cancellationToken) =>
-                throw new ArgumentOutOfRangeException();
+                throw new NotImplementedException();
 
             public override IAsyncPolicy RetryPolicy() =>
                 Policy
