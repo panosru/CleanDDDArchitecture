@@ -40,7 +40,7 @@
         /// <summary>
         ///     Performs weather forecast
         /// </summary>
-        /// <response code="200">Todo list already exists</response>
+        /// <response code="200">Weather forecast</response>
         /// <response code="404">Not found.</response>
         /// <returns>The forecast for the next days</returns>
         [HttpGet]
