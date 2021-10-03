@@ -53,7 +53,8 @@
                 vm.ContentType = "text/csv";
                 vm.FileName    = "TodoItems.csv";
 
-                return await Task.FromResult(vm).ConfigureAwait(false);
+                return await Task.FromResult(vm)
+                   .ConfigureAwait(false);
             }
         }
 
