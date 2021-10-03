@@ -79,7 +79,8 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Event
                    .ConfigureAwait(false);
 
                 if (userResult.Succeeded)
-                    await _userManager.AddToRolesAsync(user, @event.Event.Roles);
+                    await _userManager.AddToRolesAsync(user, @event.Event.Roles)
+                       .ConfigureAwait(false);
                 // else
                 //TODO: raise failed event
             }

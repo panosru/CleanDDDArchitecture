@@ -8,6 +8,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
     using Application.Aggregates;
     using Application.Identity;
     using Application.UseCases.Create;
+    using Ardalis.GuardClauses;
     using AutoMapper;
     using Aviant.DDD.Application.Orchestration;
     using Infrastructure.Persistence.Contexts;
@@ -39,9 +40,11 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
             var context = serviceProvider.GetRequiredService<AccountDbContextWrite>();
 
             if (context.Database.IsNpgsql())
-                await context.Database.MigrateAsync().ConfigureAwait(false);
+                await context.Database.MigrateAsync()
+                   .ConfigureAwait(false);
 
-            await PopulateDefaultAccountRoles(serviceProvider).ConfigureAwait(false);
+            await PopulateDefaultAccountRoles(serviceProvider)
+               .ConfigureAwait(false);
 
             // Get UserManager Service
             var userManager = serviceProvider.GetRequiredService<UserManager<AccountUser>>();
@@ -61,9 +64,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                 var orchestrator =
                     serviceProvider.GetRequiredService<IOrchestrator<AccountAggregate, AccountAggregateId>>();
 
-                if (orchestrator is null)
-                    throw new NullReferenceException(
-                        typeof(IOrchestrator<AccountAggregate, AccountAggregateId>).Name);
+                Guard.Against.Null(orchestrator, typeof(IOrchestrator<AccountAggregate, AccountAggregateId>).Name);
 
                 OrchestratorResponse requestResult = await orchestrator
                    .SendCommandAsync(
@@ -78,7 +79,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                    .ConfigureAwait(false);
 
                 if (!requestResult.Succeeded)
-                    throw new Exception($"Unable to create default user \"{accountDto.UserName}\".");
+                    throw new NotSupportedException($"Unable to create default user \"{accountDto.UserName}\".");
             }
         }
 
@@ -88,11 +89,11 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
             var roleManager = serviceProvider.GetRequiredService<RoleManager<AccountRole>>();
 
             foreach (var role in typeof(Roles).GetFields(BindingFlags.Static | BindingFlags.Public))
-                if (!await roleManager.RoleExistsAsync(role.GetValue(new Roles())?.ToString()).ConfigureAwait(false))
+                if (!await roleManager.RoleExistsAsync(role.GetValue(null)?.ToString()).ConfigureAwait(false))
                     await roleManager.CreateAsync(
                             new AccountRole
                             {
-                                Name = role.GetValue(new Roles())?.ToString()
+                                Name = role.GetValue(null)?.ToString()
                             })
                        .ConfigureAwait(false);
         }

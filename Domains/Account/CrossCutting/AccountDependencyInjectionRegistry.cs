@@ -175,7 +175,8 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                                         ? exception.ErrorCode
                                         : (int)HttpStatusCode.Unauthorized;
 
-                                    await context.HttpContext.Response.WriteAsync(payload.ToString());
+                                    await context.HttpContext.Response.WriteAsync(payload.ToString())
+                                       .ConfigureAwait(false);
                                 }
                             }
                         };
@@ -284,7 +285,8 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                     if (!string.IsNullOrEmpty(token))
                         context.Request.Headers.Add("Authorization", "Bearer " + token);
 
-                    await next();
+                    await next()
+                       .ConfigureAwait(false);
                 });
         }
     }
