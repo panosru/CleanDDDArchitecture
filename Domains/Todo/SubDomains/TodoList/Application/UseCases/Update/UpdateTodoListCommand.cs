@@ -84,11 +84,11 @@
                    .MaximumLength((int)ValidationSettings.TitleMaxLength)
                    .WithMessage(
                         "Title must not exceed {MaxLength} characters, yours had the length of {TotalLength} characters.")
-                   .MustAsync(BeUniqueTitle)
+                   .MustAsync(BeUniqueTitleAsync)
                    .WithMessage("The specified title already exists.");
             }
 
-            private Task<bool> BeUniqueTitle(
+            private Task<bool> BeUniqueTitleAsync(
                 UpdateTodoListCommand model,
                 string                title,
                 CancellationToken     cancellationToken)

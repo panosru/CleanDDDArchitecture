@@ -36,7 +36,7 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting
             TodoListApplicationAssembly
         };
 
-        public static async Task GenerateTodoMigrationsIfNewExists(IServiceProvider serviceProvider)
+        public static async Task GenerateTodoMigrationsIfNewExistsAsync(IServiceProvider serviceProvider)
         {
             var context = serviceProvider.GetRequiredService<TodoDbContextWrite>();
 

@@ -46,10 +46,10 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application
 
                     try
                     {
-                        await AccountCrossCutting.GenerateDefaultUserIfNotExists(serviceProvider)
+                        await AccountCrossCutting.GenerateDefaultUserIfNotExistsAsync(serviceProvider)
                            .ConfigureAwait(false);
 
-                        await TodoCrossCutting.GenerateTodoMigrationsIfNewExists(serviceProvider)
+                        await TodoCrossCutting.GenerateTodoMigrationsIfNewExistsAsync(serviceProvider)
                            .ConfigureAwait(false);
                     }
                     catch (Exception ex)

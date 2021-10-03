@@ -35,7 +35,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
             AccountApplicationAssembly
         };
 
-        public static async Task GenerateDefaultUserIfNotExists(IServiceProvider serviceProvider)
+        public static async Task GenerateDefaultUserIfNotExistsAsync(IServiceProvider serviceProvider)
         {
             var context = serviceProvider.GetRequiredService<AccountDbContextWrite>();
 
@@ -43,7 +43,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
                 await context.Database.MigrateAsync()
                    .ConfigureAwait(false);
 
-            await PopulateDefaultAccountRoles(serviceProvider)
+            await PopulateDefaultAccountRolesAsync(serviceProvider)
                .ConfigureAwait(false);
 
             // Get UserManager Service
@@ -83,7 +83,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting
             }
         }
 
-        private static async Task PopulateDefaultAccountRoles(IServiceProvider serviceProvider)
+        private static async Task PopulateDefaultAccountRolesAsync(IServiceProvider serviceProvider)
         {
             // Get RoleManager Service
             var roleManager = serviceProvider.GetRequiredService<RoleManager<AccountRole>>();
