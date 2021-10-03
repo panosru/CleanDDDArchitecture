@@ -45,11 +45,11 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
                    .MaximumLength((int)ValidationSettings.TitleMaxLength)
                    .WithMessage(
                         "Title must not exceed {MaxLength} characters, yours had the length of {TotalLength} characters.")
-                   .MustAsync(BeUniqueTitle)
+                   .MustAsync(BeUniqueTitleAsync)
                    .WithMessage("The specified title already exists.");
             }
 
-            private async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)
+            private async Task<bool> BeUniqueTitleAsync(string title, CancellationToken cancellationToken)
             {
                 return await _todoListReadRepository.AllAsync(l => l.Title != title, cancellationToken)
                    .ConfigureAwait(false);

@@ -54,10 +54,10 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
                 _userManager = userManager;
 
                 RuleFor(v => v.Password)
-                   .CustomAsync(CheckPassword);
+                   .CustomAsync(CheckPasswordAsync);
             }
 
-            private async Task<bool> CheckPassword(
+            private async Task<bool> CheckPasswordAsync(
                 string                                password,
                 ValidationContext<CreateAccountInput> context,
                 CancellationToken                     cancellationToken)
