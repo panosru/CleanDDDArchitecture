@@ -66,7 +66,8 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
 
                 foreach (IPasswordValidator<AccountUser> passwordValidator in _userManager.PasswordValidators)
                 {
-                    var result = await passwordValidator.ValidateAsync(_userManager, new AccountUser(), password);
+                    var result = await passwordValidator.ValidateAsync(_userManager, new AccountUser(), password)
+                       .ConfigureAwait(false);
 
                     if (result.Succeeded)
                         continue;
