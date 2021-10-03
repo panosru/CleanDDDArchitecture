@@ -14,9 +14,11 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherS
     internal class SyncWeatherServiceJob : IJob<SyncWeatherServiceJobOptions>
     {
         /// <inheritdoc />
-        public async Task Perform(SyncWeatherServiceJobOptions jobOptions)
+        public async Task PerformAsync(SyncWeatherServiceJobOptions jobOptions)
         {
-            await Task.Delay(TimeSpan.FromSeconds(10));
+            await Task.Delay(TimeSpan.FromSeconds(10))
+               .ConfigureAwait(false);
+
             Log.Information("Weather service syncronised!!");
         }
     }
