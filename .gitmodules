@@ -1,3 +1,7 @@
 [submodule "Library/Aviant.DDD"]
 	path = Library/Aviant.DDD
 	url = https://github.com/panosru/Aviant.DDD.git
+
+[submodule "Hosts/WebApp/Assets"]
+	path = Hosts/WebApp/Assets
+	url = https://github.com/panosru/CleanDDDArchitectureAssets.git
