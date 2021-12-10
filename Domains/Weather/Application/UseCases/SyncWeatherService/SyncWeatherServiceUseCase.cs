@@ -1,33 +1,29 @@
-namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherService
+namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherService;
+
+using Aviant.DDD.Application.Jobs;
+using Aviant.DDD.Application.UseCases;
+
+public sealed class SyncWeatherServiceUseCase
+    : UseCase<ISyncWeatherServiceOutput>
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Aviant.DDD.Application.Jobs;
-    using Aviant.DDD.Application.UseCases;
+    private readonly IJobRunner _jobRunner;
 
-    public sealed class SyncWeatherServiceUseCase
-        : UseCase<ISyncWeatherServiceOutput>
+    /// <inheritdoc />
+    public SyncWeatherServiceUseCase(IJobRunner jobRunner) => _jobRunner = jobRunner;
+
+    public override Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        private readonly IJobRunner _jobRunner;
-
-        /// <inheritdoc />
-        public SyncWeatherServiceUseCase(IJobRunner jobRunner) => _jobRunner = jobRunner;
-
-        public override Task ExecuteAsync(CancellationToken cancellationToken = default)
+        try
         {
-            try
-            {
-                _jobRunner.Run<SyncWeatherServiceJob, SyncWeatherServiceJobOptions>();
+            _jobRunner.Run<SyncWeatherServiceJob, SyncWeatherServiceJobOptions>();
 
-                Output.NoContent();
-            }
-            catch (Exception e)
-            {
-                Output.Invalid(e.Message);
-            }
-
-            return Task.CompletedTask;
+            Output.NoContent();
         }
+        catch (Exception e)
+        {
+            Output.Invalid(e.Message);
+        }
+
+        return Task.CompletedTask;
     }
 }

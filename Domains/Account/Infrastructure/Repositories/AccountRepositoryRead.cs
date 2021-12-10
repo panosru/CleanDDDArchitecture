@@ -1,17 +1,16 @@
-namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Repositories
-{
-    using Application.Aggregates;
-    using Application.Identity;
-    using Application.Repositories;
-    using Aviant.DDD.Infrastructure.Persistence.Repository;
-    using Persistence.Contexts;
+namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Repositories;
 
-    public sealed class AccountRepositoryRead
-        : RepositoryRead<AccountDbContextRead, AccountUser, AccountRole, AccountAggregate, AccountAggregateId>,
-          IAccountRepositoryRead
-    {
-        public AccountRepositoryRead(AccountDbContextRead context)
-            : base(context)
-        { }
-    }
+using Application.Aggregates;
+using Application.Identity;
+using Application.Repositories;
+using Aviant.DDD.Infrastructure.Persistence.Repository;
+using Persistence.Contexts;
+
+public sealed class AccountRepositoryRead
+    : RepositoryRead<AccountDbContextRead, AccountUser, AccountRole, AccountAggregate, AccountAggregateId>,
+      IAccountRepositoryRead
+{
+    public AccountRepositoryRead(AccountDbContextRead context)
+        : base(context)
+    { }
 }

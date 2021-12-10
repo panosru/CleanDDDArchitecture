@@ -1,11 +1,10 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate;
+
+using Aviant.DDD.Application.UseCases;
+
+public interface IAuthenticateOutput : IUseCaseOutput
 {
-    using Aviant.DDD.Application.UseCases;
+    public void Ok(object? @object);
 
-    public interface IAuthenticateOutput : IUseCaseOutput
-    {
-        public void Ok(object? @object);
-
-        public void Unauthorized();
-    }
+    public void Unauthorized();
 }

@@ -1,10 +1,9 @@
-﻿namespace CleanDDDArchitecture.Hosts.WebApp.Application.Pages
-{
-    using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿namespace CleanDDDArchitecture.Hosts.WebApp.Application.Pages;
 
-    public class PrivacyModel : PageModel
-    {
-        public void OnGet()
-        { }
-    }
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+public class PrivacyModel : PageModel
+{
+    public void OnGet()
+    { }
 }

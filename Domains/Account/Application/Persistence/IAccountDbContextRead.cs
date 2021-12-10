@@ -1,7 +1,6 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.Persistence
-{
-    using Aviant.DDD.Application.Persistance;
+namespace CleanDDDArchitecture.Domains.Account.Application.Persistence;
 
-    public interface IAccountDbContextRead : IDbContextRead
-    { }
-}
+using Aviant.DDD.Application.Persistance;
+
+public interface IAccountDbContextRead : IDbContextRead
+{ }

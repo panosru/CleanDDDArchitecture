@@ -1,75 +1,72 @@
-namespace CleanDDDArchitecture.Hosts.RestApi.Core.Features
+namespace CleanDDDArchitecture.Hosts.RestApi.Core.Features;
+
+using System.Collections;
+using System.Reflection;
+using AutoMapper.Internal;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.FeatureManagement;
+using Microsoft.FeatureManagement.Mvc;
+
+public sealed class CustomControllerFeatureProvider
+    : IApplicationFeatureProvider<ControllerFeature>
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using AutoMapper.Internal;
-    using Microsoft.AspNetCore.Mvc.ApplicationParts;
-    using Microsoft.AspNetCore.Mvc.Controllers;
-    using Microsoft.FeatureManagement;
-    using Microsoft.FeatureManagement.Mvc;
+    private readonly IFeatureManager _featureManager;
 
-    public sealed class CustomControllerFeatureProvider
-        : IApplicationFeatureProvider<ControllerFeature>
+    private ControllerFeature? _feature;
+
+    public CustomControllerFeatureProvider(IFeatureManager featureManager) => _featureManager = featureManager;
+
+    #region IApplicationFeatureProvider<ControllerFeature> Members
+
+    public void PopulateFeature(IEnumerable<ApplicationPart> parts, ControllerFeature feature)
     {
-        private readonly IFeatureManager _featureManager;
+        _feature = feature;
 
-        private ControllerFeature? _feature;
+        feature.Controllers
+           .Select((controller, index) => (controller, index))
+           .ToList()
+           .ForEach(
+                x =>
+                    GetCustomAttributes(x.controller, x.index));
+    }
 
-        public CustomControllerFeatureProvider(IFeatureManager featureManager) => _featureManager = featureManager;
+    #endregion
 
-        #region IApplicationFeatureProvider<ControllerFeature> Members
+    private void GetCustomAttributes(TypeInfo controller, int index)
+    {
+        controller.AsType()
+           .CustomAttributes
+           .ForAll(
+                customAttribute =>
+                    FilterCustomAttributes(customAttribute, index));
+    }
 
-        public void PopulateFeature(IEnumerable<ApplicationPart> parts, ControllerFeature feature)
-        {
-            _feature = feature;
 
-            feature.Controllers
-               .Select((controller, index) => (controller, index))
-               .ToList()
-               .ForEach(
-                    x =>
-                        GetCustomAttributes(x.controller, x.index));
-        }
+    private void FilterCustomAttributes(CustomAttributeData customAttribute, int index)
+    {
+        if (customAttribute.AttributeType.FullName != typeof(FeatureGateAttribute).FullName)
+            return;
 
-        #endregion
-
-        private void GetCustomAttributes(TypeInfo controller, int index)
-        {
-            controller.AsType()
-               .CustomAttributes
+        if (customAttribute.ConstructorArguments.First().Value is IEnumerable arguments)
+            arguments.Cast<object>()
                .ForAll(
-                    customAttribute =>
-                        FilterCustomAttributes(customAttribute, index));
-        }
+                    @object =>
+                        RemoveDisabledFeatureFromControllers(@object, index));
+    }
 
+    private void RemoveDisabledFeatureFromControllers(object argumentValue, int index)
+    {
+        var typedArgument      = (CustomAttributeTypedArgument)argumentValue;
+        var typedArgumentValue = (Features)(int)typedArgument.Value!;
 
-        private void FilterCustomAttributes(CustomAttributeData customAttribute, int index)
-        {
-            if (customAttribute.AttributeType.FullName != typeof(FeatureGateAttribute).FullName)
-                return;
+        var isFeatureEnabled = _featureManager
+           .IsEnabledAsync(typedArgumentValue.ToString())
+           .ConfigureAwait(false)
+           .GetAwaiter()
+           .GetResult();
 
-            if (customAttribute.ConstructorArguments.First().Value is IEnumerable arguments)
-                arguments.Cast<object>()
-                   .ForAll(
-                        @object =>
-                            RemoveDisabledFeatureFromControllers(@object, index));
-        }
-
-        private void RemoveDisabledFeatureFromControllers(object argumentValue, int index)
-        {
-            var typedArgument      = (CustomAttributeTypedArgument)argumentValue;
-            var typedArgumentValue = (Features)(int)typedArgument.Value!;
-
-            var isFeatureEnabled = _featureManager
-               .IsEnabledAsync(typedArgumentValue.ToString())
-               .ConfigureAwait(false)
-               .GetAwaiter()
-               .GetResult();
-
-            if (!isFeatureEnabled)
-                _feature?.Controllers.RemoveAt(index);
-        }
+        if (!isFeatureEnabled)
+            _feature?.Controllers.RemoveAt(index);
     }
 }

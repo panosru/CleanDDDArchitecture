@@ -1,47 +1,45 @@
-﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger
+﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger;
+
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+
+/// <summary>
+///     Represents the Swagger/Swashbuckle operation filter used to document the implicit API version parameter.
+/// </summary>
+/// <remarks>
+///     This <see cref="IOperationFilter" /> is only required due to bugs in the <see cref="SwaggerGenerator" />.
+///     Once they are fixed and published, this class can be removed.
+/// </remarks>
+[ExcludeFromCodeCoverage]
+internal sealed class SwaggerDefaultValues : IOperationFilter
 {
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using Microsoft.OpenApi.Models;
-    using Swashbuckle.AspNetCore.SwaggerGen;
+    #region IOperationFilter Members
 
     /// <summary>
-    ///     Represents the Swagger/Swashbuckle operation filter used to document the implicit API version parameter.
+    ///     Applies the filter to the specified operation using the given context.
     /// </summary>
-    /// <remarks>
-    ///     This <see cref="IOperationFilter" /> is only required due to bugs in the <see cref="SwaggerGenerator" />.
-    ///     Once they are fixed and published, this class can be removed.
-    /// </remarks>
-    [ExcludeFromCodeCoverage]
-    internal sealed class SwaggerDefaultValues : IOperationFilter
+    /// <param name="operation">The operation to apply the filter to.</param>
+    /// <param name="context">The current operation filter context.</param>
+    public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
-        #region IOperationFilter Members
+        if (operation.Parameters is null)
+            return;
 
-        /// <summary>
-        ///     Applies the filter to the specified operation using the given context.
-        /// </summary>
-        /// <param name="operation">The operation to apply the filter to.</param>
-        /// <param name="context">The current operation filter context.</param>
-        public void Apply(OpenApiOperation operation, OperationFilterContext context)
+        foreach (var parameter in operation.Parameters)
         {
-            if (operation.Parameters is null)
-                return;
+            var description = context.ApiDescription.ParameterDescriptions.First(
+                p => p.Name == parameter.Name);
+            var routeInfo = description.RouteInfo;
 
-            foreach (var parameter in operation.Parameters)
-            {
-                var description = context.ApiDescription.ParameterDescriptions.First(
-                    p => p.Name == parameter.Name);
-                var routeInfo = description.RouteInfo;
+            parameter.Description ??= description.ModelMetadata.Description;
 
-                parameter.Description ??= description.ModelMetadata.Description;
+            if (routeInfo is null)
+                continue;
 
-                if (routeInfo is null)
-                    continue;
-
-                parameter.Required |= !routeInfo.IsOptional;
-            }
+            parameter.Required |= !routeInfo.IsOptional;
         }
-
-        #endregion
     }
+
+    #endregion
 }

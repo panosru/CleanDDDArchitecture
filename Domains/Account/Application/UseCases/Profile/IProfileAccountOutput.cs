@@ -1,12 +1,11 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Profile
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Profile;
+
+using Aviant.DDD.Application.UseCases;
+using Identity;
+
+public interface IProfileAccountOutput : IUseCaseOutput
 {
-    using Aviant.DDD.Application.UseCases;
-    using Identity;
+    public void Ok(AccountUser accountUser);
 
-    public interface IProfileAccountOutput : IUseCaseOutput
-    {
-        public void Ok(AccountUser accountUser);
-
-        public void Invalid(string message);
-    }
+    public void Invalid(string message);
 }

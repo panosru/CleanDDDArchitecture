@@ -1,15 +1,14 @@
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Create
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Create;
+
+using System.ComponentModel.DataAnnotations;
+
+public struct TodoItemCreateDto
 {
-    using System.ComponentModel.DataAnnotations;
+    [Required]
+    public int ListId { get; set; }
 
-    public struct TodoItemCreateDto
-    {
-        [Required]
-        public int ListId { get; set; }
-
-        [Required]
-        public string Title { get; set; }
-    }
+    [Required]
+    public string Title { get; set; }
 }

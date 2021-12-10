@@ -1,11 +1,10 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Delete
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Delete;
+
+using Aviant.DDD.Application.UseCases;
+
+public sealed class DeleteTodoListInput : UseCaseInput
 {
-    using Aviant.DDD.Application.UseCases;
+    public DeleteTodoListInput(int id) => Id = id;
 
-    public sealed class DeleteTodoListInput : UseCaseInput
-    {
-        public DeleteTodoListInput(int id) => Id = id;
-
-        internal int Id { get; }
-    }
+    internal int Id { get; }
 }

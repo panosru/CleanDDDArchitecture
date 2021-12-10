@@ -1,15 +1,14 @@
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate;
+
+using System.ComponentModel.DataAnnotations;
+
+public struct AuthenticateDto
 {
-    using System.ComponentModel.DataAnnotations;
+    [Required]
+    public string Username { get; set; }
 
-    public struct AuthenticateDto
-    {
-        [Required]
-        public string Username { get; set; }
-
-        [Required]
-        public string Password { get; set; }
-    }
+    [Required]
+    public string Password { get; set; }
 }

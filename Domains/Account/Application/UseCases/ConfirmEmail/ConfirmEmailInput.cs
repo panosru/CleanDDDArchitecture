@@ -1,17 +1,16 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
+
+using Aviant.DDD.Application.UseCases;
+
+public sealed class ConfirmEmailInput : UseCaseInput
 {
-    using Aviant.DDD.Application.UseCases;
-
-    public sealed class ConfirmEmailInput : UseCaseInput
+    public ConfirmEmailInput(string token, string email)
     {
-        public ConfirmEmailInput(string token, string email)
-        {
-            Token = token;
-            Email = email;
-        }
-
-        internal string Token { get; }
-
-        internal string Email { get; }
+        Token = token;
+        Email = email;
     }
+
+    internal string Token { get; }
+
+    internal string Email { get; }
 }

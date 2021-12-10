@@ -1,35 +1,32 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.GetBy
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.GetBy;
+
+using Aviant.DDD.Application.Queries;
+using Core.Repositories;
+
+internal sealed class GetTodoItemQuery : Query<string>
 {
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Aviant.DDD.Application.Queries;
-    using Core.Repositories;
+    public GetTodoItemQuery(int id) => Id = id;
 
-    internal sealed class GetTodoItemQuery : Query<string>
+    private int Id { get; }
+
+    #region Nested type: GetTodoItemQueryHandler
+
+    internal sealed class GetTodoItemQueryHandler : QueryHandler<GetTodoItemQuery, string>
     {
-        public GetTodoItemQuery(int id) => Id = id;
+        private readonly ITodoItemRepositoryRead _todoItemReadRepository;
 
-        private int Id { get; }
+        public GetTodoItemQueryHandler(ITodoItemRepositoryRead todoItemReadRepository) =>
+            _todoItemReadRepository = todoItemReadRepository;
 
-        #region Nested type: GetTodoItemQueryHandler
-
-        internal sealed class GetTodoItemQueryHandler : QueryHandler<GetTodoItemQuery, string>
+        public override async Task<string> Handle(GetTodoItemQuery request, CancellationToken cancellationToken)
         {
-            private readonly ITodoItemRepositoryRead _todoItemReadRepository;
+            var todoName = await _todoItemReadRepository
+               .FirstOrDefaultAsync(request.Id, cancellationToken)
+               .ConfigureAwait(false);
 
-            public GetTodoItemQueryHandler(ITodoItemRepositoryRead todoItemReadRepository) =>
-                _todoItemReadRepository = todoItemReadRepository;
-
-            public override async Task<string> Handle(GetTodoItemQuery request, CancellationToken cancellationToken)
-            {
-                var todoName = await _todoItemReadRepository
-                   .FirstOrDefaultAsync(request.Id, cancellationToken)
-                   .ConfigureAwait(false);
-
-                return todoName.Title;
-            }
+            return todoName.Title;
         }
-
-        #endregion
     }
+
+    #endregion
 }
