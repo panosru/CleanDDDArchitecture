@@ -1,9 +1,8 @@
-namespace CleanDDDArchitecture.Hosts.WebApp.Core.Localisation
+namespace CleanDDDArchitecture.Hosts.WebApp.Core.Localisation;
+
+public sealed class SharedResource
 {
-    public sealed class SharedResource
-    {
-        // ReSharper disable once EmptyConstructor
-        public SharedResource()
-        { }
-    }
+    // ReSharper disable once EmptyConstructor
+    public SharedResource()
+    { }
 }

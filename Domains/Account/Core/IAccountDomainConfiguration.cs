@@ -1,7 +1,6 @@
-namespace CleanDDDArchitecture.Domains.Account.Core
-{
-    using Aviant.DDD.Core.Domain;
+namespace CleanDDDArchitecture.Domains.Account.Core;
 
-    public interface IAccountDomainConfiguration : IDomainConfigurationContainer
-    { }
-}
+using Aviant.DDD.Core.Domain;
+
+public interface IAccountDomainConfiguration : IDomainConfigurationContainer
+{ }

@@ -1,28 +1,27 @@
 ﻿#pragma warning disable 8618
 
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update;
+
+using AutoMapper;
+using Aviant.DDD.Application.Mappings;
+using Todo.Core.Entities;
+
+public sealed class TodoItemViewModel : IMapFrom<TodoItemEntity>
 {
-    using AutoMapper;
-    using Aviant.DDD.Application.Mappings;
-    using Todo.Core.Entities;
+    public int Id { get; set; }
 
-    public sealed class TodoItemViewModel : IMapFrom<TodoItemEntity>
+    public int ListId { get; set; }
+
+    public string Title { get; set; }
+
+    public bool IsCompleted { get; set; }
+
+    #region IMapFrom<TodoItemEntity> Members
+
+    public void Mapping(Profile profile)
     {
-        public int Id { get; set; }
-
-        public int ListId { get; set; }
-
-        public string Title { get; set; }
-
-        public bool IsCompleted { get; set; }
-
-        #region IMapFrom<TodoItemEntity> Members
-
-        public void Mapping(Profile profile)
-        {
-            profile.CreateMap<TodoItemEntity, TodoItemViewModel>();
-        }
-
-        #endregion
+        profile.CreateMap<TodoItemEntity, TodoItemViewModel>();
     }
+
+    #endregion
 }

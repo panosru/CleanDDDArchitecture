@@ -1,293 +1,288 @@
-namespace CleanDDDArchitecture.Domains.Account.CrossCutting
+namespace CleanDDDArchitecture.Domains.Account.CrossCutting;
+
+using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Security.Claims;
+using System.Text;
+using Application.Aggregates;
+using Application.Identity;
+using Application.Persistence;
+using Application.Repositories;
+using Application.UseCases.Authenticate;
+using Application.UseCases.ConfirmEmail;
+using Application.UseCases.Create;
+using Application.UseCases.GetBy;
+using Application.UseCases.Profile;
+using Application.UseCases.UpdateDetails;
+using Aviant.DDD.Application.EventBus;
+using Aviant.DDD.Application.Identity;
+using Aviant.DDD.Application.Orchestration;
+using Aviant.DDD.Application.Persistance;
+using Aviant.DDD.Application.Services;
+using Aviant.DDD.Core.EventBus;
+using Aviant.DDD.Core.Services;
+using Aviant.DDD.Infrastructure.CrossCutting;
+using Aviant.DDD.Infrastructure.Persistence;
+using Aviant.DDD.Infrastructure.Persistence.EventStore;
+using Aviant.DDD.Infrastructure.Persistence.Kafka;
+using Core;
+using Core.Exceptions;
+using Infrastructure;
+using Infrastructure.Identity;
+using Infrastructure.Persistence.Contexts;
+using Infrastructure.Repositories;
+using Infrastructure.Workers;
+using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
+
+public static class AccountDependencyInjectionRegistry
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IdentityModel.Tokens.Jwt;
-    using System.Linq;
-    using System.Net;
-    using System.Security.Claims;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Application.Aggregates;
-    using Application.Identity;
-    using Application.Persistence;
-    using Application.Repositories;
-    using Application.UseCases.Authenticate;
-    using Application.UseCases.ConfirmEmail;
-    using Application.UseCases.Create;
-    using Application.UseCases.GetBy;
-    using Application.UseCases.Profile;
-    using Application.UseCases.UpdateDetails;
-    using Aviant.DDD.Application.EventBus;
-    using Aviant.DDD.Application.Identity;
-    using Aviant.DDD.Application.Orchestration;
-    using Aviant.DDD.Application.Persistance;
-    using Aviant.DDD.Application.Services;
-    using Aviant.DDD.Core.EventBus;
-    using Aviant.DDD.Core.Services;
-    using Aviant.DDD.Infrastructure.CrossCutting;
-    using Aviant.DDD.Infrastructure.Persistence;
-    using Aviant.DDD.Infrastructure.Persistence.EventStore;
-    using Aviant.DDD.Infrastructure.Persistence.Kafka;
-    using Core;
-    using Core.Exceptions;
-    using Infrastructure;
-    using Infrastructure.Identity;
-    using Infrastructure.Persistence.Contexts;
-    using Infrastructure.Repositories;
-    using Infrastructure.Workers;
-    using MediatR;
-    using Microsoft.AspNetCore.Authentication;
-    using Microsoft.AspNetCore.Authentication.JwtBearer;
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.IdentityModel.Tokens;
-    using Newtonsoft.Json.Linq;
+    private const string CurrentDomain = "Account";
 
-    public static class AccountDependencyInjectionRegistry
+    static AccountDependencyInjectionRegistry() => Configuration =
+        DependencyInjectionRegistry.GetDomainConfiguration(
+            CurrentDomain.ToLower());
+
+    private static IConfiguration Configuration { get; }
+
+    private static readonly IEnumerable<string> MandatoryClaims = new[]
     {
-        private const string CurrentDomain = "Account";
+        JwtRegisteredClaimNames.NameId,
+        JwtRegisteredClaimNames.UniqueName,
+        JwtRegisteredClaimNames.Email
+    };
 
-        static AccountDependencyInjectionRegistry() => Configuration =
-            DependencyInjectionRegistry.GetDomainConfiguration(
-                CurrentDomain.ToLower());
+    public static IServiceCollection AddAccountDomain(this IServiceCollection services)
+    {
+        services.AddTransient<IAccountDomainConfiguration>(_ => new AccountDomainConfiguration(Configuration));
 
-        private static IConfiguration Configuration { get; }
+        // By default, Microsoft has some legacy claim mapping that converts
+        // standard JWT claims into proprietary ones. This removes those mappings.
+        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+        JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
 
-        private static readonly IEnumerable<string> MandatoryClaims = new[]
-        {
-            JwtRegisteredClaimNames.NameId,
-            JwtRegisteredClaimNames.UniqueName,
-            JwtRegisteredClaimNames.Email
-        };
+        services.AddDbContext<AccountDbContextWrite>(
+            options =>
+                options.UseNpgsql(
+                    Configuration.GetConnectionString("DefaultWriteConnection"),
+                    b =>
+                        b.MigrationsAssembly(AccountCrossCutting.AccountInfrastructureAssembly.FullName)));
 
-        public static IServiceCollection AddAccountDomain(this IServiceCollection services)
-        {
-            services.AddTransient<IAccountDomainConfiguration>(_ => new AccountDomainConfiguration(Configuration));
+        services.AddScoped<IAccountDbContextWrite>(
+            provider =>
+                provider.GetService<AccountDbContextWrite>()!);
 
-            // By default, Microsoft has some legacy claim mapping that converts
-            // standard JWT claims into proprietary ones. This removes those mappings.
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+        services.AddDbContext<AccountDbContextRead>(
+            options =>
+                options.UseNpgsql(
+                    Configuration.GetConnectionString("DefaultReadConnection"),
+                    b =>
+                        b.MigrationsAssembly(AccountCrossCutting.AccountApplicationAssembly.FullName)));
 
-            services.AddDbContext<AccountDbContextWrite>(
+        services.AddScoped<IAccountDbContextRead>(
+            provider =>
+                provider.GetService<AccountDbContextRead>()!);
+
+        services.AddScoped<IAccountRepositoryRead, AccountRepositoryRead>();
+        services.AddScoped<IAccountRepositoryWrite, AccountRepositoryWrite>();
+
+        services
+           .AddDefaultIdentity<AccountUser>(
                 options =>
-                    options.UseNpgsql(
-                        Configuration.GetConnectionString("DefaultWriteConnection"),
-                        b =>
-                            b.MigrationsAssembly(AccountCrossCutting.AccountInfrastructureAssembly.FullName)));
+                {
+                    options.User.RequireUniqueEmail = true;
 
-            services.AddScoped<IAccountDbContextWrite>(
-                provider =>
-                    provider.GetService<AccountDbContextWrite>()!);
+                    options.Password.RequireDigit           = true;
+                    options.Password.RequiredLength         = 5;
+                    options.Password.RequireLowercase       = true;
+                    options.Password.RequireUppercase       = true;
+                    options.Password.RequireNonAlphanumeric = true;
+                })
+           .AddRoles<AccountRole>()
+           .AddRoleManager<RoleManager<AccountRole>>()
+           .AddEntityFrameworkStores<AccountDbContextWrite>();
 
-            services.AddDbContext<AccountDbContextRead>(
+        services.AddIdentityServer()
+           .AddApiAuthorization<AccountUser, AccountDbContextWrite>();
+
+        services.AddTransient<IIdentityService, IdentityService>();
+
+        services
+           .AddAuthentication(
                 options =>
-                    options.UseNpgsql(
-                        Configuration.GetConnectionString("DefaultReadConnection"),
-                        b =>
-                            b.MigrationsAssembly(AccountCrossCutting.AccountApplicationAssembly.FullName)));
-
-            services.AddScoped<IAccountDbContextRead>(
-                provider =>
-                    provider.GetService<AccountDbContextRead>()!);
-
-            services.AddScoped<IAccountRepositoryRead, AccountRepositoryRead>();
-            services.AddScoped<IAccountRepositoryWrite, AccountRepositoryWrite>();
-
-            services
-               .AddDefaultIdentity<AccountUser>(
-                    options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme    = JwtBearerDefaults.AuthenticationScheme;
+                })
+           .AddJwtBearer(
+                options =>
+                {
+                    options.Events = new JwtBearerEvents
                     {
-                        options.User.RequireUniqueEmail = true;
-
-                        options.Password.RequireDigit           = true;
-                        options.Password.RequiredLength         = 5;
-                        options.Password.RequireLowercase       = true;
-                        options.Password.RequireUppercase       = true;
-                        options.Password.RequireNonAlphanumeric = true;
-                    })
-               .AddRoles<AccountRole>()
-               .AddRoleManager<RoleManager<AccountRole>>()
-               .AddEntityFrameworkStores<AccountDbContextWrite>();
-
-            services.AddIdentityServer()
-               .AddApiAuthorization<AccountUser, AccountDbContextWrite>();
-
-            services.AddTransient<IIdentityService, IdentityService>();
-
-            services
-               .AddAuthentication(
-                    options =>
-                    {
-                        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                        options.DefaultChallengeScheme    = JwtBearerDefaults.AuthenticationScheme;
-                    })
-               .AddJwtBearer(
-                    options =>
-                    {
-                        options.Events = new JwtBearerEvents
+                        OnTokenValidated = context =>
                         {
-                            OnTokenValidated = context =>
-                            {
-                                // Ensure that mandatory claims are set
-                                if (!MandatoryClaims.All(
+                            // Ensure that mandatory claims are set
+                            if (!MandatoryClaims.All(
                                     mandatoryClaim => context.Principal!.HasClaim(
                                         claim => claim.Type == mandatoryClaim)))
-                                    context.Fail("Missing claims.");
+                                context.Fail("Missing claims.");
 
-                                return Task.CompletedTask;
-                            },
+                            return Task.CompletedTask;
+                        },
 
-                            OnForbidden = context =>
+                        OnForbidden = context =>
+                        {
+                            context.Fail(
+                                new IdentityException(
+                                    "You are not authorised to access this resource",
+                                    HttpStatusCode.Forbidden));
+
+                            return Task.CompletedTask;
+                        },
+
+                        OnChallenge = async context =>
+                        {
+                            // this is a default method
+                            // the response statusCode and headers are set here
+                            context.HandleResponse();
+
+                            if (context.AuthenticateFailure is not null)
                             {
-                                context.Fail(
-                                    new IdentityException(
-                                        "You are not authorised to access this resource",
-                                        HttpStatusCode.Forbidden));
-
-                                return Task.CompletedTask;
-                            },
-
-                            OnChallenge = async context =>
-                            {
-                                // this is a default method
-                                // the response statusCode and headers are set here
-                                context.HandleResponse();
-
-                                if (context.AuthenticateFailure is not null)
+                                JObject payload = new()
                                 {
-                                    JObject payload = new()
-                                    {
-                                        ["error"]     = context.Error,
-                                        ["error_description"] = context.ErrorDescription,
-                                        ["message"] = context.AuthenticateFailure.Message
-                                    };
+                                    ["error"]             = context.Error,
+                                    ["error_description"] = context.ErrorDescription,
+                                    ["message"]           = context.AuthenticateFailure.Message
+                                };
 
-                                    context.Response.ContentType = "application/json";
+                                context.Response.ContentType = "application/json";
 
-                                    context.Response.StatusCode = context.AuthenticateFailure is IdentityException
-                                        exception
-                                        ? exception.ErrorCode
-                                        : (int)HttpStatusCode.Unauthorized;
+                                context.Response.StatusCode = context.AuthenticateFailure is IdentityException
+                                    exception
+                                    ? exception.ErrorCode
+                                    : (int)HttpStatusCode.Unauthorized;
 
-                                    await context.HttpContext.Response.WriteAsync(payload.ToString())
-                                       .ConfigureAwait(false);
-                                }
+                                await context.HttpContext.Response.WriteAsync(payload.ToString())
+                                   .ConfigureAwait(false);
                             }
-                        };
+                        }
+                    };
 
-                        options.RequireHttpsMetadata = false;
-                        options.SaveToken            = true;
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken            = true;
 
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuerSigningKey = true,
-                            ValidateIssuer           = true,
-                            ValidateAudience         = true,
-                            ValidateLifetime         = true,
-                            ValidIssuer              = Configuration["Jwt:Issuer"],
-                            ValidAudience            = Configuration["Jwt:Audience"],
-                            TokenDecryptionKey = new SymmetricSecurityKey(
-                                Encoding.ASCII.GetBytes(Configuration["Jwt:Key256Bit"])),
-                            IssuerSigningKey = new SymmetricSecurityKey(
-                                Encoding.ASCII.GetBytes(Configuration["Jwt:Key512Bit"])),
-                            // By setting ClockSkew to zero, the tokens are expiring at
-                            // the exact token expiration time and not 5 minutes later
-                            ClockSkew = TimeSpan.Zero
-                        };
-                    })
-               .AddIdentityServerJwt();
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        ValidateIssuer           = true,
+                        ValidateAudience         = true,
+                        ValidateLifetime         = true,
+                        ValidIssuer              = Configuration["Jwt:Issuer"],
+                        ValidAudience            = Configuration["Jwt:Audience"],
+                        TokenDecryptionKey = new SymmetricSecurityKey(
+                            Encoding.ASCII.GetBytes(Configuration["Jwt:Key256Bit"])),
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.ASCII.GetBytes(Configuration["Jwt:Key512Bit"])),
+                        // By setting ClockSkew to zero, the tokens are expiring at
+                        // the exact token expiration time and not 5 minutes later
+                        ClockSkew = TimeSpan.Zero
+                    };
+                })
+           .AddIdentityServerJwt();
 
-            services
-               .AddAuthorization(
-                    options => options.AddPolicy(
-                        "UserPolicy",
-                        policy =>
-                        {
-                            policy.RequireClaim(ClaimTypes.Email);
-                            policy.RequireClaim(ClaimTypes.DateOfBirth);
-                        }));
+        services
+           .AddAuthorization(
+                options => options.AddPolicy(
+                    "UserPolicy",
+                    policy =>
+                    {
+                        policy.RequireClaim(ClaimTypes.Email);
+                        policy.RequireClaim(ClaimTypes.DateOfBirth);
+                    }));
 
-            services
-               .AddSingleton<IEventDeserializer>(
-                    new JsonEventDeserializer(
-                        new[]
-                        {
-                            AccountCrossCutting.AccountApplicationAssembly
-                        }));
+        services
+           .AddSingleton<IEventDeserializer>(
+                new JsonEventDeserializer(
+                    new[]
+                    {
+                        AccountCrossCutting.AccountApplicationAssembly
+                    }));
 
-            EventConsumerConfig consumerConfig = new(
-                Configuration.GetConnectionString("kafka"),
-                Configuration["eventsTopicName"],
-                Configuration["eventsTopicGroupName"]);
+        EventConsumerConfig consumerConfig = new(
+            Configuration.GetConnectionString("kafka"),
+            Configuration["eventsTopicName"],
+            Configuration["eventsTopicGroupName"]);
 
-            services.AddSingleton(consumerConfig)
-               .AddSingleton(typeof(IEventConsumer<,,>), typeof(EventConsumer<,,>))
-               .AddKafkaEventProducer<AccountAggregate, AccountAggregateId>(consumerConfig);
-
-
-            services.AddSingleton<IEventStoreConnectionWrapper>(
-                    _ => new EventStoreConnectionWrapper(
-                        new Uri(Configuration.GetConnectionString("eventstore"))))
-               .AddEventsRepository<AccountAggregate, AccountAggregateId>();
+        services.AddSingleton(consumerConfig)
+           .AddSingleton(typeof(IEventConsumer<,,>), typeof(EventConsumer<,,>))
+           .AddKafkaEventProducer<AccountAggregate, AccountAggregateId>(consumerConfig);
 
 
-            services.AddEventsService<AccountAggregate, AccountAggregateId>();
+        services.AddSingleton<IEventStoreConnectionWrapper>(
+                _ => new EventStoreConnectionWrapper(
+                    new Uri(Configuration.GetConnectionString("eventstore"))))
+           .AddEventsRepository<AccountAggregate, AccountAggregateId>();
 
-            services.AddScoped<ServiceFactory>(ctx => ctx.GetRequiredService);
 
-            services.AddSingleton<IEventConsumerFactory, EventConsumerFactory>();
+        services.AddEventsService<AccountAggregate, AccountAggregateId>();
 
-            services.AddHostedService(
-                ctx =>
-                {
-                    var factory = ctx.GetRequiredService<IEventConsumerFactory>();
+        services.AddScoped<ServiceFactory>(ctx => ctx.GetRequiredService);
 
-                    return new EventsConsumerWorker(factory);
-                });
+        services.AddSingleton<IEventConsumerFactory, EventConsumerFactory>();
 
-            services.AddScoped(typeof(AuthenticateUseCase));
-            services.AddScoped(typeof(ConfirmEmailUseCase));
-            services.AddScoped(typeof(AccountCreateUseCase));
-            services.AddScoped(typeof(UpdateDetailsUseCase));
-            services.AddScoped(typeof(GetAccountUseCase));
-            services.AddScoped(typeof(ProfileAccountUseCase));
+        services.AddHostedService(
+            ctx =>
+            {
+                var factory = ctx.GetRequiredService<IEventConsumerFactory>();
 
-            services
-               .AddScoped<IOrchestrator<AccountAggregate, AccountAggregateId>,
-                    Orchestrator<AccountAggregate, AccountAggregateId>>();
+                return new EventsConsumerWorker(factory);
+            });
 
-            services
-               .AddScoped<IUnitOfWork<AccountAggregate, AccountAggregateId>,
-                    UnitOfWork<AccountAggregate, AccountAggregateId>>();
+        services.AddScoped(typeof(AuthenticateUseCase));
+        services.AddScoped(typeof(ConfirmEmailUseCase));
+        services.AddScoped(typeof(AccountCreateUseCase));
+        services.AddScoped(typeof(UpdateDetailsUseCase));
+        services.AddScoped(typeof(GetAccountUseCase));
+        services.AddScoped(typeof(ProfileAccountUseCase));
 
-            return services;
-        }
+        services
+           .AddScoped<IOrchestrator<AccountAggregate, AccountAggregateId>,
+                Orchestrator<AccountAggregate, AccountAggregateId>>();
 
-        public static IHealthChecksBuilder AddAccountChecks(this IHealthChecksBuilder builder) =>
-            builder.AddDbContextCheck<AccountDbContextWrite>();
+        services
+           .AddScoped<IUnitOfWork<AccountAggregate, AccountAggregateId>,
+                UnitOfWork<AccountAggregate, AccountAggregateId>>();
 
-        public static void UseAccountAuth(this IApplicationBuilder app)
-        {
-            app.UseAuthentication();
-            app.UseAuthorization();
+        return services;
+    }
 
-            app.Use(
-                async (context, next) =>
-                {
-                    var token = context.Session.GetString("Token");
+    public static IHealthChecksBuilder AddAccountChecks(this IHealthChecksBuilder builder) =>
+        builder.AddDbContextCheck<AccountDbContextWrite>();
 
-                    if (!string.IsNullOrEmpty(token))
-                        context.Request.Headers.Add("Authorization", "Bearer " + token);
+    public static void UseAccountAuth(this IApplicationBuilder app)
+    {
+        app.UseAuthentication();
+        app.UseAuthorization();
 
-                    await next()
-                       .ConfigureAwait(false);
-                });
-        }
+        app.Use(
+            async (context, next) =>
+            {
+                var token = context.Session.GetString("Token");
+
+                if (!string.IsNullOrEmpty(token))
+                    context.Request.Headers.Add("Authorization", "Bearer " + token);
+
+                await next()
+                   .ConfigureAwait(false);
+            });
     }
 }

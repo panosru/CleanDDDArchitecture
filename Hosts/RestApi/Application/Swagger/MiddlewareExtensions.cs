@@ -1,28 +1,26 @@
-﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger
+﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger;
+
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Builder;
+
+/// <summary>
+///     Extending Swagger services
+/// </summary>
+[ExcludeFromCodeCoverage]
+internal static class MiddlewareExtensions
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using Microsoft.AspNetCore.Builder;
-
     /// <summary>
-    ///     Extending Swagger services
+    ///     Enabling Swagger UI.
+    ///     Excluding from test environment
     /// </summary>
-    [ExcludeFromCodeCoverage]
-    internal static class MiddlewareExtensions
+    /// <param name="app">IApplicationBuilder</param>
+    public static void UseSwaggerDocuments(this IApplicationBuilder app)
     {
-        /// <summary>
-        ///     Enabling Swagger UI.
-        ///     Excluding from test environment
-        /// </summary>
-        /// <param name="app">IApplicationBuilder</param>
-        public static void UseSwaggerDocuments(this IApplicationBuilder app)
-        {
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "TEST")
-                return;
+        if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "TEST")
+            return;
 
-            app.UseSwagger();
+        app.UseSwagger();
 
-            app.UseSwaggerUI();
-        }
+        app.UseSwaggerUI();
     }
 }

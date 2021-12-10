@@ -1,8 +1,7 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Core.Repositories
-{
-    using Aviant.DDD.Core.Persistence;
-    using Todo.Core.Entities;
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Core.Repositories;
 
-    public interface ITodoItemRepositoryRead : IRepositoryRead<TodoItemEntity, int>
-    { }
-}
+using Aviant.DDD.Core.Persistence;
+using Todo.Core.Entities;
+
+public interface ITodoItemRepositoryRead : IRepositoryRead<TodoItemEntity, int>
+{ }

@@ -1,64 +1,60 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create
+﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
+
+using AutoMapper;
+using Aviant.DDD.Application.ApplicationEvents;
+using Aviant.DDD.Application.Commands;
+using Core.Repositories;
+using Todo.Core.Entities;
+
+/// <summary>
+///     The Command to create a todo list
+/// </summary>
+internal sealed class CreateTodoListCommand : Command<Lazy<CreatedTodoListViewModel>>
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using AutoMapper;
-    using Aviant.DDD.Application.ApplicationEvents;
-    using Aviant.DDD.Application.Commands;
-    using Core.Repositories;
-    using Todo.Core.Entities;
+    public CreateTodoListCommand(string title) => Title = title;
 
-    /// <summary>
-    ///     The Command to create a todo list
-    /// </summary>
-    internal sealed class CreateTodoListCommand : Command<Lazy<CreatedTodoListViewModel>>
+    private string Title { get; }
+
+    #region Nested type: CreateTodoListCommandHandler
+
+    internal sealed class CreateTodoListCommandHandler
+        : CommandHandler<CreateTodoListCommand, Lazy<CreatedTodoListViewModel>>
     {
-        public CreateTodoListCommand(string title) => Title = title;
+        private readonly IApplicationEventDispatcher _applicationEventDispatcher;
 
-        private string Title { get; }
+        private readonly IMapper _mapper;
 
-        #region Nested type: CreateTodoListCommandHandler
+        private readonly ITodoListRepositoryWrite _todoListWriteRepository;
 
-        internal sealed class CreateTodoListCommandHandler
-            : CommandHandler<CreateTodoListCommand, Lazy<CreatedTodoListViewModel>>
+        public CreateTodoListCommandHandler(
+            ITodoListRepositoryWrite    todoListWriteRepository,
+            IApplicationEventDispatcher applicationEventDispatcher,
+            IMapper                     mapper)
         {
-            private readonly IApplicationEventDispatcher _applicationEventDispatcher;
-
-            private readonly IMapper _mapper;
-
-            private readonly ITodoListRepositoryWrite _todoListWriteRepository;
-
-            public CreateTodoListCommandHandler(
-                ITodoListRepositoryWrite    todoListWriteRepository,
-                IApplicationEventDispatcher applicationEventDispatcher,
-                IMapper                     mapper)
-            {
-                _todoListWriteRepository    = todoListWriteRepository;
-                _applicationEventDispatcher = applicationEventDispatcher;
-                _mapper                     = mapper;
-            }
-
-            public override async Task<Lazy<CreatedTodoListViewModel>> Handle(
-                CreateTodoListCommand command,
-                CancellationToken     cancellationToken)
-            {
-                var entity = new TodoListEntity { Title = command.Title };
-
-
-                _applicationEventDispatcher.AddPreCommitEvent(
-                    new CreatedTodoListApplicationEvent(entity.Title));
-
-                await _todoListWriteRepository.InsertAsync(entity, cancellationToken)
-                   .ConfigureAwait(false);
-
-                // _applicationEventDispatcher.AddPostCommitEvent(
-                //     new CreatedTodoListApplicationEvent(entity.Title));
-
-                return new Lazy<CreatedTodoListViewModel>(() => _mapper.Map<CreatedTodoListViewModel>(entity));
-            }
+            _todoListWriteRepository    = todoListWriteRepository;
+            _applicationEventDispatcher = applicationEventDispatcher;
+            _mapper                     = mapper;
         }
 
-        #endregion
+        public override async Task<Lazy<CreatedTodoListViewModel>> Handle(
+            CreateTodoListCommand command,
+            CancellationToken     cancellationToken)
+        {
+            var entity = new TodoListEntity { Title = command.Title };
+
+
+            _applicationEventDispatcher.AddPreCommitEvent(
+                new CreatedTodoListApplicationEvent(entity.Title));
+
+            await _todoListWriteRepository.InsertAsync(entity, cancellationToken)
+               .ConfigureAwait(false);
+
+            // _applicationEventDispatcher.AddPostCommitEvent(
+            //     new CreatedTodoListApplicationEvent(entity.Title));
+
+            return new Lazy<CreatedTodoListViewModel>(() => _mapper.Map<CreatedTodoListViewModel>(entity));
+        }
     }
+
+    #endregion
 }

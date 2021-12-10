@@ -1,19 +1,18 @@
-namespace CleanDDDArchitecture.Domains.Shared.Core.Identity
+namespace CleanDDDArchitecture.Domains.Shared.Core.Identity;
+
+public static class Roles
 {
-    public static class Roles
-    {
-        public const string Root = "root";
+    public const string Root = "root";
 
-        public const string SuperAdmin = "superadmin";
+    public const string SuperAdmin = "superadmin";
 
-        public const string Admin = "admin";
+    public const string Admin = "admin";
 
-        public const string Manager = "manager";
+    public const string Manager = "manager";
 
-        public const string Moderator = "moderator";
+    public const string Moderator = "moderator";
 
-        public const string Member = "member";
+    public const string Member = "member";
 
-        public const string Guest = "guest";
-    }
+    public const string Guest = "guest";
 }

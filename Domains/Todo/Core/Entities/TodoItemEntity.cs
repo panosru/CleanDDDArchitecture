@@ -2,67 +2,65 @@
 
 #pragma warning disable 8618
 
-namespace CleanDDDArchitecture.Domains.Todo.Core.Entities
+namespace CleanDDDArchitecture.Domains.Todo.Core.Entities;
+
+using Aviant.DDD.Core.Configuration;
+using Aviant.DDD.Core.Entities;
+
+public sealed class TodoItemEntity
+    : Entity<int>,
+      ICreationAudited,
+      IModificationAudited,
+      IDeletionAudited,
+      ISoftDelete
 {
-    using System;
-    using Aviant.DDD.Core.Configuration;
-    using Aviant.DDD.Core.Entities;
+    public int ListId { get; set; }
 
-    public sealed class TodoItemEntity
-        : Entity<int>,
-          ICreationAudited,
-          IModificationAudited,
-          IDeletionAudited,
-          ISoftDelete
-    {
-        public int ListId { get; set; }
+    public string Title { get; set; }
 
-        public string Title { get; set; }
+    public string? Note { get; set; }
 
-        public string? Note { get; set; }
+    public DateTime? Reminder { get; set; }
 
-        public DateTime? Reminder { get; set; }
+    public bool IsCompleted { get; set; }
 
-        public bool IsCompleted { get; set; }
+    public PriorityLevel Priority { get; set; } = PriorityLevel.Medium;
 
-        public PriorityLevel Priority { get; set; } = PriorityLevel.Medium;
+    public State State { get; set; } = State.Active;
 
-        public State State { get; set; } = State.Active;
+    #region .:: Navigation Properties ::.
 
-        #region .:: Navigation Properties ::.
+    public TodoListEntity List { get; set; }
 
-        public TodoListEntity List { get; set; }
+    #endregion
 
-        #endregion
+    #region ICreationAudited Members
 
-        #region ICreationAudited Members
+    public DateTime Created { get; set; }
 
-        public DateTime Created { get; set; }
+    public Guid CreatedBy { get; set; }
 
-        public Guid CreatedBy { get; set; }
+    #endregion
 
-        #endregion
+    #region IDeletionAudited Members
 
-        #region IDeletionAudited Members
+    public DateTime? Deleted { get; set; }
 
-        public DateTime? Deleted { get; set; }
+    public Guid? DeletedBy { get; set; }
 
-        public Guid? DeletedBy { get; set; }
+    #endregion
 
-        #endregion
+    #region IModificationAudited Members
 
-        #region IModificationAudited Members
+    public DateTime? LastModified { get; set; }
 
-        public DateTime? LastModified { get; set; }
+    public Guid? LastModifiedBy { get; set; }
 
-        public Guid? LastModifiedBy { get; set; }
+    #endregion
 
-        #endregion
+    #region ISoftDelete Members
 
-        #region ISoftDelete Members
+    public bool IsDeleted { get; set; }
 
-        public bool IsDeleted { get; set; }
-
-        #endregion
-    }
+    #endregion
 }

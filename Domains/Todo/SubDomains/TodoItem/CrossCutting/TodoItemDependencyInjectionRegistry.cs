@@ -1,48 +1,47 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.CrossCutting
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.CrossCutting;
+
+using Application.UseCases.Create;
+using Application.UseCases.Delete;
+using Application.UseCases.GetBy;
+using Application.UseCases.Update;
+using Application.UseCases.UpdateDetails;
+using Aviant.DDD.Infrastructure.CrossCutting;
+using Core.Repositories;
+using Infrastructure;
+using Infrastructure.Persistence.Configurations;
+using Infrastructure.Repositories;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Todo.Infrastructure.Persistence.Contexts;
+
+public static class TodoItemDependencyInjectionRegistry
 {
-    using Application.UseCases.Create;
-    using Application.UseCases.Delete;
-    using Application.UseCases.GetBy;
-    using Application.UseCases.Update;
-    using Application.UseCases.UpdateDetails;
-    using Aviant.DDD.Infrastructure.CrossCutting;
-    using Core.Repositories;
-    using Infrastructure;
-    using Infrastructure.Persistence.Configurations;
-    using Infrastructure.Repositories;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Todo.Infrastructure.Persistence.Contexts;
+    private const string CurrentDomain = "Todo";
 
-    public static class TodoItemDependencyInjectionRegistry
+    private const string CurrentSubDomain = "TodoItem";
+
+    static TodoItemDependencyInjectionRegistry() => Configuration =
+        DependencyInjectionRegistry.GetDomainConfiguration(
+            $"{CurrentDomain}.{CurrentSubDomain}".ToLower());
+
+    // ReSharper disable once UnusedAutoPropertyAccessor.Local
+    private static IConfiguration Configuration { get; }
+
+    public static IServiceCollection AddTodoItemSubDomain(this IServiceCollection services)
     {
-        private const string CurrentDomain = "Todo";
+        services.AddScoped(_ => new TodoItemDomainConfiguration(Configuration));
 
-        private const string CurrentSubDomain = "TodoItem";
+        services.AddScoped<ITodoItemRepositoryRead, TodoItemRepositoryRead>();
+        services.AddScoped<ITodoItemRepositoryWrite, TodoItemRepositoryWrite>();
 
-        static TodoItemDependencyInjectionRegistry() => Configuration =
-            DependencyInjectionRegistry.GetDomainConfiguration(
-                $"{CurrentDomain}.{CurrentSubDomain}".ToLower());
+        services.AddScoped(typeof(TodoItemCreateUseCase));
+        services.AddScoped(typeof(TodoItemDeleteUseCase));
+        services.AddScoped(typeof(TodoItemGetByUseCase));
+        services.AddScoped(typeof(TodoItemUpdateUseCase));
+        services.AddScoped(typeof(TodoItemUpdatedetailsUseCase));
 
-        // ReSharper disable once UnusedAutoPropertyAccessor.Local
-        private static IConfiguration Configuration { get; }
+        TodoDbContextWrite.AddConfigurationAssemblyFromEntity(new TodoItemConfiguration());
 
-        public static IServiceCollection AddTodoItemSubDomain(this IServiceCollection services)
-        {
-            services.AddScoped(_ => new TodoItemDomainConfiguration(Configuration));
-
-            services.AddScoped<ITodoItemRepositoryRead, TodoItemRepositoryRead>();
-            services.AddScoped<ITodoItemRepositoryWrite, TodoItemRepositoryWrite>();
-
-            services.AddScoped(typeof(TodoItemCreateUseCase));
-            services.AddScoped(typeof(TodoItemDeleteUseCase));
-            services.AddScoped(typeof(TodoItemGetByUseCase));
-            services.AddScoped(typeof(TodoItemUpdateUseCase));
-            services.AddScoped(typeof(TodoItemUpdatedetailsUseCase));
-
-            TodoDbContextWrite.AddConfigurationAssemblyFromEntity(new TodoItemConfiguration());
-
-            return services;
-        }
+        return services;
     }
 }

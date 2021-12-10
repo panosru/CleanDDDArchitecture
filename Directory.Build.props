@@ -1,7 +1,8 @@
 <Project>
     <PropertyGroup Label="Common">
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
         <Authors>Panagiotis Kosmidis</Authors>
         <Copyright>Copyright © $(Authors) $([System.DateTime]::Now.Year)</Copyright>
         <Trademark>$(Authors)™</Trademark>

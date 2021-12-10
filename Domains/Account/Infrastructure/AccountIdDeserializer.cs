@@ -1,24 +1,22 @@
-namespace CleanDDDArchitecture.Domains.Account.Infrastructure
+namespace CleanDDDArchitecture.Domains.Account.Infrastructure;
+
+using System.Text;
+using Application.Aggregates;
+using Confluent.Kafka;
+
+internal sealed class AccountIdDeserializer : IDeserializer<AccountAggregateId>
 {
-    using System;
-    using System.Text;
-    using Application.Aggregates;
-    using Confluent.Kafka;
+    #region IDeserializer<AccountAggregateId> Members
 
-    internal sealed class AccountIdDeserializer : IDeserializer<AccountAggregateId>
+    public AccountAggregateId Deserialize(
+        ReadOnlySpan<byte>   data,
+        bool                 isNull,
+        SerializationContext context)
     {
-        #region IDeserializer<AccountAggregateId> Members
+        var decodedData = Encoding.UTF8.GetString(data.ToArray());
 
-        public AccountAggregateId Deserialize(
-            ReadOnlySpan<byte>   data,
-            bool                 isNull,
-            SerializationContext context)
-        {
-            var decodedData = Encoding.UTF8.GetString(data.ToArray());
-
-            return new AccountAggregateId(new Guid(decodedData));
-        }
-
-        #endregion
+        return new AccountAggregateId(new Guid(decodedData));
     }
+
+    #endregion
 }

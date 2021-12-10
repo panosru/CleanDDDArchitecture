@@ -1,47 +1,46 @@
-namespace CleanDDDArchitecture.Hosts.RestApi.Core.Features
+namespace CleanDDDArchitecture.Hosts.RestApi.Core.Features;
+
+public enum Features
 {
-    public enum Features
-    {
-        Metal,
+    Metal,
 
-        AccountCreate,
+    AccountCreate,
 
-        AccountAuthentication,
+    AccountAuthentication,
 
-        AccountConfirmEmail,
+    AccountConfirmEmail,
 
-        AccountGetBy,
+    AccountGetBy,
 
-        AccountProfile,
+    AccountProfile,
 
-        AccountUpdateDetails,
+    AccountUpdateDetails,
 
-        TodoItemCreate,
+    TodoItemCreate,
 
-        TodoItemDelete,
+    TodoItemDelete,
 
-        TodoItemGetBy,
+    TodoItemGetBy,
 
-        TodoItemUpdate,
+    TodoItemUpdate,
 
-        TodoItemUpdateDetails,
+    TodoItemUpdateDetails,
 
-        TodoListCreate,
+    TodoListCreate,
 
-        TodoListDelete,
+    TodoListDelete,
 
-        TodoListExportList,
+    TodoListExportList,
 
-        TodoListGetAll,
+    TodoListGetAll,
 
-        TodoListUpdate,
+    TodoListUpdate,
 
-        WeatherAddCity,
+    WeatherAddCity,
 
-        WeatherForecast,
+    WeatherForecast,
 
-        WeatherSyncService,
+    WeatherSyncService,
 
-        WeatherForecastV11
-    }
+    WeatherForecastV11
 }
