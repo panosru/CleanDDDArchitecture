@@ -1,11 +1,10 @@
-namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.Forecast
+namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.Forecast;
+
+using Aviant.DDD.Application.UseCases;
+
+public interface IForecastOutput : IUseCaseOutput
 {
-    using Aviant.DDD.Application.UseCases;
+    public void Invalid(string message);
 
-    public interface IForecastOutput : IUseCaseOutput
-    {
-        public void Invalid(string message);
-
-        public void Ok(object? @object);
-    }
+    public void Ok(object? @object);
 }

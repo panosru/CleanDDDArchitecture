@@ -1,13 +1,12 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Infrastructure
-{
-    using Aviant.DDD.Infrastructure.CrossCutting;
-    using Microsoft.Extensions.Configuration;
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Infrastructure;
 
-    public sealed class TodoItemDomainConfiguration : DomainConfigurationContainer
-    {
-        /// <inheritdoc />
-        public TodoItemDomainConfiguration(IConfiguration configuration)
-            : base(configuration)
-        { }
-    }
+using Aviant.DDD.Infrastructure.CrossCutting;
+using Microsoft.Extensions.Configuration;
+
+public sealed class TodoItemDomainConfiguration : DomainConfigurationContainer
+{
+    /// <inheritdoc />
+    public TodoItemDomainConfiguration(IConfiguration configuration)
+        : base(configuration)
+    { }
 }

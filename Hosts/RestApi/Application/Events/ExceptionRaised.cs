@@ -1,73 +1,69 @@
-namespace CleanDDDArchitecture.Hosts.RestApi.Application.Events
+namespace CleanDDDArchitecture.Hosts.RestApi.Application.Events;
+
+using Aviant.DDD.Application.ApplicationEvents;
+
+/// <summary>
+/// Application Exception Raised Event
+/// </summary>
+internal sealed class ExceptionRaised : ApplicationEvent
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Aviant.DDD.Application.ApplicationEvents;
+    /// <summary>
+    /// What assembly is to blame for the exception
+    /// </summary>
+    public readonly string AssemblyToBlame;
 
     /// <summary>
-    /// Application Exception Raised Event
     /// </summary>
-    internal sealed class ExceptionRaised : ApplicationEvent
+    // ReSharper disable once MemberCanBeInternal
+    public readonly string ErrorMessage;
+
+    /// <summary>
+    /// Stack trace of the exception
+    /// </summary>
+    public readonly string StackTrace;
+
+    /// <summary>
+    /// Serialized Exception
+    /// </summary>
+    public readonly string SerializedException;
+
+    /// <summary>
+    /// Exception Raised Constructor
+    /// </summary>
+    /// <param name="assemblyToBlame"></param>
+    /// <param name="errorMessage"></param>
+    /// <param name="stackTrace"></param>
+    /// <param name="serializedException"></param>
+    public ExceptionRaised(
+        string assemblyToBlame,
+        string errorMessage,
+        string stackTrace,
+        string serializedException)
     {
-        /// <summary>
-        /// What assembly is to blame for the exception
-        /// </summary>
-        public readonly string AssemblyToBlame;
-
-        /// <summary>
-        /// </summary>
-        // ReSharper disable once MemberCanBeInternal
-        public readonly string ErrorMessage;
-
-        /// <summary>
-        /// Stack trace of the exception
-        /// </summary>
-        public readonly string StackTrace;
-
-        /// <summary>
-        /// Serialized Exception
-        /// </summary>
-        public readonly string SerializedException;
-
-        /// <summary>
-        /// Exception Raised Constructor
-        /// </summary>
-        /// <param name="assemblyToBlame"></param>
-        /// <param name="errorMessage"></param>
-        /// <param name="stackTrace"></param>
-        /// <param name="serializedException"></param>
-        public ExceptionRaised(
-            string   assemblyToBlame,
-            string   errorMessage,
-            string   stackTrace,
-            string   serializedException)
-        {
-            AssemblyToBlame     = assemblyToBlame;
-            ErrorMessage        = errorMessage;
-            StackTrace          = stackTrace;
-            SerializedException = serializedException;
-        }
+        AssemblyToBlame     = assemblyToBlame;
+        ErrorMessage        = errorMessage;
+        StackTrace          = stackTrace;
+        SerializedException = serializedException;
     }
+}
 
+/// <summary>
+/// Handler for the Exception Raised event
+/// </summary>
+internal sealed class ExceptionRaisedHandler : ApplicationEventHandler<ExceptionRaised>
+{
     /// <summary>
-    /// Handler for the Exception Raised event
+    /// Exception Raised handle method
     /// </summary>
-    internal sealed class ExceptionRaisedHandler : ApplicationEventHandler<ExceptionRaised>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public override Task Handle(ExceptionRaised request, CancellationToken cancellationToken)
     {
-        /// <summary>
-        /// Exception Raised handle method
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public override Task Handle(ExceptionRaised request, CancellationToken cancellationToken)
-        {
-            Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%");
-            Console.WriteLine(request.ErrorMessage);
-            Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%");
+        Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%");
+        Console.WriteLine(request.ErrorMessage);
+        Console.WriteLine("%%%%%%%%%%%%%%%%%%%%%%");
 
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

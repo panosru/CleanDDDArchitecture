@@ -1,55 +1,52 @@
-﻿namespace CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.UseCases.V1_0.SyncWeatherService
+﻿namespace CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.UseCases.V1_0.SyncWeatherService;
+
+using System.Net.Mime;
+using CleanDDDArchitecture.Hosts.RestApi.Core;
+using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
+using Domains.Weather.Application.UseCases.SyncWeatherService;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.FeatureManagement.Mvc;
+
+/// <inheritdoc
+///     cref="CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
+[FeatureGate(Features.WeatherSyncService)]
+public sealed class Weather
+    : ApiController<SyncWeatherServiceUseCase, Weather>, ISyncWeatherServiceOutput
 {
-    using System.Net.Mime;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using CleanDDDArchitecture.Hosts.RestApi.Core;
-    using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
-    using Domains.Weather.Application.UseCases.SyncWeatherService;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.FeatureManagement.Mvc;
+    /// <inheritdoc />
+    public Weather([FromServices] SyncWeatherServiceUseCase useCase)
+        : base(useCase) => UseCase.SetOutput(this);
 
-    /// <inheritdoc
-    ///     cref="CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
-    [FeatureGate(Features.WeatherSyncService)]
-    public sealed class Weather
-        : ApiController<SyncWeatherServiceUseCase, Weather>, ISyncWeatherServiceOutput
+    #region ISyncWeatherServiceOutput Members
+
+    /// <summary>
+    /// </summary>
+    /// <param name="message"></param>
+    void ISyncWeatherServiceOutput.Invalid(string message) =>
+        ViewModel = BadRequest(message);
+
+    /// <summary>
+    /// </summary>
+    void ISyncWeatherServiceOutput.NoContent() => ViewModel = NoContent();
+
+    #endregion
+
+    /// <summary>
+    ///     Dummy weather syncing with external service (3 seconds delay)
+    /// </summary>
+    /// <response code="200">Synchronization successfully completed.</response>
+    /// <response code="400">Bad request.</response>
+    /// <response code="404">Not Found.</response>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Successful message.</returns>
+    [HttpPost]
+    [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Patch))]
+    [Produces(MediaTypeNames.Application.Json)]
+    public async Task<IActionResult> Forecast(CancellationToken cancellationToken = default)
     {
-        /// <inheritdoc />
-        public Weather([FromServices] SyncWeatherServiceUseCase useCase)
-            : base(useCase) => UseCase.SetOutput(this);
+        await UseCase.ExecuteAsync(cancellationToken)
+           .ConfigureAwait(false);
 
-        #region ISyncWeatherServiceOutput Members
-
-        /// <summary>
-        /// </summary>
-        /// <param name="message"></param>
-        void ISyncWeatherServiceOutput.Invalid(string message) =>
-            ViewModel = BadRequest(message);
-
-        /// <summary>
-        /// </summary>
-        void ISyncWeatherServiceOutput.NoContent() => ViewModel = NoContent();
-
-        #endregion
-
-        /// <summary>
-        ///     Dummy weather syncing with external service (3 seconds delay)
-        /// </summary>
-        /// <response code="200">Synchronization successfully completed.</response>
-        /// <response code="400">Bad request.</response>
-        /// <response code="404">Not Found.</response>
-        /// <param name="cancellationToken"></param>
-        /// <returns>Successful message.</returns>
-        [HttpPost]
-        [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Patch))]
-        [Produces(MediaTypeNames.Application.Json)]
-        public async Task<IActionResult> Forecast(CancellationToken cancellationToken = default)
-        {
-            await UseCase.ExecuteAsync(cancellationToken)
-               .ConfigureAwait(false);
-
-            return ViewModel;
-        }
+        return ViewModel;
     }
 }

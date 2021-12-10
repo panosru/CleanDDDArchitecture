@@ -1,12 +1,10 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy;
+
+using Aviant.DDD.Application.UseCases;
+
+public sealed class GetAccountInput : UseCaseInput
 {
-    using System;
-    using Aviant.DDD.Application.UseCases;
+    public GetAccountInput(Guid id) => Id = id;
 
-    public sealed class GetAccountInput : UseCaseInput
-    {
-        public GetAccountInput(Guid id) => Id = id;
-
-        internal Guid Id { get; }
-    }
+    internal Guid Id { get; }
 }

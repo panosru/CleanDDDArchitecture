@@ -1,40 +1,38 @@
-﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Services
+﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Services;
+
+using System.Security.Claims;
+using Aviant.DDD.Application.Identity;
+using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.JsonWebTokens;
+
+/// <summary>
+/// </summary>
+public sealed class CurrentUser : ICurrentUserService
 {
-    using System;
-    using System.Security.Claims;
-    using Aviant.DDD.Application.Identity;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.IdentityModel.JsonWebTokens;
+    /// <summary>
+    /// </summary>
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     /// <summary>
     /// </summary>
-    public sealed class CurrentUser : ICurrentUserService
+    /// <param name="httpContextAccessor"></param>
+    public CurrentUser(IHttpContextAccessor httpContextAccessor) => _httpContextAccessor = httpContextAccessor;
+
+    #region ICurrentUserService Members
+
+    /// <summary>
+    /// </summary>
+    public Guid UserId
     {
-        /// <summary>
-        /// </summary>
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        /// <summary>
-        /// </summary>
-        /// <param name="httpContextAccessor"></param>
-        public CurrentUser(IHttpContextAccessor httpContextAccessor) => _httpContextAccessor = httpContextAccessor;
-
-        #region ICurrentUserService Members
-
-        /// <summary>
-        /// </summary>
-        public Guid UserId
+        get
         {
-            get
-            {
-                var id = _httpContextAccessor.HttpContext?.User.FindFirstValue(JwtRegisteredClaimNames.NameId);
+            var id = _httpContextAccessor.HttpContext?.User.FindFirstValue(JwtRegisteredClaimNames.NameId);
 
-                return id is null
-                    ? Guid.Empty
-                    : Guid.Parse(id);
-            }
+            return id is null
+                ? Guid.Empty
+                : Guid.Parse(id);
         }
-
-        #endregion
     }
+
+    #endregion
 }

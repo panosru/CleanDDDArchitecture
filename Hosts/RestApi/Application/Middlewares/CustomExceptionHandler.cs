@@ -1,86 +1,83 @@
-namespace CleanDDDArchitecture.Hosts.RestApi.Application.Middlewares
+namespace CleanDDDArchitecture.Hosts.RestApi.Application.Middlewares;
+
+using System.Net;
+using Aviant.DDD.Application.Exceptions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+
+/// <summary>
+/// </summary>
+internal sealed class CustomExceptionHandler
 {
-    using System;
-    using System.Net;
-    using System.Threading.Tasks;
-    using Aviant.DDD.Application.Exceptions;
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Http;
-    using Newtonsoft.Json;
+    /// <summary>
+    /// </summary>
+    private readonly RequestDelegate _next;
 
     /// <summary>
     /// </summary>
-    internal sealed class CustomExceptionHandler
+    /// <param name="next"></param>
+    public CustomExceptionHandler(RequestDelegate next) => _next = next;
+
+    /// <summary>
+    /// </summary>
+    /// <param name="context"></param>
+    /// <returns></returns>
+    public async Task Invoke(HttpContext context)
     {
-        /// <summary>
-        /// </summary>
-        private readonly RequestDelegate _next;
-
-        /// <summary>
-        /// </summary>
-        /// <param name="next"></param>
-        public CustomExceptionHandler(RequestDelegate next) => _next = next;
-
-        /// <summary>
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
-        public async Task Invoke(HttpContext context)
+        try
         {
-            try
-            {
-                await _next(context).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                await HandleExceptionAsync(context, ex)
-                   .ConfigureAwait(false);
-            }
+            await _next(context).ConfigureAwait(false);
         }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="exception"></param>
-        /// <returns></returns>
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+        catch (Exception ex)
         {
-            var code = HttpStatusCode.InternalServerError;
-
-            var result = string.Empty;
-
-            switch (exception)
-            {
-                case ValidationException validationException:
-                    code   = HttpStatusCode.BadRequest;
-                    result = JsonConvert.SerializeObject(validationException.Failures);
-
-                    break;
-
-                case NotFoundException _:
-                    code = HttpStatusCode.NotFound;
-
-                    break;
-            }
-
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode  = (int)code;
-
-            if (string.IsNullOrEmpty(result)) result = JsonConvert.SerializeObject(new { error = exception.Message });
-
-            return context.Response.WriteAsync(result);
+            await HandleExceptionAsync(context, ex)
+               .ConfigureAwait(false);
         }
     }
 
     /// <summary>
     /// </summary>
-    internal static class CustomExceptionHandlerExtensions
+    /// <param name="context"></param>
+    /// <param name="exception"></param>
+    /// <returns></returns>
+    private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <returns></returns>
-        public static IApplicationBuilder UseCustomExceptionHandler(this IApplicationBuilder builder) =>
-            builder.UseMiddleware<CustomExceptionHandler>();
+        var code = HttpStatusCode.InternalServerError;
+
+        var result = string.Empty;
+
+        switch (exception)
+        {
+            case ValidationException validationException:
+                code   = HttpStatusCode.BadRequest;
+                result = JsonConvert.SerializeObject(validationException.Failures);
+
+                break;
+
+            case NotFoundException _:
+                code = HttpStatusCode.NotFound;
+
+                break;
+        }
+
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode  = (int)code;
+
+        if (string.IsNullOrEmpty(result)) result = JsonConvert.SerializeObject(new { error = exception.Message });
+
+        return context.Response.WriteAsync(result);
     }
+}
+
+/// <summary>
+/// </summary>
+internal static class CustomExceptionHandlerExtensions
+{
+    /// <summary>
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
+    public static IApplicationBuilder UseCustomExceptionHandler(this IApplicationBuilder builder) =>
+        builder.UseMiddleware<CustomExceptionHandler>();
 }

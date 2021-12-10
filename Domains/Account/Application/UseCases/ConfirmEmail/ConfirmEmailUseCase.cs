@@ -1,39 +1,35 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
+
+using Aviant.DDD.Application.Identity;
+using Aviant.DDD.Application.Orchestration;
+using Aviant.DDD.Application.UseCases;
+
+public sealed class ConfirmEmailUseCase
+    : UseCase<ConfirmEmailInput, IConfirmEmailOutput>
 {
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Aviant.DDD.Application.Identity;
-    using Aviant.DDD.Application.Orchestration;
-    using Aviant.DDD.Application.UseCases;
-
-    public sealed class ConfirmEmailUseCase
-        : UseCase<ConfirmEmailInput, IConfirmEmailOutput>
+    public override async Task ExecuteAsync(
+        ConfirmEmailInput input,
+        CancellationToken cancellationToken = default)
     {
-        public override async Task ExecuteAsync(
-            ConfirmEmailInput input,
-            CancellationToken cancellationToken = default)
+        OrchestratorResponse requestResult = await Orchestrator.SendCommandAsync(
+                new ConfirmEmailCommand(
+                    input.Token,
+                    input.Email),
+                cancellationToken)
+           .ConfigureAwait(false);
+
+        if (requestResult.Succeeded)
         {
-            OrchestratorResponse requestResult = await Orchestrator.SendCommandAsync(
-                    new ConfirmEmailCommand(
-                        input.Token,
-                        input.Email),
-                    cancellationToken)
-               .ConfigureAwait(false);
+            var identityResult = requestResult.Payload<IdentityResult>();
 
-            if (requestResult.Succeeded)
-            {
-                var identityResult = requestResult.Payload<IdentityResult>();
-
-                if (identityResult.Succeeded)
-                    Output.Ok();
-                else
-                    Output.Invalid(identityResult.Errors.First());
-            }
+            if (identityResult.Succeeded)
+                Output.Ok();
             else
-            {
-                Output.Invalid(requestResult.Messages.First());
-            }
+                Output.Invalid(identityResult.Errors.First());
+        }
+        else
+        {
+            Output.Invalid(requestResult.Messages.First());
         }
     }
 }

@@ -1,101 +1,96 @@
-namespace CleanDDDArchitecture.Domains.Account.CrossCutting
+namespace CleanDDDArchitecture.Domains.Account.CrossCutting;
+
+using System.Reflection;
+using Application.Aggregates;
+using Application.Identity;
+using Application.UseCases.Create;
+using Ardalis.GuardClauses;
+using AutoMapper;
+using Aviant.DDD.Application.Orchestration;
+using Infrastructure.Persistence.Contexts;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Shared.Core.Identity;
+
+public static class AccountCrossCutting
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using System.Threading.Tasks;
-    using Application.Aggregates;
-    using Application.Identity;
-    using Application.UseCases.Create;
-    using Ardalis.GuardClauses;
-    using AutoMapper;
-    using Aviant.DDD.Application.Orchestration;
-    using Infrastructure.Persistence.Contexts;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.DependencyInjection;
-    using Shared.Core.Identity;
+    internal static readonly Assembly AccountApplicationAssembly = typeof(AccountCreateUseCase).Assembly;
 
-    public static class AccountCrossCutting
+    internal static readonly Assembly AccountInfrastructureAssembly = typeof(AccountDbContextWrite).Assembly;
+
+    public static IEnumerable<Profile> AutoMapperProfiles() => new List<Profile>();
+
+    public static IEnumerable<Assembly> ValidatorAssemblies() => new List<Assembly>
     {
-        internal static readonly Assembly AccountApplicationAssembly = typeof(AccountCreateUseCase).Assembly;
+        AccountApplicationAssembly
+    };
 
-        internal static readonly Assembly AccountInfrastructureAssembly = typeof(AccountDbContextWrite).Assembly;
+    public static IEnumerable<Assembly> MediatorAssemblies() => new List<Assembly>
+    {
+        AccountApplicationAssembly
+    };
 
-        public static IEnumerable<Profile> AutoMapperProfiles() => new List<Profile>();
+    public static async Task GenerateDefaultUserIfNotExistsAsync(IServiceProvider serviceProvider)
+    {
+        var context = serviceProvider.GetRequiredService<AccountDbContextWrite>();
 
-        public static IEnumerable<Assembly> ValidatorAssemblies() => new List<Assembly>
-        {
-            AccountApplicationAssembly
-        };
-
-        public static IEnumerable<Assembly> MediatorAssemblies() => new List<Assembly>
-        {
-            AccountApplicationAssembly
-        };
-
-        public static async Task GenerateDefaultUserIfNotExistsAsync(IServiceProvider serviceProvider)
-        {
-            var context = serviceProvider.GetRequiredService<AccountDbContextWrite>();
-
-            if (context.Database.IsNpgsql())
-                await context.Database.MigrateAsync()
-                   .ConfigureAwait(false);
-
-            await PopulateDefaultAccountRolesAsync(serviceProvider)
+        if (context.Database.IsNpgsql())
+            await context.Database.MigrateAsync()
                .ConfigureAwait(false);
 
-            // Get UserManager Service
-            var userManager = serviceProvider.GetRequiredService<UserManager<AccountUser>>();
+        await PopulateDefaultAccountRolesAsync(serviceProvider)
+           .ConfigureAwait(false);
 
-            // Create default user data
-            CreateAccountDto accountDto = new()
-            {
-                UserName  = "admin",
-                Email     = "admin@localhost.com",
-                FirstName = "Panagiotis",
-                LastName  = "Kosmidis",
-                Password  = "Administrator1!"
-            };
+        // Get UserManager Service
+        var userManager = serviceProvider.GetRequiredService<UserManager<AccountUser>>();
 
-            if (userManager.Users.All(u => u.UserName != accountDto.UserName))
-            {
-                var orchestrator =
-                    serviceProvider.GetRequiredService<IOrchestrator<AccountAggregate, AccountAggregateId>>();
-
-                Guard.Against.Null(orchestrator, typeof(IOrchestrator<AccountAggregate, AccountAggregateId>).Name);
-
-                OrchestratorResponse requestResult = await orchestrator
-                   .SendCommandAsync(
-                        new CreateAccountCommand(
-                            accountDto.UserName,
-                            accountDto.Password,
-                            accountDto.FirstName,
-                            accountDto.LastName,
-                            accountDto.Email,
-                            new[] { Roles.Root },
-                            true))
-                   .ConfigureAwait(false);
-
-                if (!requestResult.Succeeded)
-                    throw new NotSupportedException($"Unable to create default user \"{accountDto.UserName}\".");
-            }
-        }
-
-        private static async Task PopulateDefaultAccountRolesAsync(IServiceProvider serviceProvider)
+        // Create default user data
+        CreateAccountDto accountDto = new()
         {
-            // Get RoleManager Service
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<AccountRole>>();
+            UserName  = "admin",
+            Email     = "admin@localhost.com",
+            FirstName = "Panagiotis",
+            LastName  = "Kosmidis",
+            Password  = "Administrator1!"
+        };
 
-            foreach (var role in typeof(Roles).GetFields(BindingFlags.Static | BindingFlags.Public))
-                if (!await roleManager.RoleExistsAsync(role.GetValue(null)?.ToString()).ConfigureAwait(false))
-                    await roleManager.CreateAsync(
-                            new AccountRole
-                            {
-                                Name = role.GetValue(null)?.ToString()
-                            })
-                       .ConfigureAwait(false);
+        if (userManager.Users.All(u => u.UserName != accountDto.UserName))
+        {
+            var orchestrator =
+                serviceProvider.GetRequiredService<IOrchestrator<AccountAggregate, AccountAggregateId>>();
+
+            Guard.Against.Null(orchestrator, typeof(IOrchestrator<AccountAggregate, AccountAggregateId>).Name);
+
+            OrchestratorResponse requestResult = await orchestrator
+               .SendCommandAsync(
+                    new CreateAccountCommand(
+                        accountDto.UserName,
+                        accountDto.Password,
+                        accountDto.FirstName,
+                        accountDto.LastName,
+                        accountDto.Email,
+                        new[] { Roles.Root },
+                        true))
+               .ConfigureAwait(false);
+
+            if (!requestResult.Succeeded)
+                throw new NotSupportedException($"Unable to create default user \"{accountDto.UserName}\".");
         }
+    }
+
+    private static async Task PopulateDefaultAccountRolesAsync(IServiceProvider serviceProvider)
+    {
+        // Get RoleManager Service
+        var roleManager = serviceProvider.GetRequiredService<RoleManager<AccountRole>>();
+
+        foreach (var role in typeof(Roles).GetFields(BindingFlags.Static | BindingFlags.Public))
+            if (!await roleManager.RoleExistsAsync(role.GetValue(null)?.ToString()).ConfigureAwait(false))
+                await roleManager.CreateAsync(
+                        new AccountRole
+                        {
+                            Name = role.GetValue(null)?.ToString()
+                        })
+                   .ConfigureAwait(false);
     }
 }

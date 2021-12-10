@@ -1,32 +1,31 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.Infrastructure.Persistence.Contexts
+﻿namespace CleanDDDArchitecture.Domains.Todo.Infrastructure.Persistence.Contexts;
+
+using Application.Persistence;
+using Aviant.DDD.Infrastructure.Persistence.Contexts;
+using Core.Entities;
+using Microsoft.EntityFrameworkCore;
+
+public sealed class TodoDbContextWrite
+    : DbContextWrite<TodoDbContextWrite>, ITodoDbContextWrite
 {
-    using Application.Persistence;
-    using Aviant.DDD.Infrastructure.Persistence.Contexts;
-    using Core.Entities;
-    using Microsoft.EntityFrameworkCore;
+    #pragma warning disable 8618
+    public TodoDbContextWrite(DbContextOptions<TodoDbContextWrite> options)
+        : base(options)
+    { }
+    #pragma warning restore 8618
 
-    public sealed class TodoDbContextWrite
-        : DbContextWrite<TodoDbContextWrite>, ITodoDbContextWrite
+    #region ITodoDbContextWrite Members
+
+    public DbSet<TodoListEntity> TodoLists { get; set; }
+
+    public DbSet<TodoItemEntity> TodoItems { get; set; }
+
+    #endregion
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        #pragma warning disable 8618
-        public TodoDbContextWrite(DbContextOptions<TodoDbContextWrite> options)
-            : base(options)
-        { }
-        #pragma warning restore 8618
+        modelBuilder.Seed();
 
-        #region ITodoDbContextWrite Members
-
-        public DbSet<TodoListEntity> TodoLists { get; set; }
-
-        public DbSet<TodoItemEntity> TodoItems { get; set; }
-
-        #endregion
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Seed();
-
-            base.OnModelCreating(modelBuilder);
-        }
+        base.OnModelCreating(modelBuilder);
     }
 }

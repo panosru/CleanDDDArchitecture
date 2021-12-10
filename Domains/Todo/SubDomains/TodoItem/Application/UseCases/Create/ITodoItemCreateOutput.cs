@@ -1,11 +1,10 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Create
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Create;
+
+using Aviant.DDD.Application.UseCases;
+
+public interface ITodoItemCreateOutput : IUseCaseOutput
 {
-    using Aviant.DDD.Application.UseCases;
+    public void Ok(object? @object);
 
-    public interface ITodoItemCreateOutput : IUseCaseOutput
-    {
-        public void Ok(object? @object);
-
-        public void Invalid(string message);
-    }
+    public void Invalid(string message);
 }

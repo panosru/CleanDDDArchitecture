@@ -2,16 +2,15 @@
 
 #pragma warning disable 8618
 
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
+
+using System.ComponentModel.DataAnnotations;
+
+public sealed class ConfirmEmailDto
 {
-    using System.ComponentModel.DataAnnotations;
+    [Required]
+    public string Token { get; set; }
 
-    public sealed class ConfirmEmailDto
-    {
-        [Required]
-        public string Token { get; set; }
-
-        [Required]
-        public string Email { get; set; }
-    }
+    [Required]
+    public string Email { get; set; }
 }

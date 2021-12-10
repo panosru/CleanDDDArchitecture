@@ -1,11 +1,10 @@
-namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherService
+namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherService;
+
+using Aviant.DDD.Application.UseCases;
+
+public interface ISyncWeatherServiceOutput : IUseCaseOutput
 {
-    using Aviant.DDD.Application.UseCases;
+    public void Invalid(string message);
 
-    public interface ISyncWeatherServiceOutput : IUseCaseOutput
-    {
-        public void Invalid(string message);
-
-        public void NoContent();
-    }
+    public void NoContent();
 }

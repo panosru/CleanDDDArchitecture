@@ -1,33 +1,32 @@
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.UpdateDetails
+namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.UpdateDetails;
+
+using Domains.Account.Application.Aggregates;
+
+/// <summary>
+/// </summary>
+internal readonly struct AccountUpdateResponse
 {
-    using Domains.Account.Application.Aggregates;
+    /// <summary>
+    /// </summary>
+    /// <param name="accountAggregate"></param>
+    public AccountUpdateResponse(AccountAggregate accountAggregate)
+    {
+        FirstName = accountAggregate.FirstName;
+        LastName  = accountAggregate.LastName;
+        Email     = accountAggregate.Email;
+    }
 
     /// <summary>
     /// </summary>
-    internal readonly struct AccountUpdateResponse
-    {
-        /// <summary>
-        /// </summary>
-        /// <param name="accountAggregate"></param>
-        public AccountUpdateResponse(AccountAggregate accountAggregate)
-        {
-            FirstName = accountAggregate.FirstName;
-            LastName  = accountAggregate.LastName;
-            Email     = accountAggregate.Email;
-        }
+    public string FirstName { get; }
 
-        /// <summary>
-        /// </summary>
-        public string FirstName { get; }
+    /// <summary>
+    /// </summary>
+    public string LastName { get; }
 
-        /// <summary>
-        /// </summary>
-        public string LastName { get; }
-
-        /// <summary>
-        /// </summary>
-        public string Email { get; }
-    }
+    /// <summary>
+    /// </summary>
+    public string Email { get; }
 }

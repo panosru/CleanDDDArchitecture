@@ -1,38 +1,34 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
+
+using Aggregates;
+using Aviant.DDD.Application.Orchestration;
+using Aviant.DDD.Application.UseCases;
+
+public sealed class AccountCreateUseCase
+    : UseCase<CreateAccountInput, ICreateAccountOutput, AccountAggregate, AccountAggregateId>
 {
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Aggregates;
-    using Aviant.DDD.Application.Orchestration;
-    using Aviant.DDD.Application.UseCases;
-
-    public sealed class AccountCreateUseCase
-        : UseCase<CreateAccountInput, ICreateAccountOutput, AccountAggregate, AccountAggregateId>
+    public override async Task ExecuteAsync(
+        CreateAccountInput input,
+        CancellationToken  cancellationToken = default)
     {
-        public override async Task ExecuteAsync(
-            CreateAccountInput input,
-            CancellationToken  cancellationToken = default)
-        {
-            await ValidateInputAsync(input, cancellationToken)
-               .ConfigureAwait(false);
+        await ValidateInputAsync(input, cancellationToken)
+           .ConfigureAwait(false);
 
-            OrchestratorResponse requestResult = await Orchestrator.SendCommandAsync(
-                    new CreateAccountCommand(
-                        input.UserName,
-                        input.Password,
-                        input.FirstName,
-                        input.LastName,
-                        input.Email,
-                        input.Roles,
-                        input.EmailConfirmed),
-                    cancellationToken)
-               .ConfigureAwait(false);
+        OrchestratorResponse requestResult = await Orchestrator.SendCommandAsync(
+                new CreateAccountCommand(
+                    input.UserName,
+                    input.Password,
+                    input.FirstName,
+                    input.LastName,
+                    input.Email,
+                    input.Roles,
+                    input.EmailConfirmed),
+                cancellationToken)
+           .ConfigureAwait(false);
 
-            if (requestResult.Succeeded)
-                Output.Ok(requestResult.Payload<AccountAggregate>());
-            else
-                Output.Invalid(requestResult.Messages.First());
-        }
+        if (requestResult.Succeeded)
+            Output.Ok(requestResult.Payload<AccountAggregate>());
+        else
+            Output.Invalid(requestResult.Messages.First());
     }
 }

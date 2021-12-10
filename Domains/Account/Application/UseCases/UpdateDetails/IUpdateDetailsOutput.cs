@@ -1,12 +1,11 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails;
+
+using Aggregates;
+using Aviant.DDD.Application.UseCases;
+
+public interface IUpdateDetailsOutput : IUseCaseOutput
 {
-    using Aggregates;
-    using Aviant.DDD.Application.UseCases;
+    public void Ok(AccountAggregate accountAggregate);
 
-    public interface IUpdateDetailsOutput : IUseCaseOutput
-    {
-        public void Ok(AccountAggregate accountAggregate);
-
-        public void Invalid(string message);
-    }
+    public void Invalid(string message);
 }

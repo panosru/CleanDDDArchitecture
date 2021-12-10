@@ -1,18 +1,17 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Infrastructure.Persistence.Configurations
+﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Infrastructure.Persistence.Configurations;
+
+using Aviant.DDD.Infrastructure.Persistence.Configurations;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Todo.Core.Entities;
+
+public sealed class TodoListConfiguration : EntityConfiguration<TodoListEntity, int>
 {
-    using Aviant.DDD.Infrastructure.Persistence.Configurations;
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
-    using Todo.Core.Entities;
-
-    public sealed class TodoListConfiguration : EntityConfiguration<TodoListEntity, int>
+    public override void Configure(EntityTypeBuilder<TodoListEntity> builder)
     {
-        public override void Configure(EntityTypeBuilder<TodoListEntity> builder)
-        {
-            builder.HasKey(e => e.Id);
+        builder.HasKey(e => e.Id);
 
-            builder.Property(t => t.Title)
-               .HasMaxLength(200)
-               .IsRequired();
-        }
+        builder.Property(t => t.Title)
+           .HasMaxLength(200)
+           .IsRequired();
     }
 }

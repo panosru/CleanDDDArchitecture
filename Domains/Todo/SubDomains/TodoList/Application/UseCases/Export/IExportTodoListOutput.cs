@@ -1,11 +1,10 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Export
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Export;
+
+using Aviant.DDD.Application.UseCases;
+
+public interface IExportTodoListOutput : IUseCaseOutput
 {
-    using Aviant.DDD.Application.UseCases;
+    public void Ok(ExportTodosVm exportTodosVm);
 
-    public interface IExportTodoListOutput : IUseCaseOutput
-    {
-        public void Ok(ExportTodosVm exportTodosVm);
-
-        public void Invalid(byte[] bytes);
-    }
+    public void Invalid(byte[] bytes);
 }

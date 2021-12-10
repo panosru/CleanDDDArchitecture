@@ -3,15 +3,13 @@
 
 #pragma warning disable 8618
 
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll;
+
+using Dtos;
+
+internal sealed class TodosVm
 {
-    using System.Collections.Generic;
-    using Dtos;
+    public IList<PriorityLevelDto> PriorityLevels { get; set; }
 
-    internal sealed class TodosVm
-    {
-        public IList<PriorityLevelDto> PriorityLevels { get; set; }
-
-        public IList<TodoListDto> Lists { get; set; }
-    }
+    public IList<TodoListDto> Lists { get; set; }
 }

@@ -1,12 +1,11 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy;
+
+using Aviant.DDD.Application.UseCases;
+using Identity;
+
+public interface IGetAccountOutput : IUseCaseOutput
 {
-    using Aviant.DDD.Application.UseCases;
-    using Identity;
+    public void Ok(AccountUser accountUser);
 
-    public interface IGetAccountOutput : IUseCaseOutput
-    {
-        public void Ok(AccountUser accountUser);
-
-        public void Invalid(string message);
-    }
+    public void Invalid(string message);
 }
