@@ -2,21 +2,14 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
 
 using Aviant.DDD.Application.UseCases;
 
-public sealed class TodoItemUpdateInput : UseCaseInput
+public sealed record TodoItemUpdateInput(
+    int    Id,
+    string Title,
+    bool   Done) : UseCaseInput
 {
-    public TodoItemUpdateInput(
-        int    id,
-        string title,
-        bool   done)
-    {
-        Id    = id;
-        Title = title;
-        Done  = done;
-    }
+    internal int Id { get; } = Id;
 
-    internal int Id { get; }
+    internal string Title { get; } = Title;
 
-    internal string Title { get; }
-
-    internal bool Done { get; }
+    internal bool Done { get; } = Done;
 }

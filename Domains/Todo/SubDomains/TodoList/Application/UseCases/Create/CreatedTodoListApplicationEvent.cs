@@ -3,11 +3,9 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
 using Aviant.DDD.Application.ApplicationEvents;
 using Polly;
 
-internal sealed class CreatedTodoListApplicationEvent : ApplicationEvent
+internal sealed record CreatedTodoListApplicationEvent(string Name) : ApplicationEvent
 {
-    public CreatedTodoListApplicationEvent(string name) => Name = name;
-
-    public string Name { get; set; }
+    public string Name { get; set; } = Name;
 }
 
 internal sealed class TodoCreatedApplicationEventHandler : ApplicationEventHandler<CreatedTodoListApplicationEvent>

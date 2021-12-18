@@ -5,17 +5,11 @@ using System.Web;
 using Aviant.DDD.Application.Commands;
 using Aviant.DDD.Application.Identity;
 
-internal sealed class ConfirmEmailCommand : Command<IdentityResult>
+internal sealed record ConfirmEmailCommand(string Token, string Email) : Command<IdentityResult>
 {
-    public ConfirmEmailCommand(string token, string email)
-    {
-        Token = token;
-        Email = email;
-    }
+    private string Token { get; } = Token;
 
-    private string Token { get; }
-
-    private string Email { get; }
+    private string Email { get; } = Email;
 
     #region Nested type: ConfirmEmailCommandHandler
 

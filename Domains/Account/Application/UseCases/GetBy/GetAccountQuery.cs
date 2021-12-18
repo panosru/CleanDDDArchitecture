@@ -4,11 +4,9 @@ using Aviant.DDD.Application.Queries;
 using Identity;
 using Microsoft.AspNetCore.Identity;
 
-internal sealed class GetAccountQuery : Query<AccountUser>
+internal sealed record GetAccountQuery(Guid Id) : Query<AccountUser>
 {
-    public GetAccountQuery(Guid id) => Id = id;
-
-    private Guid Id { get; }
+    private Guid Id { get; } = Id;
 
     #region Nested type: GetAccountQueryHandler
 

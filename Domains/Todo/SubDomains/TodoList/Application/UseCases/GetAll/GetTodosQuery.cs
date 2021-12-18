@@ -8,7 +8,7 @@ using Dtos;
 using Microsoft.EntityFrameworkCore;
 using Todo.Application.Persistence;
 
-internal sealed class GetTodosQuery : Query<TodosVm>
+internal sealed record GetTodosQuery : Query<TodosVm>
 {
     #region Nested type: GetTodosQueryHandler
 

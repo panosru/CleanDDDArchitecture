@@ -6,7 +6,7 @@ using Aviant.DDD.Core.Services;
 using Identity;
 using Microsoft.AspNetCore.Identity;
 
-internal sealed class ProfileAccountQuery : Query<AccountUser>
+internal sealed record ProfileAccountQuery : Query<AccountUser>
 {
     #region Nested type: GetAccountQueryHandler
 

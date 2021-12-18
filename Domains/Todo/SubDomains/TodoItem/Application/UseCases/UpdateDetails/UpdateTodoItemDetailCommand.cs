@@ -7,27 +7,19 @@ using Core.Repositories;
 using MediatR;
 using Todo.Core.Entities;
 
-internal sealed class UpdateTodoItemDetailCommand : Command
+internal sealed record UpdateTodoItemDetailCommand(
+    int           Id,
+    int           ListId,
+    PriorityLevel Priority,
+    string        Note) : Command
 {
-    public UpdateTodoItemDetailCommand(
-        int           id,
-        int           listId,
-        PriorityLevel priority,
-        string        note)
-    {
-        Id       = id;
-        ListId   = listId;
-        Priority = priority;
-        Note     = note;
-    }
+    private int Id { get; } = Id;
 
-    private int Id { get; }
+    private int ListId { get; } = ListId;
 
-    private int ListId { get; }
+    private PriorityLevel Priority { get; } = Priority;
 
-    private PriorityLevel Priority { get; }
-
-    private string Note { get; }
+    private string Note { get; } = Note;
 
     #region Nested type: UpdateTodoItemDetailCommandHandler
 

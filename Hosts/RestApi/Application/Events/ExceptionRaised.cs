@@ -2,10 +2,11 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Events;
 
 using Aviant.DDD.Application.ApplicationEvents;
 
+/// <inheritdoc cref="Aviant.DDD.Application.ApplicationEvents.ApplicationEvent" />
 /// <summary>
 /// Application Exception Raised Event
 /// </summary>
-internal sealed class ExceptionRaised : ApplicationEvent
+internal sealed record ExceptionRaised : ApplicationEvent
 {
     /// <summary>
     /// What assembly is to blame for the exception

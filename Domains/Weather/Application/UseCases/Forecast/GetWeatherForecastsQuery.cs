@@ -3,7 +3,7 @@
 using Aviant.DDD.Application.Queries;
 using Services;
 
-internal sealed class GetWeatherForecastsQuery : Query<IEnumerable<WeatherForecastService>>
+internal sealed record GetWeatherForecastsQuery : Query<IEnumerable<WeatherForecastService>>
 {
     #region Nested type: GetWeatherForecastsQueryHandler
 

@@ -6,14 +6,13 @@ using Aviant.DDD.Application.Commands;
 using Core.Repositories;
 using Todo.Core.Entities;
 
+/// <inheritdoc cref="Aviant.DDD.Application.Commands.Command&lt;TResponse&gt;" />
 /// <summary>
 ///     The Command to create a todo list
 /// </summary>
-internal sealed class CreateTodoListCommand : Command<Lazy<CreatedTodoListViewModel>>
+internal sealed record CreateTodoListCommand(string Title) : Command<Lazy<CreatedTodoListViewModel>>
 {
-    public CreateTodoListCommand(string title) => Title = title;
-
-    private string Title { get; }
+    private string Title { get; } = Title;
 
     #region Nested type: CreateTodoListCommandHandler
 

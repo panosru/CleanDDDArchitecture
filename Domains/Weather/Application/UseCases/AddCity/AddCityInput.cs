@@ -2,9 +2,7 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity;
 
 using Aviant.DDD.Application.UseCases;
 
-public sealed class AddCityInput : UseCaseInput
+public sealed record AddCityInput(string City) : UseCaseInput
 {
-    public AddCityInput(string city) => City = city;
-
-    internal string City { get; }
+    internal string City { get; } = City;
 }

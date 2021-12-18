@@ -9,20 +9,15 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Todo.Core.Entities;
 
+/// <inheritdoc cref="Aviant.DDD.Application.Commands.Command" />
 /// <summary>
 ///     The command to update a todo list
 /// </summary>
-internal sealed class UpdateTodoListCommand : Command
+internal sealed record UpdateTodoListCommand(int Id, string Title) : Command
 {
-    public UpdateTodoListCommand(int id, string title)
-    {
-        Id    = id;
-        Title = title;
-    }
+    private int Id { get; } = Id;
 
-    private int Id { get; }
-
-    private string Title { get; }
+    private string Title { get; } = Title;
 
     #region Nested type: UpdateTodoListCommandHandler
 

@@ -6,11 +6,9 @@ using Core.Repositories;
 using MediatR;
 using Todo.Core.Entities;
 
-internal sealed class DeleteTodoItemCommand : Command
+internal sealed record DeleteTodoItemCommand(int Id) : Command
 {
-    public DeleteTodoItemCommand(int id) => Id = id;
-
-    private int Id { get; }
+    private int Id { get; } = Id;
 
     #region Nested type: DeleteTodoItemCommandHandler
 
