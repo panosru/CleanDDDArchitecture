@@ -2,7 +2,7 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting;
 
 using Application.Persistence;
 using Aviant.DDD.Application.Orchestration;
-using Aviant.DDD.Application.Persistance;
+using Aviant.DDD.Application.Persistence;
 using Aviant.DDD.Application.Services;
 using Aviant.DDD.Infrastructure.CrossCutting;
 using Aviant.DDD.Infrastructure.Persistence;
