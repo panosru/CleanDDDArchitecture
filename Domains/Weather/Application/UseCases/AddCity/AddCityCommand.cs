@@ -2,11 +2,9 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity;
 
 using Aviant.DDD.Application.Commands;
 
-internal sealed class AddCityCommand : Command<string>
+internal sealed record AddCityCommand(string City) : Command<string>
 {
-    public AddCityCommand(string city) => City = city;
-
-    private string City { get; }
+    private string City { get; } = City;
 
     #region Nested type: AddCityCommandHandler
 

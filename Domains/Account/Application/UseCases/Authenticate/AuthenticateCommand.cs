@@ -4,17 +4,11 @@ using System.Security.Authentication;
 using Aviant.DDD.Application.Commands;
 using Aviant.DDD.Application.Identity;
 
-internal sealed class AuthenticateCommand : Command<object>
+internal sealed record AuthenticateCommand(string Username, string Password) : Command<object>
 {
-    public AuthenticateCommand(string username, string password)
-    {
-        Username = username;
-        Password = password;
-    }
+    private string Username { get; } = Username;
 
-    private string Username { get; }
-
-    private string Password { get; }
+    private string Password { get; } = Password;
 
     #region Nested type: AuthenticateCommandHandler
 

@@ -4,7 +4,7 @@ using Aviant.DDD.Application.Queries;
 using Polly;
 using Services;
 
-internal sealed class GetWeatherForecastsQueryNew : Query<IEnumerable<WeatherForecastService>>
+internal sealed record GetWeatherForecastsQueryNew : Query<IEnumerable<WeatherForecastService>>
 {
     #region Nested type: GetWeatherForecastsQueryNewHandler
 

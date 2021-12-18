@@ -9,23 +9,16 @@ using Core.Repositories;
 using FluentValidation;
 using Todo.Core.Entities;
 
-internal sealed class UpdateTodoItemCommand : Command<TodoItemViewModel>
+internal sealed record UpdateTodoItemCommand(
+    int    Id,
+    string Title,
+    bool   Done) : Command<TodoItemViewModel>
 {
-    public UpdateTodoItemCommand(
-        int    id,
-        string title,
-        bool   done)
-    {
-        Id    = id;
-        Title = title;
-        Done  = done;
-    }
+    private int Id { get; } = Id;
 
-    private int Id { get; }
+    private string Title { get; } = Title;
 
-    private string Title { get; }
-
-    private bool Done { get; }
+    private bool Done { get; } = Done;
 
     #region Nested type: UpdateTodoItemCommandHandler
 

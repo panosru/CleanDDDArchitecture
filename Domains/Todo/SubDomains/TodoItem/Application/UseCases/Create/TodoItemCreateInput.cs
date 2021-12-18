@@ -2,15 +2,9 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
 
 using Aviant.DDD.Application.UseCases;
 
-public sealed class TodoItemCreateInput : UseCaseInput
+public sealed record TodoItemCreateInput(int ListId, string Title) : UseCaseInput
 {
-    public TodoItemCreateInput(int listId, string title)
-    {
-        ListId = listId;
-        Title  = title;
-    }
+    internal int ListId { get; } = ListId;
 
-    internal int ListId { get; }
-
-    internal string Title { get; }
+    internal string Title { get; } = Title;
 }

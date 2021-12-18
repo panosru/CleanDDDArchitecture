@@ -4,9 +4,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
 
 using Aviant.DDD.Application.UseCases;
 
-public sealed class ExportTodoListInput : UseCaseInput
+public sealed record ExportTodoListInput(int ListId) : UseCaseInput
 {
-    public ExportTodoListInput(int listId) => ListId = listId;
-
-    internal int ListId { get; }
+    internal int ListId { get; } = ListId;
 }

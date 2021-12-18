@@ -3,39 +3,28 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 using Aggregates;
 using Aviant.DDD.Application.Commands;
 
-public sealed class CreateAccountCommand : Command<AccountAggregate, AccountAggregateId>
+public sealed record CreateAccountCommand(
+    string              UserName,
+    string              Password,
+    string              FirstName,
+    string              LastName,
+    string              Email,
+    IEnumerable<string> Roles,
+    bool                EmailConfirmed) : Command<AccountAggregate, AccountAggregateId>
 {
-    public CreateAccountCommand(
-        string              username,
-        string              password,
-        string              firstName,
-        string              lastName,
-        string              email,
-        IEnumerable<string> roles,
-        bool                emailConfirmed)
-    {
-        UserName       = username;
-        Password       = password;
-        FirstName      = firstName;
-        LastName       = lastName;
-        Email          = email;
-        Roles          = roles;
-        EmailConfirmed = emailConfirmed;
-    }
+    private string UserName { get; } = UserName;
 
-    private string UserName { get; }
+    private string Password { get; } = Password;
 
-    private string Password { get; }
+    private string FirstName { get; } = FirstName;
 
-    private string FirstName { get; }
+    private string LastName { get; } = LastName;
 
-    private string LastName { get; }
+    private string Email { get; } = Email;
 
-    private string Email { get; }
+    private IEnumerable<string> Roles { get; } = Roles;
 
-    private IEnumerable<string> Roles { get; }
-
-    private bool EmailConfirmed { get; }
+    private bool EmailConfirmed { get; } = EmailConfirmed;
 
     #region Nested type: CreateAccountHandler
 

@@ -6,17 +6,11 @@ using Core.Repositories;
 using FluentValidation;
 using Todo.Core.Entities;
 
-internal sealed class CreateTodoItemCommand : Command<Lazy<TodoItemViewModel>>
+internal sealed record CreateTodoItemCommand(int ListId, string Title) : Command<Lazy<TodoItemViewModel>>
 {
-    public CreateTodoItemCommand(int listId, string title)
-    {
-        ListId = listId;
-        Title  = title;
-    }
+    private int ListId { get; } = ListId;
 
-    private int ListId { get; }
-
-    private string Title { get; }
+    private string Title { get; } = Title;
 
     #region Nested type: CreateTodoItemCommandHandler
 

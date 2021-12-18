@@ -2,12 +2,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
 
 using Aviant.DDD.Application.ApplicationEvents;
 
-internal sealed class TodoCompletedApplicationEvent : ApplicationEvent
-{
-    public TodoCompletedApplicationEvent(TodoItemViewModel completedTodo) => CompletedTodo = completedTodo;
-
-    public TodoItemViewModel CompletedTodo { get; }
-}
+internal sealed record TodoCompletedApplicationEvent(TodoItemViewModel CompletedTodo) : ApplicationEvent;
 
 internal sealed class TodoCompletedApplicationEventHandler : ApplicationEventHandler<TodoCompletedApplicationEvent>
 {

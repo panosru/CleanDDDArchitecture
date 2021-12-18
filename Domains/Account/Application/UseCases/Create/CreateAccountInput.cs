@@ -6,39 +6,28 @@ using FluentValidation;
 using Identity;
 using Microsoft.AspNetCore.Identity;
 
-public sealed class CreateAccountInput : UseCaseInput
+public sealed record CreateAccountInput(
+    string              UserName,
+    string              Password,
+    string              FirstName,
+    string              LastName,
+    string              Email,
+    IEnumerable<string> Roles,
+    bool                EmailConfirmed) : UseCaseInput
 {
-    public CreateAccountInput(
-        string              userName,
-        string              password,
-        string              firstName,
-        string              lastName,
-        string              email,
-        IEnumerable<string> roles,
-        bool                emailConfirmed)
-    {
-        UserName       = userName;
-        Password       = password;
-        FirstName      = firstName;
-        LastName       = lastName;
-        Email          = email;
-        Roles          = roles;
-        EmailConfirmed = emailConfirmed;
-    }
+    internal string UserName { get; } = UserName;
 
-    internal string UserName { get; }
+    internal string Password { get; } = Password;
 
-    internal string Password { get; }
+    internal string FirstName { get; } = FirstName;
 
-    internal string FirstName { get; }
+    internal string LastName { get; } = LastName;
 
-    internal string LastName { get; }
+    internal string Email { get; } = Email;
 
-    internal string Email { get; }
+    internal IEnumerable<string> Roles { get; } = Roles;
 
-    internal IEnumerable<string> Roles { get; }
-
-    internal bool EmailConfirmed { get; }
+    internal bool EmailConfirmed { get; } = EmailConfirmed;
 
     #region Nested type: CreateAccountInputValidator
 

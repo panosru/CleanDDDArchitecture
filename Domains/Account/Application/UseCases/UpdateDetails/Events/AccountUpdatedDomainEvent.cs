@@ -7,7 +7,7 @@ using Aviant.DDD.Core.DomainEvents;
 using Aviant.DDD.Core.EventBus;
 using Polly;
 
-public sealed class AccountUpdatedDomainEvent : DomainEvent<AccountAggregate, AccountAggregateId>
+public sealed record AccountUpdatedDomainEvent : DomainEvent<AccountAggregate, AccountAggregateId>
 {
     // ReSharper disable once UnusedMember.Local
     #pragma warning disable 8618

@@ -8,7 +8,7 @@ using Aviant.DDD.Core.EventBus;
 using Identity;
 using Microsoft.AspNetCore.Identity;
 
-public sealed class AccountCreatedDomainEvent : DomainEvent<AccountAggregate, AccountAggregateId>
+public sealed record AccountCreatedDomainEvent : DomainEvent<AccountAggregate, AccountAggregateId>
 {
     // ReSharper disable once UnusedMember.Local
     #pragma warning disable 8618

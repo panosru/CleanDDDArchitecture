@@ -4,27 +4,17 @@ using Aggregates;
 using Ardalis.GuardClauses;
 using Aviant.DDD.Application.Commands;
 
-internal sealed class UpdateAccountCommand : Command<AccountAggregate, AccountAggregateId>
+internal sealed record UpdateAccountCommand(
+    AccountAggregateId AggregateId,
+    string             FirstName,
+    string             LastName,
+    string             Email) : Command<AccountAggregate, AccountAggregateId>
 {
-    public UpdateAccountCommand(
-        AccountAggregateId aggregateId,
-        string             firstName,
-        string             lastName,
-        string             email)
-    {
-        AggregateId = aggregateId;
-        FirstName   = firstName;
-        LastName    = lastName;
-        Email       = email;
-    }
+    private string FirstName { get; } = FirstName;
 
-    public AccountAggregateId AggregateId { get; }
+    private string LastName { get; } = LastName;
 
-    private string FirstName { get; }
-
-    private string LastName { get; }
-
-    private string Email { get; }
+    private string Email { get; } = Email;
 
     #region Nested type: UpdateAccountHandler
 

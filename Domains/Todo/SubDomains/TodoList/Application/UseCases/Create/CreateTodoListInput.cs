@@ -5,19 +5,13 @@ using Core.Enums;
 using Core.Repositories;
 using FluentValidation;
 
-/// <inheritdoc />
+/// <inheritdoc cref="Aviant.DDD.Application.UseCases.UseCaseInput" />
 /// <summary>
 ///     Create Todo List Input Data Object
 /// </summary>
-public sealed class CreateTodoListInput : UseCaseInput
+public sealed record CreateTodoListInput(string Title) : UseCaseInput
 {
-    /// <summary>
-    ///     Create Todo List Input Constructor
-    /// </summary>
-    /// <param name="title">The title of the todo list</param>
-    public CreateTodoListInput(string title) => Title = title;
-
-    internal string Title { get; }
+    internal string Title { get; } = Title;
 
     #region Nested type: CreateTodoListInputValidator
 

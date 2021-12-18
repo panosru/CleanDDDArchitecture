@@ -7,11 +7,9 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Todo.Core.Entities;
 
-internal sealed class DeleteTodoListCommand : Command
+internal sealed record DeleteTodoListCommand(int Id) : Command
 {
-    public DeleteTodoListCommand(int id) => Id = id;
-
-    private int Id { get; }
+    private int Id { get; } = Id;
 
     #region Nested type: DeleteTodoListCommandHandler
 

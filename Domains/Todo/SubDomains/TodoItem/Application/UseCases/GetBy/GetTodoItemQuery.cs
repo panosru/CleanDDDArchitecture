@@ -3,11 +3,9 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
 using Aviant.DDD.Application.Queries;
 using Core.Repositories;
 
-internal sealed class GetTodoItemQuery : Query<string>
+internal sealed record GetTodoItemQuery(int Id) : Query<string>
 {
-    public GetTodoItemQuery(int id) => Id = id;
-
-    private int Id { get; }
+    private int Id { get; } = Id;
 
     #region Nested type: GetTodoItemQueryHandler
 

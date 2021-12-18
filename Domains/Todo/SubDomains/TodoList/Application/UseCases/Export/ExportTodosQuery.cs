@@ -7,11 +7,9 @@ using Aviant.DDD.Application.Services;
 using Microsoft.EntityFrameworkCore;
 using Todo.Application.Persistence;
 
-internal sealed class ExportTodosQuery : Query<ExportTodosVm>
+internal sealed record ExportTodosQuery(int ListId) : Query<ExportTodosVm>
 {
-    public ExportTodosQuery(int listId) => ListId = listId;
-
-    private int ListId { get; }
+    private int ListId { get; } = ListId;
 
     #region Nested type: ExportTodosQueryHandler
 
