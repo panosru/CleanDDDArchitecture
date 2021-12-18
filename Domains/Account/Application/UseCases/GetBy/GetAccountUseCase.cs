@@ -16,7 +16,10 @@ public sealed class GetAccountUseCase
                 cancellationToken)
            .ConfigureAwait(false);
 
-        if (requestResult.Succeeded)
+        if (requestResult.Succeeded
+         && requestResult.Payload() is not null)
             Output.Ok(requestResult.Payload<AccountUser>());
+        else
+            Output.Invalid("Account not found.");
     }
 }
