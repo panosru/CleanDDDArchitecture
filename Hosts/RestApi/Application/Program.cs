@@ -134,24 +134,33 @@ internal sealed class Program
     private static void MoveEnvironmentVariablesToEnd(IConfigurationBuilder configurationBuilder)
     {
         // Items that needs to be moved to the end (FIFO)
-        List<IConfigurationSource> fifo = new()
+        List<IConfigurationSource?> fifo = new()
         {
             // Get EnvironmentVariablesConfigurationSource item
             configurationBuilder.Sources
-               .First(
+               .FirstOrDefault(
                     i =>
                         i.GetType() == typeof(EnvironmentVariablesConfigurationSource)),
 
             // Get CommandLineConfigurationSource item
             configurationBuilder.Sources
-               .First(
+               .FirstOrDefault(
                     i =>
-                        i.GetType() == typeof(CommandLineConfigurationSource))
+                        i.GetType() == typeof(CommandLineConfigurationSource)),
+
+            // Get CommandLineConfigurationSource item
+            configurationBuilder.Sources
+               .FirstOrDefault(
+                    i =>
+                        i.GetType() == typeof(ChainedConfigurationSource))
         };
 
         fifo.ForEach(
             item =>
             {
+                if (item is null)
+                    return;
+
                 // Move to the end
                 configurationBuilder.Sources.Remove(item);
                 configurationBuilder.Sources.Add(item);
