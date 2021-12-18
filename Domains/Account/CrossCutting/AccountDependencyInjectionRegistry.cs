@@ -24,7 +24,7 @@ using Aviant.DDD.Core.Services;
 using Aviant.DDD.Infrastructure.CrossCutting;
 using Aviant.DDD.Infrastructure.Persistence;
 using Aviant.DDD.Infrastructure.Persistence.EventStore;
-using Aviant.DDD.Infrastructure.Persistence.Kafka;
+using Aviant.DDD.Infrastructure.Transport.Kafka;
 using Core;
 using Core.Exceptions;
 using Infrastructure;
