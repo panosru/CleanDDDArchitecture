@@ -1,5 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Account.CrossCutting;
 
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
@@ -194,7 +195,8 @@ public static class AccountDependencyInjectionRegistry
                             Encoding.ASCII.GetBytes(Configuration["Jwt:Key512Bit"])),
                         // By setting ClockSkew to zero, the tokens are expiring at
                         // the exact token expiration time and not 5 minutes later
-                        ClockSkew = TimeSpan.Zero
+                        ClockSkew = TimeSpan.FromMinutes(
+                            double.Parse(Configuration["Jwt:ClockSkewInMinutes"], CultureInfo.InvariantCulture))
                     };
                 })
            .AddIdentityServerJwt();
@@ -210,21 +212,25 @@ public static class AccountDependencyInjectionRegistry
                     }));
 
         services
-           .AddSingleton<IEventDeserializer>(
-                new JsonEventDeserializer(
+           .AddSingleton<IEventSerializer>(
+                new JsonEventSerializer(
                     new[]
                     {
                         AccountCrossCutting.AccountApplicationAssembly
                     }));
 
-        EventConsumerConfig consumerConfig = new(
+        EventsConsumerConfig consumerConfig = new(
             Configuration.GetConnectionString("kafka"),
             Configuration["eventsTopicName"],
             Configuration["eventsTopicGroupName"]);
 
+        EventsProducerConfig eventsProducerConfig = new(
+            Configuration.GetConnectionString("kafka"),
+            Configuration["eventsTopicName"]);
+
         services.AddSingleton(consumerConfig)
            .AddSingleton(typeof(IEventConsumer<,,>), typeof(EventConsumer<,,>))
-           .AddKafkaEventProducer<AccountAggregate, AccountAggregateId>(consumerConfig);
+           .AddKafkaEventProducer<AccountAggregate, AccountAggregateId>(eventsProducerConfig);
 
 
         services.AddSingleton<IEventStoreConnectionWrapper>(
