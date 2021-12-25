@@ -1,0 +1,45 @@
+version: '3.9'
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: Postgres.Dockerfile
+    container_name: ${POSTGRES_HOST}
+    restart: 'no' # should be set to 'always' for production
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-h", "${POSTGRES_HOST}", "-p", "${POSTGRES_PORT}", "-U", "${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout:  5s
+      retries:  3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 2m
+        max-file: '3'
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-veryweak}
+    expose:
+      - ${POSTGRES_PORT}
+        
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: ${PGADMIN_HOST}
+    restart: 'no'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 2m
+        max-file: '3'
+    expose:
+      - 80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD:   ${PGADMIN_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: ${PGADMIN_CONFIG_SERVER_MODE}
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: ${PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED}
+    entrypoint: 
+      - "/bin/sh"
+      - "-c"
+      - "/bin/echo '${POSTGRES_HOST}:${POSTGRES_PORT}:*:${POSTGRES_USER}:${POSTGRES_PASSWORD}' > /tmp/pgpassfile && chmod 600 /tmp/pgpassfile && /entrypoint.sh"

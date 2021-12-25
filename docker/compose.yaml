@@ -1,0 +1,90 @@
+version: '3.9'
+
+services:
+  
+  postgres:
+    extends:
+      file:    ./services/postgres.yaml
+      service: postgres
+    networks: 
+      - postgres_net
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/
+      - ./services/postgres.init.sql:/docker-entrypoint-initdb.d/postgres.init.sql
+  
+  redis:
+    extends:
+      file:    ./services/redis.yaml
+      service: redis
+    ports:
+      - ${REDIS_PUBLIC_PORT}:${REDIS_PORT}
+    networks:
+      - redis_net
+    volumes:
+      - redis-data:/data
+  
+  loki:
+    extends:
+      file:    ./services/monitor.yaml
+      service: loki
+    networks:
+      - monitor_net
+    volumes:
+      - ./services/config-loki.yaml:/etc/loki/loki-config.yaml
+      - loki_data:/etc/loki
+  
+  zookeeper:
+    extends:
+      file:    ./services/kafka.yaml
+      service: zookeeper
+    networks:
+      - kafka_net
+  
+  kafka:
+    extends:
+      file:    ./services/kafka.yaml
+      service: kafka
+    networks:
+      - kafka_net
+    depends_on: 
+      - zookeeper
+
+  eventstore:
+    extends:
+      file:    ./services/eventstore.yaml
+      service: eventstore
+    volumes:
+      - type: volume
+        source: eventstore-volume-data
+        target: /var/lib/eventstore
+      - type: volume
+        source: eventstore-volume-logs
+        target: /var/log/eventstore
+    networks:
+      - eventstore_net
+
+# Volumes
+volumes:
+  postgres-data:
+    name: ${POSTGRES_HOST}-data
+  redis-data:
+    name: ${REDIS_HOST}-data
+  loki_data:
+    name: ${LOKI_HOST}-data
+  eventstore-volume-data:
+    name: ${EVENTSTORE_HOST}-data
+  eventstore-volume-logs:
+    name: ${EVENTSTORE_HOST}-logs
+
+# Networks
+networks:
+  postgres_net:
+    driver: bridge
+  redis_net:
+    driver: bridge
+  monitor_net:
+    driver: bridge
+  kafka_net:
+    driver: bridge
+  eventstore_net:
+    driver: bridge

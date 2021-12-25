@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  eventstore:
+    image: eventstore/eventstore:latest
+    container_name: ${EVENTSTORE_HOST}
+    restart: 'no'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 2m
+        max-file: '3'
+    expose:
+      - ${EVENTSTORE_HTTP_PORT}
+      - ${EVENTSTORE_TCP_PORT}
+    environment:
+      EVENTSTORE_CLUSTER_SIZE: ${EVENTSTORE_CLUSTER_SIZE}
+      EVENTSTORE_RUN_PROJECTIONS: ${EVENTSTORE_RUN_PROJECTIONS}
+      EVENTSTORE_START_STANDARD_PROJECTIONS: ${EVENTSTORE_START_STANDARD_PROJECTIONS}
+      EVENTSTORE_EXT_TCP_PORT: ${EVENTSTORE_TCP_PORT}
+      EVENTSTORE_HTTP_PORT: ${EVENTSTORE_HTTP_PORT}
+      EVENTSTORE_INSECURE: ${EVENTSTORE_INSECURE}
+      EVENTSTORE_ENABLE_EXTERNAL_TCP: ${EVENTSTORE_ENABLE_EXTERNAL_TCP}
+      EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP: ${EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl --fail --insecure http://${EVENTSTORE_HOST}:${EVENTSTORE_HTTP_PORT}/health/live || exit 1",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 24
+

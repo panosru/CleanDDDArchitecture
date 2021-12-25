@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+
+  redis:
+    image: redis:latest
+    container_name: ${REDIS_HOST}
+    restart: 'no'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 2m
+        max-file: '3'
+    expose:
+      - ${REDIS_PORT}
+    command: ["redis-server", "--appendonly", "${REDIS_APPEND_ONLY}", "--requirepass", "${REDIS_PASSWORD}"]
+
+  redis-commander:
+    image:          rediscommander/redis-commander:latest
+    container_name: ${REDIS_COMMANDER_HOST}
+    restart:        'no'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 2m
+        max-file: '3'
+    expose:
+      - ${REDIS_COMMANDER_PORT}
+    environment:
+      - REDIS_HOSTS=local:${REDIS_HOST}:${REDIS_PORT}:0:${REDIS_PASSWORD}
+      - HTTP_USER=${REDIS_COMMANDER_USER}
+      - HTTP_PASSWORD=${REDIS_COMMANDER_PASSWORD}

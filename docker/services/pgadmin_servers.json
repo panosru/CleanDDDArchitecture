@@ -1,0 +1,14 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Docker Compose",
+      "Group": "Servers",
+      "Port": 5432,
+      "Username": "panosru",
+      "Host": "CleanDDDArchitecture-postgres",
+      "SSLMode": "prefer",
+      "MaintenanceDB": "CleanDDDArchitecture",
+      "PassFile": "/tmp/pgpassfile"
+    }
+  }
+}
