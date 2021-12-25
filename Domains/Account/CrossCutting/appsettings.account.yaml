@@ -4,6 +4,7 @@ eventsTopicGroupName: "cleandddarchitecture-api-events-consumer"
 
 Jwt:
   ExpirationDurationInMunuts: 30
+  ClockSkewInMinutes: 5
 
 FeatureManagement:
   AccountCreate: true
