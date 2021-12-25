@@ -7,6 +7,7 @@ using System.Text;
 using System.Web;
 using Application.Identity;
 using Aviant.DDD.Application.Identity;
+using Aviant.DDD.Core.Extensions;
 using Aviant.DDD.Core.Timing;
 using Core;
 using Microsoft.AspNetCore.Identity;
@@ -84,7 +85,10 @@ public sealed class IdentityService : IIdentityService //TODO: This requires a m
         {
             new(JwtRegisteredClaimNames.Sub, _config.GetValue("Jwt:Subject")),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(JwtRegisteredClaimNames.Iat, Clock.Now.ToString(CultureInfo.InvariantCulture)),
+            new(
+                JwtRegisteredClaimNames.Iat,
+                Clock.Now.ToUnixTimestamp().ToString(CultureInfo.InvariantCulture),
+                ClaimValueTypes.Integer64),
             new(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
             new(JwtRegisteredClaimNames.UniqueName, user.UserName),
             new(JwtRegisteredClaimNames.Email, user.Email),
@@ -94,7 +98,7 @@ public sealed class IdentityService : IIdentityService //TODO: This requires a m
 
         SymmetricSecurityKey tokenDecryptionKey = new(Encoding.ASCII.GetBytes(_config.GetValue("Jwt:Key256Bit")));
         SymmetricSecurityKey issuerSigningKey   = new(Encoding.ASCII.GetBytes(_config.GetValue("Jwt:Key512Bit")));
-        SigningCredentials   credentials        = new(issuerSigningKey, SecurityAlgorithms.HmacSha256Signature);
+        SigningCredentials   signingCredentials = new(issuerSigningKey, SecurityAlgorithms.HmacSha256Signature);
 
         EncryptingCredentials encryptingCredentials = new(
             tokenDecryptionKey,
@@ -107,8 +111,9 @@ public sealed class IdentityService : IIdentityService //TODO: This requires a m
             _config.GetValue("Jwt:Issuer"),
             _config.GetValue("Jwt:Audience"),
             new ClaimsIdentity(claims),
-            expires: Clock.Now.AddMinutes(double.Parse(_config.GetValue("Jwt:ExpirationDurationInMunuts"))),
-            signingCredentials: credentials,
+            expires: Clock.Now.AddMinutes(
+                double.Parse(_config.GetValue("Jwt:ExpirationDurationInMunuts"), CultureInfo.InvariantCulture)),
+            signingCredentials: signingCredentials,
             encryptingCredentials: encryptingCredentials,
             notBefore: Clock.Now,
             issuedAt: Clock.Now);

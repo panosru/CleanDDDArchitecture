@@ -8,8 +8,8 @@ public sealed class HangfireAuthorizationFilter : LocalRequestsOnlyAuthorization
     /// <inheritdoc cref="LocalRequestsOnlyAuthorizationFilter" />
     public new bool Authorize(DashboardContext context)
     {
-        var admin = context.GetHttpContext().User.IsInRole(Roles.Root);
+        var root = context.GetHttpContext().User.IsInRole(Roles.Root);
 
-        return base.Authorize(context) || admin;
+        return base.Authorize(context) || root;
     }
 }
