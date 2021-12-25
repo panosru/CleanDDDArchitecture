@@ -1,9 +1,13 @@
 ---
+ConnectionStrings:
+  DefaultWriteConnection: "User ID =panosru;Password=rX3t9bvDT2ftH2;Server=CleanDDDArchitecture-postgres;Port=5432;Database=CleanDDDArchitecture;Integrated Security=true;Pooling=true;"
+  DefaultReadConnection: "User ID =panosru;Password=rX3t9bvDT2ftH2;Server=CleanDDDArchitecture-postgres;Port=5432;Database=CleanDDDArchitecture;Integrated Security=true;Pooling=true;"
+  Hangfire: "User ID =panosru;Password=rX3t9bvDT2ftH2;Server=CleanDDDArchitecture-postgres;Port=5432;Database=Hangfire;Integrated Security=true;Pooling=true;"
+  loki: "http://CleanDDDArchitecture-loki:3100"
 
 IdentityServer:
   Key:
     Type: Development
-
 
 Serilog:
   Using:
@@ -27,7 +31,7 @@ Serilog:
         outputTemplate: "{Timestamp:dd-MM-yyyy HH:mm:ss} [{Level:u3}] [{SourceContext}] {Message}{NewLine}{Exception}"
     - Name: GrafanaLoki
       Args:
-        uri: http://localhost:13100
+        uri: http://CleanDDDArchitecture-loki:3100
         labels:
           - key: app
             value: web_app
