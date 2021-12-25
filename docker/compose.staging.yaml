@@ -1,0 +1,72 @@
+version: '3.9'
+
+services:
+  
+  web-app:
+    build:
+      context:    ../
+      dockerfile: ./docker/WebApp.Dockerfile
+    container_name: "${SOLUTION_NAME}.WebApp"
+    environment:
+      USER_SECRETS_ID:                                     ${WEB_APP_USER_SECRETS_ID}
+      ASPNETCORE_ENVIRONMENT:                              "Staging"
+      ASPNETCORE_URLS:                                     "https://+"
+      ASPNETCORE_HTTPS_PORT:                               ${WEB_APP_PORT}
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${WEB_APP_CERTIFACATE_PASSWORD}
+      ASPNETCORE_Kestrel__Certificates__Default__Path:     /root/.aspnet/https/RestApi.pfx
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT:               false
+      ASPNETCORE_DETAILEDERRORS: 1
+      ASPNETCORE_SHUTDOWNTIMEOUTSECONDS: 3
+    volumes:
+      #- ${APPDATA}/Microsoft/UserSecrets/${WEB_APP_USER_SECRETS_ID}:/root/.microsoft/usersecrets/${WEB_APP_USER_SECRETS_ID}:ro
+      - ${HOME}/.microsoft/usersecrets/${WEB_APP_USER_SECRETS_ID}:/root/.microsoft/usersecrets/${WEB_APP_USER_SECRETS_ID}:ro
+      - ${HOME}/.aspnet/https/WebApp.pfx:/root/.aspnet/https/WebApp.pfx:ro
+    expose:
+      - 443
+    ports:
+      - "${WEB_APP_PORT}:443"
+    networks: 
+      - rest_api_net
+  
+  rest-api:
+    build:
+      context:    ../
+      dockerfile: ./docker/RestAPI.Dockerfile
+    container_name: "${SOLUTION_NAME}.RestApi"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Staging"
+      ASPNETCORE_URLS: "https://+"
+      ASPNETCORE_HTTPS_PORT: ${REST_API_PORT}
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${REST_API_CERTIFICATE_PASSWORD}
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /root/.aspnet/https/RestApi.pfx
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: false
+      ASPNETCORE_DETAILEDERRORS: 1
+      ASPNETCORE_SHUTDOWNTIMEOUTSECONDS: 3
+    volumes:
+      - ${HOME}/.aspnet/https/RestApi.pfx:/root/.aspnet/https/RestApi.pfx:ro
+    expose:
+      - 443
+    ports:
+      - "${REST_API_PORT}:443"
+    networks: 
+      - postgres_net
+      - redis_net
+      - monitor_net
+      - kafka_net
+      - eventstore_net
+      - rest_api_net
+
+# Networks
+networks:
+  postgres_net:
+    driver: bridge
+  redis_net:
+    driver: bridge
+  monitor_net:
+    driver: bridge
+  kafka_net:
+    driver: bridge
+  eventstore_net:
+    driver: bridge
+  rest_api_net:
+    driver: bridge

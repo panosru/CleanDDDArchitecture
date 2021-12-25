@@ -1,0 +1,72 @@
+version: '3.9'
+
+services:
+  
+  pgadmin:
+    extends:
+      file:    ./services/postgres.yaml
+      service: pgadmin
+    ports:
+      - "${PGADMIN_PUBLIC_PORT}:80"
+    networks:
+      - postgres_net
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./services/pgadmin_servers.json:/pgadmin4/servers.json
+  
+  redis-commander:
+    extends:
+      file:    ./services/redis.yaml
+      service: redis-commander
+    ports:
+      - ${REDIS_COMMANDER_PUBLIC_PORT}:${REDIS_COMMANDER_PORT}
+    networks:
+      - redis_net
+  
+  grafana:
+    extends:
+      file:    ./services/monitor.yaml
+      service: grafana
+    ports:
+      - ${GRAFANA_PUBLIC_PORT}:${GRAFANA_PORT}
+    networks:
+      - monitor_net
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./services/grafana/provisioning/:/etc/grafana/provisioning/
+  
+#  kafka-ui:
+#    extends:
+#      file:    ./services/kafka.yaml
+#      service: kafka-ui
+#    ports:
+#      - "${KAFKA_UI_PUBLIC_PORT}:8080"
+#    networks:
+#      - kafka_net
+  
+  kowl:
+    extends:
+      file:    ./services/kafka.yaml
+      service: kowl
+    ports:
+      - "${KOWL_PUBLIC_PORT}:8080"
+    networks:
+      - kafka_net
+  
+# Volumes
+volumes:
+  grafana_data:
+    name: ${GRAFANA_HOST}-data
+  pgadmin_data:
+    name: ${PGADMIN_HOST}-data
+
+# Networks
+networks:
+  postgres_net:
+    driver: bridge
+  redis_net:
+    driver: bridge
+  monitor_net:
+    driver: bridge
+  kafka_net:
+    driver: bridge

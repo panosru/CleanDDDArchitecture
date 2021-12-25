@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  loki:
+    image: grafana/loki:2.3.0
+    restart: 'no'
+    container_name: ${LOKI_HOST}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 2m
+        max-file: '3'
+    expose:
+      - ${LOKI_PORT}
+    command: -config.file=/etc/loki/loki-config.yaml
+
+  grafana:
+    image: grafana/grafana:latest
+    restart: 'no'
+    container_name: ${GRAFANA_HOST}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 2m
+        max-file: '3'
+    user: "0" # To allow Grafana to boot up
+    expose:
+      - ${GRAFANA_PORT}
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_SECURITY_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_SECURITY_ADMIN_PASSWORD}

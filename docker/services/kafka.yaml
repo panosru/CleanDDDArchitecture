@@ -1,0 +1,83 @@
+version: '3.9'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: ${ZOOKEEPER_HOST}
+    restart: 'no'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 2m
+        max-file: '3'
+    expose:
+      - ${ZOOKEEPER_PORT}
+    environment:
+      ZOOKEEPER_CLIENT_PORT: ${ZOOKEEPER_PORT}
+      ZOOKEEPER_TICK_TIME: ${ZOOKEEPER_TICK_TIME}
+      ZOOKEEPER_INIT_LIMIT: ${ZOOKEEPER_INIT_LIMIT}
+      ZOOKEEPER_SYNC_LIMIT: ${ZOOKEEPER_SYNC_LIMIT}
+
+  kafka:
+    # "`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-
+    # An important note about accessing Kafka from clients on other machines:
+    # -----------------------------------------------------------------------
+    #
+    # The config used here exposes port 29092 for _external_ connections to the broker
+    # i.e. those from _outside_ the docker network. This could be from the host machine
+    # running docker, or maybe further afield if you've got a more complicated setup.
+    # If the latter is true, you will need to change the value 'localhost' in
+    # KAFKA_ADVERTISED_LISTENERS to one that is resolvable to the docker host from those
+    # remote clients
+    #
+    # For connections _internal_ to the docker network, such as from other services
+    # and components, use kafka:9092.
+    #
+    # See https://rmoff.net/2018/08/02/kafka-listeners-explained/ for details
+    # "`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-
+    #
+    image: confluentinc/cp-kafka:latest
+    container_name: ${KAFKA_HOST}
+    restart: 'no'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 2m
+        max-file: '3'
+    expose:
+      - ${KAFKA_PORT}
+    environment:
+      KAFKA_BROKER_ID: ${KAFKA_BROKER_ID}
+      KAFKA_ZOOKEEPER_CONNECT: ${ZOOKEEPER_HOST}:${ZOOKEEPER_PORT}
+      KAFKA_ADVERTISED_LISTENERS: ${KAFKA_ADVERTISED_LISTENERS}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: ${KAFKA_LISTENER_SECURITY_PROTOCOL_MAP}
+      KAFKA_INTER_BROKER_LISTENER_NAME: ${KAFKA_INTER_BROKER_LISTENER_NAME}
+      # Following line is needed for Kafka versions 0.11+
+      # in case you run less than 3 Kafka brokers in your
+      # cluster because the broker config
+      # `offsets.topic.replication.factor` (default: 3)
+      # is now enforced upon topic creation
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: ${KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR}
+  
+  kafka-ui:
+    image:          provectuslabs/kafka-ui:latest
+    container_name: ${KAFKA_UI_HOST}
+    restart:        'no'
+    expose:
+      - 8080
+    environment:
+      KAFKA_CLUSTERS_0_NAME: ${KAFKA_UI_HOST}
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: ${KAFKA_HOST}:${KAFKA_PORT}
+      KAFKA_CLUSTERS_0_ZOOKEEPER: ${ZOOKEEPER_HOST}:${ZOOKEEPER_PORT}
+      KAFKA_CLUSTERS_0_READONLY: ${KAFKA_UI_READ_ONLY}
+
+  kowl:
+    image:      quay.io/cloudhut/kowl:master
+    container_name: ${KOWL_HOST}
+    restart:    'no'
+    hostname:   kowl
+    volumes:
+      - ./config-kowl.yaml:/etc/kowl/config.yml
+    expose:
+      - 8080
+    entrypoint: ./kowl --config.filepath=/etc/kowl/config.yml

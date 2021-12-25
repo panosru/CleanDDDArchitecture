@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  
+  postgres:
+    ports:
+      - ${POSTGRES_PUBLIC_PORT}:${POSTGRES_PORT}
+  
+  redis:
+    ports:
+      - ${REDIS_PUBLIC_PORT}:${REDIS_PORT}
+  
+  loki:
+    ports:
+      - ${LOKI_PUBLIC_PORT}:${LOKI_PORT}
+  
+  zookeeper:
+    ports:
+      - ${ZOOKEEPER_PUBLIC_PORT}:${ZOOKEEPER_PORT}
+
+  kafka:
+    ports:
+      - ${KAFKA_PUBLIC_PORT}:${KAFKA_PUBLIC_PORT}
+
+  eventstore:
+    ports:
+      - ${EVENTSTORE_PUBLIC_HTTP_PORT}:${EVENTSTORE_HTTP_PORT}
+      - ${EVENTSTORE_PUBLIC_TCP_PORT}:${EVENTSTORE_TCP_PORT}
