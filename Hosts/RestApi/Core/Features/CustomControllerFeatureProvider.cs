@@ -2,7 +2,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Core.Features;
 
 using System.Collections;
 using System.Reflection;
-using AutoMapper.Internal;
+using Aviant.DDD.Core.Collections.Extensions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.FeatureManagement;
