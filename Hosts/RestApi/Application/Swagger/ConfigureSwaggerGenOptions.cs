@@ -1,7 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger;
 
 using System.Diagnostics.CodeAnalysis;
-using Aviant.DDD.Core.Collections.Extensions;
+using Aviant.Core.Collections.Extensions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

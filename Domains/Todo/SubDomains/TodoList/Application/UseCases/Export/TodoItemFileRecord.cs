@@ -4,7 +4,7 @@
 
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Export;
 
-using Aviant.DDD.Application.Mappings;
+using Aviant.Application.Mappings;
 using Todo.Core.Entities;
 
 public sealed class TodoItemRecord : IMapFrom<TodoItemEntity>

@@ -49,24 +49,24 @@ services:
     ports:
       - "${REST_API_PORT}:443"
     networks: 
-      - postgres_net
-      - redis_net
-      - monitor_net
-      - kafka_net
-      - eventstore_net
+      - cleandddarchitecture_postgres_net
+      - cleandddarchitecture_redis_net
+      - cleandddarchitecture_monitor_net
+      - cleandddarchitecture_kafka_net
+      - cleandddarchitecture_eventstore_net
       - rest_api_net
 
 # Networks
 networks:
-  postgres_net:
-    driver: bridge
-  redis_net:
-    driver: bridge
-  monitor_net:
-    driver: bridge
-  kafka_net:
-    driver: bridge
-  eventstore_net:
-    driver: bridge
+  cleandddarchitecture_postgres_net:
+    external: true
+  cleandddarchitecture_redis_net:
+    external: true
+  cleandddarchitecture_monitor_net:
+    external: true
+  cleandddarchitecture_kafka_net:
+    external: true
+  cleandddarchitecture_eventstore_net:
+    external: true
   rest_api_net:
     driver: bridge

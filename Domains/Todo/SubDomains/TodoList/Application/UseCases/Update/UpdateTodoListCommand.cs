@@ -1,7 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Update;
 
-using Aviant.DDD.Application.Commands;
-using Aviant.DDD.Application.Exceptions;
+using Aviant.Application.Commands;
+using Aviant.Application.Exceptions;
 using Core.Enums;
 using Core.Repositories;
 using FluentValidation;
@@ -9,7 +9,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Todo.Core.Entities;
 
-/// <inheritdoc cref="Aviant.DDD.Application.Commands.Command" />
+/// <inheritdoc cref="Aviant.Application.Commands.Command" />
 /// <summary>
 ///     The command to update a todo list
 /// </summary>

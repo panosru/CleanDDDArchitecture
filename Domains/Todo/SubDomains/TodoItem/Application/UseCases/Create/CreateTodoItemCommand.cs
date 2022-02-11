@@ -1,7 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Create;
 
 using AutoMapper;
-using Aviant.DDD.Application.Commands;
+using Aviant.Application.Commands;
 using Core.Repositories;
 using FluentValidation;
 using Todo.Core.Entities;

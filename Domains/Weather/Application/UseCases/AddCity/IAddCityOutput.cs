@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity;
 
-using Aviant.DDD.Application.UseCases;
+using Aviant.Application.UseCases;
 
 public interface IAddCityOutput : IUseCaseOutput
 {

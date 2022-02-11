@@ -2,8 +2,8 @@
 
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Aviant.DDD.Application.Queries;
-using Aviant.DDD.Application.Services;
+using Aviant.Application.Queries;
+using Aviant.Application.Services;
 using Microsoft.EntityFrameworkCore;
 using Todo.Application.Persistence;
 

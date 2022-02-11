@@ -1,7 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Core.Controllers;
 
-using Aviant.DDD.Application.Orchestration;
-using Aviant.DDD.Application.UseCases;
+using Aviant.Application.Orchestration;
+using Aviant.Application.UseCases;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 

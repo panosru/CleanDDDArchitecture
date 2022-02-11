@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates;
 
-using Aviant.DDD.Core.Aggregates;
+using Aviant.Core.Aggregates;
 using Newtonsoft.Json;
 
 public sealed class AccountAggregateId : AggregateId<Guid>

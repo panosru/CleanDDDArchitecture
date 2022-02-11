@@ -1,7 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.Repositories;
 
 using Aggregates;
-using Aviant.DDD.Core.Persistence;
+using Aviant.Core.Persistence;
 
 public interface IAccountRepositoryWrite : IRepositoryWrite<AccountAggregate, AccountAggregateId>
 { }

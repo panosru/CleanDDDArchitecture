@@ -1,10 +1,10 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update;
 
 using AutoMapper;
-using Aviant.DDD.Application.ApplicationEvents;
-using Aviant.DDD.Application.Commands;
-using Aviant.DDD.Application.Exceptions;
-using Aviant.DDD.Application.Processors;
+using Aviant.Application.ApplicationEvents;
+using Aviant.Application.Commands;
+using Aviant.Application.Exceptions;
+using Aviant.Application.Processors;
 using Core.Repositories;
 using FluentValidation;
 using Todo.Core.Entities;

@@ -1,7 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 
 using Aggregates;
-using Aviant.DDD.Application.Commands;
+using Aviant.Application.Commands;
 
 public sealed record CreateAccountCommand(
     string              UserName,

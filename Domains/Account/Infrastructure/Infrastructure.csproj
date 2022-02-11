@@ -16,11 +16,11 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.1" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.2" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.3" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Library\Aviant.DDD\src\Infrastructure\Infrastructure.csproj" />
+      <ProjectReference Include="..\..\..\Library\Aviant\src\Infrastructure\Infrastructure.csproj" />
       <ProjectReference Include="..\Application\Application.csproj" />
     </ItemGroup>
 

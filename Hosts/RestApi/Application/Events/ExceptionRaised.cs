@@ -1,8 +1,8 @@
 namespace CleanDDDArchitecture.Hosts.RestApi.Application.Events;
 
-using Aviant.DDD.Application.ApplicationEvents;
+using Aviant.Application.ApplicationEvents;
 
-/// <inheritdoc cref="Aviant.DDD.Application.ApplicationEvents.ApplicationEvent" />
+/// <inheritdoc cref="Aviant.Application.ApplicationEvents.ApplicationEvent" />
 /// <summary>
 /// Application Exception Raised Event
 /// </summary>

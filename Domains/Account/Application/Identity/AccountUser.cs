@@ -4,7 +4,7 @@
 
 namespace CleanDDDArchitecture.Domains.Account.Application.Identity;
 
-using Aviant.DDD.Application.Identity;
+using Aviant.Application.Identity;
 
 public sealed class AccountUser : ApplicationUser
 {
