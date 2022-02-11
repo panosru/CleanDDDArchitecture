@@ -21,7 +21,7 @@ pipeline {
     stage('Building') {
       steps {
         scmSkip(deleteBuild: true, skipPattern:'.*\\[CI-SKIP\\].*')
-        sh 'dotnet restore Aviant.DDD.sln'
+        sh 'dotnet restore Aviant.sln'
         sh "dotnet build"
       }
     }

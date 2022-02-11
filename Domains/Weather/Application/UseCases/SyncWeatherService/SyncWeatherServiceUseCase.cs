@@ -1,7 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherService;
 
-using Aviant.DDD.Application.Jobs;
-using Aviant.DDD.Application.UseCases;
+using Aviant.Application.Jobs;
+using Aviant.Application.UseCases;
 
 public sealed class SyncWeatherServiceUseCase
     : UseCase<ISyncWeatherServiceOutput>

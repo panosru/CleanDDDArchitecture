@@ -1,7 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Delete;
 
-using Aviant.DDD.Application.Commands;
-using Aviant.DDD.Application.Exceptions;
+using Aviant.Application.Commands;
+using Aviant.Application.Exceptions;
 using Core.Repositories;
 using MediatR;
 using Todo.Core.Entities;

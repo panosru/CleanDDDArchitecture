@@ -1,8 +1,8 @@
 namespace CleanDDDArchitecture.Hosts.RestApi.Application;
 
 using System.Drawing;
-using Aviant.DDD.Core.Timing;
-using Aviant.DDD.Infrastructure.CrossCutting;
+using Aviant.Core.Timing;
+using Aviant.Infrastructure.CrossCutting;
 using Domains.Account.CrossCutting;
 using Domains.Todo.CrossCutting;
 using Microsoft.AspNetCore.Hosting;

@@ -1,8 +1,8 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate;
 
 using System.Security.Authentication;
-using Aviant.DDD.Application.Commands;
-using Aviant.DDD.Application.Identity;
+using Aviant.Application.Commands;
+using Aviant.Application.Identity;
 
 internal sealed record AuthenticateCommand(string Username, string Password) : Command<object>
 {

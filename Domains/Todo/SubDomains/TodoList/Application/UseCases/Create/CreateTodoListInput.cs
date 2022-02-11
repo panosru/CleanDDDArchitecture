@@ -1,11 +1,11 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
 
-using Aviant.DDD.Application.UseCases;
+using Aviant.Application.UseCases;
 using Core.Enums;
 using Core.Repositories;
 using FluentValidation;
 
-/// <inheritdoc cref="Aviant.DDD.Application.UseCases.UseCaseInput" />
+/// <inheritdoc cref="Aviant.Application.UseCases.UseCaseInput" />
 /// <summary>
 ///     Create Todo List Input Data Object
 /// </summary>

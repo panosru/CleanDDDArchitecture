@@ -6,14 +6,14 @@ using System.Security.Claims;
 using System.Text;
 using System.Web;
 using Application.Identity;
-using Aviant.DDD.Application.Identity;
-using Aviant.DDD.Core.Extensions;
-using Aviant.DDD.Core.Timing;
+using Aviant.Application.Identity;
+using Aviant.Core.Extensions;
+using Aviant.Core.Timing;
 using Core;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using IdentityResult = Aviant.DDD.Application.Identity.IdentityResult;
+using IdentityResult = Aviant.Application.Identity.IdentityResult;
 
 public sealed class IdentityService : IIdentityService //TODO: This requires a major refactor
 {

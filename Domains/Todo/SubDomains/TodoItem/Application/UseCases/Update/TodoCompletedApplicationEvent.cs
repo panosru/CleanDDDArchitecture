@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update;
 
-using Aviant.DDD.Application.ApplicationEvents;
+using Aviant.Application.ApplicationEvents;
 
 internal sealed record TodoCompletedApplicationEvent(TodoItemViewModel CompletedTodo) : ApplicationEvent;
 

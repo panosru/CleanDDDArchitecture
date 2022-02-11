@@ -2,16 +2,16 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application;
 
 using System.Reflection;
 using AutoMapper;
-using Aviant.DDD.Application.ApplicationEvents;
-using Aviant.DDD.Application.Behaviours;
-using Aviant.DDD.Application.EventBus;
-using Aviant.DDD.Application.Identity;
-using Aviant.DDD.Application.Jobs;
-using Aviant.DDD.Application.Processors;
-using Aviant.DDD.Application.Services;
-using Aviant.DDD.Core.Messages;
-using Aviant.DDD.Core.Services;
-using Aviant.DDD.Infrastructure.CrossCutting;
+using Aviant.Application.ApplicationEvents;
+using Aviant.Application.Behaviours;
+using Aviant.Application.EventBus;
+using Aviant.Application.Identity;
+using Aviant.Application.Jobs;
+using Aviant.Application.Processors;
+using Aviant.Application.Services;
+using Aviant.Core.Messages;
+using Aviant.Core.Services;
+using Aviant.Infrastructure.CrossCutting;
 using Domains.Account.CrossCutting;
 using Domains.Shared.Core;
 using Domains.Todo.CrossCutting;
@@ -275,7 +275,8 @@ public sealed class Startup
                 Authorization = new[]
                 {
                     new HangfireAuthorizationFilter()
-                }
+                },
+                IgnoreAntiforgeryToken = true
             });
 
         app.UseHealthChecks("/health");

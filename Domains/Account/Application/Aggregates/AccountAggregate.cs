@@ -2,9 +2,9 @@
 
 namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates;
 
-using Aviant.DDD.Core.Aggregates;
-using Aviant.DDD.Core.DomainEvents;
-using Aviant.DDD.Core.Entities;
+using Aviant.Core.Aggregates;
+using Aviant.Core.DomainEvents;
+using Aviant.Core.Entities;
 using UseCases.Create.Events;
 using UseCases.UpdateDetails.Events;
 

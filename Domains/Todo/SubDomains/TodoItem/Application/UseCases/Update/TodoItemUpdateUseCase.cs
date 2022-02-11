@@ -1,7 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update;
 
-using Aviant.DDD.Application.Orchestration;
-using Aviant.DDD.Application.UseCases;
+using Aviant.Application.Orchestration;
+using Aviant.Application.UseCases;
 using Todo.Application.Persistence;
 
 public sealed class TodoItemUpdateUseCase

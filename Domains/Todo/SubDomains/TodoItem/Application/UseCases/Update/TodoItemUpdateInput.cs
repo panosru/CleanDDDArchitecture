@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update;
 
-using Aviant.DDD.Application.UseCases;
+using Aviant.Application.UseCases;
 
 public sealed record TodoItemUpdateInput(
     int    Id,

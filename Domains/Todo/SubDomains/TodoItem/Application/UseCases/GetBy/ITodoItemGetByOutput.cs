@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.GetBy;
 
-using Aviant.DDD.Application.UseCases;
+using Aviant.Application.UseCases;
 
 public interface ITodoItemGetByOutput : IUseCaseOutput
 {

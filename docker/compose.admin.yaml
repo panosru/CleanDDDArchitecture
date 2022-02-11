@@ -9,7 +9,7 @@ services:
     ports:
       - "${PGADMIN_PUBLIC_PORT}:80"
     networks:
-      - postgres_net
+      - cleandddarchitecture_postgres_net
     volumes:
       - pgadmin_data:/var/lib/pgadmin
       - ./services/pgadmin_servers.json:/pgadmin4/servers.json
@@ -21,7 +21,7 @@ services:
     ports:
       - ${REDIS_COMMANDER_PUBLIC_PORT}:${REDIS_COMMANDER_PORT}
     networks:
-      - redis_net
+      - cleandddarchitecture_redis_net
   
   grafana:
     extends:
@@ -30,7 +30,7 @@ services:
     ports:
       - ${GRAFANA_PUBLIC_PORT}:${GRAFANA_PORT}
     networks:
-      - monitor_net
+      - cleandddarchitecture_monitor_net
     volumes:
       - grafana_data:/var/lib/grafana
       - ./services/grafana/provisioning/:/etc/grafana/provisioning/
@@ -42,7 +42,7 @@ services:
 #    ports:
 #      - "${KAFKA_UI_PUBLIC_PORT}:8080"
 #    networks:
-#      - kafka_net
+#      - cleandddarchitecture_kafka_net
   
   kowl:
     extends:
@@ -51,7 +51,7 @@ services:
     ports:
       - "${KOWL_PUBLIC_PORT}:8080"
     networks:
-      - kafka_net
+      - cleandddarchitecture_kafka_net
   
 # Volumes
 volumes:
@@ -62,11 +62,11 @@ volumes:
 
 # Networks
 networks:
-  postgres_net:
-    driver: bridge
-  redis_net:
-    driver: bridge
-  monitor_net:
-    driver: bridge
-  kafka_net:
-    driver: bridge
+  cleandddarchitecture_postgres_net:
+    external: true
+  cleandddarchitecture_redis_net:
+    external: true
+  cleandddarchitecture_monitor_net:
+    external: true
+  cleandddarchitecture_kafka_net:
+    external: true

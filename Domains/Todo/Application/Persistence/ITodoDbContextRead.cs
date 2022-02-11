@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Todo.Application.Persistence;
 
-using Aviant.DDD.Application.Persistence;
+using Aviant.Application.Persistence;
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
