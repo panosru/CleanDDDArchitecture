@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy;
 
-using Aviant.Application.UseCases;
+using Aviant.Foundation.Application.UseCases;
 using Identity;
 
 public interface IGetAccountOutput : IUseCaseOutput

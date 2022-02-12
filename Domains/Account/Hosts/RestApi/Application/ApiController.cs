@@ -1,7 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application;
 
 using Account.Application.Aggregates;
-using Aviant.Application.UseCases;
+using Aviant.Foundation.Application.UseCases;
 using Aviant.EventSourcing.Application.Orchestration;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Delete;
 
-using Aviant.Application.UseCases;
+using Aviant.Foundation.Application.UseCases;
 
 public interface IDeleteTodoUseCaseOutput : IUseCaseOutput
 {

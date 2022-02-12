@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll;
 
-using Aviant.Application.UseCases;
+using Aviant.Foundation.Application.UseCases;
 
 public interface IGetAllOutput : IUseCaseOutput
 {

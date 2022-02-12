@@ -1,12 +1,12 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
 
 using AutoMapper;
-using Aviant.Application.ApplicationEvents;
-using Aviant.Application.Commands;
+using Aviant.Foundation.Application.ApplicationEvents;
+using Aviant.Foundation.Application.Commands;
 using Core.Repositories;
 using Todo.Core.Entities;
 
-/// <inheritdoc cref="Aviant.Application.Commands.Command&lt;TResponse&gt;" />
+/// <inheritdoc cref="Aviant.Foundation.Application.Commands.Command&lt;TResponse&gt;" />
 /// <summary>
 ///     The Command to create a todo list
 /// </summary>

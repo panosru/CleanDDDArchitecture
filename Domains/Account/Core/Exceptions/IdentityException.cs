@@ -2,7 +2,7 @@
 
 using System.Net;
 using System.Runtime.Serialization;
-using Aviant.Core.Exceptions;
+using Aviant.Foundation.Core.Exceptions;
 
 [Serializable]
 public sealed class IdentityException : CoreException

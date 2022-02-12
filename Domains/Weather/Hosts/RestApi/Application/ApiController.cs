@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application;
 
-using Aviant.Application.UseCases;
+using Aviant.Foundation.Application.UseCases;
 
 /// <inheritdoc />
 /// <summary>

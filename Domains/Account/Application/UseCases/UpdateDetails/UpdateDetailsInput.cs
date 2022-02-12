@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails;
 
-using Aviant.Application.UseCases;
+using Aviant.Foundation.Application.UseCases;
 
 public sealed record UpdateDetailsInput(
     Guid   Id,

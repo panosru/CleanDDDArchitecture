@@ -1,7 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application;
 
-using Aviant.Application.Orchestration;
-using Aviant.Application.UseCases;
+using Aviant.Foundation.Application.Orchestration;
+using Aviant.Foundation.Application.UseCases;
 using Microsoft.Extensions.DependencyInjection;
 using Todo.Application.Persistence;
 

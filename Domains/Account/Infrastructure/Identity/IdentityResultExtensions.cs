@@ -1,6 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Identity;
 
-using Aviant.Application.Identity;
+using Aviant.Foundation.Application.Identity;
 
 internal static class IdentityResultExtensions
 {

@@ -1,7 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 
-using Aviant.Application.UseCases;
-using Aviant.Core.Collections.Extensions;
+using Aviant.Foundation.Application.UseCases;
+using Aviant.Foundation.Core.Collections.Extensions;
 using FluentValidation;
 using Identity;
 using Microsoft.AspNetCore.Identity;

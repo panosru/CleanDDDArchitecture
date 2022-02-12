@@ -1,8 +1,8 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Profile;
 
-using Aviant.Application.Identity;
-using Aviant.Application.Queries;
-using Aviant.Core.Services;
+using Aviant.Foundation.Application.Identity;
+using Aviant.Foundation.Application.Queries;
+using Aviant.Foundation.Core.Services;
 using Identity;
 using Microsoft.AspNetCore.Identity;
 

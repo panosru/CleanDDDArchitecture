@@ -3,7 +3,7 @@
 
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll.Dtos;
 
-using Aviant.Application.Mappings;
+using Aviant.Foundation.Application.Mappings;
 using Todo.Core.Entities;
 
 public sealed class TodoListDto : IMapFrom<TodoListEntity>

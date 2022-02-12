@@ -6,7 +6,7 @@ using Application.Identity;
 using Application.UseCases.Create;
 using Ardalis.GuardClauses;
 using AutoMapper;
-using Aviant.Application.Orchestration;
+using Aviant.Foundation.Application.Orchestration;
 using Aviant.EventSourcing.Application.Orchestration;
 using Infrastructure.Persistence.Contexts;
 using Microsoft.AspNetCore.Identity;

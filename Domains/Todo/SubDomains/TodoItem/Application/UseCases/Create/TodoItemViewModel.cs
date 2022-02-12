@@ -2,7 +2,7 @@
 
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Create;
 
-using Aviant.Application.Mappings;
+using Aviant.Foundation.Application.Mappings;
 using Todo.Core.Entities;
 
 public sealed class TodoItemViewModel : IMapFrom<TodoItemEntity>

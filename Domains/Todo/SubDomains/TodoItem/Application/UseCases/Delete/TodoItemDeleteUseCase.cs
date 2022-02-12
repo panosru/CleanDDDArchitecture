@@ -1,7 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Delete;
 
-using Aviant.Application.Orchestration;
-using Aviant.Application.UseCases;
+using Aviant.Foundation.Application.Orchestration;
+using Aviant.Foundation.Application.UseCases;
 using Todo.Application.Persistence;
 
 public sealed class TodoItemDeleteUseCase
