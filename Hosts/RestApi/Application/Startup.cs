@@ -4,7 +4,7 @@ using System.Reflection;
 using AutoMapper;
 using Aviant.Application.ApplicationEvents;
 using Aviant.Application.Behaviours;
-using Aviant.Application.EventBus;
+using Aviant.EventSourcing.Application.EventBus;
 using Aviant.Application.Identity;
 using Aviant.Application.Jobs;
 using Aviant.Application.Processors;

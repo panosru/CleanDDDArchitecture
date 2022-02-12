@@ -3,8 +3,8 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails.Events;
 
 using Aggregates;
-using Aviant.Core.DomainEvents;
-using Aviant.Core.EventBus;
+using Aviant.EventSourcing.Core.DomainEvents;
+using Aviant.EventSourcing.Core.EventBus;
 using Polly;
 
 public sealed record AccountUpdatedDomainEvent : DomainEvent<AccountAggregate, AccountAggregateId>
