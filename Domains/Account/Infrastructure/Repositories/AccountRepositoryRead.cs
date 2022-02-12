@@ -3,7 +3,7 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Repositories;
 using Application.Aggregates;
 using Application.Identity;
 using Application.Repositories;
-using Aviant.Infrastructure.Persistence.Repository;
+using Aviant.Foundation.Infrastructure.Persistence.Repository;
 using Persistence.Contexts;
 
 public sealed class AccountRepositoryRead

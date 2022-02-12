@@ -1,8 +1,8 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.UpdateDetails;
 
-using Aviant.Application.Commands;
-using Aviant.Application.Exceptions;
-using Aviant.Core.Configuration;
+using Aviant.Foundation.Application.Commands;
+using Aviant.Foundation.Application.Exceptions;
+using Aviant.Foundation.Core.Configuration;
 using Core.Repositories;
 using MediatR;
 using Todo.Core.Entities;

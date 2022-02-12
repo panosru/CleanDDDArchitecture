@@ -1,6 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.ForecastV1_1;
 
-using Aviant.Application.Queries;
+using Aviant.Foundation.Application.Queries;
 using Polly;
 using Services;
 

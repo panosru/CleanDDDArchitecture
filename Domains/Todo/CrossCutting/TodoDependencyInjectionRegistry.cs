@@ -1,12 +1,12 @@
 namespace CleanDDDArchitecture.Domains.Todo.CrossCutting;
 
 using Application.Persistence;
-using Aviant.Application.Orchestration;
-using Aviant.Application.Persistence;
-using Aviant.Application.Services;
-using Aviant.Infrastructure.CrossCutting;
-using Aviant.Infrastructure.Persistence;
-using Aviant.Infrastructure.Services;
+using Aviant.Foundation.Application.Orchestration;
+using Aviant.Foundation.Application.Persistence;
+using Aviant.Foundation.Application.Services;
+using Aviant.Foundation.Infrastructure.CrossCutting;
+using Aviant.Foundation.Infrastructure.Persistence;
+using Aviant.Foundation.Infrastructure.Services;
 using Infrastructure;
 using Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;

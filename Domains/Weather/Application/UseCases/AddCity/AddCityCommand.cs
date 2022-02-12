@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity;
 
-using Aviant.Application.Commands;
+using Aviant.Foundation.Application.Commands;
 
 internal sealed record AddCityCommand(string City) : Command<string>
 {

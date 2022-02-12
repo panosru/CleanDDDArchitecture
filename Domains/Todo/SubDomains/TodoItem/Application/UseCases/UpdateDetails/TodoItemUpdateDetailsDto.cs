@@ -3,7 +3,7 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.UpdateDetails;
 
 using System.ComponentModel.DataAnnotations;
-using Aviant.Core.Configuration;
+using Aviant.Foundation.Core.Configuration;
 
 public struct TodoItemUpdateDetailsDto
 {

@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy;
 
-using Aviant.Application.Queries;
+using Aviant.Foundation.Application.Queries;
 using Identity;
 using Microsoft.AspNetCore.Identity;
 

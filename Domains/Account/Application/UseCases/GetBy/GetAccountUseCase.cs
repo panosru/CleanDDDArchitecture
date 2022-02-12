@@ -1,7 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy;
 
-using Aviant.Application.Orchestration;
-using Aviant.Application.UseCases;
+using Aviant.Foundation.Application.Orchestration;
+using Aviant.Foundation.Application.UseCases;
 using Identity;
 
 public sealed class GetAccountUseCase

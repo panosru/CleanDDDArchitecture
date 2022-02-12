@@ -1,6 +1,6 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Infrastructure.Persistence.Configurations;
 
-using Aviant.Infrastructure.Persistence.Configurations;
+using Aviant.Foundation.Infrastructure.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Todo.Core.Entities;
 

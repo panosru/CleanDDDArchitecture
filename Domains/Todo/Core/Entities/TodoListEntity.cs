@@ -1,7 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.Core.Entities;
 
-using Aviant.Core.Entities;
-using Aviant.Core.Validators;
+using Aviant.Foundation.Core.Entities;
+using Aviant.Foundation.Core.Validators;
 
 public sealed class TodoListEntity
     : Entity<int>,
