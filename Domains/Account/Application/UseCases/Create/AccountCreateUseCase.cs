@@ -2,7 +2,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 
 using Aggregates;
 using Aviant.Application.Orchestration;
-using Aviant.Application.UseCases;
+using Aviant.EventSourcing.Application.UseCases;
 
 public sealed class AccountCreateUseCase
     : UseCase<CreateAccountInput, ICreateAccountOutput, AccountAggregate, AccountAggregateId>

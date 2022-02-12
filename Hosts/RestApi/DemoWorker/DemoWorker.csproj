@@ -7,7 +7,7 @@
     <ItemGroup>
         <PackageReference Include="Hangfire.Core" Version="1.7.28" />
         <PackageReference Include="Hangfire.AspNetCore" Version="1.7.28" />
-        <PackageReference Include="Hangfire.PostgreSql" Version="1.9.5" />
-        <PackageReference Include="Lamar" Version="7.1.1" />
+        <PackageReference Include="Hangfire.PostgreSql" Version="1.9.6" />
+        <PackageReference Include="Lamar" Version="8.0.0" />
     </ItemGroup>
 </Project>
