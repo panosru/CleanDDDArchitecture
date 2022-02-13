@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Library\Aviant\src\Infrastructure\Infrastructure.csproj" />
+      <ProjectReference Include="..\..\..\Library\Aviant\src\Foundation\Infrastructure\Infrastructure.csproj" />
       <ProjectReference Include="..\..\..\Library\Aviant\src\EventSourcing\Infrastructure\Infrastructure.csproj" />
       <ProjectReference Include="..\Application\Application.csproj" />
     </ItemGroup>
