@@ -11,11 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A39F70CC-02A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Foundation", "Foundation", "{8F02BD00-0510-4536-A081-A4C3F5B3A4C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Library\Aviant\src\Core\Core.csproj", "{8F83C72F-3495-4BAD-A74D-2489BF3AE122}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Library\Aviant\src\Foundation\Core\Core.csproj", "{8F83C72F-3495-4BAD-A74D-2489BF3AE122}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Library\Aviant\src\Application\Application.csproj", "{AE27788E-9E26-4C00-9BFB-668A5A37D0E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Library\Aviant\src\Foundation\Application\Application.csproj", "{AE27788E-9E26-4C00-9BFB-668A5A37D0E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Library\Aviant\src\Infrastructure\Infrastructure.csproj", "{49EBAF89-7CF5-41E6-BC83-38A0885204C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Library\Aviant\src\Foundation\Infrastructure\Infrastructure.csproj", "{49EBAF89-7CF5-41E6-BC83-38A0885204C9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventSourcing", "EventSourcing", "{9AC0B6A9-BBF2-4593-9CEF-2DD59C80C8ED}"
 EndProject
