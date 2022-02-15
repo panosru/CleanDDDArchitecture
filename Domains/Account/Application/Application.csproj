@@ -9,6 +9,7 @@
       <ProjectReference Include="..\..\..\Library\Aviant\src\EventSourcing\Application\Application.csproj" />
       <ProjectReference Include="..\..\..\Library\Aviant\src\Identity\Application\Application.csproj" />
       <ProjectReference Include="..\..\..\Library\Aviant\src\Persistence\Application\Application.csproj" />
+      <ProjectReference Include="..\..\Shared\Application\Application.csproj" />
       <ProjectReference Include="..\Core\Core.csproj" />
     </ItemGroup>
 

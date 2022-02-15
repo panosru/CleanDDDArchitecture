@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>CleanDDDArchitecture.Domains.Shared.Application</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Domains.Shared.Application</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Library\Aviant\src\DDD\Application\Application.csproj" />
+        <ProjectReference Include="..\..\..\Library\Aviant\src\Kernel\Application\Application.csproj" />
+        <ProjectReference Include="..\Core\Core.csproj" />
+    </ItemGroup>
+
+</Project>
