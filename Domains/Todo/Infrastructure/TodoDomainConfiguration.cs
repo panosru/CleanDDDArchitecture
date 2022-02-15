@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Todo.Infrastructure;
 
-using Aviant.Infrastructure.CrossCutting;
+using Aviant.Infrastructure.DDD.CrossCutting;
 using Microsoft.Extensions.Configuration;
 
 public sealed class TodoDomainConfiguration : DomainConfigurationContainer

@@ -7,7 +7,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\Library\Aviant\src\Jobs\Infrastructure\Infrastructure.csproj" />
-        <ProjectReference Include="..\..\..\Library\Aviant\src\Kernel\Infrastructure\Infrastructure.csproj" />
+        <ProjectReference Include="..\..\Shared\Infrastructure\Infrastructure.csproj" />
         <ProjectReference Include="..\Application\Application.csproj" />
     </ItemGroup>
     

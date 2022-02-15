@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>CleanDDDArchitecture.Domains.Shared.Infrastructure</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Domains.Shared.Infrastructure</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Library\Aviant\src\DDD\Infrastructure\Infrastructure.csproj" />
+        <ProjectReference Include="..\..\..\Library\Aviant\src\Kernel\Infrastructure\Infrastructure.csproj" />
+        <ProjectReference Include="..\Application\Application.csproj" />
+    </ItemGroup>
+
+</Project>
