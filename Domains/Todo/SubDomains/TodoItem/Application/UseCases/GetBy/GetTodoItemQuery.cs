@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.GetBy;
 
-using Aviant.Foundation.Application.Queries;
+using Aviant.Application.Queries;
 using Core.Repositories;
 
 internal sealed record GetTodoItemQuery(int Id) : Query<string>

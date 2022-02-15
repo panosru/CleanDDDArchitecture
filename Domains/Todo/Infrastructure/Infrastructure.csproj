@@ -11,7 +11,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Library\Aviant\src\Foundation\Infrastructure\Infrastructure.csproj" />
+        <ProjectReference Include="..\..\..\Library\Aviant\src\Kernel\Infrastructure\Infrastructure.csproj" />
+        <ProjectReference Include="..\..\..\Library\Aviant\src\Persistence\Infrastructure\Infrastructure.csproj" />
         <ProjectReference Include="..\SubDomains\TodoItem\Application\Application.csproj" />
         <ProjectReference Include="..\SubDomains\TodoList\Application\Application.csproj" />
     </ItemGroup>

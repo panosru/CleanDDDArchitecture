@@ -20,8 +20,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Library\Aviant\src\Foundation\Infrastructure\Infrastructure.csproj" />
+      <ProjectReference Include="..\..\..\Library\Aviant\src\Identity\Infrastructure\Infrastructure.csproj" />
+      <ProjectReference Include="..\..\..\Library\Aviant\src\Kernel\Infrastructure\Infrastructure.csproj" />
       <ProjectReference Include="..\..\..\Library\Aviant\src\EventSourcing\Infrastructure\Infrastructure.csproj" />
+      <ProjectReference Include="..\..\..\Library\Aviant\src\Persistence\Infrastructure\Infrastructure.csproj" />
       <ProjectReference Include="..\Application\Application.csproj" />
     </ItemGroup>
 

@@ -1,8 +1,8 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails;
 
 using Aggregates;
-using Aviant.Foundation.Application.Orchestration;
-using Aviant.EventSourcing.Application.UseCases;
+using Aviant.Application.Orchestration;
+using Aviant.Application.EventSourcing.UseCases;
 
 public sealed class UpdateDetailsUseCase
     : UseCase<UpdateDetailsInput, IUpdateDetailsOutput, AccountAggregate, AccountAggregateId>

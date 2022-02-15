@@ -2,7 +2,7 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetail
 
 using Aggregates;
 using Ardalis.GuardClauses;
-using Aviant.EventSourcing.Application.Commands;
+using Aviant.Application.EventSourcing.Commands;
 
 internal sealed record UpdateAccountCommand(
     AccountAggregateId AggregateId,

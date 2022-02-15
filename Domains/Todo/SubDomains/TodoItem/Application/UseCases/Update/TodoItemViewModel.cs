@@ -3,7 +3,7 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update;
 
 using AutoMapper;
-using Aviant.Foundation.Application.Mappings;
+using Aviant.Application.Mappings;
 using Todo.Core.Entities;
 
 public sealed class TodoItemViewModel : IMapFrom<TodoItemEntity>

@@ -6,7 +6,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Library\Aviant\src\Foundation\Application\Application.csproj" />
+      <ProjectReference Include="..\..\..\Library\Aviant\src\Kernel\Application\Application.csproj" />
+      <ProjectReference Include="..\..\..\Library\Aviant\src\Persistence\Application\Application.csproj" />
       <ProjectReference Include="..\SubDomains\TodoItem\Core\Core.csproj" />
       <ProjectReference Include="..\SubDomains\TodoList\Core\Core.csproj" />
     </ItemGroup>

@@ -3,8 +3,8 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Events;
 
 using Aggregates;
-using Aviant.EventSourcing.Core.DomainEvents;
-using Aviant.EventSourcing.Core.EventBus;
+using Aviant.Core.EventSourcing.DomainEvents;
+using Aviant.Core.EventSourcing.EventBus;
 using Identity;
 using Microsoft.AspNetCore.Identity;
 

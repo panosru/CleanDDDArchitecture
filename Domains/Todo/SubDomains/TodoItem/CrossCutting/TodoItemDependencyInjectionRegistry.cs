@@ -5,7 +5,7 @@ using Application.UseCases.Delete;
 using Application.UseCases.GetBy;
 using Application.UseCases.Update;
 using Application.UseCases.UpdateDetails;
-using Aviant.Foundation.Infrastructure.CrossCutting;
+using Aviant.Infrastructure.CrossCutting;
 using Core.Repositories;
 using Infrastructure;
 using Infrastructure.Persistence.Configurations;
