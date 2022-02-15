@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.GetBy;
 
-using Aviant.Foundation.Application.UseCases;
+using Aviant.Application.UseCases;
 
 public sealed record TodoItemGetByInput(int Id) : UseCaseInput
 {

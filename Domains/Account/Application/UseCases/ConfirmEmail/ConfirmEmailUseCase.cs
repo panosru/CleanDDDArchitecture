@@ -1,8 +1,8 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
 
-using Aviant.Foundation.Application.Identity;
-using Aviant.Foundation.Application.Orchestration;
-using Aviant.Foundation.Application.UseCases;
+using Aviant.Application.Identity;
+using Aviant.Application.Orchestration;
+using Aviant.Application.UseCases;
 
 public sealed class ConfirmEmailUseCase
     : UseCase<ConfirmEmailInput, IConfirmEmailOutput>

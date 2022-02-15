@@ -2,7 +2,7 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contex
 
 using Application.Identity;
 using Application.Persistence;
-using Aviant.Foundation.Infrastructure.Persistence.Contexts;
+using Aviant.Infrastructure.Identity.Persistence.Contexts;
 using Duende.IdentityServer.EntityFramework.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;

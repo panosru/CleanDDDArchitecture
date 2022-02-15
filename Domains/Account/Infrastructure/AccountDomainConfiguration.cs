@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Account.Infrastructure;
 
-using Aviant.Foundation.Infrastructure.CrossCutting;
+using Aviant.Infrastructure.CrossCutting;
 using Core;
 using Microsoft.Extensions.Configuration;
 

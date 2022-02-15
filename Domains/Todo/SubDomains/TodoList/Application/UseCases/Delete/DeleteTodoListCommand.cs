@@ -1,7 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Delete;
 
-using Aviant.Foundation.Application.Commands;
-using Aviant.Foundation.Application.Exceptions;
+using Aviant.Application.Commands;
+using Aviant.Application.Exceptions;
 using Core.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

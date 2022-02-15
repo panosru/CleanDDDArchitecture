@@ -1,9 +1,9 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Filters;
 
-using Aviant.Foundation.Application.Exceptions;
-using Aviant.Foundation.Core.Services;
-using Aviant.Foundation.Core.Timing;
-using Aviant.Foundation.Infrastructure.CrossCutting;
+using Aviant.Application.Exceptions;
+using Aviant.Core.Services;
+using Aviant.Core.Timing;
+using Aviant.Infrastructure.CrossCutting;
 using Events;
 using MediatR;
 using Microsoft.AspNetCore.Http;

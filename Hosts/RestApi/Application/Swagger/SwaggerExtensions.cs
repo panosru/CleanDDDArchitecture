@@ -1,7 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger;
 
 using System.Diagnostics.CodeAnalysis;
-using Aviant.Foundation.Infrastructure.CrossCutting;
+using Aviant.Infrastructure.CrossCutting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.Mvc.Versioning.Conventions;

@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherService;
 
-using Aviant.Foundation.Application.Jobs;
+using Aviant.Application.Jobs;
 using Hangfire;
 using Serilog;
 using Shared.Core;

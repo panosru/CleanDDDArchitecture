@@ -1,7 +1,7 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate;
 
-using Aviant.Foundation.Application.Orchestration;
-using Aviant.Foundation.Application.UseCases;
+using Aviant.Application.Orchestration;
+using Aviant.Application.UseCases;
 
 public sealed class AuthenticateUseCase
     : UseCase<AuthenticateInput, IAuthenticateOutput>

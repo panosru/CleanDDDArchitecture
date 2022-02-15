@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate;
 
-using Aviant.Foundation.Application.UseCases;
+using Aviant.Application.UseCases;
 
 public sealed record AuthenticateInput(string Username, string Password) : UseCaseInput
 {

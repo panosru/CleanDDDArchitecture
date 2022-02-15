@@ -4,8 +4,9 @@
 
 namespace CleanDDDArchitecture.Domains.Todo.Core.Entities;
 
-using Aviant.Foundation.Core.Configuration;
-using Aviant.Foundation.Core.Entities;
+using Aviant.Core.Configuration;
+using Aviant.Core.Entities;
+using Aviant.Core.Identity.Entities;
 
 public sealed class TodoItemEntity
     : Entity<int>,

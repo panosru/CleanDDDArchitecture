@@ -2,7 +2,7 @@ namespace CleanDDDArchitecture.Domains.Todo.CrossCutting;
 
 using System.Reflection;
 using AutoMapper;
-using Aviant.Foundation.Application.Mappings;
+using Aviant.Application.Mappings;
 using Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

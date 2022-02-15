@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
 
-using Aviant.Foundation.Application.UseCases;
+using Aviant.Application.UseCases;
 
 public interface IConfirmEmailOutput : IUseCaseOutput
 {

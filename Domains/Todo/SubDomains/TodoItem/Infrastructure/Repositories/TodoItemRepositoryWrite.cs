@@ -1,6 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Infrastructure.Repositories;
 
-using Aviant.Foundation.Infrastructure.Persistence.Repository;
+using Aviant.Infrastructure.Persistence.Repository;
 using Core.Repositories;
 using Todo.Core.Entities;
 using Todo.Infrastructure.Persistence.Contexts;
