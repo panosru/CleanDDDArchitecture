@@ -4,7 +4,7 @@
     "CleanDDDArchitecture.RestApi": {
       "commandName": "Project",
       "launchBrowser": false,
-      "applicationUrl": "https://localhost:6001",
+      "applicationUrl": "https://localhost:8091",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
       }
