@@ -1,6 +1,7 @@
 namespace CleanDDDArchitecture.Hosts.RestApi.Application;
 
 using System.Drawing;
+using AspectCore.Extensions.DependencyInjection;
 using Aviant.Core.Timing;
 using Aviant.Infrastructure.CrossCutting;
 using Domains.Account.CrossCutting;
@@ -76,16 +77,17 @@ internal sealed class Program
     /// <returns></returns>
     private static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
+           .UseSerilog(
+                (context, configuration) => configuration.ReadFrom.Configuration(context.Configuration))
            .ConfigureWebHostDefaults(
                 webBuilder =>
                 {
                     webBuilder.ConfigureAppConfiguration(SetupConfiguration);
 
-                    webBuilder.UseSerilog(
-                        (context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
                     webBuilder.ConfigureServices(SetupServices);
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+           .UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
 
     /// <summary>
     /// </summary>
