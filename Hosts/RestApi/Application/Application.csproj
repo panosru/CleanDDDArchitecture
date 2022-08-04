@@ -8,6 +8,7 @@
     <RuntimeIdentifiers>win7-x64;osx.10.11-x64;ubuntu.16.04-x64</RuntimeIdentifiers>
     <Version>1.0.$(Build).$(Revision)</Version>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <Configurations>Release;Debug</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <UserSecretsId>29fab218-042c-488c-9f64-30e9d4a6d22b</UserSecretsId>
@@ -15,6 +16,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <UserSecretsId>e280dc2a-db97-4d06-b65a-609faf78d5d1</UserSecretsId>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'CleanDDDArchitecture.RestApi' " />
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.7">
       <PrivateAssets>all</PrivateAssets>
