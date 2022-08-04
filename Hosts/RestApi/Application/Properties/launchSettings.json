@@ -1,12 +1,19 @@
-﻿{
+{
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
     "CleanDDDArchitecture.RestApi": {
       "commandName": "Project",
-      "launchBrowser": false,
       "applicationUrl": "https://localhost:8091",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
+      }
+    },
+    "CleanDDDArchitecture.Hosts.RestApi.Application": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:36099;http://localhost:17104",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   }

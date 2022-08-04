@@ -9,6 +9,7 @@
     <UserSecretsId>234254b6-8e59-4e12-9b09-b24287fed094</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'CleanDDDArchitecture.WebApp' " />
   <ItemGroup>
     <PackageReference Include="AppSettings.DependentUpon" Version="0.1.0" />
     <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.17.0" />
