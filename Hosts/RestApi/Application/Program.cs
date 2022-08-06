@@ -86,8 +86,9 @@ internal sealed class Program
 
                     webBuilder.ConfigureServices(SetupServices);
                     webBuilder.UseStartup<Startup>();
-                })
-           .UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
+                });
+            // Replace the default IOC container with the AspectCore one.
+           // .UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
 
     /// <summary>
     /// </summary>

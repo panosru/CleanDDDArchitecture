@@ -1,6 +1,8 @@
 namespace CleanDDDArchitecture.Hosts.RestApi.Application;
 
 using System.Reflection;
+using AspectCore.Configuration;
+using AspectCore.Extensions.DependencyInjection;
 using AutoMapper;
 using Aviant.Application.ApplicationEvents;
 using Aviant.Application.Behaviours;
@@ -9,6 +11,7 @@ using Aviant.Application.Identity;
 using Aviant.Application.Jobs;
 using Aviant.Application.Processors;
 using Aviant.Application.Services;
+using Aviant.Core.Aspects;
 using Aviant.Core.Messages;
 using Aviant.Core.Services;
 using Aviant.Infrastructure.CrossCutting;
@@ -34,6 +37,9 @@ using Services;
 using Swagger;
 using Hangfire;
 using Hangfire.PostgreSql;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 using Serilog;
 using Serilog.Events;
 
@@ -67,6 +73,7 @@ public sealed class Startup
     private readonly string _dataProtectionKeysDirectory = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "DataProtection-Keys");
+
     /// <summary>
     ///     This method gets called by the runtime. Use this method to add services to the container.
     /// </summary>
@@ -216,6 +223,10 @@ public sealed class Startup
            .AddSwaggerGen();
 
         services.AddSingleton<ICurrentUserService, CurrentUser>();
+
+        services.ConfigureDynamicProxy(
+            config =>
+            { });
 
         services.AddHttpContextAccessor();
 
