@@ -1,17 +1,17 @@
-FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine AS base
+FROM mcr.microsoft.com/dotnet/aspnet:7.0-alpine AS base
 WORKDIR /app
 
 # Install cultures
 RUN apk add --no-cache icu-libs
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS build
 WORKDIR /src
 # Currently this copies the whole solution (including submodules)
 # in a smaller solution with small number of projects it would be best
 # to copy only the relevant projects with COPY ["<project>/<project>.csproj", "<project>"]
-COPY . .
+COPY . ./
 RUN dotnet restore "Hosts/RestApi/Application/Application.csproj"
-COPY . .
+COPY . ./
 WORKDIR /src/Hosts/RestApi/Application
 RUN dotnet build --no-restore "Application.csproj" -c Release -o /app/build
 

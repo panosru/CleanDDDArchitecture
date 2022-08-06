@@ -13,7 +13,7 @@ services:
       ASPNETCORE_URLS:                                     "https://+"
       ASPNETCORE_HTTPS_PORT:                               ${WEB_APP_PORT}
       ASPNETCORE_Kestrel__Certificates__Default__Password: ${WEB_APP_CERTIFACATE_PASSWORD}
-      ASPNETCORE_Kestrel__Certificates__Default__Path:     /root/.aspnet/https/RestApi.pfx
+      ASPNETCORE_Kestrel__Certificates__Default__Path:     /root/.aspnet/https/WebApp.pfx
       DOTNET_SYSTEM_GLOBALIZATION_INVARIANT:               false
       ASPNETCORE_DETAILEDERRORS: 1
       ASPNETCORE_SHUTDOWNTIMEOUTSECONDS: 3
@@ -21,6 +21,7 @@ services:
       #- ${APPDATA}/Microsoft/UserSecrets/${WEB_APP_USER_SECRETS_ID}:/root/.microsoft/usersecrets/${WEB_APP_USER_SECRETS_ID}:ro
       - ${HOME}/.microsoft/usersecrets/${WEB_APP_USER_SECRETS_ID}:/root/.microsoft/usersecrets/${WEB_APP_USER_SECRETS_ID}:ro
       - ${HOME}/.aspnet/https/WebApp.pfx:/root/.aspnet/https/WebApp.pfx:ro
+      - ./DataProtection-Keys-WebApp:/app/DataProtection-Keys
     expose:
       - 443
     ports:
@@ -43,7 +44,9 @@ services:
       ASPNETCORE_DETAILEDERRORS: 1
       ASPNETCORE_SHUTDOWNTIMEOUTSECONDS: 3
     volumes:
+      - ${HOME}/.microsoft/usersecrets/${REST_API_USER_SECRETS_ID}:/root/.microsoft/usersecrets/${REST_API_USER_SECRETS_ID}:ro
       - ${HOME}/.aspnet/https/RestApi.pfx:/root/.aspnet/https/RestApi.pfx:ro
+      - ./DataProtection-Keys-RestApi:/app/DataProtection-Keys
     expose:
       - 443
     ports:
