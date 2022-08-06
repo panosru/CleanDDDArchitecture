@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup Label="Common">
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <Authors>Panagiotis Kosmidis</Authors>
