@@ -53,9 +53,9 @@ public sealed class TodoItemEntity
 
     #region IModificationAudited Members
 
-    public DateTime? LastModified { get; set; }
+    public DateTime? Updated { get; set; }
 
-    public Guid? LastModifiedBy { get; set; }
+    public Guid? UpdatedBy { get; set; }
 
     #endregion
 

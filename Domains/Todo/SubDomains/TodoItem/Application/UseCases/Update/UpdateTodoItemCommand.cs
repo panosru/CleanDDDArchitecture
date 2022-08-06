@@ -108,7 +108,7 @@ internal sealed record UpdateTodoItemCommand(
 
     #region Nested type: UpdateTodoItemCommandValidator
 
-    internal sealed class UpdateTodoItemCommandValidator : AbstractValidator<UpdateTodoItemCommand>
+    internal sealed class UpdateTodoItemCommandValidator : CommandValidator<UpdateTodoItemCommand>
     {
         public UpdateTodoItemCommandValidator()
         {

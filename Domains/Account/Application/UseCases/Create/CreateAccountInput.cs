@@ -1,5 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 
+using Aviant.Application.Commands;
 using Aviant.Application.UseCases;
 using Aviant.Core.Collections.Extensions;
 using FluentValidation;
@@ -31,7 +32,7 @@ public sealed record CreateAccountInput(
 
     #region Nested type: CreateAccountInputValidator
 
-    public sealed class CreateAccountInputValidator : AbstractValidator<CreateAccountInput>
+    public sealed class CreateAccountInputValidator : CommandValidator<CreateAccountInput>
     {
         private readonly UserManager<AccountUser> _userManager;
 
