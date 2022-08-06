@@ -69,8 +69,8 @@
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/Cryoland">
-            <img src="https://avatars.githubusercontent.com/u/11649116?v=4" width="100;" alt="Cryoland"/>
+        <a href="https://github.com/cryoland">
+            <img src="https://avatars.githubusercontent.com/u/11649116?v=4" width="100;" alt="cryoland"/>
             <br />
             <sub><b>ValenTiN Konov</b></sub>
         </a>
