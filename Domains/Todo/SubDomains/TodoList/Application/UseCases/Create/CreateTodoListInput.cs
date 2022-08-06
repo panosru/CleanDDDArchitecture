@@ -1,5 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
 
+using Aviant.Application.Commands;
 using Aviant.Application.UseCases;
 using Core.Enums;
 using Core.Repositories;
@@ -19,7 +20,7 @@ public sealed record CreateTodoListInput(string Title) : UseCaseInput
     /// <summary>
     ///     The validator object for the Create Todo List Input Data
     /// </summary>
-    public sealed class CreateTodoListInputValidator : AbstractValidator<CreateTodoListInput>
+    public sealed class CreateTodoListInputValidator : CommandValidator<CreateTodoListInput>
     {
         private readonly ITodoListRepositoryRead _todoListReadRepository;
 
