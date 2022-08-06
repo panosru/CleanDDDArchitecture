@@ -13,6 +13,7 @@ using Aviant.Core.Messages;
 using Aviant.Core.Services;
 using Aviant.Infrastructure.CrossCutting;
 using Aviant.Infrastructure.Jobs;
+using Confluent.Kafka;
 using Domains.Account.CrossCutting;
 using Domains.Shared.Core;
 using Domains.Todo.CrossCutting;
@@ -61,6 +62,12 @@ public sealed class Startup
     private IWebHostEnvironment CurrentEnvironment { get; }
 
     /// <summary>
+    /// Data protection Keys Directory
+    /// </summary>
+    private readonly string _dataProtectionKeysDirectory = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "DataProtection-Keys");
+    /// <summary>
     ///     This method gets called by the runtime. Use this method to add services to the container.
     /// </summary>
     /// <param name="services"></param>
@@ -87,6 +94,14 @@ public sealed class Startup
                .Union(WeatherCrossCutting.ValidatorAssemblies())
                .ToArray());
 
+        services.AddDataProtection()
+           .PersistKeysToFileSystem(new DirectoryInfo(_dataProtectionKeysDirectory))
+           .UseCryptographicAlgorithms(
+                new AuthenticatedEncryptorConfiguration
+                {
+                    EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
+                    ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
+                });
 
         services.AddTransient<IMediator, Mediator>();
 
