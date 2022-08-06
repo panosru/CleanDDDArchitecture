@@ -8,19 +8,11 @@
     }
   },
   "profiles": {
-    "CleanDDDArchitecture.WebApp": {
+    "CleanDDDArchitecture.Hosts.WebApp.Application": {
       "commandName": "Project",
       "applicationUrl": "https://localhost:7001",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
-      }
-    },
-    "CleanDDDArchitecture.Hosts.WebApp.Application": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "applicationUrl": "https://localhost:58069;http://localhost:56872",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   }

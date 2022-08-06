@@ -16,7 +16,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <UserSecretsId>e280dc2a-db97-4d06-b65a-609faf78d5d1</UserSecretsId>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'CleanDDDArchitecture.RestApi' " />
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'CleanDDDArchitecture.Hosts.RestApi.Application' " />
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0-preview.6.22329.4">
       <PrivateAssets>all</PrivateAssets>
