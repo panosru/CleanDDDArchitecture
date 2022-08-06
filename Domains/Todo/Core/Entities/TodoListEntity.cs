@@ -7,7 +7,7 @@ using Aviant.Core.Validators;
 public sealed class TodoListEntity
     : Entity<int>,
       ICreationAudited,
-      IModificationAudited,
+      IUpdatedAudited,
       IDeletionAudited,
       ISoftDelete
 {
@@ -35,11 +35,11 @@ public sealed class TodoListEntity
 
     #endregion
 
-    #region IModificationAudited Members
+    #region IUpdatedAudited Members
 
-    public DateTime? LastModified { get; set; }
+    public DateTime? Updated { get; set; }
 
-    public Guid? LastModifiedBy { get; set; }
+    public Guid? UpdatedBy { get; set; }
 
     #endregion
 

@@ -50,7 +50,7 @@ internal sealed record CreateTodoItemCommand(int ListId, string Title) : Command
 
     #region Nested type: CreateTodoItemCommandValidator
 
-    internal sealed class CreateTodoItemCommandValidator : AbstractValidator<CreateTodoItemCommand>
+    internal sealed class CreateTodoItemCommandValidator : CommandValidator<CreateTodoItemCommand>
     {
         public CreateTodoItemCommandValidator()
         {
