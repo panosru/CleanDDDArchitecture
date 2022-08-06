@@ -1,5 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Todo.Infrastructure.Persistence;
 
+using Aviant.Core.Timing;
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,8 +12,11 @@ internal static class ModelBuilderExtensions
            .HasData(
                 new TodoListEntity
                 {
-                    Id    = -1,
-                    Title = "Shopping"
+                    Id        = -1,
+                    Created   = Clock.Now,
+                    CreatedBy = Guid.Empty,
+                    IsDeleted = false,
+                    Title     = "Shopping"
                 });
 
         modelBuilder.Entity<TodoItemEntity>()
