@@ -18,8 +18,8 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.100
+        dotnet-version: 7.0.0
     - name: Install dotnet ef
-      run: dotnet tool install --global dotnet-ef
+      run: dotnet tool install --global dotnet-ef --version 7.0.0-preview.6.22329.4
     - name: Build with dotnet
       run: dotnet build --configuration Release
