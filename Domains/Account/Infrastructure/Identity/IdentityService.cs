@@ -118,6 +118,9 @@ public sealed class IdentityService : IIdentityService //TODO: This requires a m
             notBefore: Clock.Now,
             issuedAt: Clock.Now);
 
+        user.LastAccessed = Clock.Now;
+        await _userManager.UpdateAsync(user).ConfigureAwait(false);
+
         return new
         {
             token = new JwtSecurityTokenHandler().WriteToken(token)
