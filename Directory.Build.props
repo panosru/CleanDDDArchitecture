@@ -1,6 +1,8 @@
 <Project>
     <PropertyGroup Label="Common">
         <TargetFramework>net7.0</TargetFramework>
+        <!--TODO: Use v11 instead of preview once .NET 7 and C# 11 will be officially released -->
+        <LangVersion>preview</LangVersion>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <Authors>Panagiotis Kosmidis</Authors>
