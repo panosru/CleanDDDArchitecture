@@ -1,8 +1,6 @@
 namespace CleanDDDArchitecture.Hosts.RestApi.Application;
 
 using System.Reflection;
-using AspectCore.Configuration;
-using AspectCore.Extensions.DependencyInjection;
 using AutoMapper;
 using Aviant.Application.ApplicationEvents;
 using Aviant.Application.Behaviours;
@@ -11,12 +9,10 @@ using Aviant.Application.Identity;
 using Aviant.Application.Jobs;
 using Aviant.Application.Processors;
 using Aviant.Application.Services;
-using Aviant.Core.Aspects;
 using Aviant.Core.Messages;
 using Aviant.Core.Services;
 using Aviant.Infrastructure.CrossCutting;
 using Aviant.Infrastructure.Jobs;
-using Confluent.Kafka;
 using Domains.Account.CrossCutting;
 using Domains.Shared.Core;
 using Domains.Todo.CrossCutting;
@@ -223,10 +219,6 @@ public sealed class Startup
            .AddSwaggerGen();
 
         services.AddSingleton<ICurrentUserService, CurrentUser>();
-
-        services.ConfigureDynamicProxy(
-            config =>
-            { });
 
         services.AddHttpContextAccessor();
 

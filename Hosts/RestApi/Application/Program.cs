@@ -1,7 +1,6 @@
 namespace CleanDDDArchitecture.Hosts.RestApi.Application;
 
 using System.Drawing;
-using AspectCore.Extensions.DependencyInjection;
 using Aviant.Core.Timing;
 using Aviant.Infrastructure.CrossCutting;
 using Domains.Account.CrossCutting;
@@ -87,8 +86,6 @@ internal sealed class Program
                     webBuilder.ConfigureServices(SetupServices);
                     webBuilder.UseStartup<Startup>();
                 });
-            // Replace the default IOC container with the AspectCore one.
-           // .UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
 
     /// <summary>
     /// </summary>
