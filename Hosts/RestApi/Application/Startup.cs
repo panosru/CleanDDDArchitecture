@@ -5,6 +5,7 @@ using AutoMapper;
 using Aviant.Application.ApplicationEvents;
 using Aviant.Application.Behaviours;
 using Aviant.Application.EventSourcing.EventBus;
+using Aviant.Application.Extensions;
 using Aviant.Application.Identity;
 using Aviant.Application.Jobs;
 using Aviant.Application.Processors;
