@@ -3,11 +3,11 @@ name: "CodeQL Config"
 queries:
   - uses: security-and-quality
 
-paths:
-  - Domains
-  - Hosts
-
-paths-ignore:
-  - Library
-  - docker
-  - .github
+#paths:
+#  - Domains
+#  - Hosts
+#
+#paths-ignore:
+#  - Library
+#  - docker
+#  - .github
