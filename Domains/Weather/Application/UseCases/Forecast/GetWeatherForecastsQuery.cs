@@ -1,6 +1,7 @@
 ﻿namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.Forecast;
 
 using Aviant.Application.Queries;
+using Aviant.Core.Timing;
 using Services;
 
 internal sealed record GetWeatherForecastsQuery : Query<IEnumerable<WeatherForecastService>>
@@ -15,6 +16,12 @@ internal sealed record GetWeatherForecastsQuery : Query<IEnumerable<WeatherForec
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
+        private readonly IWeatherForecastService _weatherForecastService;
+
+        /// <inheritdoc />
+        public GetWeatherForecastsQueryHandler(IWeatherForecastService weatherForecastService) =>
+            _weatherForecastService = weatherForecastService;
+
         public override Task<IEnumerable<WeatherForecastService>> Handle(
             GetWeatherForecastsQuery request,
             CancellationToken        cancellationToken)
@@ -23,8 +30,8 @@ internal sealed record GetWeatherForecastsQuery : Query<IEnumerable<WeatherForec
 
             IEnumerable<WeatherForecastService> vm = Enumerable.Range(1, 5)
                .Select(
-                    index => new WeatherForecastService(
-                        DateTime.Now.AddDays(index),
+                    index => _weatherForecastService.GetWeatherForecast(
+                        Clock.Now.AddDays(index),
                         rng.Next(-20, 55),
                         Summaries[rng.Next(Summaries.Length)]));
 

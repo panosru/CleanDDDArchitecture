@@ -7,6 +7,7 @@ using Aviant.Application.Behaviours;
 using Aviant.Application.EventSourcing.EventBus;
 using Aviant.Application.Extensions;
 using Aviant.Application.Identity;
+using Aviant.Application.Interceptors;
 using Aviant.Application.Jobs;
 using Aviant.Application.Processors;
 using Aviant.Application.Services;
@@ -122,6 +123,7 @@ public sealed class Startup
                        .ToArray())
                .RegisterHandlers(typeof(IRequestHandler<>))
                .RegisterHandlers(typeof(IRequestHandler<,>))
+               .RegisterHandlers(typeof(InterceptorBase<>))
                .RegisterHandlers(typeof(INotificationHandler<>))
                .RegisterHandlers(typeof(IRequestPreProcessor<>))
                .RegisterHandlers(typeof(IRequestPostProcessor<,>))

@@ -1,8 +1,10 @@
 namespace CleanDDDArchitecture.Domains.Weather.CrossCutting;
 
+using Application.Services;
 using Application.UseCases.AddCity;
 using Application.UseCases.Forecast;
 using Application.UseCases.SyncWeatherService;
+using Aviant.Application.Interceptors;
 using Aviant.Application.Orchestration;
 using Aviant.Infrastructure.CrossCutting;
 using Infrastructure;
@@ -30,6 +32,8 @@ public static class WeatherDependencyInjectionRegistry
         services.AddScoped(typeof(ForecastUseCase));
         services.AddScoped(typeof(Application.UseCases.ForecastV1_1.ForecastUseCase));
         services.AddScoped(typeof(SyncWeatherServiceUseCase));
+
+        services.RegisterProxied<IWeatherForecastService, WeatherForecastService>(ProxyInterceptorLifetime.Scoped);
 
         return services;
     }
