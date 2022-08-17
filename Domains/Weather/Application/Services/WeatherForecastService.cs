@@ -2,23 +2,39 @@
 
 namespace CleanDDDArchitecture.Domains.Weather.Application.Services;
 
-public sealed class WeatherForecastService
+using Aviant.Application.Interceptors;
+using Interceptors;
+
+public interface IWeatherForecastService
 {
-    internal WeatherForecastService(
+    WeatherForecastService GetWeatherForecast(
+        DateTime date,
+        int      temperatureC,
+        string   summary);
+}
+
+[Interceptor<WeatherInterceptor>(Explicit = true)]
+public sealed class WeatherForecastService : IWeatherForecastService
+{
+    public DateTime Date { get; private set; }
+
+    public int TemperatureC { get; private set; }
+
+    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+
+    public string Summary { get; private set; }
+
+    /// <inheritdoc />
+    [Intercept]
+    public WeatherForecastService GetWeatherForecast(
         DateTime date,
         int      temperatureC,
         string   summary)
     {
-        Date         = date;
+        Date = date;
         TemperatureC = temperatureC;
-        Summary      = summary ?? throw new ArgumentNullException(nameof(summary));
+        Summary = summary ?? throw new ArgumentNullException(nameof(summary));
+
+        return this;
     }
-
-    public DateTime Date { get; }
-
-    public int TemperatureC { get; }
-
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-
-    public string Summary { get; }
 }
