@@ -20,6 +20,6 @@ jobs:
       with:
         dotnet-version: 7.0.203
     - name: Install dotnet ef
-      run: dotnet tool install --global dotnet-ef --version 7.0.203
+      run: dotnet tool install --global dotnet-ef --version 7.0.5
     - name: Build with dotnet
       run: dotnet build --configuration Release
