@@ -12,8 +12,8 @@
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'CleanDDDArchitecture.Hosts.WebApp.Application' " />
   <ItemGroup>
     <PackageReference Include="AppSettings.DependentUpon" Version="0.1.0" />
-    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.17.0" />
-    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders.TagHelpers" Version="0.17.0" />
+    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.18.0" />
+    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders.TagHelpers" Version="0.18.0" />
   </ItemGroup>
 
   <ItemGroup>
