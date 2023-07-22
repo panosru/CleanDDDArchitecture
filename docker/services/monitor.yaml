@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   loki:
-    image: grafana/loki:2.3.0
+    image: grafana/loki:main
     restart: 'no'
     container_name: ${LOKI_HOST}
     logging:
