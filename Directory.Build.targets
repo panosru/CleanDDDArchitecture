@@ -7,10 +7,17 @@
         <Copy SourceFiles="@(Binaries)"
               DestinationFolder="$(MSBuildProjectDirectory)/../../.build/$(Configuration)/$(MSBuildProjectName)/%(RecursiveDir)"
               Condition="'$(IsPackable)'!='false'" />
+        <!-- Error handling for file copy -->
+        <OnError ExecuteTargets="HandleCopyError" />
     </Target>
+
+    <!-- Error handling target -->
+    <Target Name="HandleCopyError">
+        <Message Text="Warning: One or more files failed to copy during the AfterPack target." Importance="high" />
+    </Target>
+
+    <!-- Clean target removes the bin/ and obj/ directories -->
     <Target Name="AfterClean">
-        <!-- dotnet clean doesn't remove the bin/ directories by default -->
-        <RemoveDir Directories="bin/" ContinueOnError="True" Condition="Exists('bin')" />
-        <RemoveDir Directories="obj/" ContinueOnError="True" Condition="Exists('obj')" />
+        <RemoveDir Directories="$(BaseIntermediateOutputPath);$(BaseOutputPath)" />
     </Target>
 </Project>
