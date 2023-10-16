@@ -1,21 +1,51 @@
 <Project>
     <PropertyGroup Label="Common">
+        <!-- Target framework version for all projects -->
         <TargetFramework>net7.0</TargetFramework>
+        <!-- Language version for all projects -->
         <LangVersion>latest</LangVersion>
+        <!-- Enable nullable reference types for all projects -->
         <Nullable>enable</Nullable>
+        <!-- Enable implicit usings for all projects -->
         <ImplicitUsings>enable</ImplicitUsings>
+        <!-- Authors of the projects -->
         <Authors>Panagiotis Kosmidis</Authors>
+        <!-- Copyright information -->
         <Copyright>Copyright © $(Authors) $([System.DateTime]::Now.Year)</Copyright>
+        <!-- Trademark information -->
         <Trademark>$(Authors)™</Trademark>
+        <!-- Product name -->
         <Product>$(Authors) Projects</Product>
+        <!-- Repository type -->
         <RepositoryType>Git</RepositoryType>
+        <!-- License expression for the packages -->
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <!-- Project URL for the packages -->
         <PackageProjectUrl>https://github.com/panosru/Aviant</PackageProjectUrl>
-        <!--        <PackageIconUrl>https://github.com/panosru/Aviant/blob/master/package.ico</PackageIconUrl>-->
+        <!-- Repository URL -->
         <RepositoryUrl>https://github.com/panosru/Aviant</RepositoryUrl>
+        <!-- Neutral language for the resources -->
         <NeutralLanguage>en-GB</NeutralLanguage>
-        <NoWarn>$(NoWarn);CS1591;CS8618;CS8625;CS8603;CS8604</NoWarn>
+        <!-- Build number based on the number of days since January 1, 2000 -->
         <Build>$([System.DateTime]::op_Subtraction($([System.DateTime]::get_Now().get_Date()),$([System.DateTime]::new(2000,1,1))).get_TotalDays())</Build>
+        <!-- Revision number based on the number of seconds since midnight, divided by 2 -->
         <Revision>$([MSBuild]::Divide($([System.DateTime]::get_Now().get_TimeOfDay().get_TotalSeconds()), 2).ToString('F0'))</Revision>
+        <!-- Description of the packages -->
+        <Description>Clean DDD Architecture Template</Description>
+        <!-- Tags for the packages -->
+        <PackageTags>ddd, cqrs, event sourcing</PackageTags>
+        <!-- Suppress specific compiler warnings for all projects -->
+        <NoWarn>$(NoWarn);
+            <!-- CS1591: Missing XML comment for publicly visible type or member -->
+            CS1591;
+            <!-- CS8618: Non-nullable field is uninitialized. Consider declaring as nullable. -->
+            CS8618;
+            <!-- CS8625: Cannot convert null literal to non-nullable reference type. -->
+            CS8625;
+            <!-- CS8603: Possible null reference return. -->
+            CS8603;
+            <!-- CS8604: Possible null reference argument for parameter. -->
+            CS8604
+        </NoWarn>
     </PropertyGroup>
 </Project>
