@@ -181,15 +181,15 @@ public sealed class Startup
 
         services.AddHangfire(
                 config => config
-                   .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                   .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
                    .UseSimpleAssemblyNameTypeSerializer()
                    .UseRecommendedSerializerSettings()
-                   .UsePostgreSqlStorage(
-                        Configuration.GetConnectionString("Hangfire"),
-                        new PostgreSqlStorageOptions
-                        {
-                            QueuePollInterval = TimeSpan.FromSeconds(15)
-                        })
+                   .UsePostgreSqlStorage(options => 
+                           options.UseNpgsqlConnection(Configuration.GetConnectionString("Hangfire")), 
+                       new PostgreSqlStorageOptions
+                       { 
+                           QueuePollInterval = TimeSpan.FromSeconds(15) 
+                       })
                    .UseFilter(
                         new AutomaticRetryAttribute
                         {
@@ -199,7 +199,7 @@ public sealed class Startup
                 options =>
                 {
                     options.ServerName  = $"{Environment.MachineName}.{Guid.NewGuid().ToString()}";
-                    options.WorkerCount = Environment.ProcessorCount * 5;
+                    options.WorkerCount = Environment.ProcessorCount * 3;
                     options.Queues      = new[] { JobQueue.Main, JobQueue.Second, JobQueue.Default };
                 });
 
