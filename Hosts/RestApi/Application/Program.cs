@@ -1,4 +1,3 @@
-using System.Globalization;
 using CleanDDDArchitecture.Hosts.RestApi.Application;
 using CleanDDDArchitecture.Hosts.RestApi.Application.Setup;
 using CleanDDDArchitecture.Hosts.RestApi.Core.Resources;

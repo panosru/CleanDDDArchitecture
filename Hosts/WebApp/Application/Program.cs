@@ -1,33 +1,15 @@
-namespace CleanDDDArchitecture.Hosts.WebApp.Application;
+using CleanDDDArchitecture.Hosts.WebApp.Application;
 
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+// Create a Web Application Builder. This is the first step in setting up an ASP.NET Core application.
+var builder = WebApplication.CreateBuilder(args);
 
-/// <summary>
-/// 
-/// </summary>
-internal static class Program
-{
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="args"></param>
-    public static void Main(string[] args)
-    {
-        CreateHostBuilder(args).Build().Run();
-    }
+// Configure services using extension method from ServiceConfiguration class
+builder.Services.ConfigureServices(builder.Configuration, builder.Environment);
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="args"></param>
-    /// <returns></returns>
-    private static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-           .ConfigureWebHostDefaults(
-                webBuilder =>
-                {
-                    webBuilder.UseStaticWebAssets();
-                    webBuilder.UseStartup<Startup>();
-                });
-}
+// Build the application after all services have been registered
+var app = builder.Build();
+
+// Configure middleware pipeline using extension method from AppBuilderConfiguration class
+app.ConfigureAppBuilder(app.Services, builder.Environment);
+
+app.Run();

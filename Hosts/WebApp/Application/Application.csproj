@@ -29,6 +29,7 @@
   <ItemGroup>
     <Folder Include="Middlewares" />
     <Folder Include="Resources" />
+    <Folder Include="Setup\" />
     <Folder Include="ViewComponents" />
   </ItemGroup>
   
