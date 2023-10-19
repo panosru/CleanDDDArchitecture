@@ -112,7 +112,7 @@ public sealed class IdentityService : IIdentityService //TODO: This requires a m
             _config.GetValue("Jwt:Audience"),
             new ClaimsIdentity(claims),
             expires: Clock.Now.AddMinutes(
-                double.Parse(_config.GetValue("Jwt:ExpirationDurationInMunuts"), CultureInfo.InvariantCulture)),
+                double.Parse(_config.GetValue("Jwt:ExpirationDurationInMinutes"), CultureInfo.InvariantCulture)),
             signingCredentials: signingCredentials,
             encryptingCredentials: encryptingCredentials,
             notBefore: Clock.Now,
