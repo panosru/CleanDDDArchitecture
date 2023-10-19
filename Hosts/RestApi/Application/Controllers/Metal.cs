@@ -28,7 +28,7 @@ public sealed class Metal : ApiController
     [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Get))]
     public ActionResult<object> Get()
     {
-        var assembly = typeof(Startup).Assembly;
+        var assembly = typeof(Program).Assembly;
 
         var creationDate = System.IO.File.GetCreationTime(assembly.Location);
         var version      = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
