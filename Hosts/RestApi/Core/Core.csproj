@@ -15,4 +15,19 @@
       <ProjectReference Include="..\..\..\Library\Aviant\src\Kernel\Application\Application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\ProgramStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>ProgramStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Resources\ProgramStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>ProgramStrings.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>
