@@ -1,4 +1,4 @@
-namespace CleanDDDArchitecture.Hosts.RestApi.Worker;
+namespace CleanDDDArchitecture.Hosts.Worker;
 
 using Hangfire;
 using Lamar;

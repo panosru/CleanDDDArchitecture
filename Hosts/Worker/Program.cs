@@ -1,24 +1,33 @@
-﻿using CleanDDDArchitecture.Hosts.RestApi.Worker;
+﻿using CleanDDDArchitecture.Hosts.Worker;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Lamar;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Yaml;
 
 try
 {
+    var config = new ConfigurationBuilder()
+        .AddYamlFile("appsettings.yaml", false, true)
+        .Build();
+    
     // Create a new Container
     var container = new Container(registry => registry.IncludeRegistry<CommonRegistry>());
+    
+    // // Resolve IBackgroundJobClient
+    // var jobClient = container.GetInstance<IBackgroundJobClient>();
 
     // Configure Hangfire with global settings
     GlobalConfiguration.Configuration
         // Set the data compatibility level
-        .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+        .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
         // Use simple assembly name type serializer
         .UseSimpleAssemblyNameTypeSerializer()
         // Use recommended serializer settings
         .UseRecommendedSerializerSettings()
         // Use PostgreSQL storage with specific options
-        .UsePostgreSqlStorage(
-            "User ID =panosru;Password=rX3t9bvDT2ftH2;Server=localhost;Port=15432;Database=Hangfire;Integrated Security=true;Pooling=false;Maximum Pool Size=500;ConnectionIdleLifetime=5;ConnectionPruningInterval=2",
+        .UsePostgreSqlStorage(options => 
+                options.UseNpgsqlConnection(config.GetConnectionString("Hangfire")), 
             new PostgreSqlStorageOptions
             {
                 // QueuePollInterval = TimeSpan.Zero
@@ -36,6 +45,8 @@ try
     // Use filter for automatic retries with 5 attempts
     GlobalConfiguration.Configuration.UseFilter(new AutomaticRetryAttribute { Attempts = 5 });
 
+    // Use the job client to create a background job
+    // jobClient.Enqueue(() => Console.WriteLine("Hello, Hangfire!"));
 
     // Display a message on the console indicating that the Hangfire Server has started
     Console.WriteLine("Hangfire Server started. Press any key to exit...");

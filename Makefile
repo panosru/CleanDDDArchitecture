@@ -2,7 +2,7 @@
 .SILENT:
 
 # Phony targets to avoid file name conflict
-.PHONY: help run RestApi WebApp sonar \
+.PHONY: help run RestApi WebApp Worker sonar \
 		account-db-update account-db-drop account-migrations-add account-migrations-update account-migrations-apply \
 		account-migrations-rollback account-migrations-list account-migrations-remove account-migrations-remove-all \
 		todo-db-update todo-db-drop todo-migrations-add todo-migrations-update todo-migrations-apply \
@@ -18,6 +18,7 @@ help:
 	@echo "  run				: Run a host project like so: make run app=RestApi"
 	@echo "  RestApi			: Run RestApi Host"
 	@echo "  WebApp			: Run WebApp Host"
+	@echo "  Worker			: Run Worker"
 	@echo "  sonar				: Run SonarQube analysis"
 	@echo "  db-reset			: Full database reset"
 	@echo "  db-up				: Upping database"
@@ -55,6 +56,11 @@ RestApi:
 # Run WebApp Host
 WebApp:
 	$(MAKE) run app=WebApp
+
+# Run Worker Project
+Worker:
+	@echo "Running Worker"
+	dotnet run --project Hosts/Worker
 
 # Target for running SonarQube analysis
 sonar:
