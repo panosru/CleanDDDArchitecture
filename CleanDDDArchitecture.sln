@@ -227,7 +227,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Domains\Shared\Core
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Domains\Weather\Core\Core.csproj", "{E5F53AAA-A1DE-4F38-A4FA-664598966C2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoWorker", "Hosts\RestApi\DemoWorker\DemoWorker.csproj", "{76B2D7ED-67AF-48CA-A107-263329651CD0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Worker", "Hosts\RestApi\Worker\Worker.csproj", "{76B2D7ED-67AF-48CA-A107-263329651CD0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Domains\Shared\Application\Application.csproj", "{CA1238B6-798A-436F-936E-C0CCFC768D0A}"
 EndProject
