@@ -1,169 +1,59 @@
-namespace CleanDDDArchitecture.Hosts.RestApi.Application;
-
-using System.Drawing;
-using Aviant.Core.Timing;
-using Aviant.Infrastructure.CrossCutting;
-using Domains.Account.CrossCutting;
-using Domains.Todo.CrossCutting;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.CommandLine;
-using Microsoft.Extensions.Configuration.EnvironmentVariables;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using System.Globalization;
+using CleanDDDArchitecture.Hosts.RestApi.Application;
+using CleanDDDArchitecture.Hosts.RestApi.Application.Setup;
+using CleanDDDArchitecture.Hosts.RestApi.Core.Resources;
 using Serilog;
 using Serilog.Debugging;
 using Console = Colorful.Console;
 
-/// <summary>
-/// </summary>
-internal sealed class Program
+try
 {
-    /// <summary>
-    /// </summary>
-    private Program()
-    { }
+    // Create a Web Application Builder. This is the first step in setting up an ASP.NET Core application.
+    var builder = WebApplication.CreateBuilder(args);
 
-    /// <summary>
-    /// </summary>
-    /// <param name="args"></param>
-    /// <returns></returns>
-    public static async Task Main(string[] args)
-    {
-        try
-        {
-            Console.WriteLine("Starting Web Host", Color.Green);
-            var host = CreateHostBuilder(args).Build();
+    // Create a new logger for the application using Serilog
+    Log.Logger = new LoggerConfiguration()
+         .ReadFrom.Configuration(builder.Configuration)
+         .CreateLogger();
+    
+    // Use Serilog as the logger for the application
+    builder.Host.UseSerilog((context, configuration) => 
+        configuration.ReadFrom.Configuration(context.Configuration));
 
-            using (var scope = host.Services.CreateScope())
-            {
-                var serviceProvider = scope.ServiceProvider;
+    // Setup configuration using the ConfigurationSetup class
+    new ConfigurationSetup().Setup(builder);
 
-                try
-                {
-                    await AccountCrossCutting.GenerateDefaultUserIfNotExistsAsync(serviceProvider)
-                       .ConfigureAwait(false);
+    // Setup services using the ServicesSetup class
+    new ServicesSetup().Setup(builder.Services);
 
-                    await TodoCrossCutting.GenerateTodoMigrationsIfNewExistsAsync(serviceProvider)
-                       .ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "An error occurred while migrating or seeding the database");
+    // Configure services using extension method from ServiceConfiguration class
+    builder.Services.ConfigureServices(builder.Configuration, builder.Environment);
+    
+    // Build the application after all services have been registered
+    var app = builder.Build();
+    
+    // Migrate and seed database using DatabaseSetup class
+    await new DatabaseSetup().MigrateAndSeedDatabase(app.Services)
+        .ConfigureAwait(false);
 
-                    throw;
-                }
-            }
-
-            SelfLog.Enable(Console.Error);
-
-            await host.RunAsync()
-               .ConfigureAwait(false);
-        }
-        catch (Exception e)
-        {
-            Log.Fatal(e, "Host terminated unexpectedly!");
-        }
-        finally
-        {
-            Log.CloseAndFlush();
-        }
-    }
-
-    /// <summary>
-    /// </summary>
-    /// <param name="args"></param>
-    /// <returns></returns>
-    private static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-           .UseSerilog(
-                (context, configuration) => configuration.ReadFrom.Configuration(context.Configuration))
-           .ConfigureWebHostDefaults(
-                webBuilder =>
-                {
-                    webBuilder.ConfigureAppConfiguration(SetupConfiguration);
-
-                    webBuilder.ConfigureServices(SetupServices);
-                    webBuilder.UseStartup<Startup>();
-                });
-
-    /// <summary>
-    /// </summary>
-    /// <param name="hostBuilderContext"></param>
-    /// <param name="configurationBuilder"></param>
-    private static void SetupConfiguration(
-        WebHostBuilderContext hostBuilderContext,
-        IConfigurationBuilder configurationBuilder)
-    {
-        DependencyInjectionRegistry.ConfigurationBuilder = configurationBuilder;
-
-        string[] configFiles =
-        {
-            "appsettings.yml",
-            $"appsettings.{hostBuilderContext.HostingEnvironment.EnvironmentName}.yml",
-            "appsettings.yaml",
-            $"appsettings.{hostBuilderContext.HostingEnvironment.EnvironmentName}.yaml"
-        };
-
-        foreach (var configFile in configFiles
-                    .Where(
-                         configFile =>
-                             File.Exists(
-                                 Path.Combine(Directory.GetCurrentDirectory(), configFile))))
-            configurationBuilder.AddYamlFile(configFile, false, true);
-
-        MoveEnvironmentVariablesToEnd(configurationBuilder);
-
-        DependencyInjectionRegistry.SetConfiguration(configurationBuilder);
-    }
-
-    /// <summary>
-    /// </summary>
-    /// <param name="hostBuilderContext"></param>
-    /// <param name="services"></param>
-    private static void SetupServices(
-        WebHostBuilderContext hostBuilderContext,
-        IServiceCollection    services)
-    {
-        Clock.Provider = ClockProviders.Utc;
-    }
-
-    /// <summary>
-    /// </summary>
-    /// <param name="configurationBuilder"></param>
-    private static void MoveEnvironmentVariablesToEnd(IConfigurationBuilder configurationBuilder)
-    {
-        // Items that needs to be moved to the end (FIFO)
-        List<IConfigurationSource?> fifo = new()
-        {
-            // Get EnvironmentVariablesConfigurationSource item
-            configurationBuilder.Sources
-               .FirstOrDefault(
-                    i =>
-                        i.GetType() == typeof(EnvironmentVariablesConfigurationSource)),
-
-            // Get CommandLineConfigurationSource item
-            configurationBuilder.Sources
-               .FirstOrDefault(
-                    i =>
-                        i.GetType() == typeof(CommandLineConfigurationSource)),
-
-            // Get CommandLineConfigurationSource item
-            configurationBuilder.Sources
-               .FirstOrDefault(
-                    i =>
-                        i.GetType() == typeof(ChainedConfigurationSource))
-        };
-
-        fifo.ForEach(
-            item =>
-            {
-                if (item is null)
-                    return;
-
-                // Move to the end
-                configurationBuilder.Sources.Remove(item);
-                configurationBuilder.Sources.Add(item);
-            });
-    }
+    // Enable self logging for Serilog
+    SelfLog.Enable(Console.Error);
+    
+    // Configure middleware pipeline using extension method from AppBuilderConfiguration class
+    app.ConfigureAppBuilder(app.Services, builder.Environment);
+    
+    // Run the application
+    await app.RunAsync()
+        .ConfigureAwait(false);
+}
+catch (Exception e)
+{
+    // Log any fatal exception that occurs and print it on the console
+    Log.Fatal(e, Resource.HostTerminatedUnexpectedly);
+    Console.WriteLine(e);
+}
+finally
+{
+    // Ensure that all log events have been flushed to their sinks before the program exits
+    Log.CloseAndFlush();
 }
