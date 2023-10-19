@@ -8,6 +8,19 @@
 include .env
 export $(shell sed 's/=.*//' .env)
 
+# Run a host project
+run:
+	@echo "Running $(app) host"
+	dotnet run --project Hosts/$(app)/Application
+
+# Run RestApi Host
+RestApi:
+	$(MAKE) run app=RestApi
+
+# Run WebApp Host
+WebApp:
+	$(MAKE) run app=WebApp
+
 # Target for running SonarQube analysis
 sonar:
 	# Echo a message
@@ -25,6 +38,23 @@ sonar:
 	# If this command fails, the make command will stop
 	dotnet sonarscanner end /d:sonar.login="${SONAR_LOGIN}" || exit 1
 
+# Full database reset
+db-reset:
+	echo "Resetting database"
+	$(MAKE) account-db-drop
+	$(MAKE) account-migrations-remove-all
+	$(MAKE) todo-db-drop
+	$(MAKE) todo-migrations-remove-all
+
+db-up:
+	echo "Upping database"
+	$(MAKE) account-db-update
+	$(MAKE) account-migrations-add
+	$(MAKE) account-migrations-apply
+	$(MAKE) todo-db-update
+	$(MAKE) todo-migrations-add
+	$(MAKE) todo-migrations-apply
+
 # Target for updating Account database
 account-db-update:
 	echo "Updating Account database"
@@ -33,7 +63,7 @@ account-db-update:
 # Target for dropping Account database
 account-db-drop:
 	echo "Dropping Account database"
-	dotnet ef database drop --project Hosts/RestApi/Application --context AccountDbContextWrite || exit 1
+	yes | dotnet ef database drop --project Hosts/RestApi/Application --context AccountDbContextWrite || exit 1
 
 # Target for adding Account database migration
 account-migrations-add:
@@ -84,7 +114,7 @@ todo-db-update:
 # Target for dropping Todo database
 todo-db-drop:
 	echo "Dropping Todo database"
-	dotnet ef database drop --project Hosts/RestApi/Application --context TodoDbContextWrite || exit 1
+	yes | dotnet ef database drop --project Hosts/RestApi/Application --context TodoDbContextWrite || exit 1
 
 # Target for adding Todo database migration
 todo-migrations-add:
