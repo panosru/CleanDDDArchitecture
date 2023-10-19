@@ -2,11 +2,46 @@
 .SILENT:
 
 # Phony targets to avoid file name conflict
-.PHONY: sonar account-db-update account-db-drop account-migrations-add account-migrations-update account-migrations-apply account-migrations-rollback account-migrations-list account-migrations-remove account-migrations-remove-all todo-db-update todo-db-drop todo-migrations-add todo-migrations-update todo-migrations-apply todo-migrations-rollback todo-migrations-list todo-migrations-remove todo-migrations-remove-all
+.PHONY: help run RestApi WebApp sonar \
+		account-db-update account-db-drop account-migrations-add account-migrations-update account-migrations-apply \
+		account-migrations-rollback account-migrations-list account-migrations-remove account-migrations-remove-all \
+		todo-db-update todo-db-drop todo-migrations-add todo-migrations-update todo-migrations-apply \
+		todo-migrations-rollback todo-migrations-list todo-migrations-remove todo-migrations-remove-all
 
 # Include environment variables from .env file
 include .env
 export $(shell sed 's/=.*//' .env)
+
+# Display help information about this Makefile.
+help:
+	@echo "Available targets:"
+	@echo "  run				: Run a host project like so: make run app=RestApi"
+	@echo "  RestApi			: Run RestApi Host"
+	@echo "  WebApp			: Run WebApp Host"
+	@echo "  sonar				: Run SonarQube analysis"
+	@echo "  db-reset			: Full database reset"
+	@echo "  db-up				: Upping database"
+	@echo "  account-db-update		: Update Account database"
+	@echo "  account-db-drop		: Drop Account database"
+	@echo "  account-migrations-add	: Add Account database migration"
+	@echo "  account-migrations-update	: Update Account database migration"
+	@echo "  account-migrations-apply	: Apply Account database migration"
+	@echo "  account-migrations-rollback	: Rollback Account database migration"
+	@echo "  account-migrations-list	: List Account database migrations"
+	@echo "  account-migrations-remove	: Remove Account database migration"
+	@echo "  account-migrations-remove-all	: Remove all Account database migrations"
+	@echo "  todo-db-update		: Update Todo database"
+	@echo "  todo-db-drop			: Drop Todo database"
+	@echo "  todo-migrations-add		: Add Todo database migration"
+	@echo "  todo-migrations-update	: Update Todo database migration"
+	@echo "  todo-migrations-apply		: Apply Todo database migration"
+	@echo "  todo-migrations-rollback	: Rollback Todo database migration"
+	@echo "  todo-migrations-list		: List Todo database migrations"
+	@echo "  todo-migrations-remove	: Remove Todo database migration"
+	@echo "  todo-migrations-remove-all	: Remove all Todo database migrations"
+
+
+	
 
 # Run a host project
 run:
