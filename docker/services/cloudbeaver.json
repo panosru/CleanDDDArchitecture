@@ -1,0 +1,54 @@
+{
+  "folders": {},
+  "connections": {
+    "postgresql-template-1": {
+      "provider": "postgresql",
+      "driver": "postgres-jdbc",
+      "name": "PostgreSQL (Template)",
+      "template": true,
+      "read-only": true,
+      "configuration": {
+        "host": "localhost",
+        "port": "5432",
+        "database": "postgres",
+        "url": "jdbc:postgresql://localhost:5432/postgres",
+        "configurationType": "MANUAL",
+        "type": "dev",
+        "provider-properties": {
+          "@dbeaver-show-non-default-db@": "false"
+        }
+      }
+    },
+    "microsoft-18cc5ba7327-1dc6d29875bc8c79": {
+      "provider": "sqlserver",
+      "driver": "microsoft",
+      "name": "SQL Server@CleanDDDArchitecture",
+      "save-password": true,
+      "configuration": {
+        "host": "CleanDDDArchitecture-mssql",
+        "port": "1433",
+        "url": "jdbc:sqlserver://;serverName\u003dCleanDDDArchitecture-mssql;",
+        "configurationType": "MANUAL",
+        "type": "dev",
+        "provider-properties": {
+          "sslTrustServerCertificate": "true"
+        },
+        "auth-model": "sqlserver_database"
+      }
+    }
+  },
+  "connection-types": {
+    "dev": {
+      "name": "Development",
+      "color": "255,255,255",
+      "description": "Regular development database",
+      "auto-commit": true,
+      "confirm-execute": false,
+      "confirm-data-change": false,
+      "smart-commit": false,
+      "smart-commit-recover": false,
+      "auto-close-transactions": true,
+      "close-transactions-period": 1800
+    }
+  }
+}

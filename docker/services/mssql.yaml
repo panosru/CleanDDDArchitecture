@@ -38,3 +38,7 @@ services:
         max-file: '3'
     expose:
       - 80
+    environment:
+      CB_SERVER_NAME: CloudBeaver CE Server
+      CB_ADMIN_NAME: cbadmin
+      CB_ADMIN_PASSWORD: ${MSSQLADMIN_PASSWORD:-veryweak}
