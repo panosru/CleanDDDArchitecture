@@ -1,0 +1,2 @@
+ConnectionStrings:
+  Hangfire: "Server=localhost,11433;Database=Hangfire;User Id=sa;Password=XpU7oFh3HRFoG6;MultipleActiveResultSets=true;TrustServerCertificate=true;Pooling=False;Max Pool Size=500;"

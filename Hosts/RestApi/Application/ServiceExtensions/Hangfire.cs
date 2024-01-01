@@ -2,7 +2,7 @@ using Aviant.Application.Jobs;
 using Aviant.Infrastructure.Jobs;
 using CleanDDDArchitecture.Domains.Shared.Core;
 using Hangfire;
-using Hangfire.PostgreSql;
+using Hangfire.SqlServer;
 
 namespace CleanDDDArchitecture.Hosts.RestApi.Application.ServiceExtensions;
 
@@ -28,9 +28,8 @@ public static class Hangfire
                     .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
                     .UseSimpleAssemblyNameTypeSerializer()
                     .UseRecommendedSerializerSettings()
-                    .UsePostgreSqlStorage(options => 
-                            options.UseNpgsqlConnection(configuration.GetConnectionString("Hangfire")), 
-                        new PostgreSqlStorageOptions
+                    .UseSqlServerStorage(configuration.GetConnectionString("Hangfire"), 
+                        new SqlServerStorageOptions
                         { 
                             QueuePollInterval = TimeSpan.FromSeconds(15) 
                         })
@@ -44,7 +43,7 @@ public static class Hangfire
                 {
                     options.ServerName  = $"{Environment.MachineName}.{Guid.NewGuid().ToString()}";
                     options.WorkerCount = Environment.ProcessorCount * 3;
-                    options.Queues      = new[] { JobQueue.Main, JobQueue.Second, JobQueue.Default };
+                    options.Queues      = [JobQueue.Main, JobQueue.Second, JobQueue.Default];
                 });
 
         return services;
