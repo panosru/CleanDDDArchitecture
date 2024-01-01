@@ -4,17 +4,17 @@ services:
   
   web-app:
     build:
-      context:    ../
+      context: ../
       dockerfile: ./docker/WebApp.Dockerfile
     container_name: "${SOLUTION_NAME}.WebApp"
     environment:
-      USER_SECRETS_ID:                                     ${WEB_APP_USER_SECRETS_ID}
-      ASPNETCORE_ENVIRONMENT:                              "Staging"
-      ASPNETCORE_URLS:                                     "https://+"
-      ASPNETCORE_HTTPS_PORT:                               ${WEB_APP_PORT}
+      USER_SECRETS_ID: ${WEB_APP_USER_SECRETS_ID}
+      ASPNETCORE_ENVIRONMENT: "Staging"
+      ASPNETCORE_URLS: "https://+"
+      ASPNETCORE_HTTPS_PORT: ${WEB_APP_PORT}
       ASPNETCORE_Kestrel__Certificates__Default__Password: ${WEB_APP_CERTIFACATE_PASSWORD}
-      ASPNETCORE_Kestrel__Certificates__Default__Path:     /root/.aspnet/https/WebApp.pfx
-      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT:               false
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /root/.aspnet/https/WebApp.pfx
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: false
       ASPNETCORE_DETAILEDERRORS: 1
       ASPNETCORE_SHUTDOWNTIMEOUTSECONDS: 3
     volumes:
@@ -26,12 +26,12 @@ services:
       - 443
     ports:
       - "${WEB_APP_PORT}:443"
-    networks: 
+    networks:
       - rest_api_net
   
   rest-api:
     build:
-      context:    ../
+      context: ../
       dockerfile: ./docker/RestAPI.Dockerfile
     container_name: "${SOLUTION_NAME}.RestApi"
     environment:
@@ -51,13 +51,40 @@ services:
       - 443
     ports:
       - "${REST_API_PORT}:443"
-    networks: 
+    networks:
       - cleandddarchitecture_mssql_net
       - cleandddarchitecture_postgres_net
       - cleandddarchitecture_redis_net
       - cleandddarchitecture_monitor_net
       - cleandddarchitecture_kafka_net
       - cleandddarchitecture_eventstore_net
+      - rest_api_net
+  
+  worker:
+    build:
+      context:    ../
+      dockerfile: ./docker/Worker.Dockerfile
+    container_name: "${SOLUTION_NAME}.Worker"
+    environment:
+      USER_SECRETS_ID:                                     ${WORKER_USER_SECRETS_ID}
+      ASPNETCORE_ENVIRONMENT:                              "Staging"
+      ASPNETCORE_URLS:                                     "https://+"
+      ASPNETCORE_HTTPS_PORT:                               ${WORKER_PORT}
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${WORKER_CERTIFACATE_PASSWORD}
+      ASPNETCORE_Kestrel__Certificates__Default__Path:     /root/.aspnet/https/Worker.pfx
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT:               false
+      ASPNETCORE_DETAILEDERRORS: 1
+      ASPNETCORE_SHUTDOWNTIMEOUTSECONDS: 3
+    volumes:
+      #- ${APPDATA}/Microsoft/UserSecrets/${WORKER_USER_SECRETS_ID}:/root/.microsoft/usersecrets/${WORKER_USER_SECRETS_ID}:ro
+      - ${HOME}/.microsoft/usersecrets/${WORKER_USER_SECRETS_ID}:/root/.microsoft/usersecrets/${WORKER_USER_SECRETS_ID}:ro
+      - ${HOME}/.aspnet/https/Worker.pfx:/root/.aspnet/https/Worker.pfx:ro
+      - ./DataProtection-Keys-Worker:/app/DataProtection-Keys
+    expose:
+      - 443
+    ports:
+      - "${WORKER_PORT}:443"
+    networks: 
       - rest_api_net
 
 # Networks

@@ -4,7 +4,7 @@
 .SILENT:
 
 # .PHONY is used to declare phony targets which do not represent a file.
-.PHONY: help infrastructure admin pull-dotnet api web clean reset hard-clean
+.PHONY: help infrastructure admin pull-dotnet api web worker clean reset hard-clean
 
 # Environment variables for Docker compose files and env file.
 ENV_FILE ?= .env.dev
@@ -24,6 +24,7 @@ help:
 	@echo "  pull-dotnet 		: Pull dotnet images"
 	@echo "  api         		: Create API service"
 	@echo "  web         		: Create web service"
+	@echo "  worker     	 	: Create worker service"
 	@echo "  clean       		: Clean Docker resources"
 	@echo "  reset       		: Reset Docker volumes"
 	@echo "  hard-clean  		: Hard clean Docker resources"
@@ -53,6 +54,11 @@ api: pull-dotnet
 web: pull-dotnet
 	echo "Creating web..."
 	${DOCKER_COMPOSE} -f ${COMPOSE_STAGING_FILE} up web-app --force-recreate --build
+
+# Create worker server using Docker compose after pulling dotnet images.
+worker: pull-dotnet
+	echo "Creating worker..."
+	${DOCKER_COMPOSE} -f ${COMPOSE_STAGING_FILE} up worker --force-recreate --build
 
 # Clean Docker resources by bringing down services and removing orphan containers.
 clean:
