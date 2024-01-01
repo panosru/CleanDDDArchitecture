@@ -7,8 +7,12 @@ using Microsoft.Extensions.Configuration.Yaml;
 
 try
 {
+    var environment = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")
+                          ?? Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
     var config = new ConfigurationBuilder()
         .AddYamlFile("appsettings.yaml", false, true)
+        .AddYamlFile($"appsettings.{environment}.yaml", true, true)
         .Build();
     
     // Create a new Container
