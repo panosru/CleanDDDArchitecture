@@ -116,19 +116,19 @@ account-migrations-add:
 account-migrations-update:
 	echo "Updating Account database migration"
 	$(eval DB_MIGRATION_NAME ?= CreateAccountDomainTables)
-	dotnet ef migrations script --project Domains/Account/Infrastructure --startup-project Hosts/RestApi/Application --output-dir Persistence/Migrations --context AccountDbContextWrite || exit 1
+	dotnet ef migrations script --project Domains/Account/Infrastructure --startup-project Hosts/RestApi/Application --context AccountDbContextWrite || exit 1
 
 # Target for applying Account database migration
 account-migrations-apply:
 	echo "Applying Account database migration"
 	$(eval DB_MIGRATION_NAME ?= CreateAccountDomainTables)
-	dotnet ef database update $(DB_MIGRATION_NAME) --project Domains/Account/Infrastructure --startup-project Hosts/RestApi/Application --output-dir Persistence/Migrations --context AccountDbContextWrite || exit 1
+	dotnet ef database update $(DB_MIGRATION_NAME) --project Domains/Account/Infrastructure --startup-project Hosts/RestApi/Application --context AccountDbContextWrite || exit 1
 
 # Target for rolling back Account database migration
 account-migrations-rollback:
 	echo "Rolling back Account database migration"
 	$(eval DB_MIGRATION_NAME ?= CreateAccountDomainTables)
-	dotnet ef database update $(DB_MIGRATION_NAME) --project Domains/Account/Infrastructure --startup-project Hosts/RestApi/Application --output-dir Persistence/Migrations --context AccountDbContextWrite || exit 1
+	dotnet ef database update $(DB_MIGRATION_NAME) --project Domains/Account/Infrastructure --startup-project Hosts/RestApi/Application --context AccountDbContextWrite || exit 1
 
 # Target for listing Account database migrations
 account-migrations-list:
@@ -167,19 +167,19 @@ todo-migrations-add:
 todo-migrations-update:
 	echo "Updating Todo database migration"
 	$(eval DB_MIGRATION_NAME ?= CreateTodoDomainTables)
-	dotnet ef migrations script --project Domains/Todo/Infrastructure --startup-project Hosts/RestApi/Application --output-dir Persistence/Migrations --context TodoDbContextWrite || exit 1
+	dotnet ef migrations script --project Domains/Todo/Infrastructure --startup-project Hosts/RestApi/Application --context TodoDbContextWrite || exit 1
 
 # Target for applying Todo database migration
 todo-migrations-apply:
 	echo "Applying Todo database migration"
 	$(eval DB_MIGRATION_NAME ?= CreateTodoDomainTables)
-	dotnet ef database update $(DB_MIGRATION_NAME) --project Domains/Todo/Infrastructure --startup-project Hosts/RestApi/Application --output-dir Persistence/Migrations --context TodoDbContextWrite || exit 1
+	dotnet ef database update $(DB_MIGRATION_NAME) --project Domains/Todo/Infrastructure --startup-project Hosts/RestApi/Application --context TodoDbContextWrite || exit 1
 
 # Target for rolling back Todo database migration
 todo-migrations-rollback:
 	echo "Rolling back Todo database migration"
 	$(eval DB_MIGRATION_NAME ?= CreateTodoDomainTables)
-	dotnet ef database update $(DB_MIGRATION_NAME) --project Domains/Todo/Infrastructure --startup-project Hosts/RestApi/Application --output-dir Persistence/Migrations --context TodoDbContextWrite || exit 1
+	dotnet ef database update $(DB_MIGRATION_NAME) --project Domains/Todo/Infrastructure --startup-project Hosts/RestApi/Application --context TodoDbContextWrite || exit 1
 
 # Target for listing Todo database migrations
 todo-migrations-list:
