@@ -43,7 +43,6 @@ storage_config:
     active_index_directory: /tmp/loki/boltdb-shipper-active
     cache_location: /tmp/loki/boltdb-shipper-cache
     cache_ttl: 24h         # Can be increased for faster performance over longer query periods, uses more disk space
-    shared_store: filesystem
   filesystem:
     directory: /tmp/loki/chunks
 
@@ -56,15 +55,11 @@ limits_config:
   ingestion_burst_size_mb: 20
   retention_period: 720h
   split_queries_by_interval: 30m
-  enforce_metric_name: false
   max_cache_freshness_per_query: 10m
-
-chunk_store_config:
-  max_look_back_period: 0s
 
 compactor:
   working_directory: /tmp/loki/boltdb-shipper-compactor
-  shared_store: filesystem
+  delete_request_store: filesystem
   compaction_interval: 10m
   retention_enabled: true
   retention_delete_delay: 2h
