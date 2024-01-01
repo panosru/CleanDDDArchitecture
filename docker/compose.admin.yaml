@@ -12,6 +12,9 @@ services:
       - cleandddarchitecture_mssql_net
     volumes:
       - dbeaver_data:/opt/cloudbeaver/workspace
+      - ./services/cloudbeaver.json:/opt/cloudbeaver/workspace/GlobalConfiguration/.dbeaver/data-sources.json
+    environment:
+      CB_SERVER_URL: http://localhost:${MSSQLADMIN_PUBLIC_PORT}
   
   pgadmin:
     extends:
