@@ -46,6 +46,8 @@ try
         .ConfigureAwait(false);
 }
 catch (Exception e)
+    // Ignore HostAbortedException that is thrown when the application is stopped using Ctrl+C
+    when (e is not HostAbortedException)
 {
     // Log any fatal exception that occurs and print it on the console
     Log.Fatal(e, Resource.HostTerminatedUnexpectedly);
