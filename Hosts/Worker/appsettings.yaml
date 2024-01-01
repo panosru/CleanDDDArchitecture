@@ -1,5 +1,3 @@
-ConnectionStrings:
-  Hangfire: "User ID=panosru;Password=REMOVED-SECRET;Server=localhost;Port=15432;Database=Hangfire;Integrated Security=true;Pooling=false;Maximum Pool Size=500;ConnectionIdleLifetime=5;ConnectionPruningInterval=2"
 Logging:
   LogLevel:
     Default: "Information"
