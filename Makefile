@@ -12,6 +12,13 @@
 include .env
 export $(shell sed 's/=.*//' .env)
 
+# Set default environment
+ENV ?= Development
+
+# Export DOTNET_ENVIRONMENT and ASPNETCORE_ENVIRONMENT
+export DOTNET_ENVIRONMENT := $(ENV)
+export ASPNETCORE_ENVIRONMENT := $(ENV)
+
 # Display help information about this Makefile.
 help:
 	@echo "Available targets:"
@@ -47,7 +54,7 @@ help:
 # Run a host project
 run:
 	@echo "Running $(app) host"
-	dotnet run --project Hosts/$(app)/Application
+	dotnet run --project Hosts/$(app)/Application --environment $(ENV)
 
 # Run RestApi Host
 RestApi:
@@ -60,7 +67,7 @@ WebApp:
 # Run Worker Project
 Worker:
 	@echo "Running Worker"
-	dotnet run --project Hosts/Worker
+	dotnet run --project Hosts/Worker --environment $(ENV)
 
 # Target for running SonarQube analysis
 sonar:
