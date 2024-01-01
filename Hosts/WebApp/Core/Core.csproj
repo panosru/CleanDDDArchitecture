@@ -11,9 +11,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.9" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.9" />
-        <PackageReference Include="Westwind.AspnetCore.LiveReload" Version="0.4.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.0" />
+        <PackageReference Include="Westwind.AspnetCore.LiveReload" Version="0.5.0" />
     </ItemGroup>
 
     <ItemGroup>
