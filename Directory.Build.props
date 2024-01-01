@@ -1,7 +1,7 @@
 <Project>
     <PropertyGroup Label="Common">
         <!-- Target framework version for all projects -->
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <!-- Language version for all projects -->
         <LangVersion>latest</LangVersion>
         <!-- Enable nullable reference types for all projects -->
