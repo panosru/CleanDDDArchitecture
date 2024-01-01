@@ -6,9 +6,15 @@
     <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Version>1.0.$(Build).$(Revision)</Version>
-    <UserSecretsId>234254b6-8e59-4e12-9b09-b24287fed094</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <UserSecretsId>234254b6-8e59-4e12-9b09-b24287fed094</UserSecretsId>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <UserSecretsId>1d991c3b-8471-4e5f-9f8a-8dbe9719b9e9</UserSecretsId>
+  </PropertyGroup>
+  
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'CleanDDDArchitecture.Hosts.WebApp.Application' " />
   <ItemGroup>
     <PackageReference Include="AppSettings.DependentUpon" Version="0.1.0" />

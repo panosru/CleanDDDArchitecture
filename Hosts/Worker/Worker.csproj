@@ -4,6 +4,13 @@
         <OutputType>Exe</OutputType>
         <RootNamespace>CleanDDDArchitecture.Hosts.Worker</RootNamespace>
         <AssemblyName>CleanDDDArchitecture.Hosts.Worker</AssemblyName>
+  </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <UserSecretsId>0747a96a-9965-42a3-974c-c961848d4c47</UserSecretsId>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <UserSecretsId>b648bb8f-8fe9-434f-a0b8-fc675b036ff8</UserSecretsId>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Hangfire.Core" Version="1.8.6" />
