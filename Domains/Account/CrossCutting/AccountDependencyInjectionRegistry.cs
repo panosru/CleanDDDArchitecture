@@ -207,6 +207,8 @@ public static class AccountDependencyInjectionRegistry
                         policy.RequireClaim(ClaimTypes.DateOfBirth);
                     }));
 
+        services.AddSingleton<IAuthorizationHandler, TokenAuthorizationHandler>();
+
         services
            .AddSingleton<IEventSerializer>(
                 new JsonEventSerializer(
