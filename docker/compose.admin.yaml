@@ -2,6 +2,17 @@ version: '3.9'
 
 services:
   
+  mssqladmin:
+    extends:
+      file:    ./services/mssql.yaml
+      service: mssqladmin
+    ports:
+      - ${MSSQLADMIN_PUBLIC_PORT}:${MSSQLADMIN_PORT}
+    networks:
+      - cleandddarchitecture_mssql_net
+    volumes:
+      - dbeaver_data:/opt/cloudbeaver/workspace
+  
   pgadmin:
     extends:
       file:    ./services/postgres.yaml
@@ -55,6 +66,8 @@ services:
   
 # Volumes
 volumes:
+  dbeaver_data:
+    name: ${MSSQLADMIN_HOST}-data
   grafana_data:
     name: ${GRAFANA_HOST}-data
   pgadmin_data:
@@ -62,6 +75,8 @@ volumes:
 
 # Networks
 networks:
+  cleandddarchitecture_mssql_net:
+    external: true
   cleandddarchitecture_postgres_net:
     external: true
   cleandddarchitecture_redis_net:

@@ -2,6 +2,10 @@ version: '3.9'
 
 services:
   
+  mssql:
+    ports:
+      - ${MSSQL_PUBLIC_PORT}:${MSSQL_PORT}
+  
   postgres:
     ports:
       - ${POSTGRES_PUBLIC_PORT}:${POSTGRES_PORT}

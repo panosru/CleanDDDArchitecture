@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    user: root
+    container_name: ${MSSQL_HOST}
+    restart: 'no' # should be set to 'always' for production
+    healthcheck:
+      test: [ "CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "${MSSQL_HOST}", 
+              "-U", "sa", "-P", "${MSSQL_PASSWORD:-veryweak}", 
+              "-Q", "SELECT 1"]
+      interval: 10s
+      timeout:  5s
+      retries:  3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 2m
+        max-file: '3'
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_PASSWORD:-veryweak}
+      MSSQL_DATA_DIR: /var/opt/mssql/data
+      MSSQL_PID: "Developer"
+      MSSQL_TCP_PORT: ${MSSQL_PORT}
+    expose:
+      - ${MSSQL_PORT}
+  
+  mssqladmin:
+    image: dbeaver/cloudbeaver:latest
+    container_name: ${MSSQLADMIN_HOST}
+    restart: 'no'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 2m
+        max-file: '3'
+    expose:
+      - 80
