@@ -1,13 +1,10 @@
 ---
 ConnectionStrings:
-  DefaultWriteConnection: "User ID =panosru;Password=rX3t9bvDT2ftH2;Server=CleanDDDArchitecture-postgres;Port=5432;Database=CleanDDDArchitecture;Integrated Security=true;Pooling=true;"
-  DefaultReadConnection: "User ID =panosru;Password=rX3t9bvDT2ftH2;Server=CleanDDDArchitecture-postgres;Port=5432;Database=CleanDDDArchitecture;Integrated Security=true;Pooling=true;"
   Hangfire: "User ID =panosru;Password=rX3t9bvDT2ftH2;Server=CleanDDDArchitecture-postgres;Port=5432;Database=Hangfire;Integrated Security=true;Pooling=true;"
+  MSSQLConnection: "Server=CleanDDDArchitecture-mssql,1433;Database=CleanDDDArchitecture;User Id=sa;Password=XpU7oFh3HRFoG6;MultipleActiveResultSets=true;TrustServerCertificate=true;"
+  DefaultWriteConnection: "User ID =panosru;Password=rX3t9bvDT2ftH2;Server=CleanDDDArchitecture-postgres;Port=5432;Database=CleanDDDArchitecture;Pooling=true;"
+  DefaultReadConnection: "User ID =panosru;Password=rX3t9bvDT2ftH2;Server=CleanDDDArchitecture-postgres;Port=5432;Database=CleanDDDArchitecture;Pooling=true;"
   loki: "http://CleanDDDArchitecture-loki:3100"
-
-IdentityServer:
-  Key:
-    Type: Development
 
 Serilog:
   Using:
