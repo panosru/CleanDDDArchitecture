@@ -36,7 +36,7 @@ public static class AccountCrossCutting
     {
         var context = serviceProvider.GetRequiredService<AccountDbContextWrite>();
 
-        if (context.Database.IsNpgsql())
+        if (context.Database.IsSqlServer())
             await context.Database.MigrateAsync()
                .ConfigureAwait(false);
 

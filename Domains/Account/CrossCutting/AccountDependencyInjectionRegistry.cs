@@ -73,8 +73,8 @@ public static class AccountDependencyInjectionRegistry
 
         services.AddDbContext<AccountDbContextWrite>(
             options =>
-                options.UseNpgsql(
-                    Configuration.GetConnectionString("DefaultWriteConnection"),
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("MSSQLConnection"),
                     b =>
                         b.MigrationsAssembly(AccountCrossCutting.AccountInfrastructureAssembly.FullName)));
 
@@ -84,8 +84,8 @@ public static class AccountDependencyInjectionRegistry
 
         services.AddDbContext<AccountDbContextRead>(
             options =>
-                options.UseNpgsql(
-                    Configuration.GetConnectionString("DefaultReadConnection"),
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("MSSQLConnection"),
                     b =>
                         b.MigrationsAssembly(AccountCrossCutting.AccountApplicationAssembly.FullName)));
 
