@@ -61,8 +61,8 @@ clean:
 
 # Reset Docker volumes by cleaning resources and pruning volumes.
 reset: clean
-	echo "Resetting..."
-	docker volume prune -f
+	echo "Removing volumes..."
+	docker volume ls -qf name=CleanDDDArchitecture- | awk '{print $1}' | xargs -r docker volume rm -f
 
 # Perform a hard clean by resetting resources, pruning networks, and pruning all unused Docker objects.
 hard-clean: reset
