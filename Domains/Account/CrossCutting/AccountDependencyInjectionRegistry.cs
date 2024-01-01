@@ -1,5 +1,6 @@
 namespace CleanDDDArchitecture.Domains.Account.CrossCutting;
 
+using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
@@ -34,12 +35,11 @@ using Infrastructure.Persistence.Contexts;
 using Infrastructure.Repositories;
 using Infrastructure.Workers;
 using MediatR;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -61,7 +61,7 @@ public static class AccountDependencyInjectionRegistry
         JwtRegisteredClaimNames.UniqueName,
         JwtRegisteredClaimNames.Email
     };
-
+    
     public static IServiceCollection AddAccountDomain(this IServiceCollection services)
     {
         services.AddTransient<IAccountDomainConfiguration>(_ => new AccountDomainConfiguration(Configuration));
@@ -97,7 +97,7 @@ public static class AccountDependencyInjectionRegistry
         services.AddScoped<IAccountRepositoryWrite, AccountRepositoryWrite>();
 
         services
-           .AddDefaultIdentity<AccountUser>(
+           .AddIdentity<AccountUser, AccountRole>(
                 options =>
                 {
                     options.User.RequireUniqueEmail = true;
@@ -108,12 +108,9 @@ public static class AccountDependencyInjectionRegistry
                     options.Password.RequireUppercase       = true;
                     options.Password.RequireNonAlphanumeric = true;
                 })
-           .AddRoles<AccountRole>()
            .AddRoleManager<RoleManager<AccountRole>>()
            .AddEntityFrameworkStores<AccountDbContextWrite>();
 
-        services.AddIdentityServer()
-           .AddApiAuthorization<AccountUser, AccountDbContextWrite>();
 
         services.AddTransient<IIdentityService, IdentityService>();
 
@@ -198,8 +195,7 @@ public static class AccountDependencyInjectionRegistry
                         ClockSkew = TimeSpan.FromMinutes(
                             double.Parse(Configuration["Jwt:ClockSkewInMinutes"], CultureInfo.InvariantCulture))
                     };
-                })
-           .AddIdentityServerJwt();
+                });
 
         services
            .AddAuthorization(
@@ -278,7 +274,7 @@ public static class AccountDependencyInjectionRegistry
     {
         app.UseAuthentication();
         app.UseAuthorization();
-
+        
         app.Use(
             async (context, next) =>
             {
