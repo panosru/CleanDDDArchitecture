@@ -41,8 +41,8 @@ admin:
 # Pull dotnet images from Microsoft container registry.
 pull-dotnet:
 	echo "Pulling dotnet..."
-	docker pull mcr.microsoft.com/dotnet/aspnet:7.0-alpine
-	docker pull mcr.microsoft.com/dotnet/sdk:7.0-alpine
+	docker pull mcr.microsoft.com/dotnet/aspnet:8.0-alpine
+	docker pull mcr.microsoft.com/dotnet/sdk:8.0-alpine
 
 # Create API service using Docker compose after pulling dotnet images.
 api: pull-dotnet
