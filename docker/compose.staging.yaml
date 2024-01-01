@@ -52,6 +52,7 @@ services:
     ports:
       - "${REST_API_PORT}:443"
     networks: 
+      - cleandddarchitecture_mssql_net
       - cleandddarchitecture_postgres_net
       - cleandddarchitecture_redis_net
       - cleandddarchitecture_monitor_net
@@ -61,6 +62,8 @@ services:
 
 # Networks
 networks:
+  cleandddarchitecture_mssql_net:
+    external: true
   cleandddarchitecture_postgres_net:
     external: true
   cleandddarchitecture_redis_net:
