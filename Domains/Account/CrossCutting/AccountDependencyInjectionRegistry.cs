@@ -2,7 +2,7 @@ namespace CleanDDDArchitecture.Domains.Account.CrossCutting;
 
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
-using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.JsonWebTokens;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
@@ -68,8 +68,7 @@ public static class AccountDependencyInjectionRegistry
 
         // By default, Microsoft has some legacy claim mapping that converts
         // standard JWT claims into proprietary ones. This removes those mappings.
-        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-        JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+        JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
         services.AddDbContext<AccountDbContextWrite>(
             options =>
@@ -111,7 +110,6 @@ public static class AccountDependencyInjectionRegistry
            .AddRoleManager<RoleManager<AccountRole>>()
            .AddEntityFrameworkStores<AccountDbContextWrite>();
 
-
         services.AddTransient<IIdentityService, IdentityService>();
 
         services
@@ -120,10 +118,13 @@ public static class AccountDependencyInjectionRegistry
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme    = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
            .AddJwtBearer(
                 options =>
                 {
+                    options.MapInboundClaims = false;
+                    
                     options.Events = new JwtBearerEvents
                     {
                         OnTokenValidated = context =>
