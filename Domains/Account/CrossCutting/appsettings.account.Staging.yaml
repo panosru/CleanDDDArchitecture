@@ -1,14 +1,4 @@
-ConnectionStrings:
-  eventstore: "tcp://admin:changeit@CleanDDDArchitecture-eventstore:1113"
-  kafka: "CleanDDDArchitecture-kafka:9092"
-                       
-Auth0:
-  Domain: "localhost"
-  Audience: "Demo"
-
 Jwt:
-  Key512Bit: "D35B8F8E10EEDFB687CF62EE9706790EA2F8D34C79DA9D89A9151CD563ECAD82"
-  Key256Bit: "337436763979244226452948404D6351"
   Issuer: "https://localhost:8091"
   Audience: "CleanDDDArchitecture.Hosts.RestApi.ApplicationAPI"
   Subject: "DemoJwtSubject"
