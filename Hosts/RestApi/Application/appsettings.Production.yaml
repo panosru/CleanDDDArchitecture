@@ -1,10 +1,4 @@
 ---
-IdentityServer:
-  Key:
-    Type: Store
-    StoreName: My
-    StoreLocation: CurrentUser
-    Name: CN=localhost
 
 Serilog:
   Using:
