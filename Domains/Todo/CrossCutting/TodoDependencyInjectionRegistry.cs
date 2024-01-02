@@ -42,7 +42,7 @@ public static class TodoDependencyInjectionRegistry
         services.AddDbContext<TodoDbContextWrite>(
             options =>
                 options.UseNpgsql(
-                    Configuration.GetConnectionString("DefaultWriteConnection"),
+                    Configuration.GetConnectionString("PGSQLConnection"),
                     b =>
                         b.MigrationsAssembly(typeof(TodoDbContextWrite).Assembly.FullName)));
 
@@ -54,7 +54,7 @@ public static class TodoDependencyInjectionRegistry
         services.AddDbContext<TodoDbContextRead>(
             options =>
                 options.UseNpgsql(
-                    Configuration.GetConnectionString("DefaultWriteConnection"),
+                    Configuration.GetConnectionString("PGSQLConnection"),
                     b =>
                         b.MigrationsAssembly(typeof(TodoDbContextRead).Assembly.FullName)));
 
