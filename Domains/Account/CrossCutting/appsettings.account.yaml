@@ -3,7 +3,7 @@ eventsTopicName: "CleanDDDArchitectureEvents"
 eventsTopicGroupName: "cleandddarchitecture-api-events-consumer"
 
 Jwt:
-  ExpirationDurationInMunuts: 30
+  ExpirationDurationInMinutes: 30
   ClockSkewInMinutes: 5
 
 FeatureManagement:
