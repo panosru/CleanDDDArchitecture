@@ -48,6 +48,7 @@ public sealed class Account
     /// <returns>Account Profile data.</returns>
     [HttpGet("profile")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AccountProfileResponse))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ApiConventionMethod(typeof(ApiConventions), nameof(ApiConventions.Get))]
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> GetAccountProfile()

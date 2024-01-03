@@ -37,10 +37,13 @@ FeatureManagement:
 #    },
 #    
 #    "Jwt": {
-#      "Key512Bit": "REMOVED-SECRET",
-#      "Key256Bit": "REMOVED-SECRET",
-#      "Issuer": "https://localhost:8091",
-#      "Audience": "CleanDDDArchitecture.Hosts.RestApi.ApplicationAPI",
-#      "Subject": "DemoJwtSubject"
+#      "Access": {
+#        "Key512Bit": "REMOVED-SECRET",
+#        "Key256Bit": "REMOVED-SECRET",
+#      },
+#      "Refresh": {
+#        "Key512Bit": "REMOVED-SECRET",
+#        "Key256Bit": "REMOVED-SECRET"
+#      }
 #    }
 #  }

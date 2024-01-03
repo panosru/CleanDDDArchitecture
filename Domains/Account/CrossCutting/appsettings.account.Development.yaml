@@ -1,2 +1,7 @@
 Jwt:
-  ExpirationDurationInMinutes: 10080 #7 days
+  Issuer: "https://localhost:8091"
+  Subject: "DemoJwtSubject"
+  Access:
+    ExpirationDurationInMinutes: 10080 # 7 days
+  Refresh:
+    ExpirationDurationInMinutes: 28800 # 20 days
