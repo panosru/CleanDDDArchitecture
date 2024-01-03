@@ -1,32 +1,28 @@
-﻿namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Identity;
-
-using System.Globalization;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Web;
-using Application.Identity;
+﻿using CleanDDDArchitecture.Domains.Account.Infrastructure.Identity.Mechanism;
 using Aviant.Application.Identity;
-using Aviant.Core.Extensions;
-using Aviant.Core.Timing;
-using Core;
+using CleanDDDArchitecture.Domains.Account.Application.Identity;
+using CleanDDDArchitecture.Domains.Account.Core;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using IdentityResult = Aviant.Application.Identity.IdentityResult;
 
-public sealed class IdentityService : IIdentityService //TODO: This requires a major refactor
-{
-    private readonly IAccountDomainConfiguration _config;
+namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Identity;
 
+public sealed class IdentityService : IIdentityService
+{
     private readonly UserManager<AccountUser> _userManager;
+
+    private readonly Authenticator _authenticator;
+    
+    private readonly ConfirmEmail _confirmEmail;
 
     public IdentityService(
         UserManager<AccountUser>    userManager,
         IAccountDomainConfiguration config)
     {
         _userManager = userManager;
-        _config      = config;
+        _authenticator = new Authenticator(userManager, config);
+        _confirmEmail = new ConfirmEmail(userManager);
     }
 
     #region IIdentityService Members
@@ -34,127 +30,21 @@ public sealed class IdentityService : IIdentityService //TODO: This requires a m
     public async Task<object?> AuthenticateAsync(
         string            username,
         string            password,
-        CancellationToken cancellationToken = default)
-    {
-        // Check if user with that username exists
-        var user = await _userManager.Users.FirstOrDefaultAsync(
-                u =>
-                    u.UserName == username,
-                cancellationToken)
+        CancellationToken cancellationToken = default) =>
+        await _authenticator.AuthenticateAsync(username, password, cancellationToken)
            .ConfigureAwait(false);
-
-        // Check if the user exists
-        if (user is null)
-            return null;
-
-        // Check if the user is locked out
-        if (_userManager.SupportsUserLockout
-         && await _userManager.IsLockedOutAsync(user).ConfigureAwait(false))
-            return new { error = "Account is locked" };
-
-        // Check if the provided password is correct
-        if (!await _userManager.CheckPasswordAsync(user, password).ConfigureAwait(false))
-        {
-            // Lock user
-            if (_userManager.SupportsUserLockout
-             && await _userManager.GetLockoutEnabledAsync(user).ConfigureAwait(false))
-                await _userManager.AccessFailedAsync(user).ConfigureAwait(false);
-
-            return new { error = "Invalid credentials" };
-        }
-
-        // Reset user count
-        if (_userManager.SupportsUserLockout
-         && 0 < await _userManager.GetAccessFailedCountAsync(user).ConfigureAwait(false))
-            await _userManager.ResetAccessFailedCountAsync(user).ConfigureAwait(false);
-
-        // Check if email has been confirmed
-        if (!user.EmailConfirmed)
-            return new
-            {
-                error = "Confirm your email first",
-                confirm_token = HttpUtility.UrlEncode(
-                    Convert.ToBase64String(
-                        Encoding.UTF8.GetBytes(
-                            await _userManager.GenerateEmailConfirmationTokenAsync(user)
-                               .ConfigureAwait(false))))
-            };
-
-        // Creating claims based on the system and user information
-        Claim[] claims =
-        {
-            new(JwtRegisteredClaimNames.Sub, _config.GetValue("Jwt:Subject")),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(
-                JwtRegisteredClaimNames.Iat,
-                Clock.Now.ToUnixTimestamp().ToString(CultureInfo.InvariantCulture),
-                ClaimValueTypes.Integer64),
-            new(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.UniqueName, user.UserName),
-            new(JwtRegisteredClaimNames.Email, user.Email),
-            new(JwtRegisteredClaimNames.GivenName, user.FirstName),
-            new(JwtRegisteredClaimNames.FamilyName, user.LastName)
-        };
-
-        SymmetricSecurityKey tokenDecryptionKey = new(Encoding.ASCII.GetBytes(_config.GetValue("Jwt:Key256Bit")));
-        SymmetricSecurityKey issuerSigningKey   = new(Encoding.ASCII.GetBytes(_config.GetValue("Jwt:Key512Bit")));
-        SigningCredentials   signingCredentials = new(issuerSigningKey, SecurityAlgorithms.HmacSha256Signature);
-
-        EncryptingCredentials encryptingCredentials = new(
-            tokenDecryptionKey,
-            SecurityAlgorithms.Aes256KW,
-            SecurityAlgorithms.Aes256CbcHmacSha512);
-
-        JwtSecurityTokenHandler tokenHandler = new();
-
-        var token = tokenHandler.CreateJwtSecurityToken(
-            _config.GetValue("Jwt:Issuer"),
-            _config.GetValue("Jwt:Audience"),
-            new ClaimsIdentity(claims),
-            expires: Clock.Now.AddMinutes(
-                double.Parse(_config.GetValue("Jwt:ExpirationDurationInMinutes"), CultureInfo.InvariantCulture)),
-            signingCredentials: signingCredentials,
-            encryptingCredentials: encryptingCredentials,
-            notBefore: Clock.Now,
-            issuedAt: Clock.Now);
-
-        user.LastAccessed = Clock.Now;
-        await _userManager.UpdateAsync(user).ConfigureAwait(false);
-
-        return new
-        {
-            token = new JwtSecurityTokenHandler().WriteToken(token)
-        };
-    }
 
     public async Task<IdentityResult> ConfirmEmailAsync(
         string            token,
         string            email,
-        CancellationToken cancellationToken = default)
-    {
-        var user = await _userManager.FindByEmailAsync(email)
+        CancellationToken cancellationToken = default) =>
+        await _confirmEmail.ConfirmEmailAsync(token, email)
            .ConfigureAwait(false);
-
-        if (user is null)
-            return IdentityResult.Failure(new[] { "Invalid" });
-
-        if (user.EmailConfirmed)
-            return IdentityResult.Failure(new[] { "Email already confirmed" });
-
-        var result = await _userManager.ConfirmEmailAsync(user, token)
-           .ConfigureAwait(false);
-
-        return !result.Succeeded
-            ? IdentityResult.Failure(new[] { result.Errors.First().Description })
-            : IdentityResult.Success();
-    }
 
     public async Task<string> GetUserNameAsync(
         Guid              userId,
         CancellationToken cancellationToken = default)
     {
-        Console.WriteLine(userId);
-
         var user = await _userManager.Users.FirstAsync(u => u.Id == userId, cancellationToken)
            .ConfigureAwait(false);
 
@@ -182,13 +72,18 @@ public sealed class IdentityService : IIdentityService //TODO: This requires a m
         Guid              userId,
         CancellationToken cancellationToken = default)
     {
-        var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
+        var user = await _userManager.FindByIdAsync(userId.ToString()).ConfigureAwait(false);
 
-        if (user is not null)
-            return await DeleteUserAsync(user, cancellationToken)
-               .ConfigureAwait(false);
-
-        return IdentityResult.Success();
+        // Check if the user exists
+        if (user is null)
+        {
+            // Optionally, handle the scenario when the user is not found.
+            // For example, return a failure result or log the incident.
+            return IdentityResult.Failure(new[] { "User not found." });
+        }
+            
+        // Proceed with deletion
+        return await DeleteUserAsync(user, cancellationToken).ConfigureAwait(false);
     }
 
     #endregion
@@ -203,3 +98,4 @@ public sealed class IdentityService : IIdentityService //TODO: This requires a m
         return result.ToApplicationResult();
     }
 }
+

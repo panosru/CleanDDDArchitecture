@@ -3,8 +3,12 @@ eventsTopicName: "CleanDDDArchitectureEvents"
 eventsTopicGroupName: "cleandddarchitecture-api-events-consumer"
 
 Jwt:
-  ExpirationDurationInMinutes: 30
+  Audience: "CleanDDDArchitecture.Hosts.RestApi.ApplicationAPI"
   ClockSkewInMinutes: 5
+  Access:
+    ExpirationDurationInMinutes: 15
+  Refresh:
+    ExpirationDurationInMinutes: 10080 # 7 days
 
 FeatureManagement:
   AccountCreate: true

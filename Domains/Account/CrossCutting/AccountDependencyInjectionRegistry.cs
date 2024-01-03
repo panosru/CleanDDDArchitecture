@@ -1,21 +1,18 @@
-namespace CleanDDDArchitecture.Domains.Account.CrossCutting;
-
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using Microsoft.IdentityModel.JsonWebTokens;
-using System.Net;
 using System.Security.Claims;
 using System.Text;
-using Application.Aggregates;
-using Application.Identity;
-using Application.Persistence;
-using Application.Repositories;
-using Application.UseCases.Authenticate;
-using Application.UseCases.ConfirmEmail;
-using Application.UseCases.Create;
-using Application.UseCases.GetBy;
-using Application.UseCases.Profile;
-using Application.UseCases.UpdateDetails;
+using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Application.Identity;
+using CleanDDDArchitecture.Domains.Account.Application.Persistence;
+using CleanDDDArchitecture.Domains.Account.Application.Repositories;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.Profile;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails;
 using Aviant.Application.EventSourcing.EventBus;
 using Aviant.Application.Identity;
 using Aviant.Application.EventSourcing.Orchestration;
@@ -27,13 +24,12 @@ using Aviant.Infrastructure.EventSourcing.Persistence;
 using Aviant.Infrastructure.CrossCutting;
 using Aviant.Infrastructure.EventSourcing.Persistence.EventStore;
 using Aviant.Infrastructure.EventSourcing.Transport.Kafka;
-using Core;
-using Core.Exceptions;
-using Infrastructure;
-using Infrastructure.Identity;
-using Infrastructure.Persistence.Contexts;
-using Infrastructure.Repositories;
-using Infrastructure.Workers;
+using CleanDDDArchitecture.Domains.Account.Core;
+using CleanDDDArchitecture.Domains.Account.Infrastructure;
+using CleanDDDArchitecture.Domains.Account.Infrastructure.Identity;
+using CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contexts;
+using CleanDDDArchitecture.Domains.Account.Infrastructure.Repositories;
+using CleanDDDArchitecture.Domains.Account.Infrastructure.Workers;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -43,7 +39,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
+
+namespace CleanDDDArchitecture.Domains.Account.CrossCutting;
 
 public static class AccountDependencyInjectionRegistry
 {
@@ -124,57 +121,8 @@ public static class AccountDependencyInjectionRegistry
                 options =>
                 {
                     options.MapInboundClaims = false;
-                    
-                    options.Events = new JwtBearerEvents
-                    {
-                        OnTokenValidated = context =>
-                        {
-                            // Ensure that mandatory claims are set
-                            if (!MandatoryClaims.All(
-                                    mandatoryClaim => context.Principal!.HasClaim(
-                                        claim => claim.Type == mandatoryClaim)))
-                                context.Fail("Missing claims.");
 
-                            return Task.CompletedTask;
-                        },
-
-                        OnForbidden = context =>
-                        {
-                            context.Fail(
-                                new IdentityException(
-                                    "You are not authorised to access this resource",
-                                    HttpStatusCode.Forbidden));
-
-                            return Task.CompletedTask;
-                        },
-
-                        OnChallenge = async context =>
-                        {
-                            // this is a default method
-                            // the response statusCode and headers are set here
-                            context.HandleResponse();
-
-                            if (context.AuthenticateFailure is not null)
-                            {
-                                JObject payload = new()
-                                {
-                                    ["error"]             = context.Error,
-                                    ["error_description"] = context.ErrorDescription,
-                                    ["message"]           = context.AuthenticateFailure.Message
-                                };
-
-                                context.Response.ContentType = "application/json";
-
-                                context.Response.StatusCode = context.AuthenticateFailure is IdentityException
-                                    exception
-                                    ? exception.ErrorCode
-                                    : (int)HttpStatusCode.Unauthorized;
-
-                                await context.HttpContext.Response.WriteAsync(payload.ToString())
-                                   .ConfigureAwait(false);
-                            }
-                        }
-                    };
+                    options.Events = JwtBearerEventsConfigurator.GetJwtBearerEvents(MandatoryClaims);
 
                     options.RequireHttpsMetadata = false;
                     options.SaveToken            = true;
@@ -188,9 +136,9 @@ public static class AccountDependencyInjectionRegistry
                         ValidIssuer              = Configuration["Jwt:Issuer"],
                         ValidAudience            = Configuration["Jwt:Audience"],
                         TokenDecryptionKey = new SymmetricSecurityKey(
-                            Encoding.ASCII.GetBytes(Configuration["Jwt:Key256Bit"])),
+                            Encoding.ASCII.GetBytes(Configuration["Jwt:Access:Key256Bit"])),
                         IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.ASCII.GetBytes(Configuration["Jwt:Key512Bit"])),
+                            Encoding.ASCII.GetBytes(Configuration["Jwt:Access:Key512Bit"])),
                         // By setting ClockSkew to zero, the tokens are expiring at
                         // the exact token expiration time and not 5 minutes later
                         ClockSkew = TimeSpan.FromMinutes(

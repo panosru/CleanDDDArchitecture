@@ -1,4 +1,0 @@
-Jwt:
-  Issuer: "https://localhost:8091"
-  Audience: "CleanDDDArchitecture.Hosts.RestApi.ApplicationAPI"
-  Subject: "DemoJwtSubject"

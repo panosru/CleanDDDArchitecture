@@ -37,10 +37,13 @@ FeatureManagement:
 #    },
 #    
 #    "Jwt": {
-#      "Key512Bit": "D35B8F8E10EEDFB687CF62EE9706790EA2F8D34C79DA9D89A9151CD563ECAD82",
-#      "Key256Bit": "337436763979244226452948404D6351",
-#      "Issuer": "https://localhost:8091",
-#      "Audience": "CleanDDDArchitecture.Hosts.RestApi.ApplicationAPI",
-#      "Subject": "DemoJwtSubject"
+#      "Access": {
+#        "Key512Bit": "Nioi18q5M4dQKM92Pho2WwXBIis3f257Ped4J4m2gpIRaoS0jZBMY8Kp0EvNuQsa",
+#        "Key256Bit": "yulEJ2CRbyvzTbyorcZoiznSlfZ4SE5T",
+#      },
+#      "Refresh": {
+#        "Key512Bit": "RL3tJAjSjS55nGp0ZxjdhqQxPWjKIogldPEQr0xPJHE6le5FoEC4Y2N2bjRVaA0n",
+#        "Key256Bit": "rnLzkCWxRVdNPTxUIAuw5q8LPGOACJ6Z"
+#      }
 #    }
 #  }
