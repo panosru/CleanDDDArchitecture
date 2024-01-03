@@ -1,12 +1,11 @@
-namespace CleanDDDArchitecture.Hosts.RestApi.Application.Controllers;
-
 using System.Diagnostics;
-using Core;
-using Core.Controllers;
-using Core.Features;
+using CleanDDDArchitecture.Hosts.RestApi.Core;
+using CleanDDDArchitecture.Hosts.RestApi.Core.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.FeatureManagement.Mvc;
+
+namespace CleanDDDArchitecture.Hosts.RestApi.Application.Controllers;
 
 /// <inheritdoc />
 /// <summary>
@@ -15,7 +14,7 @@ using Microsoft.FeatureManagement.Mvc;
 [ApiVersion("1.0")]
 [ApiVersion("1.1")]
 [AllowAnonymous]
-[FeatureGate(Features.Metal)]
+[FeatureGate(Core.Features.Features.Metal)]
 public sealed class Metal : ApiController
 {
     /// <summary>

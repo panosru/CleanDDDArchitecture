@@ -1,9 +1,8 @@
-#pragma warning disable 8618
-
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
-
 using Aviant.Application.Mappings;
-using Todo.Core.Entities;
+using CleanDDDArchitecture.Domains.Todo.Core.Entities;
+
+#pragma warning disable 8618
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
 
 public sealed class CreatedTodoListViewModel : IMapFrom<TodoListEntity>
 {

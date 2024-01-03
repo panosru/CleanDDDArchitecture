@@ -1,7 +1,7 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails;
-
-using Aggregates;
+using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
 using Aviant.Application.UseCases;
+
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails;
 
 public interface IUpdateDetailsOutput : IUseCaseOutput
 {

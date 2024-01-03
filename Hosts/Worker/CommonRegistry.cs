@@ -1,7 +1,7 @@
-namespace CleanDDDArchitecture.Hosts.Worker;
-
 using Hangfire;
 using Lamar;
+
+namespace CleanDDDArchitecture.Hosts.Worker;
 
 internal class CommonRegistry : ServiceRegistry
 {

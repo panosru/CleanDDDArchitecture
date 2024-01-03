@@ -1,8 +1,8 @@
-namespace CleanDDDArchitecture.Domains.Account.Infrastructure;
-
 using System.Text;
-using Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
 using Confluent.Kafka;
+
+namespace CleanDDDArchitecture.Domains.Account.Infrastructure;
 
 internal sealed class AccountIdDeserializer : IDeserializer<AccountAggregateId>
 {

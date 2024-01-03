@@ -1,8 +1,8 @@
-﻿namespace CleanDDDArchitecture.Domains.Account.Core.Exceptions;
-
-using System.Net;
+﻿using System.Net;
 using System.Runtime.Serialization;
 using Aviant.Core.Exceptions;
+
+namespace CleanDDDArchitecture.Domains.Account.Core.Exceptions;
 
 [Serializable]
 public sealed class IdentityException : CoreException

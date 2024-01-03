@@ -1,21 +1,21 @@
-namespace CleanDDDArchitecture.Domains.Todo.CrossCutting;
-
-using Application.Persistence;
+using CleanDDDArchitecture.Domains.Todo.Application.Persistence;
 using Aviant.Application.Persistence;
 using Aviant.Application.Persistence.Orchestration;
 using Aviant.Application.Services;
 using Aviant.Infrastructure.CrossCutting;
 using Aviant.Infrastructure.Persistence;
 using Aviant.Infrastructure.Services;
-using Infrastructure;
-using Infrastructure.Persistence.Contexts;
+using CleanDDDArchitecture.Domains.Todo.Infrastructure;
+using CleanDDDArchitecture.Domains.Todo.Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SubDomains.TodoItem.CrossCutting;
-using SubDomains.TodoList.Application.UseCases.Export;
-using SubDomains.TodoList.CrossCutting;
-using SubDomains.TodoList.Infrastructure.Files.Maps;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.CrossCutting;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Export;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.CrossCutting;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Infrastructure.Files.Maps;
+
+namespace CleanDDDArchitecture.Domains.Todo.CrossCutting;
 
 public static class TodoDependencyInjectionRegistry
 {

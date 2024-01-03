@@ -1,11 +1,11 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.UpdateDetails;
-
-using Aviant.Application.Commands;
+﻿using Aviant.Application.Commands;
 using Aviant.Application.Exceptions;
 using Aviant.Core.Configuration;
-using Core.Repositories;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Core.Repositories;
 using MediatR;
-using Todo.Core.Entities;
+using CleanDDDArchitecture.Domains.Todo.Core.Entities;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.UpdateDetails;
 
 internal sealed record UpdateTodoItemDetailCommand(
     int           Id,

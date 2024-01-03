@@ -1,11 +1,10 @@
-﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger;
-
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using YamlDotNet.Serialization.TypeInspectors;
+
+namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger;
 
 /// <summary>
 ///     To use YAML serializer to generate YAML

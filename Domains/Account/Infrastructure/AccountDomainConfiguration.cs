@@ -1,8 +1,8 @@
-namespace CleanDDDArchitecture.Domains.Account.Infrastructure;
-
 using Aviant.Infrastructure.DDD.CrossCutting;
-using Core;
+using CleanDDDArchitecture.Domains.Account.Core;
 using Microsoft.Extensions.Configuration;
+
+namespace CleanDDDArchitecture.Domains.Account.Infrastructure;
 
 public sealed class AccountDomainConfiguration : DomainConfigurationContainer, IAccountDomainConfiguration
 {

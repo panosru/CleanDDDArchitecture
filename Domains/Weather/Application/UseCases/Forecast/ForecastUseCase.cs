@@ -1,7 +1,7 @@
-namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.Forecast;
-
 using Aviant.Application.Orchestration;
 using Aviant.Application.UseCases;
+
+namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.Forecast;
 
 public sealed class ForecastUseCase : UseCase<IForecastOutput>
 {

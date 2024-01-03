@@ -1,10 +1,10 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Profile;
-
 using Aviant.Application.Identity;
 using Aviant.Application.Queries;
 using Aviant.Core.Services;
-using Identity;
+using CleanDDDArchitecture.Domains.Account.Application.Identity;
 using Microsoft.AspNetCore.Identity;
+
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Profile;
 
 internal sealed record ProfileAccountQuery : Query<AccountUser>
 {

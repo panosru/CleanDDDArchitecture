@@ -1,8 +1,8 @@
-﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger;
-
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+
+namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger;
 
 /// <summary>
 ///     Represents the Swagger/Swashbuckle operation filter used to document the implicit API version parameter.

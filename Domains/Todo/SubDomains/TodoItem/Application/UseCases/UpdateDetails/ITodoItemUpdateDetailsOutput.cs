@@ -1,6 +1,6 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.UpdateDetails;
-
 using Aviant.Application.UseCases;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.UpdateDetails;
 
 public interface ITodoItemUpdateDetailsOutput : IUseCaseOutput
 {

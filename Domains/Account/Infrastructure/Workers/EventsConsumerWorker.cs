@@ -1,8 +1,8 @@
-namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Workers;
-
-using Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
 using Aviant.Core.EventSourcing.EventBus;
 using Microsoft.Extensions.Hosting;
+
+namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Workers;
 
 public sealed class EventsConsumerWorker : BackgroundService
 {

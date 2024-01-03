@@ -1,10 +1,10 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Create;
-
-using AutoMapper;
+﻿using AutoMapper;
 using Aviant.Application.Commands;
-using Core.Repositories;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Core.Repositories;
 using FluentValidation;
-using Todo.Core.Entities;
+using CleanDDDArchitecture.Domains.Todo.Core.Entities;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Create;
 
 internal sealed record CreateTodoItemCommand(int ListId, string Title) : Command<Lazy<TodoItemViewModel>>
 {

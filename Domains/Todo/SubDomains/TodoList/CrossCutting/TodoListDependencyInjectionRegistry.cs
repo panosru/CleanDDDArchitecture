@@ -1,18 +1,18 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.CrossCutting;
-
-using Application.UseCases.Create;
-using Application.UseCases.Delete;
-using Application.UseCases.Export;
-using Application.UseCases.GetAll;
-using Application.UseCases.Update;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Delete;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Export;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Update;
 using Aviant.Infrastructure.CrossCutting;
-using Core.Repositories;
-using Infrastructure;
-using Infrastructure.Persistence.Configurations;
-using Infrastructure.Repositories;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Core.Repositories;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Infrastructure;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Infrastructure.Persistence.Configurations;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Infrastructure.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Todo.Infrastructure.Persistence.Contexts;
+using CleanDDDArchitecture.Domains.Todo.Infrastructure.Persistence.Contexts;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.CrossCutting;
 
 public static class TodoListDependencyInjectionRegistry
 {

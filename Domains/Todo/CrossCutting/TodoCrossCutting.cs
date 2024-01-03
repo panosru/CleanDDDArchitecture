@@ -1,13 +1,13 @@
-namespace CleanDDDArchitecture.Domains.Todo.CrossCutting;
-
 using System.Reflection;
 using AutoMapper;
 using Aviant.Application.Mappings;
-using Infrastructure.Persistence.Contexts;
+using CleanDDDArchitecture.Domains.Todo.Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using SubDomains.TodoItem.Application.UseCases.Create;
-using SubDomains.TodoList.Application.UseCases.Create;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Create;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
+
+namespace CleanDDDArchitecture.Domains.Todo.CrossCutting;
 
 public static class TodoCrossCutting
 {

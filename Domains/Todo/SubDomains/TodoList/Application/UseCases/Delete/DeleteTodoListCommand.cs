@@ -1,11 +1,11 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Delete;
-
-using Aviant.Application.Commands;
+﻿using Aviant.Application.Commands;
 using Aviant.Application.Exceptions;
-using Core.Repositories;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Core.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Todo.Core.Entities;
+using CleanDDDArchitecture.Domains.Todo.Core.Entities;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Delete;
 
 internal sealed record DeleteTodoListCommand(int Id) : Command
 {

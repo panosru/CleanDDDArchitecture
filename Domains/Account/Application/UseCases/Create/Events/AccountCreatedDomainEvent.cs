@@ -1,12 +1,12 @@
 // ReSharper disable MemberCanBeInternal
 
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Events;
-
-using Aggregates;
+using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
 using Aviant.Core.EventSourcing.DomainEvents;
 using Aviant.Core.EventSourcing.EventBus;
-using Identity;
+using CleanDDDArchitecture.Domains.Account.Application.Identity;
 using Microsoft.AspNetCore.Identity;
+
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Events;
 
 public sealed record AccountCreatedDomainEvent : DomainEvent<AccountAggregate, AccountAggregateId>
 {

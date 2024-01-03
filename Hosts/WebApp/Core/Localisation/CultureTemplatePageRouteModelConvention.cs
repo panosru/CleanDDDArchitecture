@@ -1,6 +1,6 @@
-namespace CleanDDDArchitecture.Hosts.WebApp.Core.Localisation;
-
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+
+namespace CleanDDDArchitecture.Hosts.WebApp.Core.Localisation;
 
 /// <inheritdoc />
 /// <summary>

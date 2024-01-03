@@ -1,10 +1,10 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
-
-using AutoMapper;
+﻿using AutoMapper;
 using Aviant.Application.ApplicationEvents;
 using Aviant.Application.Commands;
-using Core.Repositories;
-using Todo.Core.Entities;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Core.Repositories;
+using CleanDDDArchitecture.Domains.Todo.Core.Entities;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
 
 /// <inheritdoc cref="Aviant.Application.Commands.Command&lt;TResponse&gt;" />
 /// <summary>

@@ -1,7 +1,7 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll;
-
 using Aviant.Application.Orchestration;
 using Aviant.Application.UseCases;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll;
 
 public sealed class GetAllUseCase : UseCase<IGetAllOutput>
 {

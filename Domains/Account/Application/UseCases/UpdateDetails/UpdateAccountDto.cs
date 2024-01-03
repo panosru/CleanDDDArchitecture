@@ -1,8 +1,8 @@
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails;
-
 using System.ComponentModel.DataAnnotations;
+
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails;
 
 public struct UpdateAccountDto
 {

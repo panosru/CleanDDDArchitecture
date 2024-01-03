@@ -1,10 +1,10 @@
 ﻿// ReSharper disable MemberCanBeInternal
 
+using Aviant.Application.Identity;
+
 #pragma warning disable 8618
 
 namespace CleanDDDArchitecture.Domains.Account.Application.Identity;
-
-using Aviant.Application.Identity;
 
 public sealed class AccountUser : ApplicationUser
 {

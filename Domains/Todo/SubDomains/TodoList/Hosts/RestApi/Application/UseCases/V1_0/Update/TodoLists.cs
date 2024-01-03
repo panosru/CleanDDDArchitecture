@@ -1,11 +1,11 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application.UseCases.V1_0.Update;
-
-using System.Net.Mime;
+﻿using System.Net.Mime;
 using CleanDDDArchitecture.Hosts.RestApi.Core;
 using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.FeatureManagement.Mvc;
-using TodoList.Application.UseCases.Update;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Update;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application.UseCases.V1_0.Update;
 
 /// <inheritdoc
 ///     cref="CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />

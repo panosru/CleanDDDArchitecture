@@ -1,12 +1,12 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll;
-
-using AutoMapper;
+﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Aviant.Application.Queries;
 using Aviant.Core.Configuration;
-using Dtos;
+using CleanDDDArchitecture.Domains.Todo.Application.Persistence;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll.Dtos;
 using Microsoft.EntityFrameworkCore;
-using Todo.Application.Persistence;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll;
 
 internal sealed record GetTodosQuery : Query<TodosVm>
 {

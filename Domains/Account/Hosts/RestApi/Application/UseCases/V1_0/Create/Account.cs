@@ -1,16 +1,16 @@
-namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.Create;
-
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
+using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
+using CleanDDDArchitecture.Domains.Shared.Core.Identity;
 using CleanDDDArchitecture.Hosts.RestApi.Core;
 using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
-using Domains.Account.Application.Aggregates;
-using Domains.Account.Application.UseCases.Create;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.FeatureManagement.Mvc;
-using Shared.Core.Identity;
+
+namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.Create;
 
 /// <inheritdoc
 ///     cref="CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />

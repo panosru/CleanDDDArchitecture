@@ -1,6 +1,6 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
-
 using Aviant.Application.UseCases;
+
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
 
 public sealed record ConfirmEmailInput(string Token, string Email) : UseCaseInput
 {

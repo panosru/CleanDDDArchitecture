@@ -1,9 +1,9 @@
 ﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace CleanDDDArchitecture.Domains.Weather.Application.Services;
-
 using Aviant.Application.Interceptors;
-using Interceptors;
+using CleanDDDArchitecture.Domains.Weather.Application.Interceptors;
+
+namespace CleanDDDArchitecture.Domains.Weather.Application.Services;
 
 public interface IWeatherForecastService
 {

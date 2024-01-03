@@ -1,8 +1,8 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Update;
-
 using Aviant.Application.Orchestration;
 using Aviant.Application.Persistence.UseCases;
-using Todo.Application.Persistence;
+using CleanDDDArchitecture.Domains.Todo.Application.Persistence;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Update;
 
 public sealed class UpdateTodoListUseCase
     : UseCase<UpdateTodoListInput, IUpdateTodoListOutput, ITodoDbContextWrite>

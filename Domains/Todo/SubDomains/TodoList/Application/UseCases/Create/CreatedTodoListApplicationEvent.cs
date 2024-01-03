@@ -1,7 +1,7 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
-
 using Aviant.Application.ApplicationEvents;
 using Polly;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
 
 internal sealed record CreatedTodoListApplicationEvent(string Name) : ApplicationEvent
 {

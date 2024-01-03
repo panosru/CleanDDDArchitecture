@@ -1,13 +1,13 @@
-namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.GetBy;
-
 using System.Net.Mime;
 using CleanDDDArchitecture.Hosts.RestApi.Core;
 using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
-using Domains.Account.Application.Identity;
-using Domains.Account.Application.UseCases.GetBy;
+using CleanDDDArchitecture.Domains.Account.Application.Identity;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.FeatureManagement.Mvc;
+
+namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.GetBy;
 
 /// <inheritdoc
 ///     cref="CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />

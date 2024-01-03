@@ -1,10 +1,10 @@
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
+using System.ComponentModel.DataAnnotations;
+
 #pragma warning disable 8618
 
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
-
-using System.ComponentModel.DataAnnotations;
 
 public sealed class ConfirmEmailDto
 {

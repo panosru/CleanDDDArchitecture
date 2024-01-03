@@ -1,7 +1,7 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Infrastructure;
-
 using Aviant.Infrastructure.DDD.CrossCutting;
 using Microsoft.Extensions.Configuration;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Infrastructure;
 
 public sealed class TodoListDomainConfiguration : DomainConfigurationContainer
 {

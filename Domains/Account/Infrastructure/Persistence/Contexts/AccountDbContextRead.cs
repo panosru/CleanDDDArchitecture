@@ -1,9 +1,9 @@
-namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contexts;
-
-using Application.Identity;
-using Application.Persistence;
+using CleanDDDArchitecture.Domains.Account.Application.Identity;
+using CleanDDDArchitecture.Domains.Account.Application.Persistence;
 using Aviant.Infrastructure.Identity.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
+
+namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contexts;
 
 public sealed class AccountDbContextRead
     : AuthorizationDbContextRead<AccountUser, AccountRole>, IAccountDbContextRead

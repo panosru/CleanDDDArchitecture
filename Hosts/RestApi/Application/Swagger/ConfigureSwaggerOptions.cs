@@ -1,9 +1,9 @@
-﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger;
-
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
+
+namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger;
 
 /// <inheritdoc />
 [ExcludeFromCodeCoverage]

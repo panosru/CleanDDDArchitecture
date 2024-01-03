@@ -1,9 +1,9 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
-
 using System.Text;
 using System.Web;
 using Aviant.Application.Commands;
 using Aviant.Application.Identity;
+
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
 
 internal sealed record ConfirmEmailCommand(string Token, string Email) : Command<IdentityResult>
 {

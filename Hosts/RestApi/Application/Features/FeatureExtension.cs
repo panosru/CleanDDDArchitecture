@@ -1,9 +1,8 @@
-namespace CleanDDDArchitecture.Hosts.RestApi.Application.Features;
-
 using Aviant.Infrastructure.CrossCutting;
-using Core.Features;
-using Microsoft.Extensions.DependencyInjection;
+using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
 using Microsoft.FeatureManagement;
+
+namespace CleanDDDArchitecture.Hosts.RestApi.Application.Features;
 
 /// <summary>
 /// </summary>

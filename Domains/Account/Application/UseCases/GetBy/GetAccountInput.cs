@@ -1,6 +1,6 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy;
-
 using Aviant.Application.UseCases;
+
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy;
 
 public sealed record GetAccountInput(Guid Id) : UseCaseInput
 {

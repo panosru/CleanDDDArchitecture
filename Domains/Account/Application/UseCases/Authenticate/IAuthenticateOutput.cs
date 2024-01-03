@@ -1,6 +1,6 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate;
-
 using Aviant.Application.UseCases;
+
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate;
 
 public interface IAuthenticateOutput : IUseCaseOutput
 {

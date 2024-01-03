@@ -1,13 +1,13 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update;
-
-using AutoMapper;
+﻿using AutoMapper;
 using Aviant.Application.ApplicationEvents;
 using Aviant.Application.Commands;
 using Aviant.Application.Exceptions;
 using Aviant.Application.Processors;
-using Core.Repositories;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Core.Repositories;
 using FluentValidation;
-using Todo.Core.Entities;
+using CleanDDDArchitecture.Domains.Todo.Core.Entities;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update;
 
 internal sealed record UpdateTodoItemCommand(
     int    Id,

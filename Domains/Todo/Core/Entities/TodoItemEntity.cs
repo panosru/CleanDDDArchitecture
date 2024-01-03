@@ -1,12 +1,12 @@
 ﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
 
-#pragma warning disable 8618
-
-namespace CleanDDDArchitecture.Domains.Todo.Core.Entities;
-
 using Aviant.Core.Configuration;
 using Aviant.Core.Entities;
 using Aviant.Core.Identity.Entities;
+
+#pragma warning disable 8618
+
+namespace CleanDDDArchitecture.Domains.Todo.Core.Entities;
 
 public sealed class TodoItemEntity
     : Entity<int>,

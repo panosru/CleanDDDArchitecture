@@ -1,8 +1,8 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy;
-
 using Aviant.Application.Queries;
-using Identity;
+using CleanDDDArchitecture.Domains.Account.Application.Identity;
 using Microsoft.AspNetCore.Identity;
+
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy;
 
 internal sealed record GetAccountQuery(Guid Id) : Query<AccountUser>
 {

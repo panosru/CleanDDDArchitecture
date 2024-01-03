@@ -1,11 +1,11 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
-
 using Aviant.Application.Commands;
 using Aviant.Application.UseCases;
 using Aviant.Core.Collections.Extensions;
 using FluentValidation;
-using Identity;
+using CleanDDDArchitecture.Domains.Account.Application.Identity;
 using Microsoft.AspNetCore.Identity;
+
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 
 public sealed record CreateAccountInput(
     string              UserName,

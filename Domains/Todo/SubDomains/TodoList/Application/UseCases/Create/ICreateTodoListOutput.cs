@@ -1,6 +1,6 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
-
 using Aviant.Application.UseCases;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
 
 public interface ICreateTodoListOutput : IUseCaseOutput
 {

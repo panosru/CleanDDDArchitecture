@@ -1,12 +1,12 @@
 // ReSharper disable MemberCanBeInternal
 
-namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates;
-
 using Aviant.Core.Entities;
 using Aviant.Core.EventSourcing.Aggregates;
 using Aviant.Core.EventSourcing.DomainEvents;
-using UseCases.Create.Events;
-using UseCases.UpdateDetails.Events;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Events;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails.Events;
+
+namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates;
 
 public sealed class AccountAggregate
     : Aggregate<AccountAggregate, AccountAggregateId>,

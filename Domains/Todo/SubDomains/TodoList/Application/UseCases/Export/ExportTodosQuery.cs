@@ -1,11 +1,11 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Export;
-
-using AutoMapper;
+﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Aviant.Application.Queries;
 using Aviant.Application.Services;
 using Microsoft.EntityFrameworkCore;
-using Todo.Application.Persistence;
+using CleanDDDArchitecture.Domains.Todo.Application.Persistence;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Export;
 
 internal sealed record ExportTodosQuery(int ListId) : Query<ExportTodosVm>
 {
