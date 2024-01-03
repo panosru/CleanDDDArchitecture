@@ -6,8 +6,7 @@ namespace CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application;
 /// <summary>
 ///     Weather endpoints
 /// </summary>
-public abstract class ApiController : CleanDDDArchitecture.Hosts.RestApi.Core.Controllers.ApiController
-{ }
+public abstract class ApiController : CleanDDDArchitecture.Hosts.RestApi.Core.Controllers.ApiController;
 
 /// <inheritdoc />
 /// <summary>

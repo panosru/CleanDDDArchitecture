@@ -5,8 +5,7 @@ using CleanDDDArchitecture.Domains.Shared.Core;
 
 namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherService;
 
-internal sealed class SyncWeatherServiceJobOptions : IJobOptions
-{ }
+internal sealed class SyncWeatherServiceJobOptions : IJobOptions;
 
 [Queue(JobQueue.Main)]
 internal class SyncWeatherServiceJob : IJob<SyncWeatherServiceJobOptions>
