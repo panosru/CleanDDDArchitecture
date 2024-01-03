@@ -3,5 +3,4 @@ using Aviant.Core.Persistence;
 
 namespace CleanDDDArchitecture.Domains.Account.Application.Repositories;
 
-public interface IAccountRepositoryRead : IRepositoryRead<AccountAggregate, AccountAggregateId>
-{ }
+public interface IAccountRepositoryRead : IRepositoryRead<AccountAggregate, AccountAggregateId>;

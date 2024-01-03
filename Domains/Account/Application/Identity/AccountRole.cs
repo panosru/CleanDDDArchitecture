@@ -2,5 +2,4 @@ using Aviant.Application.Identity;
 
 namespace CleanDDDArchitecture.Domains.Account.Application.Identity;
 
-public sealed class AccountRole : ApplicationRole
-{ }
+public sealed class AccountRole : ApplicationRole;
