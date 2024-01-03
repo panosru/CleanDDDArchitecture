@@ -1,6 +1,6 @@
-namespace CleanDDDArchitecture.Hosts.RestApi.Application.Events;
-
 using Aviant.Application.ApplicationEvents;
+
+namespace CleanDDDArchitecture.Hosts.RestApi.Application.Events;
 
 /// <inheritdoc cref="Aviant.Application.ApplicationEvents.ApplicationEvent" />
 /// <summary>

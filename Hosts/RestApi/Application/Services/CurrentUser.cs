@@ -1,9 +1,8 @@
-﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Services;
-
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Aviant.Application.Identity;
-using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.JsonWebTokens;
+
+namespace CleanDDDArchitecture.Hosts.RestApi.Application.Services;
 
 /// <summary>
 /// </summary>

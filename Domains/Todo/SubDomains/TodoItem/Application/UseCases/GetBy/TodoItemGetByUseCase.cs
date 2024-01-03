@@ -1,7 +1,7 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.GetBy;
-
 using Aviant.Application.Orchestration;
 using Aviant.Application.UseCases;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.GetBy;
 
 public sealed class TodoItemGetByUseCase
     : UseCase<TodoItemGetByInput, ITodoItemGetByOutput>

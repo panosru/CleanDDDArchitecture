@@ -1,11 +1,11 @@
 // ReSharper disable MemberCanBeInternal
 
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails.Events;
-
-using Aggregates;
+using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
 using Aviant.Core.EventSourcing.DomainEvents;
 using Aviant.Core.EventSourcing.EventBus;
 using Polly;
+
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails.Events;
 
 public sealed record AccountUpdatedDomainEvent : DomainEvent<AccountAggregate, AccountAggregateId>
 {

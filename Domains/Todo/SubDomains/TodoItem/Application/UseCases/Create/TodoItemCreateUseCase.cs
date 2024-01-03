@@ -1,8 +1,8 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Create;
-
 using Aviant.Application.Orchestration;
 using Aviant.Application.Persistence.UseCases;
-using Todo.Application.Persistence;
+using CleanDDDArchitecture.Domains.Todo.Application.Persistence;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Create;
 
 public sealed class TodoItemCreateUseCase
     : UseCase<TodoItemCreateInput, ITodoItemCreateOutput, ITodoDbContextWrite>

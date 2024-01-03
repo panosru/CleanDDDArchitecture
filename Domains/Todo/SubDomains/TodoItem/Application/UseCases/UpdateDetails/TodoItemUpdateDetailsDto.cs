@@ -1,9 +1,9 @@
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.UpdateDetails;
-
 using System.ComponentModel.DataAnnotations;
 using Aviant.Core.Configuration;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.UpdateDetails;
 
 public struct TodoItemUpdateDetailsDto
 {

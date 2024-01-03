@@ -1,7 +1,7 @@
-namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity;
-
 using Aviant.Application.Orchestration;
 using Aviant.Application.UseCases;
+
+namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity;
 
 public sealed class AddCityUseCase
     : UseCase<AddCityInput, IAddCityOutput>

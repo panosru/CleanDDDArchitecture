@@ -1,10 +1,10 @@
-namespace CleanDDDArchitecture.Hosts.WebApp.Core.TagHelpers;
-
-using Localisation;
+using CleanDDDArchitecture.Hosts.WebApp.Core.Localisation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+
+namespace CleanDDDArchitecture.Hosts.WebApp.Core.TagHelpers;
 
 [HtmlTargetElement("a", Attributes = ActionAttributeName)]
 [HtmlTargetElement("a", Attributes = ControllerAttributeName)]

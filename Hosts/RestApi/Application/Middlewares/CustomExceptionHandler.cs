@@ -1,10 +1,8 @@
-namespace CleanDDDArchitecture.Hosts.RestApi.Application.Middlewares;
-
 using System.Net;
 using Aviant.Application.Exceptions;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+
+namespace CleanDDDArchitecture.Hosts.RestApi.Application.Middlewares;
 
 /// <summary>
 /// </summary>

@@ -1,8 +1,8 @@
-namespace CleanDDDArchitecture.Hosts.WebApp.Core.Localisation;
-
 using System.Collections.Immutable;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
+
+namespace CleanDDDArchitecture.Hosts.WebApp.Core.Localisation;
 
 public static class Cultures
 {

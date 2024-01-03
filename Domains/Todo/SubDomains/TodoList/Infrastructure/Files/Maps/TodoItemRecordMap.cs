@@ -1,8 +1,8 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Infrastructure.Files.Maps;
-
-using System.Globalization;
-using Application.UseCases.Export;
+﻿using System.Globalization;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Export;
 using CsvHelper.Configuration;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Infrastructure.Files.Maps;
 
 public sealed class TodoItemRecordMap : ClassMap<TodoItemRecord>
 {

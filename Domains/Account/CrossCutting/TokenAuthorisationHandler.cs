@@ -1,9 +1,9 @@
-namespace CleanDDDArchitecture.Domains.Account.CrossCutting;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json;
+
+namespace CleanDDDArchitecture.Domains.Account.CrossCutting;
 
 public sealed class TokenAuthorizationHandler
     : AuthorizationHandler<IAuthorizationRequirement>

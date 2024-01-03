@@ -1,9 +1,9 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.Infrastructure.Persistence.Contexts;
-
-using Application.Persistence;
+﻿using CleanDDDArchitecture.Domains.Todo.Application.Persistence;
 using Aviant.Infrastructure.Identity.Persistence.Contexts;
-using Core.Entities;
+using CleanDDDArchitecture.Domains.Todo.Core.Entities;
 using Microsoft.EntityFrameworkCore;
+
+namespace CleanDDDArchitecture.Domains.Todo.Infrastructure.Persistence.Contexts;
 
 public sealed class TodoDbContextWrite
     : DbContextWrite<TodoDbContextWrite>, ITodoDbContextWrite

@@ -1,16 +1,14 @@
-﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger;
-
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using Aviant.Infrastructure.CrossCutting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
+
+namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger;
 
 /// <summary>
 ///     Service Collection(IServiceCollection) Extensions

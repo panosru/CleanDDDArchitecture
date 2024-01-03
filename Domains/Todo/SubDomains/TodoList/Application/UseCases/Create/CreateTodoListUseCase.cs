@@ -1,8 +1,8 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
-
 using Aviant.Application.Orchestration;
 using Aviant.Application.Persistence.UseCases;
-using Todo.Application.Persistence;
+using CleanDDDArchitecture.Domains.Todo.Application.Persistence;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
 
 /// <inheritdoc />
 /// <summary>

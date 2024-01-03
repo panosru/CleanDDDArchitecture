@@ -1,8 +1,8 @@
-﻿namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.Forecast;
-
-using Aviant.Application.Queries;
+﻿using Aviant.Application.Queries;
 using Aviant.Core.Timing;
-using Services;
+using CleanDDDArchitecture.Domains.Weather.Application.Services;
+
+namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.Forecast;
 
 internal sealed record GetWeatherForecastsQuery : Query<IEnumerable<WeatherForecastService>>
 {

@@ -1,9 +1,9 @@
-namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherService;
-
 using Aviant.Application.Jobs;
 using Hangfire;
 using Serilog;
-using Shared.Core;
+using CleanDDDArchitecture.Domains.Shared.Core;
+
+namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherService;
 
 internal sealed class SyncWeatherServiceJobOptions : IJobOptions
 { }

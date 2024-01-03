@@ -1,18 +1,18 @@
-namespace CleanDDDArchitecture.Domains.Account.CrossCutting;
-
 using System.Reflection;
-using Application.Aggregates;
-using Application.Identity;
-using Application.UseCases.Create;
+using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Application.Identity;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 using Ardalis.GuardClauses;
 using AutoMapper;
 using Aviant.Application.Orchestration;
 using Aviant.Application.EventSourcing.Orchestration;
-using Infrastructure.Persistence.Contexts;
+using CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contexts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Shared.Core.Identity;
+using CleanDDDArchitecture.Domains.Shared.Core.Identity;
+
+namespace CleanDDDArchitecture.Domains.Account.CrossCutting;
 
 public static class AccountCrossCutting
 {

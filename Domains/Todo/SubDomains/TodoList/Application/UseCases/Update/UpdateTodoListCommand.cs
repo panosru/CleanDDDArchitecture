@@ -1,13 +1,13 @@
-﻿namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Update;
-
-using Aviant.Application.Commands;
+﻿using Aviant.Application.Commands;
 using Aviant.Application.Exceptions;
-using Core.Enums;
-using Core.Repositories;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Core.Enums;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Core.Repositories;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Todo.Core.Entities;
+using CleanDDDArchitecture.Domains.Todo.Core.Entities;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Update;
 
 /// <inheritdoc cref="Aviant.Application.Commands.Command" />
 /// <summary>

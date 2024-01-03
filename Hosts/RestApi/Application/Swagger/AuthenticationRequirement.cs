@@ -1,10 +1,10 @@
-namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger;
-
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+
+namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger;
 
 /// <summary>
 ///     Swagger filter to add the bearer into each request.

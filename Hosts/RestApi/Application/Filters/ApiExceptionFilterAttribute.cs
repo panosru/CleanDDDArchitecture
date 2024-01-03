@@ -1,16 +1,14 @@
-﻿namespace CleanDDDArchitecture.Hosts.RestApi.Application.Filters;
-
-using Aviant.Application.Exceptions;
+﻿using Aviant.Application.Exceptions;
 using Aviant.Core.Services;
 using Aviant.Core.Timing;
 using Aviant.Infrastructure.CrossCutting;
-using Events;
+using CleanDDDArchitecture.Hosts.RestApi.Application.Events;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
+
+namespace CleanDDDArchitecture.Hosts.RestApi.Application.Filters;
 
 /// <inheritdoc />
 /// <summary>

@@ -1,7 +1,7 @@
-namespace CleanDDDArchitecture.Domains.Weather.Application.Interceptors;
-
 using Aviant.Application.Interceptors;
 using Serilog;
+
+namespace CleanDDDArchitecture.Domains.Weather.Application.Interceptors;
 
 public sealed class WeatherInterceptor : InterceptorBase<WeatherInterceptor>
 {

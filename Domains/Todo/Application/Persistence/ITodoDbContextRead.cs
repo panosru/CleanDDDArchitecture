@@ -1,8 +1,8 @@
-namespace CleanDDDArchitecture.Domains.Todo.Application.Persistence;
-
 using Aviant.Application.Persistence;
-using Core.Entities;
+using CleanDDDArchitecture.Domains.Todo.Core.Entities;
 using Microsoft.EntityFrameworkCore;
+
+namespace CleanDDDArchitecture.Domains.Todo.Application.Persistence;
 
 public interface ITodoDbContextRead : IDbContextRead
 {

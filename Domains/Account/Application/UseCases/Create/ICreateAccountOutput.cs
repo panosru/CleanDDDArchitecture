@@ -1,7 +1,7 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
-
-using Aggregates;
+using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
 using Aviant.Application.UseCases;
+
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 
 public interface ICreateAccountOutput : IUseCaseOutput
 {

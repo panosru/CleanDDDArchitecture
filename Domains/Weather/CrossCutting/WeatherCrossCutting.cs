@@ -1,8 +1,8 @@
-namespace CleanDDDArchitecture.Domains.Weather.CrossCutting;
-
 using System.Reflection;
-using Application.UseCases.Forecast;
+using CleanDDDArchitecture.Domains.Weather.Application.UseCases.Forecast;
 using AutoMapper;
+
+namespace CleanDDDArchitecture.Domains.Weather.CrossCutting;
 
 public static class WeatherCrossCutting
 {

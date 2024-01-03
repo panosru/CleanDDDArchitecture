@@ -1,7 +1,7 @@
-namespace CleanDDDArchitecture.Hosts.RestApi.Core;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+
+namespace CleanDDDArchitecture.Hosts.RestApi.Core;
 
 public static class ApiConventions
 {

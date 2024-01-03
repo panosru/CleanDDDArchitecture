@@ -1,7 +1,7 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy;
-
 using Aviant.Application.UseCases;
-using Identity;
+using CleanDDDArchitecture.Domains.Account.Application.Identity;
+
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy;
 
 public interface IGetAccountOutput : IUseCaseOutput
 {

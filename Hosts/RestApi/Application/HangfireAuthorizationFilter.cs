@@ -1,7 +1,7 @@
-namespace CleanDDDArchitecture.Hosts.RestApi.Application;
-
-using Domains.Shared.Core.Identity;
+using CleanDDDArchitecture.Domains.Shared.Core.Identity;
 using Hangfire.Dashboard;
+
+namespace CleanDDDArchitecture.Hosts.RestApi.Application;
 
 public sealed class HangfireAuthorizationFilter : LocalRequestsOnlyAuthorizationFilter
 {

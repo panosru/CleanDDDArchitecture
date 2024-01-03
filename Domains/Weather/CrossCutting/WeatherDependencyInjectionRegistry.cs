@@ -1,15 +1,15 @@
-namespace CleanDDDArchitecture.Domains.Weather.CrossCutting;
-
-using Application.Services;
-using Application.UseCases.AddCity;
-using Application.UseCases.Forecast;
-using Application.UseCases.SyncWeatherService;
+using CleanDDDArchitecture.Domains.Weather.Application.Services;
+using CleanDDDArchitecture.Domains.Weather.Application.UseCases.AddCity;
+using CleanDDDArchitecture.Domains.Weather.Application.UseCases.Forecast;
+using CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherService;
 using Aviant.Application.Interceptors;
 using Aviant.Application.Orchestration;
 using Aviant.Infrastructure.CrossCutting;
-using Infrastructure;
+using CleanDDDArchitecture.Domains.Weather.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
+namespace CleanDDDArchitecture.Domains.Weather.CrossCutting;
 
 public static class WeatherDependencyInjectionRegistry
 {

@@ -1,8 +1,8 @@
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
-namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.Profile;
+using CleanDDDArchitecture.Domains.Account.Application.Identity;
 
-using Domains.Account.Application.Identity;
+namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.Profile;
 
 /// <summary>
 /// </summary>

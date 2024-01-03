@@ -1,6 +1,6 @@
-namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Create;
-
 using Aviant.Application.UseCases;
+
+namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Create;
 
 public sealed record TodoItemCreateInput(int ListId, string Title) : UseCaseInput
 {

@@ -1,8 +1,8 @@
 ﻿// ReSharper disable MemberCanBeInternal
 
-#pragma warning disable 8618
-
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Export;
+
+#pragma warning disable 8618
 
 public sealed class ExportTodosVm
 {

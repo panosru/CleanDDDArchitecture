@@ -1,7 +1,7 @@
-namespace CleanDDDArchitecture.Domains.Weather.Infrastructure;
-
 using Aviant.Infrastructure.DDD.CrossCutting;
 using Microsoft.Extensions.Configuration;
+
+namespace CleanDDDArchitecture.Domains.Weather.Infrastructure;
 
 public sealed class WeatherDomainConfiguration : DomainConfigurationContainer
 {

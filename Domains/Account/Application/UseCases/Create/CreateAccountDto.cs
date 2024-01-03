@@ -1,6 +1,6 @@
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
-
 using System.ComponentModel.DataAnnotations;
+
+namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 
 public struct CreateAccountDto
 {
