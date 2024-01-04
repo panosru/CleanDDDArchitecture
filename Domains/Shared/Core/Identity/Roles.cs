@@ -1,18 +1,18 @@
 namespace CleanDDDArchitecture.Domains.Shared.Core.Identity;
 
-public static class Roles
+public enum Roles
 {
-    public const string Root = "root";
+    Root,
 
-    public const string SuperAdmin = "superadmin";
+    SuperAdmin,
 
-    public const string Admin = "admin";
+    Admin,
 
-    public const string Manager = "manager";
+    Manager,
 
-    public const string Moderator = "moderator";
+    Moderator,
 
-    public const string Member = "member";
+    Member,
 
-    public const string Guest = "guest";
+    Guest
 }

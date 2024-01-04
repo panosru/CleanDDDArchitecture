@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
+using Aviant.Core.Enum;
 using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 using CleanDDDArchitecture.Domains.Shared.Core.Identity;
@@ -68,7 +69,7 @@ public sealed class Account
                     dto.FirstName,
                     dto.LastName,
                     dto.Email,
-                    new[] { nameof(Roles.Member) },
+                    new[] { Roles.Member.ToString(StringCase.Lower) },
                     false))
            .ConfigureAwait(false);
 
