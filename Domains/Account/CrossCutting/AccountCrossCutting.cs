@@ -6,6 +6,7 @@ using Ardalis.GuardClauses;
 using AutoMapper;
 using Aviant.Application.Orchestration;
 using Aviant.Application.EventSourcing.Orchestration;
+using Aviant.Core.Enum;
 using CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contexts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -71,7 +72,7 @@ public static class AccountCrossCutting
                         accountDto.FirstName,
                         accountDto.LastName,
                         accountDto.Email,
-                        new[] { Roles.Root },
+                        new[] { Roles.Root.ToString(StringCase.Lower) },
                         true))
                .ConfigureAwait(false);
 
