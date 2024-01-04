@@ -9,7 +9,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Application.Swagger;
 
 /// <inheritdoc />
 /// <summary>
-///     Implementation of IConfigureOptions&lt;SwaggerGenOptions&gt;
+///     Implementation of IConfigureOptions{SwaggerGenOptions}
 /// </summary>
 [ExcludeFromCodeCoverage]
 internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>

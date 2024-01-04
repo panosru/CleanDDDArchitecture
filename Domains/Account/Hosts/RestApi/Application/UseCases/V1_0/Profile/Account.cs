@@ -10,7 +10,7 @@ using Microsoft.FeatureManagement.Mvc;
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.Profile;
 
 /// <inheritdoc
-///     cref="CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
+///     cref="CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.ApiController{TUseCase,TUseCaseOutput}" />
 [ApiVersion("1.0")]
 [FeatureGate(Features.AccountProfile)]
 public sealed class Account

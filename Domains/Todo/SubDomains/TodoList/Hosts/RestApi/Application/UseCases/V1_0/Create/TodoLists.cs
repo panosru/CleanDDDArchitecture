@@ -9,7 +9,7 @@ using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application.UseCases.V1_0.Create;
 
 /// <inheritdoc
-///     cref="CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
+///     cref="CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Application.ApiController{TUseCase,TUseCaseOutput}" />
 [FeatureGate(Features.TodoListCreate)]
 public sealed class TodoLists
     : ApiController<CreateTodoListUseCase, TodoLists>,

@@ -14,7 +14,7 @@ using Microsoft.FeatureManagement.Mvc;
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.UseCases.V1_0.Create;
 
 /// <inheritdoc
-///     cref="CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
+///     cref="CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Application.ApiController{TUseCase,TUseCaseOutput}" />
 [ApiVersion("1.0")]
 [AllowAnonymous]
 [FeatureGate(Features.AccountCreate)]

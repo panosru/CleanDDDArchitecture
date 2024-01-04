@@ -9,7 +9,7 @@ using Microsoft.FeatureManagement.Mvc;
 namespace CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.UseCases.V1_0.Forecast;
 
 /// <inheritdoc
-///     cref="CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
+///     cref="CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Application.ApiController{TUseCase,TUseCaseOutput}" />
 [FeatureGate(Features.WeatherForecast)]
 [AllowAnonymous]
 public sealed class Weather
