@@ -7,6 +7,7 @@ using Aviant.Core.Extensions;
 using Aviant.Core.Timing;
 using CleanDDDArchitecture.Domains.Account.Application.Identity;
 using CleanDDDArchitecture.Domains.Account.Core;
+using CleanDDDArchitecture.Domains.Account.Core.Identity.Dto;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -78,12 +79,12 @@ internal class Authenticator
         // Update last accessed date
         await UpdateLastAccessedAsync(user);
 
-        return new
+        return new AuthResult
         {
-            token_type = "Bearer",
-            access_token = accessTokenSerialised,
-            expires_in = accessToken.ValidTo.ToUnixTimestamp() - Clock.Now.ToUnixTimestamp(),
-            refresh_token = refreshTokenSerialised
+            TokenType = "Bearer",
+            AccessToken = accessTokenSerialised,
+            ExpiresIn = (long)(accessToken.ValidTo.ToUnixTimestamp() - Clock.Now.ToUnixTimestamp()),
+            RefreshToken = refreshTokenSerialised
         };
     }
     
