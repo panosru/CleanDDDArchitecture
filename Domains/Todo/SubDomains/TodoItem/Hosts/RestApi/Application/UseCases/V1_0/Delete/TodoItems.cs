@@ -8,7 +8,7 @@ using Microsoft.FeatureManagement.Mvc;
 using TodoItem.Application.UseCases.Delete;
 
 /// <inheritdoc
-///     cref="CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Hosts.RestApi.Application.ApiController&lt;TUseCase,TUseCaseOutput&gt;" />
+///     cref="CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Hosts.RestApi.Application.ApiController{TUseCase,TUseCaseOutput}" />
 [FeatureGate(Features.TodoItemDelete)]
 public sealed class TodoItems
     : ApiController<TodoItemDeleteUseCase, TodoItems>,

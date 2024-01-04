@@ -6,7 +6,7 @@ using CleanDDDArchitecture.Domains.Todo.Core.Entities;
 
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
 
-/// <inheritdoc cref="Aviant.Application.Commands.Command&lt;TResponse&gt;" />
+/// <inheritdoc cref="Aviant.Application.Commands.Command{TResponse}" />
 /// <summary>
 ///     The Command to create a todo list
 /// </summary>
