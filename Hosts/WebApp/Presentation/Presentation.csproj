@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <RootNamespace>CleanDDDArchitecture.Hosts.WebApp.Presentation</RootNamespace>
+    <AssemblyName>CleanDDDArchitecture.Hosts.WebApp.Presentation</AssemblyName>
+    <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Version>1.0.$(Build).$(Revision)</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <UserSecretsId>234254b6-8e59-4e12-9b09-b24287fed094</UserSecretsId>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <UserSecretsId>1d991c3b-8471-4e5f-9f8a-8dbe9719b9e9</UserSecretsId>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'CleanDDDArchitecture.Hosts.WebApp.Presentation' " />
+  <ItemGroup>
+    <PackageReference Include="AppSettings.DependentUpon" Version="0.1.0" />
+    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.21.0" />
+    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders.TagHelpers" Version="0.21.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Domains\Weather\Hosts\WebApp\Presentation\Presentation.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Shared\_Layout.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Shared\_ValidationScriptsPartial.cshtml" />
+    <_ContentIncludedByDefault Remove="Components\CultureSelector.razor" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Middlewares" />
+    <Folder Include="Resources" />
+    <Folder Include="Setup\" />
+    <Folder Include="ViewComponents" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Pages\Index.el.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.el.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Pages\Index.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Update="Resources\Pages\Index.el.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Index.el.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Pages\Index.en.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Index.en.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,8 @@
+@page "{slug}"
+@model CleanDDDArchitecture.Hosts.WebApp.Presentation.Areas.Foo.Pages.Demo
+
+@{
+    ViewData["Title"] = $"Demo - {Model.Slug}";
+}
+
+Slug: @Model.Slug;
