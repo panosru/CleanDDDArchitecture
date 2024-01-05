@@ -7,11 +7,17 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Core.Controllers;
 
 /// <inheritdoc />
 /// <summary>
-///     API Controller
+/// API Shared Controller
 /// </summary>
 [ApiController]
-[Route("api/[controller]")]
-public abstract class ApiController : ControllerBase
+[Route("api/[segments]")]
+public abstract class ApiSharedController : ControllerBase;
+
+/// <inheritdoc />
+/// <summary>
+/// API Controller
+/// </summary>
+public abstract class ApiController : ApiSharedController
 {
     /// <summary>
     /// </summary>
@@ -21,13 +27,11 @@ public abstract class ApiController : ControllerBase
 
 /// <inheritdoc />
 /// <summary>
-///     API Controller
+/// API Controller Generic
 /// </summary>
 /// <typeparam name="TUseCase"></typeparam>
 /// <typeparam name="TUseCaseOutput"></typeparam>
-[ApiController]
-[Route("api/[controller]")]
-public abstract class ApiController<TUseCase, TUseCaseOutput> : ControllerBase
+public abstract class ApiController<TUseCase, TUseCaseOutput> : ApiSharedController
     where TUseCase : class, IUseCase<TUseCaseOutput>
     where TUseCaseOutput : class, IUseCaseOutput
 {
