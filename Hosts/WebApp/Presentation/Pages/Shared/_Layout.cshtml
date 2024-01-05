@@ -1,0 +1,65 @@
+﻿@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery _xsrf
+@functions{
+    public string GetAntiXsrfRequestToken() => _xsrf.GetAndStoreTokens(Context).RequestToken;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <base href="~/">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!--[if ie]><meta http-equiv='X-UA-Compatible' content="IE=edge,IE=9,IE=8,chrome=1"><![endif]-->
+    <meta charset="UTF-8" content="@GetAntiXsrfRequestToken()" csrf-param="_csrf_token" method-param="_method" name="csrf-token">
+    <title>@ViewData["Title"] - Presentation</title>
+    <meta name="author" content="Panagiotis Kosmidis">
+    
+    @if (IsSectionDefined("Meta"))
+    {
+        @await RenderSectionAsync("Meta")
+    }
+    else
+    {
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+    }
+    
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/site.css"/>
+    @await RenderSectionAsync("Styles", false)
+</head>
+<body>
+    <header>
+        <partial name="_MainMenu"/>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+            <vc:culture-selector name="panos" />
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2020 - Presentation - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" 
+        @* asp-fallback-src="~/js/jquery.slim.min.js" *@
+        @* asp-fallback-test="window.jQuery" *@
+        crossorigin="anonymous" asp-add-nonce="true"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        @* asp-fallback-src="~/js/bootstrap.min.js" *@
+        @* asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal" *@
+        crossorigin="anonymous" asp-add-nonce="true"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", false)
+</body>
+</html>

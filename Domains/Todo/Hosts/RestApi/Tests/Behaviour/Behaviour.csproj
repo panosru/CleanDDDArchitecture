@@ -6,6 +6,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Application\Application.csproj" />
+        <ProjectReference Include="..\..\Presentation\Presentation.csproj" />
     </ItemGroup>
 </Project>

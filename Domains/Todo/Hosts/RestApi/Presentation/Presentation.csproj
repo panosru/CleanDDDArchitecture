@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>CleanDDDArchitecture.Domains.Todo.Hosts.RestApi.Presentation</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Domains.Todo.Hosts.RestApi.Presentation</AssemblyName>
+        <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\CrossCutting\CrossCutting.csproj" />
+      <ProjectReference Include="..\..\..\SubDomains\TodoItem\Hosts\RestApi\Presentation\Presentation.csproj" />
+      <ProjectReference Include="..\..\..\SubDomains\TodoList\Hosts\RestApi\Presentation\Presentation.csproj" />
+    </ItemGroup>
+
+</Project>

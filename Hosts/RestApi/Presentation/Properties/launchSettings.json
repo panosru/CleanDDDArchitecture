@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "CleanDDDArchitecture.Hosts.RestApi.Presentation": {
+      "commandName": "Project",
+      "applicationUrl": "https://localhost:8091",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

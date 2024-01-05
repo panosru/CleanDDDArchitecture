@@ -81,7 +81,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration", "Domains\Acco
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unit", "Domains\Account\Tests\Unit\Unit.csproj", "{96C76148-634C-4006-BBE3-FACC7C7054D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Domains\Account\Hosts\RestApi\Application\Application.csproj", "{A2A1B51E-EB21-4622-89B8-6334415BE901}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Domains\Account\Hosts\RestApi\Presentation\Presentation.csproj", "{A2A1B51E-EB21-4622-89B8-6334415BE901}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Behaviour", "Domains\Account\Hosts\RestApi\Tests\Behaviour\Behaviour.csproj", "{8DD7F261-AEA5-431C-AFFE-A379AC830B70}"
 EndProject
@@ -101,7 +101,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RestApi", "RestApi", "{981E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1FA2B339-4D71-48EE-961A-2C1046FEEA47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Domains\Todo\Hosts\RestApi\Application\Application.csproj", "{D9DD0B70-9A7F-45DB-B826-61FD1F413776}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Domains\Todo\Hosts\RestApi\Presentation\Presentation.csproj", "{D9DD0B70-9A7F-45DB-B826-61FD1F413776}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Behaviour", "Domains\Todo\Hosts\RestApi\Tests\Behaviour\Behaviour.csproj", "{811150DC-3BC0-43C2-9492-62ADACE1DBE5}"
 EndProject
@@ -121,7 +121,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3FC0FFB5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Behaviour", "Domains\Todo\SubDomains\TodoList\Hosts\RestApi\Tests\Behaviour\Behaviour.csproj", "{28D1022A-CB23-4244-A9D6-B2027A6ADE2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Domains\Todo\SubDomains\TodoList\Hosts\RestApi\Application\Application.csproj", "{755105A1-C447-4A1F-9DD8-B668C9D2DBAD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Domains\Todo\SubDomains\TodoList\Hosts\RestApi\Presentation\Presentation.csproj", "{755105A1-C447-4A1F-9DD8-B668C9D2DBAD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Behaviour", "Domains\Todo\SubDomains\TodoList\Tests\Behaviour\Behaviour.csproj", "{5776F01D-A992-4606-82A3-3D91F328F5CE}"
 EndProject
@@ -143,7 +143,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0737B9FA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Behaviour", "Domains\Todo\SubDomains\TodoItem\Hosts\RestApi\Tests\Behaviour\Behaviour.csproj", "{53A42E45-94D9-4977-B75D-DB5D3938E2E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Domains\Todo\SubDomains\TodoItem\Hosts\RestApi\Application\Application.csproj", "{2C3BD717-9EF4-409B-9128-10D58AC70C28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Domains\Todo\SubDomains\TodoItem\Hosts\RestApi\Presentation\Presentation.csproj", "{2C3BD717-9EF4-409B-9128-10D58AC70C28}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Domains\Todo\SubDomains\TodoItem\Core\Core.csproj", "{A6BBE38E-AFE3-48EA-BED2-69614FF8753B}"
 EndProject
@@ -175,7 +175,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Behaviour", "Hosts\RestApi\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Hosts\RestApi\Core\Core.csproj", "{6C4655AB-0A8E-4DF4-8159-1C7BD6993EF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Hosts\RestApi\Application\Application.csproj", "{4FB5B663-41A4-4980-8AC6-BDBE0ADA2C92}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Hosts\RestApi\Presentation\Presentation.csproj", "{4FB5B663-41A4-4980-8AC6-BDBE0ADA2C92}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Weather", "Weather", "{92C66757-37C1-4E0E-B5A8-27527151E8A5}"
 EndProject
@@ -187,7 +187,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E90E3046
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Behaviour", "Domains\Weather\Hosts\RestApi\Tests\Behaviour\Behaviour.csproj", "{E84682C9-F475-4E51-90BB-402A9E87C9E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Domains\Weather\Hosts\RestApi\Application\Application.csproj", "{0E63DDF0-5CB2-4287-9F12-18EBC7126001}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Domains\Weather\Hosts\RestApi\Presentation\Presentation.csproj", "{0E63DDF0-5CB2-4287-9F12-18EBC7126001}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{307E70DC-4DF4-4B3C-8FFA-669D20143475}"
 EndProject
@@ -211,13 +211,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{70AF2CB1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ui", "Hosts\WebApp\Tests\Ui\Ui.csproj", "{5C47E2F6-8723-4D3A-9BA2-022A05509FC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Hosts\WebApp\Application\Application.csproj", "{5914EEA0-6FEF-4D64-A6EE-9B23FDEC19A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Hosts\WebApp\Presentation\Presentation.csproj", "{5914EEA0-6FEF-4D64-A6EE-9B23FDEC19A3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApp", "WebApp", "{2A58BB24-F9A5-4363-9AB2-B7C8B8298C0B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{62DE499A-5313-4C4C-BB7A-FBB822350A78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Domains\Weather\Hosts\WebApp\Application\Application.csproj", "{5AC06796-F886-47A1-844E-75C8A955C3EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Domains\Weather\Hosts\WebApp\Presentation\Presentation.csproj", "{5AC06796-F886-47A1-844E-75C8A955C3EA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Hosts\WebApp\Core\Core.csproj", "{0A097D11-9CB4-416F-AD7C-53C6FD2AB57B}"
 EndProject

@@ -10,15 +10,15 @@ WORKDIR /src
 # in a smaller solution with small number of projects it would be best
 # to copy only the relevant projects with COPY ["<project>/<project>.csproj", "<project>"]
 COPY . ./
-RUN dotnet restore "Hosts/RestApi/Application/Application.csproj"
+RUN dotnet restore "Hosts/RestApi/Presentation/Presentation.csproj"
 COPY . ./
-WORKDIR /src/Hosts/RestApi/Application
-RUN dotnet build --no-restore "Application.csproj" -c Release -o /app/build
+WORKDIR /src/Hosts/RestApi/Presentation
+RUN dotnet build --no-restore "Presentation.csproj" -c Release -o /app/build
 
 FROM build as publish
-RUN dotnet publish "Application.csproj" -c Release -o /app/publish
+RUN dotnet publish "Presentation.csproj" -c Release -o /app/publish
 
 FROM base as final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "CleanDDDArchitecture.Hosts.RestApi.Application.dll"]
+ENTRYPOINT ["dotnet", "CleanDDDArchitecture.Hosts.RestApi.Presentation.dll"]
