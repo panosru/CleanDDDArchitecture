@@ -15,6 +15,7 @@ public static class Serilog
     /// <returns></returns>
     public static IApplicationBuilder UseSerilogBuilder(this IApplicationBuilder app)
     {
+        //TODO: Revisit the logging configuration
         app.UseSerilogRequestLogging(
             options =>
             {

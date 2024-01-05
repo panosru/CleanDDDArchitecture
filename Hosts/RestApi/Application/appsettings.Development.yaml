@@ -9,6 +9,8 @@ Serilog:
     Override:
       Microsoft: Warning
       System: Warning
+      Hangfire: Information
+      Serilog: Information
   Enrich:
     - FromLogContext
     - WithMachineName
