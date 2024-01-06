@@ -40,7 +40,6 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
     /// <inheritdoc />
     public void Configure(SwaggerGenOptions options)
     {
-        options.DocumentFilter<YamlDocumentFilter>();
         options.OperationFilter<SwaggerDefaultValues>();
         options.IgnoreObsoleteActions();
 
@@ -52,7 +51,7 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
             {
                 Name         = "Authorization",
                 BearerFormat = "JWT",
-                Scheme       = "Bearer",
+                Scheme       = "bearer",  // Scheme should be in lowercase
                 Description  = "Specify the authorization token.",
                 In           = ParameterLocation.Header,
                 Type         = SecuritySchemeType.Http,

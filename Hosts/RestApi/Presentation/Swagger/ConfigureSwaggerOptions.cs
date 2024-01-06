@@ -25,7 +25,7 @@ internal sealed class ConfigureSwaggerOptions : IConfigureOptions<SwaggerOptions
     /// <inheritdoc />
     public void Configure(SwaggerOptions options)
     {
-        options.RouteTemplate = _settings.RoutePrefix + "/{documentName}/swagger.json";
+        options.RouteTemplate = _settings.RoutePrefix + "/{documentName}/swagger.yaml";
 
         options.PreSerializeFilters.Add(
             (swaggerDoc, httpReq) =>
