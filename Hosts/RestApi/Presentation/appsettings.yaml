@@ -10,7 +10,7 @@ SwaggerSettings:
     Minor: 0
   Info:
     Title: Current API
-    Description: Swagger with API version, <a href='/swagger.yaml'>download swagger.yaml</a>
+    Description: Clean DDD Architecture Demo Project API
     TermsOfService: https://company.com/termsofservice
     Contact:
       Name: John Doe

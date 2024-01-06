@@ -42,7 +42,7 @@ internal sealed class ConfigureSwaggerUiOptions : IConfigureOptions<SwaggerUIOpt
                 description =>
                 {
                     options.SwaggerEndpoint(
-                        $"/{_settings.RoutePrefix}/{description.GroupName}/swagger.json",
+                        $"/{_settings.RoutePrefix}/{description.GroupName}/swagger.yaml",
                         description.GroupName.ToUpperInvariant());
 
                     options.DocumentTitle = _settings.Name;

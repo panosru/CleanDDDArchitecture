@@ -40,7 +40,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\swagger.yaml" />
-    <Content Include="wwwroot\swagger.yaml" Watch="false" />
     <Content Include="appsettings.yaml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
