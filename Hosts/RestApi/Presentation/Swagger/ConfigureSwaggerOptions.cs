@@ -31,7 +31,7 @@ internal sealed class ConfigureSwaggerOptions : IConfigureOptions<SwaggerOptions
             (swaggerDoc, httpReq) =>
                 swaggerDoc.Servers = new List<OpenApiServer>
                 {
-                    new OpenApiServer
+                    new()
                     {
                         Url = $"{httpReq.Scheme}://{httpReq.Host.Value}"
                     }
