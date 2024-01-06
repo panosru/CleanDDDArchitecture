@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>CleanDDDArchitecture.Domains.Todo.Hosts.RestApi.Core</RootNamespace>
+        <AssemblyName>CleanDDDArchitecture.Domains.Todo.Hosts.RestApi.Core</AssemblyName>
+        <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\..\Hosts\RestApi\Core\Core.csproj" />
+      <ProjectReference Include="..\..\..\CrossCutting\CrossCutting.csproj" />
+    </ItemGroup>
+
+</Project>
