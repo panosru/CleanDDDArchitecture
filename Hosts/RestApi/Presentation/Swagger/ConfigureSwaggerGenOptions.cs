@@ -73,19 +73,32 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
     {
         foreach (var description in _provider.ApiVersionDescriptions)
         {
-            if (description.IsDeprecated) _settings.Info!.Description += " - DEPRECATED";
+            var versionKey = $"V{description.ApiVersion.MajorVersion}_{description.ApiVersion.MinorVersion}";
+            var defaultInfo = new OpenApiInfo
+            {
+                Title = _settings.Info?.Title,
+                Description = _settings.Info?.Description,
+                TermsOfService = _settings.Info?.TermsOfService,
+                Contact = _settings.Info?.Contact,
+                License = _settings.Info?.License,
+                Version = description.ApiVersion.ToString()
+            };
 
-            options.SwaggerDoc(
-                description.GroupName,
-                new OpenApiInfo
-                {
-                    Title          = _settings.Info!.Title,
-                    Description    = _settings.Info.Description,
-                    TermsOfService = _settings.Info.TermsOfService,
-                    Contact        = _settings.Info.Contact,
-                    License        = _settings.Info.License,
-                    Version        = description.ApiVersion.ToString()
-                });
+            if (_settings.VersionInfo != null && 
+                _settings.VersionInfo.TryGetValue(versionKey, out var overrideInfo))
+            {
+                // Override specific fields if they exist
+                defaultInfo.Title = overrideInfo.Title ?? defaultInfo.Title;
+                defaultInfo.Description = overrideInfo.Description ?? defaultInfo.Description;
+                defaultInfo.TermsOfService = overrideInfo.TermsOfService ?? defaultInfo.TermsOfService;
+                defaultInfo.Contact = overrideInfo.Contact ?? defaultInfo.Contact;
+                defaultInfo.License = overrideInfo.License ?? defaultInfo.License;
+            }
+
+            if (description.IsDeprecated)
+                defaultInfo.Description += " - DEPRECATED";
+
+            options.SwaggerDoc(description.GroupName, defaultInfo);
         }
     }
 
