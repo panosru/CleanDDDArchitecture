@@ -65,9 +65,9 @@ public class CustomRouteConvention : IApplicationModelConvention
                 // Add the custom segment from the attribute to the segments list.
                 segments.Insert(0, segmentAttribute.Segment);
             }
-            else if (!IsBaseControllerType(controllerType.BaseType))
+            else if (!IsBaseControllerType(controllerType.BaseType) && !IsAnyParentControllerHasRouteSegmentAttribute(controllerType))
             {
-                // Use the default controller name as a segment if no RouteSegmentAttribute is present.
+                // Use the default controller name as a segment if no RouteSegmentAttribute is present in the inheritance chain.
                 var segmentName = GetSegmentNameFromType(controllerType);
                 segments.Insert(0, segmentName);
             }
@@ -78,6 +78,33 @@ public class CustomRouteConvention : IApplicationModelConvention
 
         // Join the collected segments to form the complete route template.
         return string.Join("/", segments);
+    }
+    
+    /// <summary>
+    /// Checks if any parent controller in the inheritance chain of the given controller type has the RouteSegmentAttribute.
+    /// </summary>
+    /// <param name="controllerType">The type of the controller to check for parent controllers.</param>
+    /// <returns>True if any parent controller has the RouteSegmentAttribute; otherwise, false.</returns>
+    private bool IsAnyParentControllerHasRouteSegmentAttribute(Type controllerType)
+    {
+        // Start checking from the parent of the current controller type.
+        var baseType = controllerType.BaseType;
+
+        // Traverse up the inheritance chain.
+        while (baseType != null && baseType != typeof(ControllerBase))
+        {
+            // If the RouteSegmentAttribute is found on a parent controller, return true.
+            if (baseType.GetCustomAttribute<RouteSegmentAttribute>() != null)
+            {
+                return true;
+            }
+
+            // Move to the next level up in the inheritance chain.
+            baseType = baseType.BaseType;
+        }
+
+        // Return false if the RouteSegmentAttribute is not found on any parent controller.
+        return false;
     }
 
 
