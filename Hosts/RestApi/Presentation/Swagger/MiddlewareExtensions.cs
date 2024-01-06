@@ -15,7 +15,10 @@ internal static class MiddlewareExtensions
     /// <param name="app">IApplicationBuilder</param>
     public static void UseSwaggerDocuments(this IApplicationBuilder app)
     {
-        if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "TEST")
+        var environment = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") 
+                          ?? Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+        if (environment == "TEST")
             return;
 
         app.UseSwagger();
