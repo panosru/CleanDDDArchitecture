@@ -1,7 +1,6 @@
-using Aviant.Application.Persistence.Orchestration;
 using Aviant.Application.UseCases;
-using Microsoft.Extensions.DependencyInjection;
-using CleanDDDArchitecture.Domains.Todo.Application.Persistence;
+using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Core;
+using CleanDDDArchitecture.Hosts.RestApi.Core.Routing;
 
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Presentation;
 
@@ -9,13 +8,8 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Hosts.RestApi.Pr
 /// <summary>
 ///     Todo Lists endpoints
 /// </summary>
-public abstract class ApiController : CleanDDDArchitecture.Hosts.RestApi.Core.Controllers.ApiController
-{
-    /// <summary>
-    /// </summary>
-    protected new IOrchestrator<ITodoDbContextWrite> Orchestrator =>
-        HttpContext.RequestServices.GetRequiredService<IOrchestrator<ITodoDbContextWrite>>();
-}
+[RouteSegment(ITodoListDomainConfiguration.RouteSegment)]
+public abstract class ApiController : Todo.Hosts.RestApi.Core.ApiController;
 
 /// <inheritdoc />
 /// <summary>
@@ -23,8 +17,9 @@ public abstract class ApiController : CleanDDDArchitecture.Hosts.RestApi.Core.Co
 /// </summary>
 /// <typeparam name="TUseCase"></typeparam>
 /// <typeparam name="TUseCaseOutput"></typeparam>
+[RouteSegment(ITodoListDomainConfiguration.RouteSegment)]
 public abstract class ApiController<TUseCase, TUseCaseOutput>
-    : CleanDDDArchitecture.Hosts.RestApi.Core.Controllers.ApiController<TUseCase, TUseCaseOutput>
+    : Todo.Hosts.RestApi.Core.ApiController<TUseCase, TUseCaseOutput>
     where TUseCase : class, IUseCase<TUseCaseOutput>
     where TUseCaseOutput : class, IUseCaseOutput
 {

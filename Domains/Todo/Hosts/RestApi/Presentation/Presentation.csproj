@@ -8,7 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\CrossCutting\CrossCutting.csproj" />
       <ProjectReference Include="..\..\..\SubDomains\TodoItem\Hosts\RestApi\Presentation\Presentation.csproj" />
       <ProjectReference Include="..\..\..\SubDomains\TodoList\Hosts\RestApi\Presentation\Presentation.csproj" />
     </ItemGroup>

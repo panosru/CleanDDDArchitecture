@@ -51,28 +51,23 @@ public class CustomRouteConvention : IApplicationModelConvention
         // Traverse the controller's inheritance hierarchy to build the route template.
         while (controllerType != null && controllerType != typeof(ControllerBase))
         {
-            // Skip the custom base controller types to avoid adding their names to the route.
             if (IsBaseControllerType(controllerType))
             {
+                // Skip custom base controller types in route template generation.
                 controllerType = controllerType.BaseType;
                 continue;
             }
 
-            // Check for and use the RouteSegmentAttribute if present.
+            // Check for the presence of the RouteSegmentAttribute.
             var segmentAttribute = controllerType.GetCustomAttribute<RouteSegmentAttribute>();
             if (segmentAttribute != null)
             {
-                // Clear existing segments and use the custom segment from the attribute.
-                // This ensures the route only consists of the segment defined in the attribute.
-                segments.Clear();
+                // Add the custom segment from the attribute to the segments list.
                 segments.Insert(0, segmentAttribute.Segment);
-                break; // No need to check further up the hierarchy.
             }
-
-            // If no RouteSegmentAttribute is present, and the parent type is not a base controller,
-            // use the default controller name as a segment in the route.
-            if (!IsBaseControllerType(controllerType.BaseType))
+            else if (!IsBaseControllerType(controllerType.BaseType))
             {
+                // Use the default controller name as a segment if no RouteSegmentAttribute is present.
                 var segmentName = GetSegmentNameFromType(controllerType);
                 segments.Insert(0, segmentName);
             }
@@ -85,6 +80,7 @@ public class CustomRouteConvention : IApplicationModelConvention
         return string.Join("/", segments);
     }
 
+
     /// <summary>
     /// Checks if a given type is one of the base controller types.
     /// </summary>
@@ -95,6 +91,7 @@ public class CustomRouteConvention : IApplicationModelConvention
         // A controller type is considered a base controller if it is either ApiController or
         // a generic variant of ApiController<TUseCase, TUseCaseOutput>.
         return controllerType == typeof(ApiController) ||
+               controllerType == typeof(ApiSharedController) ||
                (controllerType.IsGenericType && 
                 controllerType.GetGenericTypeDefinition() == typeof(ApiController<,>));
     }
