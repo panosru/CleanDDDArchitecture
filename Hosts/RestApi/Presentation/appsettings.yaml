@@ -9,7 +9,7 @@ SwaggerSettings:
     Major: 1
     Minor: 0
   Info:
-    Title: Rest API
+    Title: Current API
     Description: Swagger with API version, <a href='/swagger.yaml'>download swagger.yaml</a>
     TermsOfService: https://company.com/termsofservice
     Contact:
@@ -19,6 +19,13 @@ SwaggerSettings:
     License:
       Name: MIT
       Url: https://opensource.org/licenses/MIT
+  VersionInfo:
+    V1_1:
+      Title: Beta API
+      Contact:
+        Name: New Guy
+        Email: new.guy@email.com
+        Url: https://support.company.com/helpdesk-v1-1
 
 FeatureManagement:
   Metal: true

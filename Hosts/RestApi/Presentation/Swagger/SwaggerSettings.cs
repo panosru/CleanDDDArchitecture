@@ -25,4 +25,9 @@ internal sealed class SwaggerSettings
     ///     Gets or sets RoutePrefix.
     /// </summary>
     public string? RoutePrefix { get; set; }
+    
+    /// <summary>
+    ///    Gets or sets VersionInfo.
+    /// </summary>
+    public Dictionary<string, OpenApiInfo> VersionInfo { get; set; }
 }
