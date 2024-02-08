@@ -34,13 +34,13 @@ FeatureManagement:
 #  {
 #    // RestAPI Release
 #    "ConnectionStrings": {
-#      "MSSQLConnection": "Server=CleanDDDArchitecture-mssql,1433;Database=CleanDDDArchitecture;User Id=sa;Password=XpU7oFh3HRFoG6;MultipleActiveResultSets=true;TrustServerCertificate=true;",
-#      "PGSQLConnection": "Server=CleanDDDArchitecture-postgres;Port=5432;Database=CleanDDDArchitecture;User ID =panosru;Password=rX3t9bvDT2ftH2;Pooling=true;",
-#      "Hangfire": "Server=CleanDDDArchitecture-mssql,11433;Database=Hangfire;User Id=sa;Password=XpU7oFh3HRFoG6;MultipleActiveResultSets=true;TrustServerCertificate=true;",
-#      "eventstore": "tcp://admin:changeit@CleanDDDArchitecture-eventstore:1113",
-#      "kafka": "CleanDDDArchitecture-kafka:9092",
-#      "loki": "http://CleanDDDArchitecture-loki:3100",
-#      "mongo": "mongodb://CleanDDDArchitecture-mongo:27017"
+#      "MSSQLConnection": "Server=CleanDDDArchitecture-infra-mssql,1433;Database=CleanDDDArchitecture;User Id=sa;Password=XpU7oFh3HRFoG6;MultipleActiveResultSets=true;TrustServerCertificate=true;",
+#      "PGSQLConnection": "Server=CleanDDDArchitecture-infra-postgres;Port=5432;Database=CleanDDDArchitecture;User ID =panosru;Password=rX3t9bvDT2ftH2;Pooling=true;",
+#      "Hangfire": "Server=CleanDDDArchitecture-infra-mssql,11433;Database=Hangfire;User Id=sa;Password=XpU7oFh3HRFoG6;MultipleActiveResultSets=true;TrustServerCertificate=true;",
+#      "eventstore": "tcp://admin:changeit@CleanDDDArchitecture-infra-eventstore:1113",
+#      "kafka": "CleanDDDArchitecture-infra-kafka:9092",
+#      "loki": "http://CleanDDDArchitecture-infra-loki:3100",
+#      "mongo": "mongodb://CleanDDDArchitecture-infra-mongo:27017"
 #    },
 #    
 #    "Jwt": {

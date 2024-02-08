@@ -52,12 +52,12 @@ services:
     ports:
       - "${REST_API_PORT}:443"
     networks:
-      - cleandddarchitecture_mssql_net
-      - cleandddarchitecture_postgres_net
-      - cleandddarchitecture_redis_net
-      - cleandddarchitecture_monitor_net
-      - cleandddarchitecture_kafka_net
-      - cleandddarchitecture_eventstore_net
+      - mssql_net
+      - postgres_net
+      - redis_net
+      - monitor_net
+      - kafka_net
+      - eventstore_net
       - rest_api_net
   
   worker:
@@ -89,17 +89,17 @@ services:
 
 # Networks
 networks:
-  cleandddarchitecture_mssql_net:
+  mssql_net:
     external: true
-  cleandddarchitecture_postgres_net:
+  postgres_net:
     external: true
-  cleandddarchitecture_redis_net:
+  redis_net:
     external: true
-  cleandddarchitecture_monitor_net:
+  monitor_net:
     external: true
-  cleandddarchitecture_kafka_net:
+  kafka_net:
     external: true
-  cleandddarchitecture_eventstore_net:
+  eventstore_net:
     external: true
   rest_api_net:
     driver: bridge

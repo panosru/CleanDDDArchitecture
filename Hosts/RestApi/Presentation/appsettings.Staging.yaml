@@ -22,7 +22,7 @@ Serilog:
         outputTemplate: "{Timestamp:dd-MM-yyyy HH:mm:ss} [{Level:u3}] [{SourceContext}] {Message}{NewLine}{Exception}"
     - Name: GrafanaLoki
       Args:
-        uri: http://CleanDDDArchitecture-loki:3100
+        uri: http://CleanDDDArchitecture-infra-loki:3100
         labels:
           - key: app
             value: web_app

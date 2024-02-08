@@ -25,9 +25,9 @@
       "name": "SQL Server@CleanDDDArchitecture",
       "save-password": true,
       "configuration": {
-        "host": "CleanDDDArchitecture-mssql",
+        "host": "CleanDDDArchitecture-infra-mssql",
         "port": "1433",
-        "url": "jdbc:sqlserver://;serverName\u003dCleanDDDArchitecture-mssql;",
+        "url": "jdbc:sqlserver://;serverName=CleanDDDArchitecture-infra-mssql;username=sa;password=XpU7oFh3HRFoG6",
         "configurationType": "MANUAL",
         "type": "dev",
         "provider-properties": {

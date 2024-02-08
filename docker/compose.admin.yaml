@@ -9,7 +9,7 @@ services:
     ports:
       - ${MSSQLADMIN_PUBLIC_PORT}:${MSSQLADMIN_PORT}
     networks:
-      - cleandddarchitecture_mssql_net
+      - mssql_net
     volumes:
       - dbeaver_data:/opt/cloudbeaver/workspace
       - ./services/cloudbeaver.json:/opt/cloudbeaver/workspace/GlobalConfiguration/.dbeaver/data-sources.json
@@ -23,7 +23,7 @@ services:
     ports:
       - "${PGADMIN_PUBLIC_PORT}:80"
     networks:
-      - cleandddarchitecture_postgres_net
+      - postgres_net
     volumes:
       - pgadmin_data:/var/lib/pgadmin
       - ./services/pgadmin_servers.json:/pgadmin4/servers.json
@@ -35,7 +35,7 @@ services:
     ports:
       - ${REDIS_COMMANDER_PUBLIC_PORT}:${REDIS_COMMANDER_PORT}
     networks:
-      - cleandddarchitecture_redis_net
+      - redis_net
   
   grafana:
     extends:
@@ -44,7 +44,7 @@ services:
     ports:
       - ${GRAFANA_PUBLIC_PORT}:${GRAFANA_PORT}
     networks:
-      - cleandddarchitecture_monitor_net
+      - monitor_net
     volumes:
       - grafana_data:/var/lib/grafana
       - ./services/grafana/provisioning/:/etc/grafana/provisioning/
@@ -56,7 +56,7 @@ services:
 #    ports:
 #      - "${KAFKA_UI_PUBLIC_PORT}:8080"
 #    networks:
-#      - cleandddarchitecture_kafka_net
+#      - kafka_net
   
   kowl:
     extends:
@@ -65,7 +65,7 @@ services:
     ports:
       - "${KOWL_PUBLIC_PORT}:8080"
     networks:
-      - cleandddarchitecture_kafka_net
+      - kafka_net
   
 # Volumes
 volumes:
@@ -78,13 +78,18 @@ volumes:
 
 # Networks
 networks:
-  cleandddarchitecture_mssql_net:
+  mssql_net:
+    name: ${COMPOSE_PROJECT_NAME}_mssql_net
     external: true
-  cleandddarchitecture_postgres_net:
+  postgres_net:
+    name: ${COMPOSE_PROJECT_NAME}_postgres_net
     external: true
-  cleandddarchitecture_redis_net:
+  redis_net:
+    name: ${COMPOSE_PROJECT_NAME}_redis_net
     external: true
-  cleandddarchitecture_monitor_net:
+  monitor_net:
+    name: ${COMPOSE_PROJECT_NAME}_monitor_net
     external: true
-  cleandddarchitecture_kafka_net:
+  kafka_net:
+    name: ${COMPOSE_PROJECT_NAME}_kafka_net
     external: true
