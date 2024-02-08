@@ -23,6 +23,9 @@ internal static class MiddlewareExtensions
 
         app.UseSwagger();
 
-        app.UseSwaggerUI();
+        app.UseSwaggerUI(options =>
+        {
+            options.InjectStylesheet("/css/swagger-ui/dark-theme.css");
+        });
     }
 }

@@ -30,6 +30,7 @@
     <_ContentIncludedByDefault Remove="Pages\Shared\_Layout.cshtml" />
     <_ContentIncludedByDefault Remove="Pages\Shared\_ValidationScriptsPartial.cshtml" />
     <_ContentIncludedByDefault Remove="Components\CultureSelector.razor" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\swagger-ui\dark-theme.css" />
   </ItemGroup>
   
   <ItemGroup>
