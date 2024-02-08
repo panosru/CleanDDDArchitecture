@@ -1,7 +1,7 @@
 # See: https://github.com/cloudhut/kowl/tree/master/docs/config for reference config files.
 kafka:
   brokers:
-    - CleanDDDArchitecture-kafka:9092
+    - CleanDDDArchitecture-infra-kafka:9092
 
 server:
   listenPort: 8080

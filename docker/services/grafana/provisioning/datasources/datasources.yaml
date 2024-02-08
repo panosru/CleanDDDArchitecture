@@ -5,7 +5,7 @@ datasources:
   type: loki
   access: proxy
   orgId: 1
-  url: http://CleanDDDArchitecture-loki:3100
+  url: http://CleanDDDArchitecture-infra-loki:3100
   basicAuth: false
   isDefault: true
   version: 1
