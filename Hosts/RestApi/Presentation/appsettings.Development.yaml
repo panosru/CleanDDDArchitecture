@@ -1,4 +1,7 @@
 ---
+EmailSettings:
+  FromName: "Clean DDD Architecture"
+  FromEmail: "no-reply@cleanddd.com"
 
 Serilog:
   Using:

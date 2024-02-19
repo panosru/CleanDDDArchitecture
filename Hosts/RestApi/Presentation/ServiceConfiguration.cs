@@ -22,6 +22,7 @@ public static class ServiceConfiguration
         services.AddSingleton(configuration);
         DependencyInjectionRegistry.CurrentEnvironment = environment;
 
+        services.AddEmailService(configuration);
         services.AddAutoMapperServices();
         services.AddValidatorServices();
         services.AddDataProtectionServices();
