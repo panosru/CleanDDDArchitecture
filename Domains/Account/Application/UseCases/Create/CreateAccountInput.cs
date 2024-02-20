@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Aviant.Application.Commands;
 using Aviant.Application.UseCases;
 using Aviant.Core.Collections.Extensions;
@@ -8,7 +9,6 @@ using Microsoft.AspNetCore.Identity;
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 
 public sealed record CreateAccountInput(
-    string              UserName,
     string              Password,
     string              FirstName,
     string              LastName,
@@ -16,8 +16,6 @@ public sealed record CreateAccountInput(
     IEnumerable<string> Roles,
     bool                EmailConfirmed) : UseCaseInput
 {
-    internal string UserName { get; } = UserName;
-
     internal string Password { get; } = Password;
 
     internal string FirstName { get; } = FirstName;
@@ -35,13 +33,42 @@ public sealed record CreateAccountInput(
     public sealed class CreateAccountInputValidator : CommandValidator<CreateAccountInput>
     {
         private readonly UserManager<AccountUser> _userManager;
+        private readonly EmailAddressAttribute _emailAddressAttribute = new();
 
         public CreateAccountInputValidator(UserManager<AccountUser> userManager)
         {
             _userManager = userManager;
 
+            RuleFor(v => v.Email)
+                .CustomAsync(CheckEmailAsync);
+            
             RuleFor(v => v.Password)
                .CustomAsync(CheckPasswordAsync);
+        }
+
+        private async Task<bool> CheckEmailAsync(
+            string email,
+            ValidationContext<CreateAccountInput> context,
+            CancellationToken cancellationToken)
+        {
+            // Check if the email is valid
+            if (string.IsNullOrEmpty(email) || !_emailAddressAttribute.IsValid(email))
+            {
+                context.AddFailure(_userManager.ErrorDescriber.InvalidEmail(email).Description);
+
+                return false;
+            }
+            
+            // Check if the email is unique
+            if (await _userManager.FindByEmailAsync(email)
+               .ConfigureAwait(false) is not null)
+            {
+                context.AddFailure(_userManager.ErrorDescriber.DuplicateEmail(email).Description);
+                
+                return false;
+            }
+            
+            return true;
         }
 
         private async Task<bool> CheckPasswordAsync(

@@ -64,7 +64,6 @@ public sealed class Account
     {
         await UseCase.ExecuteAsync(
                 new CreateAccountInput(
-                    dto.UserName,
                     dto.Password,
                     dto.FirstName,
                     dto.LastName,

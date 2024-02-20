@@ -16,7 +16,6 @@ public sealed class AccountCreateUseCase
 
         OrchestratorResponse requestResult = await Orchestrator.SendCommandAsync(
                 new CreateAccountCommand(
-                    input.UserName,
                     input.Password,
                     input.FirstName,
                     input.LastName,

@@ -13,7 +13,6 @@ internal readonly struct AccountCreateResponse
     /// <param name="accountAggregate"></param>
     public AccountCreateResponse(AccountAggregate accountAggregate)
     {
-        Username  = accountAggregate.UserName;
         FirstName = accountAggregate.FirstName;
         LastName  = accountAggregate.LastName;
         Email     = accountAggregate.Email;
@@ -23,10 +22,6 @@ internal readonly struct AccountCreateResponse
     /// <summary>
     /// </summary>
     public string Message { get; }
-
-    /// <summary>
-    /// </summary>
-    public string Username { get; }
 
     /// <summary>
     /// </summary>
