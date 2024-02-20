@@ -1,7 +1,6 @@
-Jwt:
-  Issuer: "https://localhost:8091"
-  Subject: "DemoJwtSubject"
-  Access:
-    ExpirationDurationInMinutes: 10080 # 7 days
-  Refresh:
-    ExpirationDurationInMinutes: 28800 # 20 days
+---
+Auth:
+  IdentityOptions:
+    Lockout:
+      DefaultLockoutTimeSpanInMinutes: 1
+      MaxFailedAccessAttempts: 5

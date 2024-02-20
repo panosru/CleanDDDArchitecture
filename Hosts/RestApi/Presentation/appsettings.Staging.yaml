@@ -1,4 +1,12 @@
 ---
+AllowedHosts: "localhost"
+
+AppSettings:
+  BaseUrl: "https://localhost"
+  Emails:
+    Contact: "info@localhost"
+    NoReply: "no-reply@localhost"
+  
 
 Serilog:
   Using:
