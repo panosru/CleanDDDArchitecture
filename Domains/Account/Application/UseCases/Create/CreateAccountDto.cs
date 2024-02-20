@@ -5,9 +5,6 @@ namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 public struct CreateAccountDto
 {
     [Required]
-    public string UserName { get; set; }
-
-    [Required]
     public string Password { get; set; }
 
     [Required]

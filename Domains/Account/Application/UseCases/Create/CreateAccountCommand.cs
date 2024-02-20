@@ -1,10 +1,11 @@
 using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
 using Aviant.Application.EventSourcing.Commands;
+using CleanDDDArchitecture.Domains.Account.Application.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 
 public sealed record CreateAccountCommand(
-    string              UserName,
     string              Password,
     string              FirstName,
     string              LastName,
@@ -12,8 +13,6 @@ public sealed record CreateAccountCommand(
     IEnumerable<string> Roles,
     bool                EmailConfirmed) : Command<AccountAggregate, AccountAggregateId>
 {
-    private string UserName { get; } = UserName;
-
     private string Password { get; } = Password;
 
     private string FirstName { get; } = FirstName;
@@ -31,18 +30,29 @@ public sealed record CreateAccountCommand(
     public sealed class CreateAccountHandler
         : CommandHandler<CreateAccountCommand, AccountAggregate, AccountAggregateId>
     {
+        private readonly UserManager<AccountUser> _userManager;
+
+        public CreateAccountHandler(UserManager<AccountUser> userManager) => 
+            _userManager = userManager;
+
         public override Task<AccountAggregate> Handle(
             CreateAccountCommand command,
-            CancellationToken    cancellationToken) =>
-            Task.FromResult(
+            CancellationToken cancellationToken)
+        {
+            if (!_userManager.SupportsUserEmail)
+                throw new NotSupportedException("Identity requires a user store with email support.");
+            
+            return Task.FromResult(
                 AccountAggregate.Create(
-                    command.UserName,
+                    command.Email, // Use the email as the username
                     command.Password,
                     command.FirstName,
                     command.LastName,
                     command.Email,
                     command.Roles,
                     command.EmailConfirmed));
+        }
+            
     }
 
     #endregion

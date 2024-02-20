@@ -1,10 +1,19 @@
 // ReSharper disable MemberCanBeInternal
 
+using System.Text;
+using Aviant.Application.ApplicationEvents;
+using Aviant.Application.Jobs;
 using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
 using Aviant.Core.EventSourcing.DomainEvents;
 using Aviant.Core.EventSourcing.EventBus;
 using CleanDDDArchitecture.Domains.Account.Application.Identity;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Jobs;
+using CleanDDDArchitecture.Domains.Shared.Core;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Options;
 
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Events;
 
@@ -50,9 +59,16 @@ public sealed record AccountCreatedDomainEvent : DomainEvent<AccountAggregate, A
     internal sealed class AccountCreatedDomainEventConsumer : DomainEventHandler<AccountCreatedDomainEvent>
     {
         private readonly UserManager<AccountUser> _userManager;
+        private readonly IJobRunner _jobRunner;
 
-        public AccountCreatedDomainEventConsumer(UserManager<AccountUser> userManager) =>
+        public AccountCreatedDomainEventConsumer(
+            UserManager<AccountUser> userManager,
+            IJobRunner jobRunner)
+        {
             _userManager = userManager;
+            _jobRunner = jobRunner;
+        }
+            
 
         public override async Task Handle(
             EventReceived<AccountCreatedDomainEvent> @event,
@@ -76,10 +92,22 @@ public sealed record AccountCreatedDomainEvent : DomainEvent<AccountAggregate, A
                .ConfigureAwait(false);
 
             if (userResult.Succeeded)
+            {
                 await _userManager.AddToRolesAsync(user, @event.Event.Roles)
-                   .ConfigureAwait(false);
-            // else
-            //TODO: raise failed event
+                    .ConfigureAwait(false);
+
+                // Send email confirmation link
+                _jobRunner.Run<SendEmailConfirmJob, SendEmailConfirmJobOptions>(
+                    options =>
+                    {
+                        options.Email = user.Email;
+                    });
+            }
+            else
+            {
+                //TODO: raise failed event
+                Console.WriteLine($"User was not created: {userResult.ToString()}");
+            }
         }
     }
 
