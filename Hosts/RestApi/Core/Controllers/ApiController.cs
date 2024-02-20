@@ -31,7 +31,7 @@ public abstract class ApiController : ApiSharedController
 /// </summary>
 /// <typeparam name="TUseCase"></typeparam>
 /// <typeparam name="TUseCaseOutput"></typeparam>
-public abstract class ApiController<TUseCase, TUseCaseOutput> : ApiSharedController
+public abstract class ApiController<TUseCase, TUseCaseOutput> : ApiSharedController, IUseCaseOutput
     where TUseCase : class, IUseCase<TUseCaseOutput>
     where TUseCaseOutput : class, IUseCaseOutput
 {
@@ -40,4 +40,10 @@ public abstract class ApiController<TUseCase, TUseCaseOutput> : ApiSharedControl
     protected ApiController(TUseCase useCase) => UseCase = useCase;
 
     protected IActionResult ViewModel { get; set; } = new NoContentResult();
+    
+    /// <summary>
+    /// </summary>
+    /// <param name="object"></param>
+    void IUseCaseOutput.BadRequest(object? @object) =>
+        ViewModel = BadRequest(@object);
 }
