@@ -8,6 +8,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\..\Library\Aviant\src\DDD\Infrastructure\Infrastructure.csproj" />
         <ProjectReference Include="..\..\..\Library\Aviant\src\Email\Infrastructure\Infrastructure.csproj" />
+        <ProjectReference Include="..\..\..\Library\Aviant\src\Jobs\Infrastructure\Infrastructure.csproj" />
         <ProjectReference Include="..\..\..\Library\Aviant\src\Kernel\Infrastructure\Infrastructure.csproj" />
         <ProjectReference Include="..\Application\Application.csproj" />
     </ItemGroup>
