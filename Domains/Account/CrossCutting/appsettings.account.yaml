@@ -2,17 +2,37 @@
 eventsTopicName: "CleanDDDArchitectureEvents"
 eventsTopicGroupName: "cleandddarchitecture-api-events-consumer"
 
-Jwt:
-  Audience: "CleanDDDArchitecture.Hosts.RestApi.PresentationAPI"
-  ClockSkewInMinutes: 5
-  Access:
-    ExpirationDurationInMinutes: 15
-  Refresh:
-    ExpirationDurationInMinutes: 10080 # 7 days
+Auth:
+  Cookie:
+    Name: "CleanDDDArchitecture.Hosts.RestApi.PresentationAPI"
+    ExpireTimeSpanInMinutes: 15
+    LoginPath: "/api/identity/authenticate"
+    LogoutPath: "/api/identity/logout"
+    SlidingExpiration: true
+  IdentityOptions:
+    Password:
+      RequireDigit: true
+      RequiredLength: 5
+      RequireLowercase: true
+      RequireUppercase: true
+      RequireNonAlphanumeric: true
+    Lockout:
+      DefaultLockoutTimeSpanInMinutes: 10
+      MaxFailedAccessAttempts: 3
+    User:
+      RequireUniqueEmail: true
+    SignIn:
+      RequireConfirmedEmail: true
+      RequireConfirmedPhoneNumber: false
+      RequireConfirmedAccount: false
 
 FeatureManagement:
   AccountCreate: true
   AccountAuthentication: true
+  Account2fa: true
+  AccountForgotPassword: true
+  AccountResetPassword: true
+  AccountRefreshToken: true
   AccountConfirmEmail: true
   AccountGetBy: true
   AccountProfile: true

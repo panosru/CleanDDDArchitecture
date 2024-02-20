@@ -1,5 +1,14 @@
 ---
-AllowedHosts: "*"
+AppSettings:
+  Title: Clean DDD Architecture
+  SocialMedia:
+    Facebook: "Fb"
+    X: "x"
+    LinkedIn: "In"
+  Legal:
+    TermsOfService: "/terms"
+    PrivacyPolicy: "/privacy"
+
 UseInMemoryDatabase: false
 
 SwaggerSettings:
@@ -42,15 +51,11 @@ FeatureManagement:
 #      "loki": "http://CleanDDDArchitecture-infra-loki:3100",
 #      "mongo": "mongodb://CleanDDDArchitecture-infra-mongo:27017"
 #    },
-#    
-#    "Jwt": {
-#      "Access": {
-#        "Key512Bit": "Nioi18q5M4dQKM92Pho2WwXBIis3f257Ped4J4m2gpIRaoS0jZBMY8Kp0EvNuQsa",
-#        "Key256Bit": "yulEJ2CRbyvzTbyorcZoiznSlfZ4SE5T",
-#      },
-#      "Refresh": {
-#        "Key512Bit": "RL3tJAjSjS55nGp0ZxjdhqQxPWjKIogldPEQr0xPJHE6le5FoEC4Y2N2bjRVaA0n",
-#        "Key256Bit": "rnLzkCWxRVdNPTxUIAuw5q8LPGOACJ6Z"
-#      }
+#    "EmailSettings": {
+#      "SmtpHost": "192.168.1.5",
+#      "SmtpPort": 1025,
+#      "EnableSsl": false,
+#      "SmtpUsername": "",
+#      "SmtpPassword": ""
 #    }
 #  }

@@ -1,4 +1,11 @@
 ---
+AllowedHosts: "mydomain.com"
+
+AppSettings:
+  BaseUrl: "https://mydomain.com"
+  Emails:
+    Contact: "info@mydomain.com"
+    NoReply: "no-reply@mydomain.com"
 
 Serilog:
   Using:

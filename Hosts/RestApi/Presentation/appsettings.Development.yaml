@@ -1,8 +1,12 @@
 ---
-EmailSettings:
-  FromName: "Clean DDD Architecture"
-  FromEmail: "no-reply@cleanddd.com"
+AllowedHosts: "*"
 
+AppSettings:
+  BaseUrl: "https://localhost:8091"
+  Emails:
+    Contact: "info@localhost"
+    NoReply: "no-reply@localhost"
+    
 Serilog:
   Using:
     - Serilog.Sinks.Console
