@@ -18,29 +18,22 @@ public static class Email
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // Get the configuration properties
-        var smtpHost = configuration["EmailSettings:SmtpHost"];
-        var smtpPort = int.Parse(configuration["EmailSettings:SmtpPort"]);
-        var enableSsl = bool.Parse(configuration["EmailSettings:EnableSsl"]);
-        var smtpUsername = configuration["EmailSettings:SmtpUsername"];
-        var smtpPassword = configuration["EmailSettings:SmtpPassword"];
-        var fromName = configuration["EmailSettings:FromName"];
-        var fromEmail = configuration["EmailSettings:FromEmail"];
-        
         services.AddSingleton<ISmtpClientFactory, SmtpClientFactory>(
             provider => new SmtpClientFactory(
-                smtpHost,
-                smtpPort,
-                enableSsl,
-                smtpUsername,
-                smtpPassword));
+                configuration["EmailSettings:SmtpHost"],
+                int.Parse(configuration["EmailSettings:SmtpPort"]),
+                bool.Parse(configuration["EmailSettings:EnableSsl"]),
+                configuration["EmailSettings:SmtpUsername"],
+                configuration["EmailSettings:SmtpPassword"]));
         
         services.AddTransient<IEmailService, EmailService>(
             provider =>
             {
                 var smtpClientFactory = provider.GetRequiredService<ISmtpClientFactory>();
 
-                return new EmailService(smtpClientFactory, fromName, fromEmail);
+                return new EmailService(smtpClientFactory,
+                    configuration["AppSettings:Title"],
+                    configuration["AppSettings:Emails:NoReply"]);
             });
         
         return services;
