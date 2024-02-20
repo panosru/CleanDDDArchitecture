@@ -50,14 +50,13 @@ public static class AccountCrossCutting
         // Create default user data
         CreateAccountDto accountDto = new()
         {
-            UserName  = "admin",
             Email     = "admin@localhost.com",
             FirstName = "Panagiotis",
             LastName  = "Kosmidis",
             Password  = "Administrator1!"
         };
 
-        if (userManager.Users.All(u => u.UserName != accountDto.UserName))
+        if (userManager.Users.All(u => u.UserName != accountDto.Email))
         {
             var orchestrator =
                 serviceProvider.GetRequiredService<IOrchestrator<AccountAggregate, AccountAggregateId>>();
@@ -67,7 +66,6 @@ public static class AccountCrossCutting
             OrchestratorResponse requestResult = await orchestrator
                .SendCommandAsync(
                     new CreateAccountCommand(
-                        accountDto.UserName,
                         accountDto.Password,
                         accountDto.FirstName,
                         accountDto.LastName,
@@ -77,7 +75,7 @@ public static class AccountCrossCutting
                .ConfigureAwait(false);
 
             if (!requestResult.Succeeded)
-                throw new NotSupportedException($"Unable to create default user \"{accountDto.UserName}\".");
+                throw new NotSupportedException($"Unable to create default user \"{accountDto.Email}\".");
         }
     }
 
