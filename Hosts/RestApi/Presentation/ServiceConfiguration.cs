@@ -1,4 +1,5 @@
 using Aviant.Infrastructure.CrossCutting;
+using CleanDDDArchitecture.Domains.Shared.Core;
 using CleanDDDArchitecture.Hosts.RestApi.Presentation.ServiceExtensions;
 
 namespace CleanDDDArchitecture.Hosts.RestApi.Presentation;
@@ -21,6 +22,10 @@ public static class ServiceConfiguration
     {
         services.AddSingleton(configuration);
         DependencyInjectionRegistry.CurrentEnvironment = environment;
+        
+        // Bind App Settings
+        var appSettings = configuration.GetSection("AppSettings");
+        services.Configure<AppSettings>(appSettings);
 
         services.AddEmailService(configuration);
         services.AddAutoMapperServices();
