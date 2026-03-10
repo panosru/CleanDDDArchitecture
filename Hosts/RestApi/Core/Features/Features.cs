@@ -8,6 +8,12 @@ public enum Features
 
     AccountAuthentication,
 
+    AccountForgotPassword,
+
+    AccountResetPassword,
+
+    AccountChangePassword,
+
     AccountRefreshToken,
 
     AccountConfirmEmail,
