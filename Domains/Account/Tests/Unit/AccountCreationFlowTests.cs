@@ -132,6 +132,15 @@ public sealed class AccountCreationFlowTests
             string password,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
+        public Task<EmailConfirmationTicket?> GenerateEmailConfirmationAsync(
+            string email,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<EmailChangeTicket?> GenerateEmailChangeAsync(
+            Guid userId,
+            string newEmail,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
         public Task<PasswordResetTicket?> GeneratePasswordResetAsync(
             string email,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -158,6 +167,12 @@ public sealed class AccountCreationFlowTests
 
             return Task.FromResult(IdentityResult.Success());
         }
+
+        public Task<IdentityResult> ConfirmEmailChangeAsync(
+            string currentEmail,
+            string newEmail,
+            string token,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<string> GetUserNameAsync(Guid userId, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
