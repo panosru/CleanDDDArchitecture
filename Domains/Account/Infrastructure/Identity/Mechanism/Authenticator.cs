@@ -41,6 +41,9 @@ internal sealed class Authenticator
         if (user is null)
             return null;
 
+        if (user.Status != AccountStatus.Active)
+            return null;
+
         if (await IsUserLockedOutAsync(user).ConfigureAwait(false))
             return null;
 

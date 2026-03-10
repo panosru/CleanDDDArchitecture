@@ -9,10 +9,14 @@ using CleanDDDArchitecture.Domains.Account.Application.Persistence;
 using CleanDDDArchitecture.Domains.Account.Application.Repositories;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangePassword;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminSuspend;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminUnlock;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminUnsuspend;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangeEmailConfirm;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangeEmailRequest;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.Deactivate;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ForgotPassword;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Logout;
@@ -119,6 +123,9 @@ public static class AccountDependencyInjectionRegistry
                     options.Password.RequireLowercase       = true;
                     options.Password.RequireUppercase       = true;
                     options.Password.RequireNonAlphanumeric = true;
+                    options.Lockout.AllowedForNewUsers      = true;
+                    options.Lockout.DefaultLockoutTimeSpan  = TimeSpan.FromMinutes(10);
+                    options.Lockout.MaxFailedAccessAttempts = 3;
                 })
            .AddRoleManager<RoleManager<AccountRole>>()
            .AddEntityFrameworkStores<AccountDbContextWrite>()
@@ -127,6 +134,7 @@ public static class AccountDependencyInjectionRegistry
         services.AddScoped<IdentityService>();
         services.AddScoped<IIdentityService>(provider => provider.GetRequiredService<IdentityService>());
         services.AddScoped<IAccountAuthenticationService>(provider => provider.GetRequiredService<IdentityService>());
+        services.AddScoped<IAccountAdministrationService>(provider => provider.GetRequiredService<IdentityService>());
 
         services
            .AddAuthentication(
@@ -221,6 +229,10 @@ public static class AccountDependencyInjectionRegistry
                 });
 
         services.AddScoped<AuthenticateUseCase>();
+        services.AddScoped<DeactivateUseCase>();
+        services.AddScoped<AdminSuspendUseCase>();
+        services.AddScoped<AdminUnsuspendUseCase>();
+        services.AddScoped<AdminUnlockUseCase>();
         services.AddScoped<ForgotPasswordUseCase>();
         services.AddScoped<ResetPasswordUseCase>();
         services.AddScoped<ChangePasswordUseCase>();

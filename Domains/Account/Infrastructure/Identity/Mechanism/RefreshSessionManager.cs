@@ -103,7 +103,7 @@ internal sealed class RefreshSessionManager
             .SingleOrDefaultAsync(item => item.Id == principal.UserId, cancellationToken)
             .ConfigureAwait(false);
 
-        if (user is null || !user.EmailConfirmed)
+        if (user is null || !user.EmailConfirmed || user.Status != AccountStatus.Active)
             return null;
 
         var nextSessionId = Guid.NewGuid();
