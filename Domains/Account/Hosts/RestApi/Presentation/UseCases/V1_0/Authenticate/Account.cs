@@ -54,7 +54,12 @@ public sealed class Account
     [Consumes(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> Authenticate([FromBody] AuthenticateDto dto)
     {
-        await UseCase.ExecuteAsync(new AuthenticateInput(dto.Username, dto.Password))
+        await UseCase.ExecuteAsync(
+                new AuthenticateInput(
+                    dto.Username,
+                    dto.Password,
+                    dto.TwoFactorCode,
+                    dto.RecoveryCode))
            .ConfigureAwait(false);
 
         return ViewModel;

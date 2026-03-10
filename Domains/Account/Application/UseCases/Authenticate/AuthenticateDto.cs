@@ -11,4 +11,8 @@ public struct AuthenticateDto
 
     [Required]
     public string Password { get; set; }
+
+    public string? TwoFactorCode { get; set; }
+
+    public string? RecoveryCode { get; set; }
 }
