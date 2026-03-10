@@ -123,8 +123,32 @@ public sealed class EmailLifecycleTests
 
         public string? Token { get; private set; }
 
-        public Task<object?> AuthenticateAsync(string username, string password, CancellationToken cancellationToken = default) =>
+        public Task<object?> AuthenticateAsync(
+            string username,
+            string password,
+            string? twoFactorCode = null,
+            string? recoveryCode = null,
+            CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
+
+        public Task<MfaSetupTicket?> BeginMfaSetupAsync(
+            Guid userId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<MfaRecoveryCodesTicket?> EnableMfaAsync(
+            Guid userId,
+            string code,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IdentityResult> DisableMfaAsync(
+            Guid userId,
+            string password,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<MfaRecoveryCodesTicket?> RegenerateRecoveryCodesAsync(
+            Guid userId,
+            string password,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<EmailConfirmationTicket?> GenerateEmailConfirmationAsync(string email, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
