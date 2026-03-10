@@ -7,8 +7,9 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Identity.Mechanism
 /// <summary>
 /// Confirm user's email
 /// </summary>
-internal class ConfirmEmail
+internal sealed class ConfirmEmail
 {
+    private static readonly string[] InvalidEmailErrors = ["Invalid email."];
     private readonly UserManager<AccountUser> _userManager;
 
     /// <summary>
@@ -34,11 +35,11 @@ internal class ConfirmEmail
         // Find user by email
         var user = await FindUserByEmailAsync(email);
         if (user is null)
-            return IdentityResult.Failure(new[] { "Invalid email." });
+            return IdentityResult.Failure(InvalidEmailErrors);
 
         // Check if email is already confirmed
         if (user.EmailConfirmed)
-            return IdentityResult.Failure(new[] { "Email already confirmed." });
+            return IdentityResult.Success();
 
         // Attempt to confirm email
         return await ConfirmUserEmailAsync(user, token);

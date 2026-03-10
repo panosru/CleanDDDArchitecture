@@ -1,11 +1,11 @@
-using Aviant.Application.Identity;
 using Aviant.Application.Orchestration;
-using Aviant.Application.UseCases;
+using Aviant.Application.EventSourcing.UseCases;
+using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
 
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
 
 public sealed class ConfirmEmailUseCase
-    : UseCase<ConfirmEmailInput, IConfirmEmailOutput>
+    : UseCase<ConfirmEmailInput, IConfirmEmailOutput, AccountAggregate, AccountAggregateId>
 {
     public override async Task ExecuteAsync(
         ConfirmEmailInput input,
@@ -19,17 +19,8 @@ public sealed class ConfirmEmailUseCase
            .ConfigureAwait(false);
 
         if (requestResult.Succeeded)
-        {
-            var identityResult = requestResult.Payload<IdentityResult>();
-
-            if (identityResult.Succeeded)
-                Output.Ok();
-            else
-                Output.Invalid(identityResult.Errors.First());
-        }
+            Output.Ok();
         else
-        {
             Output.Invalid(requestResult.Messages.First());
-        }
     }
 }

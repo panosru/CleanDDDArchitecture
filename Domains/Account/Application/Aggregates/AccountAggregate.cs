@@ -3,6 +3,8 @@
 using Aviant.Core.Entities;
 using Aviant.Core.EventSourcing.Aggregates;
 using Aviant.Core.EventSourcing.DomainEvents;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangeEmail.Events;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail.Events;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Events;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails.Events;
 
@@ -21,7 +23,6 @@ public sealed class AccountAggregate
     private AccountAggregate(
         AccountAggregateId  aggregateId,
         string              userName,
-        string              password,
         string              firstName,
         string              lastName,
         string              email,
@@ -30,7 +31,6 @@ public sealed class AccountAggregate
         : base(aggregateId)
     {
         UserName       = userName;
-        Password       = password;
         FirstName      = firstName;
         LastName       = lastName;
         Email          = email;
@@ -41,8 +41,6 @@ public sealed class AccountAggregate
     }
 
     public string UserName { get; private set; }
-
-    public string Password { get; private set; }
 
     public string FirstName { get; private set; }
 
@@ -63,20 +61,17 @@ public sealed class AccountAggregate
     #endregion
 
     internal static AccountAggregate Create(
+        Guid                id,
         string              username,
-        string              password,
         string              firstname,
         string              lastname,
         string              email,
         IEnumerable<string> roles,
         bool                emailConfirmed)
     {
-        AccountAggregateId id = new(Guid.NewGuid());
-
         return new AccountAggregate(
-            id,
+            new AccountAggregateId(id),
             username,
-            password,
             firstname,
             lastname,
             email,
@@ -96,6 +91,28 @@ public sealed class AccountAggregate
         AddEvent(new AccountUpdatedDomainEvent(this));
     }
 
+    internal void ConfirmEmail()
+    {
+        if (EmailConfirmed)
+            return;
+
+        EmailConfirmed = true;
+
+        AddEvent(new AccountEmailConfirmedDomainEvent(this));
+    }
+
+    internal void ChangeEmail(string email)
+    {
+        if (string.Equals(Email, email, StringComparison.OrdinalIgnoreCase))
+            return;
+
+        UserName = email;
+        Email = email;
+        EmailConfirmed = true;
+
+        AddEvent(new AccountEmailChangedDomainEvent(this));
+    }
+
     protected override void Apply(IDomainEvent<AccountAggregateId> @event)
     {
         switch (@event)
@@ -103,7 +120,6 @@ public sealed class AccountAggregate
             case AccountCreatedDomainEvent c:
                 Id             = c.AggregateId;
                 UserName       = c.UserName;
-                Password       = c.Password;
                 FirstName      = c.FirstName;
                 LastName       = c.LastName;
                 Email          = c.Email;
@@ -115,6 +131,16 @@ public sealed class AccountAggregate
                 FirstName = u.FirstName;
                 LastName  = u.LastName;
                 Email     = u.Email;
+                break;
+
+            case AccountEmailConfirmedDomainEvent c:
+                EmailConfirmed = c.EmailConfirmed;
+                break;
+
+            case AccountEmailChangedDomainEvent c:
+                UserName = c.UserName;
+                Email = c.Email;
+                EmailConfirmed = c.EmailConfirmed;
                 break;
         }
     }

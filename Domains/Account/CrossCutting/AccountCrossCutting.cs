@@ -10,7 +10,10 @@ using Aviant.Core.Enum;
 using CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contexts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using CleanDDDArchitecture.Domains.Shared.Core.Identity;
 
 namespace CleanDDDArchitecture.Domains.Account.CrossCutting;
@@ -37,9 +40,19 @@ public static class AccountCrossCutting
     {
         var context = serviceProvider.GetRequiredService<AccountDbContextWrite>();
 
-        if (context.Database.IsSqlServer())
-            await context.Database.MigrateAsync()
-               .ConfigureAwait(false);
+        if (context.Database.IsNpgsql())
+        {
+            var hasMigrations = context.GetService<IMigrationsAssembly>().Migrations.Any();
+
+            if (hasMigrations)
+                await context.Database.MigrateAsync().ConfigureAwait(false);
+            else
+                await context.Database.EnsureCreatedAsync().ConfigureAwait(false);
+        }
+
+        var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+        if (!configuration.GetValue<bool>("UnsafeDefaults:SeedDefaultUser"))
+            return;
 
         await PopulateDefaultAccountRolesAsync(serviceProvider)
            .ConfigureAwait(false);
