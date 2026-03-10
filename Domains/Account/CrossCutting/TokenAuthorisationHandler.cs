@@ -12,7 +12,12 @@ public sealed class TokenAuthorizationHandler
         AuthorizationHandlerContext context,
         IAuthorizationRequirement requirement)
     {
-        var httpContext = (context.Resource as AuthorizationFilterContext)?.HttpContext;
+        var httpContext = context.Resource switch
+        {
+            AuthorizationFilterContext authorizationFilterContext => authorizationFilterContext.HttpContext,
+            HttpContext directHttpContext => directHttpContext,
+            _ => null
+        };
 
         if (httpContext == null)
         {
@@ -45,4 +50,3 @@ public sealed class TokenAuthorizationHandler
         return Task.CompletedTask;
     }
 }
-

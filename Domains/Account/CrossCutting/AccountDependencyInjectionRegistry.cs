@@ -11,7 +11,12 @@ using CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.Logout;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.LogoutAll;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Profile;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.RefreshToken;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.RevokeSession;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.Sessions;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails;
 using Aviant.Application.EventSourcing.EventBus;
 using Aviant.Application.Identity;
@@ -48,7 +53,7 @@ public static class AccountDependencyInjectionRegistry
 
     static AccountDependencyInjectionRegistry() => Configuration =
         DependencyInjectionRegistry.GetDomainConfiguration(
-            CurrentDomain.ToLower());
+            CurrentDomain.ToLowerInvariant());
 
     private static IConfiguration Configuration { get; }
 
@@ -61,6 +66,7 @@ public static class AccountDependencyInjectionRegistry
     
     public static IServiceCollection AddAccountDomain(this IServiceCollection services)
     {
+        ValidateJwtConfiguration(Configuration);
         services.AddTransient<IAccountDomainConfiguration>(_ => new AccountDomainConfiguration(Configuration));
 
         // By default, Microsoft has some legacy claim mapping that converts
@@ -69,8 +75,8 @@ public static class AccountDependencyInjectionRegistry
 
         services.AddDbContext<AccountDbContextWrite>(
             options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("MSSQLConnection"),
+                options.UseNpgsql(
+                    Configuration.GetConnectionString("PGSQLConnection"),
                     b =>
                         b.MigrationsAssembly(AccountCrossCutting.AccountInfrastructureAssembly.FullName)));
 
@@ -80,8 +86,8 @@ public static class AccountDependencyInjectionRegistry
 
         services.AddDbContext<AccountDbContextRead>(
             options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("MSSQLConnection"),
+                options.UseNpgsql(
+                    Configuration.GetConnectionString("PGSQLConnection"),
                     b =>
                         b.MigrationsAssembly(AccountCrossCutting.AccountApplicationAssembly.FullName)));
 
@@ -105,9 +111,12 @@ public static class AccountDependencyInjectionRegistry
                     options.Password.RequireNonAlphanumeric = true;
                 })
            .AddRoleManager<RoleManager<AccountRole>>()
-           .AddEntityFrameworkStores<AccountDbContextWrite>();
+           .AddEntityFrameworkStores<AccountDbContextWrite>()
+           .AddDefaultTokenProviders();
 
-        services.AddTransient<IIdentityService, IdentityService>();
+        services.AddScoped<IdentityService>();
+        services.AddScoped<IIdentityService>(provider => provider.GetRequiredService<IdentityService>());
+        services.AddScoped<IAccountAuthenticationService>(provider => provider.GetRequiredService<IdentityService>());
 
         services
            .AddAuthentication(
@@ -192,20 +201,30 @@ public static class AccountDependencyInjectionRegistry
 
         services.AddSingleton<IEventConsumerFactory, EventConsumerFactory>();
 
-        services.AddHostedService(
-            ctx =>
-            {
-                var factory = ctx.GetRequiredService<IEventConsumerFactory>();
+        if (Configuration.GetValue("EventSourcing:EnableConsumer", false))
+            services.AddHostedService(
+                ctx =>
+                {
+                    var factory = ctx.GetRequiredService<IEventConsumerFactory>();
 
-                return new EventsConsumerWorker(factory);
-            });
+                    return new EventsConsumerWorker(factory);
+                });
 
-        services.AddScoped(typeof(AuthenticateUseCase));
-        services.AddScoped(typeof(ConfirmEmailUseCase));
-        services.AddScoped(typeof(AccountCreateUseCase));
-        services.AddScoped(typeof(UpdateDetailsUseCase));
-        services.AddScoped(typeof(GetAccountUseCase));
-        services.AddScoped(typeof(ProfileAccountUseCase));
+        services.AddScoped<AuthenticateUseCase>();
+        services.AddScoped<ConfirmEmailUseCase>();
+        services.AddScoped<AccountCreateUseCase>();
+        services.AddScoped<RefreshTokenUseCase>();
+        services.AddScoped<LogoutUseCase>();
+        services.AddScoped<LogoutAllUseCase>();
+        services.AddScoped<ListSessionsUseCase>();
+        services.AddScoped<RevokeSessionUseCase>();
+        services.AddScoped<UpdateDetailsUseCase>();
+        services.AddScoped<GetAccountUseCase>();
+        services.AddScoped<ProfileAccountUseCase>();
+
+        services.AddScoped<
+            Aviant.Application.Orchestration.IOrchestrator,
+            Aviant.Application.Orchestration.Orchestrator>();
 
         services
            .AddScoped<IOrchestrator<AccountAggregate, AccountAggregateId>,
@@ -232,10 +251,34 @@ public static class AccountDependencyInjectionRegistry
                 var token = context.Session.GetString("Token");
 
                 if (!string.IsNullOrEmpty(token))
-                    context.Request.Headers.Add("Authorization", "Bearer " + token);
+                    context.Request.Headers.Append("Authorization", "Bearer " + token);
 
                 await next()
                    .ConfigureAwait(false);
             });
     }
+
+    private static void ValidateJwtConfiguration(IConfiguration configuration)
+    {
+        foreach (var path in new[]
+                 {
+                     "Jwt:Issuer",
+                     "Jwt:Audience",
+                     "Jwt:ClockSkewInMinutes",
+                     "Jwt:Access:Key256Bit",
+                     "Jwt:Access:Key512Bit",
+                     "Jwt:Access:ExpirationDurationInMinutes",
+                     "Jwt:Refresh:Key256Bit",
+                     "Jwt:Refresh:Key512Bit",
+                     "Jwt:Refresh:ExpirationDurationInMinutes"
+                 })
+        {
+            _ = GetRequiredConfigurationValue(configuration, path);
+        }
+    }
+
+    private static string GetRequiredConfigurationValue(IConfiguration configuration, string path) =>
+        configuration[path]
+        ?? throw new InvalidOperationException(
+            $"Missing required account configuration value '{path}'.");
 }
