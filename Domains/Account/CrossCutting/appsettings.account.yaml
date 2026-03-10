@@ -39,6 +39,8 @@ FeatureManagement:
   AccountChangeEmail: true
   AccountRefreshToken: true
   AccountConfirmEmail: true
+  AccountDeactivate: true
+  AccountAdministration: true
   AccountLogout: true
   AccountLogoutAll: true
   AccountGetBy: true

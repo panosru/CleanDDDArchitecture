@@ -13,10 +13,11 @@ internal readonly struct AccountProfileResponse
     /// <param name="accountUser"></param>
     public AccountProfileResponse(AccountUser accountUser)
     {
-        Username  = accountUser.UserName;
-        FirstName = accountUser.FirstName;
-        LastName  = accountUser.LastName;
-        Email     = accountUser.Email;
+        Username  = accountUser.UserName ?? string.Empty;
+        FirstName = accountUser.FirstName ?? string.Empty;
+        LastName  = accountUser.LastName ?? string.Empty;
+        Email     = accountUser.Email ?? string.Empty;
+        Status    = accountUser.Status.ToString();
     }
 
     /// <summary>
@@ -34,4 +35,8 @@ internal readonly struct AccountProfileResponse
     /// <summary>
     /// </summary>
     public string Email { get; }
+
+    /// <summary>
+    /// </summary>
+    public string Status { get; }
 }

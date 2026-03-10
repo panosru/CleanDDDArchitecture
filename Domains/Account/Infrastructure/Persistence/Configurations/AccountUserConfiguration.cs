@@ -8,7 +8,11 @@ internal sealed class AccountUserConfiguration : IEntityTypeConfiguration<Accoun
 {
     public void Configure(EntityTypeBuilder<AccountUser> builder)
     {
-        // Identity config is applied by the base context. This exists so EF has a
-        // concrete configuration type in the account infrastructure assembly.
+        builder.Property(user => user.Status)
+            .HasConversion<int>()
+            .HasDefaultValue(AccountStatus.Active);
+
+        builder.Property(user => user.StatusReason)
+            .HasMaxLength(512);
     }
 }

@@ -24,6 +24,10 @@ public enum Features
 
     AccountConfirmEmail,
 
+    AccountDeactivate,
+
+    AccountAdministration,
+
     AccountLogout,
 
     AccountLogoutAll,

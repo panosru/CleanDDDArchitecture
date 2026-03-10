@@ -18,10 +18,11 @@ using IdentityResult = Aviant.Application.Identity.IdentityResult;
 
 namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Identity;
 
-public sealed class IdentityService : IIdentityService, IAccountAuthenticationService
+public sealed class IdentityService : IIdentityService, IAccountAuthenticationService, IAccountAdministrationService
 {
     private const int EmailChangeTokenLifetimeHours = 24;
     private const int RecoveryCodesCount = 10;
+    private static readonly string[] AdminRoles = ["root", "superadmin", "admin"];
     private static readonly string[] UserNotFoundErrors = ["User not found."];
     private static readonly string[] InvalidEmailChangeTokenErrors = ["Invalid token."];
 
@@ -169,6 +170,113 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
 
         return new MfaRecoveryCodesTicket(recoveryCodes);
+    }
+
+    public async Task<IdentityResult> DeactivateAsync(
+        Guid userId,
+        string currentPassword,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString()).ConfigureAwait(false);
+
+        if (user is null)
+            return IdentityResult.Failure(UserNotFoundErrors);
+
+        if (!await _userManager.CheckPasswordAsync(user, currentPassword).ConfigureAwait(false))
+            return IdentityResult.Failure(["Invalid current password."]);
+
+        if (user.Status == AccountStatus.Deactivated)
+            return IdentityResult.Success();
+
+        return await ApplyStatusAsync(
+                user,
+                AccountStatus.Deactivated,
+                "Self deactivated.",
+                shouldLockOut: true,
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task<IdentityResult> SuspendAsync(
+        Guid actorUserId,
+        Guid targetUserId,
+        string? reason,
+        CancellationToken cancellationToken = default)
+    {
+        if (!await IsAdministratorAsync(actorUserId).ConfigureAwait(false))
+            return IdentityResult.Failure(["Administrator access is required."]);
+
+        if (actorUserId == targetUserId)
+            return IdentityResult.Failure(["Administrators cannot suspend themselves."]);
+
+        var user = await _userManager.FindByIdAsync(targetUserId.ToString()).ConfigureAwait(false);
+
+        if (user is null)
+            return IdentityResult.Failure(UserNotFoundErrors);
+
+        if (user.Status == AccountStatus.Deactivated)
+            return IdentityResult.Failure(["Deactivated accounts cannot be suspended."]);
+
+        if (user.Status == AccountStatus.Suspended)
+            return IdentityResult.Success();
+
+        return await ApplyStatusAsync(
+                user,
+                AccountStatus.Suspended,
+                string.IsNullOrWhiteSpace(reason) ? "Suspended by administrator." : reason.Trim(),
+                shouldLockOut: true,
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task<IdentityResult> UnsuspendAsync(
+        Guid actorUserId,
+        Guid targetUserId,
+        CancellationToken cancellationToken = default)
+    {
+        if (!await IsAdministratorAsync(actorUserId).ConfigureAwait(false))
+            return IdentityResult.Failure(["Administrator access is required."]);
+
+        var user = await _userManager.FindByIdAsync(targetUserId.ToString()).ConfigureAwait(false);
+
+        if (user is null)
+            return IdentityResult.Failure(UserNotFoundErrors);
+
+        if (user.Status == AccountStatus.Deactivated)
+            return IdentityResult.Failure(["Deactivated accounts cannot be unsuspended."]);
+
+        if (user.Status != AccountStatus.Suspended)
+            return IdentityResult.Success();
+
+        return await ApplyStatusAsync(
+                user,
+                AccountStatus.Active,
+                "Unsuspended by administrator.",
+                shouldLockOut: false,
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task<IdentityResult> UnlockAsync(
+        Guid actorUserId,
+        Guid targetUserId,
+        CancellationToken cancellationToken = default)
+    {
+        if (!await IsAdministratorAsync(actorUserId).ConfigureAwait(false))
+            return IdentityResult.Failure(["Administrator access is required."]);
+
+        var user = await _userManager.FindByIdAsync(targetUserId.ToString()).ConfigureAwait(false);
+
+        if (user is null)
+            return IdentityResult.Failure(UserNotFoundErrors);
+
+        if (_userManager.SupportsUserLockout)
+        {
+            await _userManager.SetLockoutEndDateAsync(user, null).ConfigureAwait(false);
+            await _userManager.ResetAccessFailedCountAsync(user).ConfigureAwait(false);
+        }
+
+        return IdentityResult.Success();
     }
 
     public async Task<EmailConfirmationTicket?> GenerateEmailConfirmationAsync(
@@ -545,5 +653,49 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
             UrlEncoder.Default.Encode("CleanDDDArchitecture"),
             UrlEncoder.Default.Encode(email),
             UrlEncoder.Default.Encode(unformattedKey));
+    }
+
+    private async Task<bool> IsAdministratorAsync(Guid actorUserId)
+    {
+        var actor = await _userManager.FindByIdAsync(actorUserId.ToString()).ConfigureAwait(false);
+
+        if (actor is null)
+            return false;
+
+        var roles = await _userManager.GetRolesAsync(actor).ConfigureAwait(false);
+
+        return roles.Any(role => AdminRoles.Contains(role, StringComparer.OrdinalIgnoreCase));
+    }
+
+    private async Task<IdentityResult> ApplyStatusAsync(
+        AccountUser user,
+        AccountStatus status,
+        string reason,
+        bool shouldLockOut,
+        CancellationToken cancellationToken)
+    {
+        user.Status = status;
+        user.StatusReason = reason;
+        user.StatusChangedAtUtc = DateTimeOffset.UtcNow;
+
+        var updateResult = await _userManager.UpdateAsync(user).ConfigureAwait(false);
+        if (!updateResult.Succeeded)
+            return updateResult.ToApplicationResult();
+
+        if (_userManager.SupportsUserLockout)
+        {
+            await _userManager.SetLockoutEndDateAsync(
+                    user,
+                    shouldLockOut ? DateTimeOffset.MaxValue : null)
+                .ConfigureAwait(false);
+
+            if (!shouldLockOut)
+                await _userManager.ResetAccessFailedCountAsync(user).ConfigureAwait(false);
+        }
+
+        await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
+        await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+
+        return IdentityResult.Success();
     }
 }
