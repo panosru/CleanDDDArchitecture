@@ -132,6 +132,22 @@ public sealed class AccountCreationFlowTests
             string password,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
+        public Task<PasswordResetTicket?> GeneratePasswordResetAsync(
+            string email,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IdentityResult> ResetPasswordAsync(
+            string email,
+            string token,
+            string newPassword,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IdentityResult> ChangePasswordAsync(
+            Guid userId,
+            string currentPassword,
+            string newPassword,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
         public Task<IdentityResult> ConfirmEmailAsync(
             string token,
             string email,
