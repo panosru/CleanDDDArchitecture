@@ -8,13 +8,16 @@ using CleanDDDArchitecture.Domains.Account.Application.Identity;
 using CleanDDDArchitecture.Domains.Account.Application.Persistence;
 using CleanDDDArchitecture.Domains.Account.Application.Repositories;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Authenticate;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangePassword;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.ForgotPassword;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Logout;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.LogoutAll;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Profile;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.RefreshToken;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.ResetPassword;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.RevokeSession;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Sessions;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails;
@@ -211,6 +214,9 @@ public static class AccountDependencyInjectionRegistry
                 });
 
         services.AddScoped<AuthenticateUseCase>();
+        services.AddScoped<ForgotPasswordUseCase>();
+        services.AddScoped<ResetPasswordUseCase>();
+        services.AddScoped<ChangePasswordUseCase>();
         services.AddScoped<ConfirmEmailUseCase>();
         services.AddScoped<AccountCreateUseCase>();
         services.AddScoped<RefreshTokenUseCase>();

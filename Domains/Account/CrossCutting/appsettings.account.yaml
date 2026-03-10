@@ -34,6 +34,7 @@ FeatureManagement:
   Account2fa: true
   AccountForgotPassword: true
   AccountResetPassword: true
+  AccountChangePassword: true
   AccountRefreshToken: true
   AccountConfirmEmail: true
   AccountLogout: true

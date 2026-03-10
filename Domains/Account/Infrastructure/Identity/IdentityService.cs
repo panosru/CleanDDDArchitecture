@@ -7,6 +7,8 @@ using CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contexts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 using IdentityResult = Aviant.Application.Identity.IdentityResult;
 
 namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Identity;
@@ -40,6 +42,66 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         string password,
         CancellationToken cancellationToken = default) =>
         await _authenticator.AuthenticateAsync(username, password, cancellationToken).ConfigureAwait(false);
+
+    public async Task<PasswordResetTicket?> GeneratePasswordResetAsync(
+        string email,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByEmailAsync(email).ConfigureAwait(false);
+
+        if (user is null || !user.EmailConfirmed)
+            return null;
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user).ConfigureAwait(false);
+        var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+        return new PasswordResetTicket(user.Id, user.Email!, user.FullName, encodedToken);
+    }
+
+    public async Task<IdentityResult> ResetPasswordAsync(
+        string email,
+        string token,
+        string newPassword,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByEmailAsync(email).ConfigureAwait(false);
+
+        if (user is null)
+            return IdentityResult.Failure(UserNotFoundErrors);
+
+        var decodedToken = DecodeToken(token);
+        var result = await _userManager.ResetPasswordAsync(user, decodedToken, newPassword).ConfigureAwait(false);
+
+        if (!result.Succeeded)
+            return result.ToApplicationResult();
+
+        await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
+        await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+
+        return IdentityResult.Success();
+    }
+
+    public async Task<IdentityResult> ChangePasswordAsync(
+        Guid userId,
+        string currentPassword,
+        string newPassword,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString()).ConfigureAwait(false);
+
+        if (user is null)
+            return IdentityResult.Failure(UserNotFoundErrors);
+
+        var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword).ConfigureAwait(false);
+
+        if (!result.Succeeded)
+            return result.ToApplicationResult();
+
+        await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
+        await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+
+        return IdentityResult.Success();
+    }
 
     public async Task<AuthResult?> RefreshAsync(
         string refreshToken,
@@ -167,5 +229,17 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         var result = await _userManager.DeleteAsync(user).ConfigureAwait(false);
 
         return result.ToApplicationResult();
+    }
+
+    private static string DecodeToken(string token)
+    {
+        try
+        {
+            return Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+        }
+        catch (FormatException)
+        {
+            return token;
+        }
     }
 }
