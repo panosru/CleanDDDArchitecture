@@ -61,7 +61,7 @@ internal sealed class SendEmailConfirmJob : IJob<SendEmailConfirmJobOptions>
         var confirmationLink = _linkGenerator.GetUriByAction(
             action: "ConfirmEmail",
             controller: "Account",
-            values: new { userId = user.Id, code = _code },
+            values: new { token = _code, email = user.Email },
             scheme: uri.Scheme,
             host: new HostString(uri.Host, uri.Port));
 

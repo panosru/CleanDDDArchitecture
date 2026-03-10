@@ -36,7 +36,7 @@ public sealed record AccountUpdatedDomainEvent : DomainEvent<AccountAggregate, A
         public override Task Handle(
             EventReceived<AccountUpdatedDomainEvent> @event,
             CancellationToken                        cancellationToken) =>
-            throw new NotImplementedException();
+            Task.CompletedTask;
 
         public override IAsyncPolicy RetryPolicy() =>
             Policy

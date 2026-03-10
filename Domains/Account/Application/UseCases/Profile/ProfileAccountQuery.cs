@@ -21,10 +21,14 @@ internal sealed record ProfileAccountQuery : Query<AccountUser>
             ServiceLocator.ServiceContainer.GetService<ICurrentUserService>(
                 typeof(ICurrentUserService));
 
-        public override Task<AccountUser> Handle(
+        public override async Task<AccountUser> Handle(
             ProfileAccountQuery request,
-            CancellationToken   cancellationToken) =>
-            _accountUserManager.FindByIdAsync(CurrentUserService.UserId.ToString());
+            CancellationToken   cancellationToken)
+        {
+            var user = await _accountUserManager.FindByIdAsync(CurrentUserService.UserId.ToString()).ConfigureAwait(false);
+
+            return user ?? throw new KeyNotFoundException($"Account '{CurrentUserService.UserId}' was not found.");
+        }
     }
 
     #endregion

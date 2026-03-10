@@ -54,7 +54,7 @@ public sealed record CreateAccountInput(
             // Check if the email is valid
             if (string.IsNullOrEmpty(email) || !_emailAddressAttribute.IsValid(email))
             {
-                context.AddFailure(_userManager.ErrorDescriber.InvalidEmail(email).Description);
+                context.AddFailure(nameof(CreateAccountInput.Email), _userManager.ErrorDescriber.InvalidEmail(email).Description);
 
                 return false;
             }
@@ -63,7 +63,7 @@ public sealed record CreateAccountInput(
             if (await _userManager.FindByEmailAsync(email)
                .ConfigureAwait(false) is not null)
             {
-                context.AddFailure(_userManager.ErrorDescriber.DuplicateEmail(email).Description);
+                context.AddFailure(nameof(CreateAccountInput.Email), _userManager.ErrorDescriber.DuplicateEmail(email).Description);
                 
                 return false;
             }
@@ -87,7 +87,7 @@ public sealed record CreateAccountInput(
                     continue;
 
                 result.Errors.ForAll(
-                    error => context.AddFailure(error.Description));
+                    error => context.AddFailure(nameof(CreateAccountInput.Password), error.Description));
 
                 isValid = false;
             }

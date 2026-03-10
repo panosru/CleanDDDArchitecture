@@ -17,8 +17,12 @@ internal sealed record GetAccountQuery(Guid Id) : Query<AccountUser>
         public GetAccountQueryHandler(UserManager<AccountUser> accountUserManager) =>
             _accountUserManager = accountUserManager;
 
-        public override Task<AccountUser> Handle(GetAccountQuery request, CancellationToken cancellationToken) =>
-            _accountUserManager.FindByIdAsync(request.Id.ToString());
+        public override async Task<AccountUser> Handle(GetAccountQuery request, CancellationToken cancellationToken)
+        {
+            var user = await _accountUserManager.FindByIdAsync(request.Id.ToString()).ConfigureAwait(false);
+
+            return user ?? throw new KeyNotFoundException($"Account '{request.Id}' was not found.");
+        }
     }
 
     #endregion

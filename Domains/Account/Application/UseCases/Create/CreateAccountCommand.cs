@@ -1,7 +1,10 @@
 using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using Aviant.Application.ApplicationEvents;
+using Aviant.Core.Messages;
 using Aviant.Application.EventSourcing.Commands;
-using CleanDDDArchitecture.Domains.Account.Application.Identity;
-using Microsoft.AspNetCore.Identity;
+using Aviant.Application.Identity;
+using Aviant.Application.Processors;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Events;
 
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 
@@ -30,29 +33,71 @@ public sealed record CreateAccountCommand(
     public sealed class CreateAccountHandler
         : CommandHandler<CreateAccountCommand, AccountAggregate, AccountAggregateId>
     {
-        private readonly UserManager<AccountUser> _userManager;
+        private readonly IIdentityService _identityService;
+        private readonly IMessages _messages;
 
-        public CreateAccountHandler(UserManager<AccountUser> userManager) => 
-            _userManager = userManager;
+        public CreateAccountHandler(
+            IIdentityService identityService,
+            IMessages messages)
+        {
+            _identityService = identityService;
+            _messages = messages;
+        }
 
-        public override Task<AccountAggregate> Handle(
+        public override async Task<AccountAggregate> Handle(
             CreateAccountCommand command,
             CancellationToken cancellationToken)
         {
-            if (!_userManager.SupportsUserEmail)
-                throw new NotSupportedException("Identity requires a user store with email support.");
-            
-            return Task.FromResult(
-                AccountAggregate.Create(
-                    command.Email, // Use the email as the username
+            var createUserResult = await _identityService.CreateUserAsync(
+                    command.Email,
                     command.Password,
                     command.FirstName,
                     command.LastName,
-                    command.Email,
                     command.Roles,
-                    command.EmailConfirmed));
+                    command.EmailConfirmed,
+                    cancellationToken)
+                .ConfigureAwait(false);
+
+            if (!createUserResult.Result.Succeeded)
+            {
+                foreach (var error in createUserResult.Result.Errors)
+                    _messages.AddMessage(error);
+
+                return null!;
+            }
+
+            return AccountAggregate.Create(
+                createUserResult.UserId,
+                command.Email,
+                command.FirstName,
+                command.LastName,
+                command.Email,
+                command.Roles,
+                command.EmailConfirmed);
         }
-            
+    }
+
+    internal sealed class CreateAccountCommandPostProcessor
+        : RequestPostProcessor<CreateAccountCommand, AccountAggregate>
+    {
+        private readonly IApplicationEventDispatcher _applicationEventDispatcher;
+
+        public CreateAccountCommandPostProcessor(IApplicationEventDispatcher applicationEventDispatcher) =>
+            _applicationEventDispatcher = applicationEventDispatcher;
+
+        public override Task Process(
+            CreateAccountCommand request,
+            AccountAggregate response,
+            CancellationToken cancellationToken)
+        {
+            if (response is null)
+                return Task.CompletedTask;
+
+            _applicationEventDispatcher.AddPostCommitEvent(
+                new AccountCreatedApplicationEvent(response.Email, response.EmailConfirmed));
+
+            return Task.CompletedTask;
+        }
     }
 
     #endregion

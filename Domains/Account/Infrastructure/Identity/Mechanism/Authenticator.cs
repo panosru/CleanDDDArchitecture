@@ -39,10 +39,10 @@ internal sealed class Authenticator
             return null;
 
         if (await IsUserLockedOutAsync(user).ConfigureAwait(false))
-            return new { error = "Account is locked" };
+            return null;
 
         if (!await CheckPasswordAsync(user, password).ConfigureAwait(false))
-            return new { error = "Invalid credentials" };
+            return null;
 
         if (!user.EmailConfirmed)
         {

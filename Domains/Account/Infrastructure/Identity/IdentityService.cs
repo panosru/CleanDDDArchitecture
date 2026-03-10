@@ -4,21 +4,27 @@ using CleanDDDArchitecture.Domains.Account.Core;
 using CleanDDDArchitecture.Domains.Account.Core.Identity.Dto;
 using CleanDDDArchitecture.Domains.Account.Infrastructure.Identity.Mechanism;
 using CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contexts;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
+using System.Text.Json;
+using Serilog;
 using IdentityResult = Aviant.Application.Identity.IdentityResult;
 
 namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Identity;
 
 public sealed class IdentityService : IIdentityService, IAccountAuthenticationService
 {
+    private const int EmailChangeTokenLifetimeHours = 24;
     private static readonly string[] UserNotFoundErrors = ["User not found."];
+    private static readonly string[] InvalidEmailChangeTokenErrors = ["Invalid token."];
 
     private readonly Authenticator _authenticator;
     private readonly ConfirmEmail _confirmEmail;
+    private readonly IDataProtector _emailChangeProtector;
     private readonly RefreshSessionManager _refreshSessionManager;
     private readonly RoleManager<AccountRole> _roleManager;
     private readonly UserManager<AccountUser> _userManager;
@@ -28,6 +34,7 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         RoleManager<AccountRole> roleManager,
         IAccountDomainConfiguration config,
         AccountDbContextWrite accountDbContextWrite,
+        IDataProtectionProvider dataProtectionProvider,
         IHttpContextAccessor httpContextAccessor)
     {
         _userManager = userManager;
@@ -35,6 +42,7 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         _refreshSessionManager = new RefreshSessionManager(accountDbContextWrite, config, httpContextAccessor);
         _authenticator = new Authenticator(userManager, _refreshSessionManager);
         _confirmEmail = new ConfirmEmail(userManager);
+        _emailChangeProtector = dataProtectionProvider.CreateProtector("CleanDDDArchitecture.Account.EmailChange");
     }
 
     public async Task<object?> AuthenticateAsync(
@@ -42,6 +50,49 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         string password,
         CancellationToken cancellationToken = default) =>
         await _authenticator.AuthenticateAsync(username, password, cancellationToken).ConfigureAwait(false);
+
+    public async Task<EmailConfirmationTicket?> GenerateEmailConfirmationAsync(
+        string email,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByEmailAsync(email).ConfigureAwait(false);
+
+        if (user is null || user.EmailConfirmed)
+            return null;
+
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user).ConfigureAwait(false);
+        var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+        return new EmailConfirmationTicket(user.Email!, user.FullName, encodedToken);
+    }
+
+    public async Task<EmailChangeTicket?> GenerateEmailChangeAsync(
+        Guid userId,
+        string newEmail,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString()).ConfigureAwait(false);
+
+        if (user is null)
+            return null;
+
+        if (string.Equals(user.Email, newEmail, StringComparison.OrdinalIgnoreCase))
+            return null;
+
+        if (await _userManager.FindByEmailAsync(newEmail).ConfigureAwait(false) is not null)
+            return null;
+
+        EmailChangeTokenPayload payload = new(
+            user.Id,
+            user.Email!,
+            newEmail,
+            user.SecurityStamp ?? string.Empty,
+            DateTimeOffset.UtcNow.AddHours(EmailChangeTokenLifetimeHours));
+        var protectedBytes = _emailChangeProtector.Protect(JsonSerializer.SerializeToUtf8Bytes(payload));
+        var encodedToken = WebEncoders.Base64UrlEncode(protectedBytes);
+
+        return new EmailChangeTicket(user.Email!, newEmail, user.FullName, encodedToken);
+    }
 
     public async Task<PasswordResetTicket?> GeneratePasswordResetAsync(
         string email,
@@ -134,6 +185,89 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         string email,
         CancellationToken cancellationToken = default) =>
         await _confirmEmail.ConfirmEmailAsync(token, email).ConfigureAwait(false);
+
+    public async Task<IdentityResult> ConfirmEmailChangeAsync(
+        string currentEmail,
+        string newEmail,
+        string token,
+        CancellationToken cancellationToken = default)
+    {
+        var payload = DecodeEmailChangeToken(token);
+        if (payload is null
+         || payload.ExpiresAtUtc <= DateTimeOffset.UtcNow
+         || !string.Equals(payload.CurrentEmail, currentEmail, StringComparison.OrdinalIgnoreCase)
+         || !string.Equals(payload.NewEmail, newEmail, StringComparison.OrdinalIgnoreCase))
+        {
+            Log.Warning(
+                "Email change token validation failed before user lookup. CurrentEmail={CurrentEmail} NewEmail={NewEmail} HasPayload={HasPayload} ExpiresAt={ExpiresAtUtc} PayloadCurrentEmail={PayloadCurrentEmail} PayloadNewEmail={PayloadNewEmail}",
+                currentEmail,
+                newEmail,
+                payload is not null,
+                payload?.ExpiresAtUtc,
+                payload?.CurrentEmail,
+                payload?.NewEmail);
+            return IdentityResult.Failure(InvalidEmailChangeTokenErrors);
+        }
+
+        var user = await _userManager.FindByIdAsync(payload.UserId.ToString()).ConfigureAwait(false);
+
+        if (user is null)
+        {
+            var alreadyChangedUser = await _userManager.FindByEmailAsync(newEmail).ConfigureAwait(false);
+
+            if (alreadyChangedUser is not null
+             && alreadyChangedUser.Id == payload.UserId
+             && alreadyChangedUser.EmailConfirmed
+             && string.Equals(alreadyChangedUser.UserName, newEmail, StringComparison.OrdinalIgnoreCase))
+                return IdentityResult.Success();
+
+            return IdentityResult.Failure(UserNotFoundErrors);
+        }
+
+        if (!string.Equals(user.SecurityStamp, payload.SecurityStamp, StringComparison.Ordinal))
+        {
+            Log.Warning(
+                "Email change token rejected due to security stamp mismatch. UserId={UserId} CurrentStamp={CurrentStamp} PayloadStamp={PayloadStamp}",
+                user.Id,
+                user.SecurityStamp,
+                payload.SecurityStamp);
+            return IdentityResult.Failure(InvalidEmailChangeTokenErrors);
+        }
+
+        if (string.Equals(user.Email, newEmail, StringComparison.OrdinalIgnoreCase)
+         && string.Equals(user.UserName, newEmail, StringComparison.OrdinalIgnoreCase)
+         && user.EmailConfirmed)
+            return IdentityResult.Success();
+
+        if (!string.Equals(user.Email, currentEmail, StringComparison.OrdinalIgnoreCase))
+        {
+            Log.Warning(
+                "Email change token rejected due to stale current email. UserId={UserId} ActualEmail={ActualEmail} ExpectedEmail={ExpectedEmail}",
+                user.Id,
+                user.Email,
+                currentEmail);
+            return IdentityResult.Failure(InvalidEmailChangeTokenErrors);
+        }
+
+        var existingUser = await _userManager.FindByEmailAsync(newEmail).ConfigureAwait(false);
+        if (existingUser is not null && existingUser.Id != user.Id)
+            return IdentityResult.Failure([_userManager.ErrorDescriber.DuplicateEmail(newEmail).Description]);
+
+        user.Email = newEmail;
+        user.NormalizedEmail = _userManager.NormalizeEmail(newEmail);
+        user.UserName = newEmail;
+        user.NormalizedUserName = _userManager.NormalizeName(newEmail);
+        user.EmailConfirmed = true;
+
+        var updateResult = await _userManager.UpdateAsync(user).ConfigureAwait(false);
+        if (!updateResult.Succeeded)
+            return updateResult.ToApplicationResult();
+
+        await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
+        await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+
+        return IdentityResult.Success();
+    }
 
     public async Task<string> GetUserNameAsync(
         Guid userId,
@@ -242,4 +376,27 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
             return token;
         }
     }
+
+    private EmailChangeTokenPayload? DecodeEmailChangeToken(string token)
+    {
+        try
+        {
+            var protectedBytes = WebEncoders.Base64UrlDecode(token);
+            var bytes = _emailChangeProtector.Unprotect(protectedBytes);
+
+            return JsonSerializer.Deserialize<EmailChangeTokenPayload>(bytes);
+        }
+        catch
+        {
+            Log.Warning("Failed to decode email change token.");
+            return null;
+        }
+    }
+
+    private sealed record EmailChangeTokenPayload(
+        Guid UserId,
+        string CurrentEmail,
+        string NewEmail,
+        string SecurityStamp,
+        DateTimeOffset ExpiresAtUtc);
 }

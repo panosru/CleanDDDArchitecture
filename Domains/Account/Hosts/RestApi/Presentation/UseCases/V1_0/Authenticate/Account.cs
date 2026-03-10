@@ -1,4 +1,3 @@
-using System.Net;
 using System.Net.Mime;
 using CleanDDDArchitecture.Hosts.RestApi.Core;
 using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
@@ -28,16 +27,12 @@ public sealed class Account
 
     /// <summary>
     /// </summary>
-    /// <param name="object"></param>
-    void IAuthenticateOutput.Ok(object? @object) =>
-        ViewModel = Ok(@object);
+    /// <param name="response"></param>
+    void IAuthenticateOutput.Ok(object? response) =>
+        ViewModel = Ok(response);
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <exception cref="HttpRequestException"></exception>
     void IAuthenticateOutput.Unauthorized() =>
-        throw new HttpRequestException(HttpStatusCode.Unauthorized.ToString());
+        ViewModel = Unauthorized();
 
     #endregion
 

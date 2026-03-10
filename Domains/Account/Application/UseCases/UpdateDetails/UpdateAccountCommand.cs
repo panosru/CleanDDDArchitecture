@@ -1,6 +1,7 @@
 using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
 using Ardalis.GuardClauses;
 using Aviant.Application.EventSourcing.Commands;
+using Aviant.Core.Messages;
 
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails;
 
@@ -21,6 +22,10 @@ internal sealed record UpdateAccountCommand(
     internal sealed class UpdateAccountHandler
         : CommandHandler<UpdateAccountCommand, AccountAggregate, AccountAggregateId>
     {
+        private readonly IMessages _messages;
+
+        public UpdateAccountHandler(IMessages messages) => _messages = messages;
+
         public override async Task<AccountAggregate> Handle(
             UpdateAccountCommand command,
             CancellationToken    cancellationToken)
@@ -31,7 +36,13 @@ internal sealed record UpdateAccountCommand(
 
             Guard.Against.Null(account, nameof(command.AggregateId));
 
-            account.ChangeDetails(command.FirstName, command.LastName, command.Email);
+            if (!string.Equals(account.Email, command.Email, StringComparison.OrdinalIgnoreCase))
+            {
+                _messages.AddMessage("Use the change-email flow to update the email address.");
+                return null!;
+            }
+
+            account.ChangeDetails(command.FirstName, command.LastName, account.Email);
 
             return account;
         }

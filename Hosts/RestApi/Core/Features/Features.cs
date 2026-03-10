@@ -14,6 +14,10 @@ public enum Features
 
     AccountChangePassword,
 
+    AccountResendConfirmation,
+
+    AccountChangeEmail,
+
     AccountRefreshToken,
 
     AccountConfirmEmail,

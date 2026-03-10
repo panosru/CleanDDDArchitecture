@@ -1,4 +1,3 @@
-using System.Security.Authentication;
 using Aviant.Application.Commands;
 using Aviant.Application.Identity;
 
@@ -21,11 +20,9 @@ internal sealed record AuthenticateCommand(string Username, string Password) : C
 
         public override async Task<object> Handle(AuthenticateCommand command, CancellationToken cancellationToken)
         {
-            var user = await _identityIdentityService
+            return await _identityIdentityService
                .AuthenticateAsync(command.Username, command.Password, cancellationToken)
                .ConfigureAwait(false);
-
-            return user ?? throw new AuthenticationException();
         }
     }
 

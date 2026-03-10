@@ -11,14 +11,14 @@ public sealed class EventsConsumerWorker : BackgroundService
     public EventsConsumerWorker(IEventConsumerFactory eventConsumerFactory) =>
         _eventConsumerFactory = eventConsumerFactory;
 
-    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         IEnumerable<IEventConsumer> consumers = new[]
         {
             _eventConsumerFactory.Build<AccountAggregate, AccountAggregateId, AccountIdDeserializer>()
         };
 
-        var tc = Task.WhenAll(consumers.Select(c => c.ConsumeAsync(cancellationToken)));
+        var tc = Task.WhenAll(consumers.Select(c => c.ConsumeAsync(stoppingToken)));
         await tc.ConfigureAwait(false);
     }
 }
