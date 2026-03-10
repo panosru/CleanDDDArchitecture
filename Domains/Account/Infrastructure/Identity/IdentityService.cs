@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using System.Text.Json;
 using Serilog;
+using System.Text.Encodings.Web;
+using System.Globalization;
 using IdentityResult = Aviant.Application.Identity.IdentityResult;
 
 namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Identity;
@@ -19,6 +21,7 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Identity;
 public sealed class IdentityService : IIdentityService, IAccountAuthenticationService
 {
     private const int EmailChangeTokenLifetimeHours = 24;
+    private const int RecoveryCodesCount = 10;
     private static readonly string[] UserNotFoundErrors = ["User not found."];
     private static readonly string[] InvalidEmailChangeTokenErrors = ["Invalid token."];
 
@@ -48,8 +51,125 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
     public async Task<object?> AuthenticateAsync(
         string username,
         string password,
+        string? twoFactorCode = null,
+        string? recoveryCode = null,
         CancellationToken cancellationToken = default) =>
-        await _authenticator.AuthenticateAsync(username, password, cancellationToken).ConfigureAwait(false);
+        await _authenticator
+            .AuthenticateAsync(username, password, twoFactorCode, recoveryCode, cancellationToken)
+            .ConfigureAwait(false);
+
+    public async Task<MfaSetupTicket?> BeginMfaSetupAsync(
+        Guid userId,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString()).ConfigureAwait(false);
+
+        if (user is null)
+            return null;
+
+        var key = await _userManager.GetAuthenticatorKeyAsync(user).ConfigureAwait(false);
+        if (string.IsNullOrWhiteSpace(key))
+        {
+            await _userManager.ResetAuthenticatorKeyAsync(user).ConfigureAwait(false);
+            key = await _userManager.GetAuthenticatorKeyAsync(user).ConfigureAwait(false);
+        }
+
+        if (string.IsNullOrWhiteSpace(key))
+            return null;
+
+        return new MfaSetupTicket(
+            FormatAuthenticatorKey(key),
+            GenerateQrCodeUri(user.Email!, key),
+            user.TwoFactorEnabled);
+    }
+
+    public async Task<MfaRecoveryCodesTicket?> EnableMfaAsync(
+        Guid userId,
+        string code,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString()).ConfigureAwait(false);
+
+        if (user is null)
+            return null;
+
+        var normalizedCode = code.Replace(" ", string.Empty, StringComparison.Ordinal)
+            .Replace("-", string.Empty, StringComparison.Ordinal);
+        var isValid = await _userManager.VerifyTwoFactorTokenAsync(
+                user,
+                _userManager.Options.Tokens.AuthenticatorTokenProvider,
+                normalizedCode)
+            .ConfigureAwait(false);
+
+        if (!isValid)
+            return null;
+
+        var enableResult = await _userManager.SetTwoFactorEnabledAsync(user, true).ConfigureAwait(false);
+        if (!enableResult.Succeeded)
+            return null;
+
+        var recoveryCodes = (await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, RecoveryCodesCount)
+                .ConfigureAwait(false))
+            .ToArray();
+
+        await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
+        await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+
+        return new MfaRecoveryCodesTicket(recoveryCodes);
+    }
+
+    public async Task<IdentityResult> DisableMfaAsync(
+        Guid userId,
+        string password,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString()).ConfigureAwait(false);
+
+        if (user is null)
+            return IdentityResult.Failure(UserNotFoundErrors);
+
+        if (!await _userManager.CheckPasswordAsync(user, password).ConfigureAwait(false))
+            return IdentityResult.Failure(["Invalid current password."]);
+
+        if (!await _userManager.GetTwoFactorEnabledAsync(user).ConfigureAwait(false))
+            return IdentityResult.Success();
+
+        var disableResult = await _userManager.SetTwoFactorEnabledAsync(user, false).ConfigureAwait(false);
+        if (!disableResult.Succeeded)
+            return disableResult.ToApplicationResult();
+
+        await _userManager.ResetAuthenticatorKeyAsync(user).ConfigureAwait(false);
+        await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
+        await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+
+        return IdentityResult.Success();
+    }
+
+    public async Task<MfaRecoveryCodesTicket?> RegenerateRecoveryCodesAsync(
+        Guid userId,
+        string password,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString()).ConfigureAwait(false);
+
+        if (user is null)
+            return null;
+
+        if (!await _userManager.CheckPasswordAsync(user, password).ConfigureAwait(false))
+            return null;
+
+        if (!await _userManager.GetTwoFactorEnabledAsync(user).ConfigureAwait(false))
+            return null;
+
+        var recoveryCodes = (await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, RecoveryCodesCount)
+                .ConfigureAwait(false))
+            .ToArray();
+
+        await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
+        await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+
+        return new MfaRecoveryCodesTicket(recoveryCodes);
+    }
 
     public async Task<EmailConfirmationTicket?> GenerateEmailConfirmationAsync(
         string email,
@@ -399,4 +519,31 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         string NewEmail,
         string SecurityStamp,
         DateTimeOffset ExpiresAtUtc);
+
+    private static string FormatAuthenticatorKey(string key)
+    {
+        StringBuilder result = new();
+        int currentPosition = 0;
+
+        while (currentPosition + 4 < key.Length)
+        {
+            result.Append(key.AsSpan(currentPosition, 4)).Append(' ');
+            currentPosition += 4;
+        }
+
+        if (currentPosition < key.Length)
+            result.Append(key.AsSpan(currentPosition));
+
+        return result.ToString().ToLowerInvariant();
+    }
+
+    private static string GenerateQrCodeUri(string email, string unformattedKey)
+    {
+        return string.Format(
+            CultureInfo.InvariantCulture,
+            "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6",
+            UrlEncoder.Default.Encode("CleanDDDArchitecture"),
+            UrlEncoder.Default.Encode(email),
+            UrlEncoder.Default.Encode(unformattedKey));
+    }
 }

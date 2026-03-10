@@ -14,6 +14,8 @@ public enum Features
 
     AccountChangePassword,
 
+    Account2fa,
+
     AccountResendConfirmation,
 
     AccountChangeEmail,

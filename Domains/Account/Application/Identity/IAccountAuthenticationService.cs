@@ -7,6 +7,8 @@ public interface IAccountAuthenticationService
     public Task<object?> AuthenticateAsync(
         string username,
         string password,
+        string? twoFactorCode = null,
+        string? recoveryCode = null,
         CancellationToken cancellationToken = default);
 
     public Task<AuthResult?> RefreshAsync(

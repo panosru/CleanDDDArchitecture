@@ -13,7 +13,9 @@ public sealed class AuthenticateUseCase
         OrchestratorResponse requestResult = await Orchestrator.SendCommandAsync(
                 new AuthenticateCommand(
                     input.Username,
-                    input.Password),
+                    input.Password,
+                    input.TwoFactorCode,
+                    input.RecoveryCode),
                 cancellationToken)
            .ConfigureAwait(false);
 

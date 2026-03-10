@@ -2,6 +2,7 @@ using System.Text;
 using System.Web;
 using Aviant.Core.Timing;
 using CleanDDDArchitecture.Domains.Account.Application.Identity;
+using CleanDDDArchitecture.Domains.Account.Core.Identity.Dto;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,6 +33,8 @@ internal sealed class Authenticator
     internal async Task<object?> AuthenticateAsync(
         string username,
         string password,
+        string? twoFactorCode,
+        string? recoveryCode,
         CancellationToken cancellationToken)
     {
         var user = await FindUserAsync(username, cancellationToken).ConfigureAwait(false);
@@ -54,6 +57,19 @@ internal sealed class Authenticator
         }
 
         await ResetAccessFailedCountIfNeededAsync(user).ConfigureAwait(false);
+
+        if (await _userManager.GetTwoFactorEnabledAsync(user).ConfigureAwait(false))
+        {
+            var isMfaValid = await ValidateSecondFactorAsync(user, twoFactorCode, recoveryCode).ConfigureAwait(false);
+
+            if (!isMfaValid)
+            {
+                if (string.IsNullOrWhiteSpace(twoFactorCode) && string.IsNullOrWhiteSpace(recoveryCode))
+                    return new MfaChallengeResult();
+
+                return null;
+            }
+        }
 
         var authResult = await _refreshSessionManager
             .IssueTokensAsync(user, cancellationToken)
@@ -88,6 +104,35 @@ internal sealed class Authenticator
         if (_userManager.SupportsUserLockout
          && await _userManager.GetLockoutEnabledAsync(user).ConfigureAwait(false))
             await _userManager.AccessFailedAsync(user).ConfigureAwait(false);
+
+        return false;
+    }
+
+    private async Task<bool> ValidateSecondFactorAsync(
+        AccountUser user,
+        string? twoFactorCode,
+        string? recoveryCode)
+    {
+        if (!string.IsNullOrWhiteSpace(twoFactorCode))
+        {
+            var normalizedCode = twoFactorCode.Replace(" ", string.Empty, StringComparison.Ordinal)
+                .Replace("-", string.Empty, StringComparison.Ordinal);
+
+            return await _userManager.VerifyTwoFactorTokenAsync(
+                    user,
+                    _userManager.Options.Tokens.AuthenticatorTokenProvider,
+                    normalizedCode)
+                .ConfigureAwait(false);
+        }
+
+        if (!string.IsNullOrWhiteSpace(recoveryCode))
+        {
+            var normalizedRecoveryCode = recoveryCode.Replace(" ", string.Empty, StringComparison.Ordinal);
+            var result = await _userManager.RedeemTwoFactorRecoveryCodeAsync(user, normalizedRecoveryCode)
+                .ConfigureAwait(false);
+
+            return result.Succeeded;
+        }
 
         return false;
     }
