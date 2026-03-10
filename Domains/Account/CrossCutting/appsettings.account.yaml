@@ -1,6 +1,8 @@
 ---
 eventsTopicName: "CleanDDDArchitectureEvents"
 eventsTopicGroupName: "cleandddarchitecture-api-events-consumer"
+UnsafeDefaults:
+  SeedDefaultUser: false
 
 Auth:
   Cookie:
@@ -34,6 +36,9 @@ FeatureManagement:
   AccountResetPassword: true
   AccountRefreshToken: true
   AccountConfirmEmail: true
+  AccountLogout: true
+  AccountLogoutAll: true
   AccountGetBy: true
   AccountProfile: true
+  AccountSessions: true
   AccountUpdateDetails: true

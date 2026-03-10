@@ -8,11 +8,19 @@ public enum Features
 
     AccountAuthentication,
 
+    AccountRefreshToken,
+
     AccountConfirmEmail,
+
+    AccountLogout,
+
+    AccountLogoutAll,
 
     AccountGetBy,
 
     AccountProfile,
+
+    AccountSessions,
 
     AccountUpdateDetails,
 
