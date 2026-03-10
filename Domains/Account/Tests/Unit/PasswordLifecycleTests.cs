@@ -83,6 +83,15 @@ public sealed class PasswordLifecycleTests
         public Task<object?> AuthenticateAsync(string username, string password, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
+        public Task<EmailConfirmationTicket?> GenerateEmailConfirmationAsync(
+            string email,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<EmailChangeTicket?> GenerateEmailChangeAsync(
+            Guid userId,
+            string newEmail,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
         public Task<PasswordResetTicket?> GeneratePasswordResetAsync(string email, CancellationToken cancellationToken = default) =>
             Task.FromResult<PasswordResetTicket?>(new PasswordResetTicket(Guid.NewGuid(), email, "Test User", "encoded-token"));
 
@@ -114,6 +123,12 @@ public sealed class PasswordLifecycleTests
 
         public Task<IdentityResult> ConfirmEmailAsync(string token, string email, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
+
+        public Task<IdentityResult> ConfirmEmailChangeAsync(
+            string currentEmail,
+            string newEmail,
+            string token,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<string> GetUserNameAsync(Guid userId, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
