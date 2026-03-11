@@ -8,7 +8,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
 
 public sealed class GetAllUseCase : UseCase<IGetAllOutput>
 {
-    private IOrchestrator<ITodoDbContextWrite> TodoOrchestrator =>
+    private static IOrchestrator<ITodoDbContextWrite> TodoOrchestrator =>
         ServiceLocator.ServiceContainer.GetRequiredService<IOrchestrator<ITodoDbContextWrite>>(
             typeof(IOrchestrator<ITodoDbContextWrite>));
 

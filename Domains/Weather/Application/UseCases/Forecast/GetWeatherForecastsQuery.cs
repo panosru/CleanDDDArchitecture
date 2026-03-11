@@ -16,26 +16,20 @@ internal sealed record GetWeatherForecastsQuery : Query<IEnumerable<WeatherForec
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        private readonly IWeatherForecastService _weatherForecastService;
+        private readonly IWeatherForecastCollectionService _weatherForecastCollectionService;
 
         /// <inheritdoc />
-        public GetWeatherForecastsQueryHandler(IWeatherForecastService weatherForecastService) =>
-            _weatherForecastService = weatherForecastService;
+        public GetWeatherForecastsQueryHandler(IWeatherForecastCollectionService weatherForecastCollectionService) =>
+            _weatherForecastCollectionService = weatherForecastCollectionService;
 
         public override Task<IEnumerable<WeatherForecastService>> Handle(
             GetWeatherForecastsQuery request,
             CancellationToken        cancellationToken)
         {
-            var rng = new Random();
-
-            IEnumerable<WeatherForecastService> vm = Enumerable.Range(1, 5)
-               .Select(
-                    index => _weatherForecastService.GetWeatherForecast(
-                        Clock.Now.AddDays(index),
-                        rng.Next(-20, 55),
-                        Summaries[rng.Next(Summaries.Length)]));
-
-            return Task.FromResult(vm);
+            return Task.FromResult<IEnumerable<WeatherForecastService>>(
+                _weatherForecastCollectionService.BuildForecasts(
+                    Clock.Now,
+                    Summaries));
         }
     }
 

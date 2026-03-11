@@ -28,8 +28,7 @@ internal sealed record GetTodosQuery : Query<TodosVm>
         {
             return new TodosVm
             {
-                PriorityLevels = Enum.GetValues(typeof(PriorityLevel))
-                   .Cast<PriorityLevel>()
+                PriorityLevels = Enum.GetValues<PriorityLevel>()
                    .Select(p => new PriorityLevelDto { Value = (int)p, Name = p.ToString() })
                    .ToList(),
 

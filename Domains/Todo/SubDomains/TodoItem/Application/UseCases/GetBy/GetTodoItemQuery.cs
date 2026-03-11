@@ -1,4 +1,6 @@
 using Aviant.Application.Queries;
+using Aviant.Application.Exceptions;
+using Aviant.Core.Exceptions;
 using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Core.Repositories;
 
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.GetBy;
@@ -18,11 +20,21 @@ internal sealed record GetTodoItemQuery(int Id) : Query<string>
 
         public override async Task<string> Handle(GetTodoItemQuery request, CancellationToken cancellationToken)
         {
-            var todoName = await _todoItemReadRepository
-               .FirstOrDefaultAsync(request.Id, cancellationToken)
-               .ConfigureAwait(false);
+            try
+            {
+                var todoName = await _todoItemReadRepository
+                   .FirstOrDefaultAsync(request.Id, cancellationToken)
+                   .ConfigureAwait(false);
 
-            return todoName.Title;
+                if (todoName is null)
+                    throw new NotFoundException("TodoItem", request.Id);
+
+                return todoName.Title;
+            }
+            catch (EntityNotFoundException)
+            {
+                throw new NotFoundException("TodoItem", request.Id);
+            }
         }
     }
 

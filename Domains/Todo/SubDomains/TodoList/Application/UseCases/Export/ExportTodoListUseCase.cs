@@ -10,7 +10,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
 public sealed class ExportTodoListUseCase
     : UseCase<ExportTodoListInput, IExportTodoListOutput>
 {
-    private IOrchestrator<ITodoDbContextWrite> TodoOrchestrator =>
+    private static IOrchestrator<ITodoDbContextWrite> TodoOrchestrator =>
         ServiceLocator.ServiceContainer.GetRequiredService<IOrchestrator<ITodoDbContextWrite>>(
             typeof(IOrchestrator<ITodoDbContextWrite>));
 

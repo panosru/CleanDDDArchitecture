@@ -7,7 +7,7 @@ namespace CleanDDDArchitecture.Domains.Weather.Tests.Behaviour;
 public sealed class WeatherForecastServiceTests
 {
     [Fact]
-    public void GetWeatherForecast_ShouldCreateANewForecastInstance()
+    public void GetWeatherForecastShouldCreateANewForecastInstance()
     {
         var service = new WeatherForecastService();
 

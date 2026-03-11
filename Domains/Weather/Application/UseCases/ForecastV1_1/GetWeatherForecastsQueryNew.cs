@@ -19,26 +19,20 @@ internal sealed record GetWeatherForecastsQueryNew : Query<IEnumerable<WeatherFo
             "Warm v1.1", "Balmy v1.1", "Hot v1.1", "Sweltering v1.1", "Scorching v1.1"
         };
 
-        private IWeatherForecastService _weatherForecastService;
+        private readonly IWeatherForecastCollectionService _weatherForecastCollectionService;
 
         /// <inheritdoc />
-        public GetWeatherForecastsQueryNewHandler(IWeatherForecastService weatherForecastService) =>
-            _weatherForecastService = weatherForecastService;
+        public GetWeatherForecastsQueryNewHandler(IWeatherForecastCollectionService weatherForecastCollectionService) =>
+            _weatherForecastCollectionService = weatherForecastCollectionService;
 
         public override Task<IEnumerable<WeatherForecastService>> Handle(
             GetWeatherForecastsQueryNew request,
             CancellationToken           cancellationToken)
         {
-            Random rng = new();
-
-            IEnumerable<WeatherForecastService> vm = Enumerable.Range(1, 5)
-               .Select(
-                    index => _weatherForecastService.GetWeatherForecast(
-                        Clock.Now.AddDays(index),
-                        rng.Next(-20, 55),
-                        Summaries[rng.Next(Summaries.Length)]));
-
-            return Task.FromResult(vm);
+            return Task.FromResult<IEnumerable<WeatherForecastService>>(
+                _weatherForecastCollectionService.BuildForecasts(
+                    Clock.Now,
+                    Summaries));
         }
 
         public override IAsyncPolicy RetryPolicy() =>

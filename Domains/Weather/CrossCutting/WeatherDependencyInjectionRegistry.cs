@@ -34,6 +34,7 @@ public static class WeatherDependencyInjectionRegistry
         services.AddScoped(typeof(SyncWeatherServiceUseCase));
 
         services.RegisterProxied<IWeatherForecastService, WeatherForecastService>(ProxyInterceptorLifetime.Scoped);
+        services.AddScoped<IWeatherForecastCollectionService, WeatherForecastCollectionService>();
 
         return services;
     }
