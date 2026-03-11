@@ -58,7 +58,7 @@ public sealed class Account
     {
         await UseCase.ExecuteAsync(
                 new AuthenticateInput(
-                    dto.Username,
+                    dto.LoginIdentifier,
                     dto.Password,
                     dto.TwoFactorCode,
                     dto.RecoveryCode))

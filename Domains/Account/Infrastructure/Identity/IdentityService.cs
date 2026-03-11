@@ -1523,7 +1523,7 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         _httpContextAccessor.HttpContext
         ?? throw new InvalidOperationException("No active HttpContext is available.");
 
-    private IReadOnlyCollection<ExternalProviderConfiguration> GetExternalProviders()
+    private ExternalProviderConfiguration[] GetExternalProviders()
     {
         return _configuration
             .GetSection("ExternalIdentity:Providers")
@@ -1561,7 +1561,7 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         return true;
     }
 
-    private bool IsAllowedRedirectUri(string redirectUri)
+    private static bool IsAllowedRedirectUri(string redirectUri)
     {
         if (!Uri.TryCreate(redirectUri, UriKind.Absolute, out var uri))
             return false;
