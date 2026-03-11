@@ -220,6 +220,28 @@ public sealed class AccountAdministrationQueriesTests
                 }
             ]);
         }
+
+        public Task<IReadOnlyCollection<AccountAdminSummaryDto>?> SearchAccountsAsync(
+            Guid actorUserId,
+            string? query,
+            string? status,
+            string? role,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<EmailConfirmationTicket?> GenerateEmailConfirmationForUserAsync(
+            Guid actorUserId,
+            Guid targetUserId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<PasswordResetTicket?> GeneratePasswordResetForUserAsync(
+            Guid actorUserId,
+            Guid targetUserId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<int?> RevokeAllSessionsAsync(
+            Guid actorUserId,
+            Guid targetUserId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     private sealed class StubCurrentUserService : ICurrentUserService

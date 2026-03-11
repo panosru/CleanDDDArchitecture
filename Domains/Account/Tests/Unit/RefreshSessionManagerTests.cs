@@ -5,8 +5,12 @@ using CleanDDDArchitecture.Domains.Account.Infrastructure.Identity.Mechanism;
 using CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contexts;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace CleanDDDArchitecture.Domains.Account.Tests.Unit;
@@ -89,6 +93,23 @@ public sealed class RefreshSessionManagerTests
             new RefreshSessionManager(
                 context,
                 new AccountDomainConfiguration(configuration),
-                new HttpContextAccessor { HttpContext = httpContext }));
+                new HttpContextAccessor { HttpContext = httpContext },
+                CreateUserManager(context)));
+    }
+
+    private static UserManager<AccountUser> CreateUserManager(AccountDbContextWrite context)
+    {
+        var store = new UserStore<AccountUser, AccountRole, AccountDbContextWrite, Guid>(context);
+
+        return new UserManager<AccountUser>(
+            store,
+            Options.Create(new IdentityOptions()),
+            new PasswordHasher<AccountUser>(),
+            [],
+            [],
+            new UpperInvariantLookupNormalizer(),
+            new IdentityErrorDescriber(),
+            null,
+            NullLogger<UserManager<AccountUser>>.Instance);
     }
 }

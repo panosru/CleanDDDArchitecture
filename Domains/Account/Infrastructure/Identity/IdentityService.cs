@@ -542,6 +542,153 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         return await GetOwnSecurityEventsAsync(targetUserId, cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<IReadOnlyCollection<AccountAdminSummaryDto>?> SearchAccountsAsync(
+        Guid actorUserId,
+        string? query,
+        string? status,
+        string? role,
+        CancellationToken cancellationToken = default)
+    {
+        if (!await IsAdministratorAsync(actorUserId).ConfigureAwait(false))
+            return null;
+
+        IQueryable<AccountUser> usersQuery = _userManager.Users.AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(query))
+        {
+            var trimmed = query.Trim();
+            usersQuery = usersQuery.Where(
+                user =>
+                    (user.UserName != null && EF.Functions.ILike(user.UserName, $"%{trimmed}%"))
+                 || (user.Email != null && EF.Functions.ILike(user.Email, $"%{trimmed}%"))
+                 || EF.Functions.ILike(user.FirstName, $"%{trimmed}%")
+                 || EF.Functions.ILike(user.LastName, $"%{trimmed}%"));
+        }
+
+        if (!string.IsNullOrWhiteSpace(status)
+         && Enum.TryParse<AccountStatus>(status, true, out var parsedStatus))
+            usersQuery = usersQuery.Where(user => user.Status == parsedStatus);
+
+        var users = await usersQuery
+            .OrderBy(user => user.Email)
+            .Take(100)
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        List<AccountAdminSummaryDto> result = [];
+        foreach (var user in users)
+        {
+            var roles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+            if (!string.IsNullOrWhiteSpace(role)
+             && !roles.Any(item => string.Equals(item, role.Trim(), StringComparison.OrdinalIgnoreCase)))
+                continue;
+
+            result.Add(
+                new AccountAdminSummaryDto
+                {
+                    Id = user.Id,
+                    Username = user.UserName ?? string.Empty,
+                    FirstName = user.FirstName ?? string.Empty,
+                    LastName = user.LastName ?? string.Empty,
+                    Email = user.Email ?? string.Empty,
+                    EmailConfirmed = user.EmailConfirmed,
+                    Status = user.Status.ToString(),
+                    LastAccessed = user.LastAccessed,
+                    Roles = roles.OrderBy(item => item, StringComparer.OrdinalIgnoreCase).ToArray()
+                });
+        }
+
+        return result;
+    }
+
+    public async Task<EmailConfirmationTicket?> GenerateEmailConfirmationForUserAsync(
+        Guid actorUserId,
+        Guid targetUserId,
+        CancellationToken cancellationToken = default)
+    {
+        if (!await IsAdministratorAsync(actorUserId).ConfigureAwait(false))
+            return null;
+
+        var user = await _userManager.FindByIdAsync(targetUserId.ToString()).ConfigureAwait(false);
+        if (user is null || user.EmailConfirmed)
+            return null;
+
+        var ticket = await GenerateEmailConfirmationAsync(user.Email!, cancellationToken).ConfigureAwait(false);
+        if (ticket is not null)
+        {
+            await RecordSecurityEventAsync(
+                    user.Id,
+                    actorUserId,
+                    AccountSecurityEventTypes.EmailConfirmationRequested,
+                    "Email confirmation was requested by an administrator.",
+                    cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        return ticket;
+    }
+
+    public async Task<PasswordResetTicket?> GeneratePasswordResetForUserAsync(
+        Guid actorUserId,
+        Guid targetUserId,
+        CancellationToken cancellationToken = default)
+    {
+        if (!await IsAdministratorAsync(actorUserId).ConfigureAwait(false))
+            return null;
+
+        var user = await _userManager.FindByIdAsync(targetUserId.ToString()).ConfigureAwait(false);
+        if (user is null)
+            return null;
+
+        var ticket = await GeneratePasswordResetAsync(user.Email!, cancellationToken).ConfigureAwait(false);
+        if (ticket is not null)
+        {
+            await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+            await RecordSecurityEventAsync(
+                    user.Id,
+                    actorUserId,
+                    AccountSecurityEventTypes.PasswordResetRequested,
+                    "Password reset was requested by an administrator.",
+                    cancellationToken)
+                .ConfigureAwait(false);
+            await RecordSecurityEventAsync(
+                    user.Id,
+                    actorUserId,
+                    AccountSecurityEventTypes.SessionsRevoked,
+                    "All active sessions were revoked by an administrator due to a password reset.",
+                    cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        return ticket;
+    }
+
+    public async Task<int?> RevokeAllSessionsAsync(
+        Guid actorUserId,
+        Guid targetUserId,
+        CancellationToken cancellationToken = default)
+    {
+        if (!await IsAdministratorAsync(actorUserId).ConfigureAwait(false))
+            return null;
+
+        var user = await _userManager.FindByIdAsync(targetUserId.ToString()).ConfigureAwait(false);
+        if (user is null)
+            return null;
+
+        var revoked = await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+        await RecordSecurityEventAsync(
+                user.Id,
+                actorUserId,
+                AccountSecurityEventTypes.SessionsRevoked,
+                revoked == 0
+                    ? "An administrator requested session revocation, but there were no active sessions."
+                    : $"An administrator revoked all active sessions ({revoked} sessions).",
+                cancellationToken)
+            .ConfigureAwait(false);
+
+        return revoked;
+    }
+
     public async Task<EmailConfirmationTicket?> GenerateEmailConfirmationAsync(
         string email,
         CancellationToken cancellationToken = default)
