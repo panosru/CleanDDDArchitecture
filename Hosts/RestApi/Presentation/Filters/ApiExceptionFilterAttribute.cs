@@ -17,7 +17,7 @@ internal sealed class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 {
     /// <summary>
     /// </summary>
-    private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
+    private readonly Dictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
 
     /// <summary>
     /// </summary>
@@ -67,9 +67,9 @@ internal sealed class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     {
         Type type = context.Exception.GetType();
 
-        if (_exceptionHandlers.ContainsKey(type))
+        if (_exceptionHandlers.TryGetValue(type, out var handler))
         {
-            _exceptionHandlers[type].Invoke(context);
+            handler.Invoke(context);
 
             return;
         }

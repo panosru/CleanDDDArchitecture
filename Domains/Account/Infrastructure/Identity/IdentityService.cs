@@ -1791,6 +1791,12 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
 
     private string GeneratePhoneVerificationCode()
     {
+        var fixedCode = _configuration["PhoneVerification:FixedCode"];
+        if (!string.IsNullOrWhiteSpace(fixedCode)
+         && fixedCode.All(char.IsDigit)
+         && fixedCode.Length == GetPhoneVerificationCodeLength())
+            return fixedCode;
+
         var maxValueExclusive = (int)Math.Pow(10, GetPhoneVerificationCodeLength());
         var value = RandomNumberGenerator.GetInt32(maxValueExclusive);
 

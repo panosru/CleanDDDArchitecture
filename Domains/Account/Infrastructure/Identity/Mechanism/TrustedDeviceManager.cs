@@ -86,11 +86,25 @@ internal sealed class TrustedDeviceManager
         CancellationToken cancellationToken)
     {
         var now = DateTimeOffset.UtcNow;
-
-        return await _dbContext.TrustedDevices
+        var devices = await _dbContext.TrustedDevices
             .Where(item => item.UserId == userId && item.RevokedAtUtc == null && item.ExpiresAtUtc > now)
             .OrderByDescending(item => item.LastUsedAtUtc ?? item.CreatedAtUtc)
             .Select(
+                item =>
+                    new
+                    {
+                        Id = item.Id,
+                        DeviceName = item.DeviceName,
+                        item.CreatedAtUtc,
+                        item.ExpiresAtUtc,
+                        item.LastUsedAtUtc,
+                        CreatedByIp = item.CreatedByIp,
+                        UserAgent = item.UserAgent
+                    })
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        return devices.Select(
                 item =>
                     new AccountTrustedDeviceDto
                     {
@@ -98,14 +112,11 @@ internal sealed class TrustedDeviceManager
                         DeviceName = item.DeviceName,
                         CreatedAtUtc = item.CreatedAtUtc.UtcDateTime,
                         ExpiresAtUtc = item.ExpiresAtUtc.UtcDateTime,
-                        LastUsedAtUtc = item.LastUsedAtUtc.HasValue
-                            ? item.LastUsedAtUtc.Value.UtcDateTime
-                            : null,
+                        LastUsedAtUtc = item.LastUsedAtUtc?.UtcDateTime,
                         CreatedByIp = item.CreatedByIp,
                         UserAgent = item.UserAgent
                     })
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
+            .ToArray();
     }
 
     internal async Task<bool> RevokeTrustedDeviceAsync(
