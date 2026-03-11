@@ -13,7 +13,11 @@ public sealed class AccountGatewayTodoFlowTests : IAsyncLifetime
     private readonly AccountIntegrationEnvironment _environment = new();
     private readonly JsonSerializerOptions _jsonOptions = new() { PropertyNameCaseInsensitive = true };
 
-    public ValueTask InitializeAsync() => new(_environment.InitializeAsync());
+    public async ValueTask InitializeAsync()
+    {
+        using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMinutes(5));
+        await _environment.InitializeAsync(cancellationTokenSource.Token);
+    }
 
     public ValueTask DisposeAsync() => _environment.DisposeAsync();
 
