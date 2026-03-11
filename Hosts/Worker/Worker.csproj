@@ -20,6 +20,9 @@
         <PackageReference Include="NetEscapades.Configuration.Yaml" />
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\..\Library\Aviant\src\Kernel\Core\Core.csproj" />
+    </ItemGroup>
+    <ItemGroup>
         <Content Include="appsettings.yaml">
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -3,7 +3,6 @@
   <PropertyGroup>
     <RootNamespace>CleanDDDArchitecture.Hosts.RestApi.Presentation</RootNamespace>
     <AssemblyName>CleanDDDArchitecture.Hosts.RestApi.Presentation</AssemblyName>
-    <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <RuntimeIdentifiers>win-x64;osx-x64;linux-x64</RuntimeIdentifiers>
     <Version>1.0.$(Build).$(Revision)</Version>

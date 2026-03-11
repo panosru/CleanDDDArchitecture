@@ -42,7 +42,7 @@ public class ConfigurationSetup
     ///   Move EnvironmentVariablesConfigurationSource to the end of the configuration sources
     /// </summary>
     /// <param name="configurationBuilder"></param>
-    private void MoveEnvironmentVariablesToEnd(IConfigurationBuilder configurationBuilder)
+    private static void MoveEnvironmentVariablesToEnd(ConfigurationManager configurationBuilder)
     {
         // Items that needs to be moved to the end (FIFO)
         List<IConfigurationSource?> fifo = new()

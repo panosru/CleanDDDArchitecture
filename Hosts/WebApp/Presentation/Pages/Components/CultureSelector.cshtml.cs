@@ -36,7 +36,7 @@ public sealed class CultureSelector : ViewComponent
 
         _returnUrl = _returnUrl
            .Replace($"/{_currentCulture}", newCulture, StringComparison.OrdinalIgnoreCase)
-           .ToLower();
+           .ToLower(CultureInfo.InvariantCulture);
     }
 
     public IViewComponentResult Invoke(string name) =>

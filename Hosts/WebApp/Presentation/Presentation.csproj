@@ -3,7 +3,6 @@
   <PropertyGroup>
     <RootNamespace>CleanDDDArchitecture.Hosts.WebApp.Presentation</RootNamespace>
     <AssemblyName>CleanDDDArchitecture.Hosts.WebApp.Presentation</AssemblyName>
-    <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Version>1.0.$(Build).$(Revision)</Version>
   </PropertyGroup>

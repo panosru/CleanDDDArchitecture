@@ -139,7 +139,7 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
                 $"Could not extract a confirmation link from the email body.{Environment.NewLine}{message.Html ?? message.Text}");
         }
 
-        return match.Groups["url"].Value;
+        return System.Net.WebUtility.HtmlDecode(match.Groups["url"].Value);
     }
 
     public static string ExtractPasswordResetToken(MailpitMessageDetail message)
@@ -246,6 +246,34 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
                 $"kafka account events for '{email}'",
                 cancellationToken).ConfigureAwait(false)
             ;
+    }
+
+    public async Task<string> WaitForPhoneVerificationCodeAsync(
+        string phoneNumber,
+        string purpose,
+        TimeSpan timeout,
+        CancellationToken cancellationToken = default)
+    {
+        return await WaitForResultAsync(
+                () =>
+                {
+                    var logContent = File.Exists(_startupLogPath)
+                        ? File.ReadAllText(_startupLogPath)
+                        : string.Empty;
+                    var match = PhoneVerificationCodeRegex().Matches(logContent)
+                        .Cast<Match>()
+                        .LastOrDefault(candidate =>
+                            string.Equals(candidate.Groups["phone"].Value, phoneNumber, StringComparison.Ordinal)
+                         && string.Equals(candidate.Groups["purpose"].Value, purpose, StringComparison.OrdinalIgnoreCase));
+
+                    return Task.FromResult(
+                        match is { Success: true }
+                            ? (true, match.Groups["code"].Value)
+                            : (false, string.Empty));
+                },
+                timeout,
+                $"phone verification code for '{phoneNumber}' ({purpose})",
+                cancellationToken).ConfigureAwait(false);
     }
 
     public async ValueTask DisposeAsync()
@@ -464,6 +492,7 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
                 ["EmailSettings:SmtpUsername"] = string.Empty,
                 ["EmailSettings__SmtpPassword"] = string.Empty,
                 ["EmailSettings:SmtpPassword"] = string.Empty,
+                ["PhoneVerification__FixedCode"] = "123456",
                 ["EventSourcing__EnableConsumer"] = "false",
                 ["Jwt__Issuer"] = JwtIssuer,
                 ["Jwt__Audience"] = JwtAudience,
@@ -814,6 +843,11 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
 
     [GeneratedRegex("\"token\"\\s*:\\s*\"(?<token>[^\"]+)\"", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
     private static partial Regex PasswordResetTokenRegex();
+
+    [GeneratedRegex(
+        "PhoneNumber=(?<phone>\\S+)\\s+Purpose=(?<purpose>\\S+)\\s+Code=(?<code>\\d+)",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+    private static partial Regex PhoneVerificationCodeRegex();
 
     private sealed class MailpitMessagesResponse
     {

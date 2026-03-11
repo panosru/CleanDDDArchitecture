@@ -1,5 +1,6 @@
 using Aviant.Application.Email;
 using Aviant.Infrastructure.Email;
+using System.Globalization;
 
 namespace CleanDDDArchitecture.Hosts.RestApi.Presentation.ServiceExtensions;
 
@@ -21,7 +22,7 @@ public static class Email
         services.AddSingleton<ISmtpClientFactory, SmtpClientFactory>(
             provider => new SmtpClientFactory(
                 configuration["EmailSettings:SmtpHost"],
-                int.Parse(configuration["EmailSettings:SmtpPort"]),
+                int.Parse(configuration["EmailSettings:SmtpPort"]!, CultureInfo.InvariantCulture),
                 bool.Parse(configuration["EmailSettings:EnableSsl"]),
                 configuration["EmailSettings:SmtpUsername"],
                 configuration["EmailSettings:SmtpPassword"]));

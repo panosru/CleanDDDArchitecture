@@ -47,7 +47,7 @@ public class CustomRouteConvention : IApplicationModelConvention
     /// </summary>
     /// <param name="controllerType">The type of the controller for which to generate the route.</param>
     /// <returns>A string representing the route template.</returns>
-    private string GetRouteTemplate(Type controllerType)
+    private static string GetRouteTemplate(Type controllerType)
     {
         var segments = new List<string>();
 
@@ -90,7 +90,7 @@ public class CustomRouteConvention : IApplicationModelConvention
     /// </summary>
     /// <param name="controllerType">The type of the controller to check for parent controllers.</param>
     /// <returns>True if any parent controller has the RouteSegmentAttribute; otherwise, false.</returns>
-    private bool IsAnyParentControllerHasRouteSegmentAttribute(Type controllerType)
+    private static bool IsAnyParentControllerHasRouteSegmentAttribute(Type controllerType)
     {
         // Start checking from the parent of the current controller type.
         var baseType = controllerType.BaseType;
@@ -118,7 +118,7 @@ public class CustomRouteConvention : IApplicationModelConvention
     /// </summary>
     /// <param name="controllerType">The controller type to check.</param>
     /// <returns>True if the type is a base controller type; otherwise, false.</returns>
-    private bool IsBaseControllerType(Type controllerType)
+    private static bool IsBaseControllerType(Type controllerType)
     {
         // A controller type is considered a base controller if it is either ApiController or
         // a generic variant of ApiController<TUseCase, TUseCaseOutput>.
@@ -133,7 +133,7 @@ public class CustomRouteConvention : IApplicationModelConvention
     /// </summary>
     /// <param name="type">The type from which to extract the segment name.</param>
     /// <returns>A string representing the segment name derived from the type.</returns>
-    private string GetSegmentNameFromType(Type type)
+    private static string GetSegmentNameFromType(Type type)
     {
         // Handle generic types by removing the generic type notation (e.g., `1, `2, etc.).
         if (type.IsGenericType)
