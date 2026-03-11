@@ -153,6 +153,11 @@ public sealed class AccountStateManagementTests
             Guid targetUserId,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
+        public Task<IdentityResult> ReactivateAsync(
+            Guid actorUserId,
+            Guid targetUserId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
         public Task<IdentityResult> ReplaceRolesAsync(
             Guid actorUserId,
             Guid targetUserId,
@@ -199,6 +204,29 @@ public sealed class AccountStateManagementTests
         public Task<int?> RevokeAllSessionsAsync(
             Guid actorUserId,
             Guid targetUserId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<AccountDeletionRequestResult> RequestAccountDeletionAsync(
+            Guid userId,
+            string currentPassword,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IdentityResult> ConfirmAccountDeletionAsync(
+            string email,
+            string token,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IdentityResult> RequestPhoneVerificationAsync(
+            Guid userId,
+            string phoneNumber,
+            bool isChange,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IdentityResult> VerifyPhoneVerificationAsync(
+            Guid userId,
+            string phoneNumber,
+            string code,
+            bool isChange,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 

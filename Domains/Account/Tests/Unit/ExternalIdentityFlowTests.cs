@@ -115,12 +115,22 @@ public sealed class ExternalIdentityFlowTests
         public Guid? UnlinkUserId { get; private set; }
         public string? UnlinkProvider { get; private set; }
 
-        public Task<object?> AuthenticateAsync(string username, string password, string? twoFactorCode = null, string? recoveryCode = null, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<object?> AuthenticateAsync(
+            string username,
+            string password,
+            string? twoFactorCode = null,
+            string? recoveryCode = null,
+            string? trustedDeviceToken = null,
+            bool rememberDevice = false,
+            string? deviceName = null,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<AuthResult?> RefreshAsync(string refreshToken, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<bool> RevokeRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<int> RevokeAllRefreshTokensAsync(Guid userId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyCollection<AccountSessionDto>> GetActiveSessionsAsync(Guid userId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<bool> RevokeSessionAsync(Guid userId, Guid sessionId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyCollection<AccountTrustedDeviceDto>> GetTrustedDevicesAsync(Guid userId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<bool> RevokeTrustedDeviceAsync(Guid userId, Guid trustedDeviceId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<IReadOnlyCollection<ExternalIdentityProviderDto>> GetExternalProvidersAsync(CancellationToken cancellationToken = default)
         {

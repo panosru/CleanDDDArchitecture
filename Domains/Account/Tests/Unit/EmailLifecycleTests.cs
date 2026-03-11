@@ -128,6 +128,9 @@ public sealed class EmailLifecycleTests
             string password,
             string? twoFactorCode = null,
             string? recoveryCode = null,
+            string? trustedDeviceToken = null,
+            bool rememberDevice = false,
+            string? deviceName = null,
             CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
