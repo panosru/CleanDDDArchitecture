@@ -142,6 +142,18 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
         return match.Groups["url"].Value;
     }
 
+    public static string ExtractPasswordResetToken(MailpitMessageDetail message)
+    {
+        var match = PasswordResetTokenRegex().Match(message.Html ?? message.Text ?? string.Empty);
+        if (!match.Success)
+        {
+            throw new InvalidOperationException(
+                $"Could not extract a password reset token from the email body.{Environment.NewLine}{message.Html ?? message.Text}");
+        }
+
+        return System.Net.WebUtility.HtmlDecode(match.Groups["token"].Value);
+    }
+
     public async Task<Guid> WaitForConfirmedUserAsync(
         string email,
         TimeSpan timeout,
@@ -799,6 +811,9 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
 
     [GeneratedRegex("href='(?<url>[^']+)'", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
     private static partial Regex ConfirmationUrlRegex();
+
+    [GeneratedRegex("\"token\"\\s*:\\s*\"(?<token>[^\"]+)\"", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+    private static partial Regex PasswordResetTokenRegex();
 
     private sealed class MailpitMessagesResponse
     {
