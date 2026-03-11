@@ -19,6 +19,12 @@ public sealed class AuthenticateDto : IValidatableObject
 
     public string? RecoveryCode { get; set; }
 
+    public string? TrustedDeviceToken { get; set; }
+
+    public bool RememberDevice { get; set; }
+
+    public string? DeviceName { get; set; }
+
     public string LoginIdentifier =>
         !string.IsNullOrWhiteSpace(Email)
             ? Email

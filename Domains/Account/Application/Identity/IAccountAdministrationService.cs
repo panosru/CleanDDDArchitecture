@@ -10,6 +10,11 @@ public interface IAccountAdministrationService
         string currentPassword,
         CancellationToken cancellationToken = default);
 
+    public Task<IdentityResult> ReactivateAsync(
+        Guid actorUserId,
+        Guid targetUserId,
+        CancellationToken cancellationToken = default);
+
     public Task<IdentityResult> SuspendAsync(
         Guid actorUserId,
         Guid targetUserId,
@@ -77,5 +82,28 @@ public interface IAccountAdministrationService
     public Task<int?> RevokeAllSessionsAsync(
         Guid actorUserId,
         Guid targetUserId,
+        CancellationToken cancellationToken = default);
+
+    public Task<AccountDeletionRequestResult> RequestAccountDeletionAsync(
+        Guid userId,
+        string currentPassword,
+        CancellationToken cancellationToken = default);
+
+    public Task<IdentityResult> ConfirmAccountDeletionAsync(
+        string email,
+        string token,
+        CancellationToken cancellationToken = default);
+
+    public Task<IdentityResult> RequestPhoneVerificationAsync(
+        Guid userId,
+        string phoneNumber,
+        bool isChange,
+        CancellationToken cancellationToken = default);
+
+    public Task<IdentityResult> VerifyPhoneVerificationAsync(
+        Guid userId,
+        string phoneNumber,
+        string code,
+        bool isChange,
         CancellationToken cancellationToken = default);
 }

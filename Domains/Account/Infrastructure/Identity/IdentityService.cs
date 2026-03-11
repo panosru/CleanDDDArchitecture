@@ -1,4 +1,5 @@
 using Aviant.Application.Identity;
+using CleanDDDArchitecture.Domains.Account.Application.Notifications;
 using CleanDDDArchitecture.Domains.Account.Application.Identity;
 using CleanDDDArchitecture.Domains.Account.Core;
 using CleanDDDArchitecture.Domains.Account.Core.Identity.Dto;
@@ -28,6 +29,7 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Identity;
 public sealed class IdentityService : IIdentityService, IAccountAuthenticationService, IAccountAdministrationService
 {
     private const int EmailChangeTokenLifetimeHours = 24;
+    private const int AccountDeletionTokenLifetimeHours = 24;
     private const int ExternalStateLifetimeMinutesDefault = 15;
     private const int RecoveryCodesCount = 10;
     private static readonly HashSet<string> ReservedClaimTypes =
@@ -54,12 +56,15 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
     private readonly AccountDbContextWrite _accountDbContextWrite;
     private readonly Authenticator _authenticator;
     private readonly ConfirmEmail _confirmEmail;
+    private readonly IDataProtector _accountDeletionProtector;
     private readonly IDataProtector _emailChangeProtector;
     private readonly IDataProtector _externalStateProtector;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IPhoneVerificationSender _phoneVerificationSender;
     private readonly RefreshSessionManager _refreshSessionManager;
     private readonly RoleManager<AccountRole> _roleManager;
+    private readonly TrustedDeviceManager _trustedDeviceManager;
     private readonly UserManager<AccountUser> _userManager;
     private readonly IConfiguration _configuration;
 
@@ -70,17 +75,21 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         AccountDbContextWrite accountDbContextWrite,
         IDataProtectionProvider dataProtectionProvider,
         IHttpContextAccessor httpContextAccessor,
-        IHttpClientFactory httpClientFactory)
+        IHttpClientFactory httpClientFactory,
+        IPhoneVerificationSender phoneVerificationSender)
     {
         _configuration = config.Configuration();
         _accountDbContextWrite = accountDbContextWrite;
         _httpContextAccessor = httpContextAccessor;
         _httpClientFactory = httpClientFactory;
+        _phoneVerificationSender = phoneVerificationSender;
         _userManager = userManager;
         _roleManager = roleManager;
         _refreshSessionManager = new RefreshSessionManager(accountDbContextWrite, config, httpContextAccessor, userManager);
-        _authenticator = new Authenticator(userManager, _refreshSessionManager);
+        _trustedDeviceManager = new TrustedDeviceManager(accountDbContextWrite, httpContextAccessor, config);
+        _authenticator = new Authenticator(userManager, _refreshSessionManager, _trustedDeviceManager);
         _confirmEmail = new ConfirmEmail(userManager);
+        _accountDeletionProtector = dataProtectionProvider.CreateProtector("CleanDDDArchitecture.Account.Deletion");
         _emailChangeProtector = dataProtectionProvider.CreateProtector("CleanDDDArchitecture.Account.EmailChange");
         _externalStateProtector = dataProtectionProvider.CreateProtector("CleanDDDArchitecture.Account.ExternalIdentity.State");
     }
@@ -90,9 +99,20 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         string password,
         string? twoFactorCode = null,
         string? recoveryCode = null,
+        string? trustedDeviceToken = null,
+        bool rememberDevice = false,
+        string? deviceName = null,
         CancellationToken cancellationToken = default) =>
         await _authenticator
-            .AuthenticateAsync(username, password, twoFactorCode, recoveryCode, cancellationToken)
+            .AuthenticateAsync(
+                username,
+                password,
+                twoFactorCode,
+                recoveryCode,
+                trustedDeviceToken,
+                rememberDevice,
+                deviceName,
+                cancellationToken)
             .ConfigureAwait(false);
 
     public async Task<MfaSetupTicket?> BeginMfaSetupAsync(
@@ -151,6 +171,7 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
 
         await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
         await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+        await RevokeTrustedDevicesAndRecordAsync(user.Id, user.Id, cancellationToken).ConfigureAwait(false);
         await RecordSecurityEventAsync(
                 user.Id,
                 user.Id,
@@ -185,6 +206,7 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         await _userManager.ResetAuthenticatorKeyAsync(user).ConfigureAwait(false);
         await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
         await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+        await RevokeTrustedDevicesAndRecordAsync(user.Id, user.Id, cancellationToken).ConfigureAwait(false);
         await RecordSecurityEventAsync(
                 user.Id,
                 user.Id,
@@ -218,6 +240,7 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
 
         await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
         await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+        await RevokeTrustedDevicesAndRecordAsync(user.Id, user.Id, cancellationToken).ConfigureAwait(false);
         await RecordSecurityEventAsync(
                 user.Id,
                 user.Id,
@@ -251,6 +274,31 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
                 "Self deactivated.",
                 shouldLockOut: true,
                 actorUserId: user.Id,
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task<IdentityResult> ReactivateAsync(
+        Guid actorUserId,
+        Guid targetUserId,
+        CancellationToken cancellationToken = default)
+    {
+        if (!await IsAdministratorAsync(actorUserId).ConfigureAwait(false))
+            return IdentityResult.Failure(["Administrator access is required."]);
+
+        var user = await _userManager.FindByIdAsync(targetUserId.ToString()).ConfigureAwait(false);
+        if (user is null)
+            return IdentityResult.Failure(UserNotFoundErrors);
+
+        if (user.Status == AccountStatus.Active)
+            return IdentityResult.Success();
+
+        return await ApplyStatusAsync(
+                user,
+                AccountStatus.Active,
+                "Reactivated by administrator.",
+                shouldLockOut: false,
+                actorUserId: actorUserId,
                 cancellationToken)
             .ConfigureAwait(false);
     }
@@ -657,6 +705,7 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         if (ticket is not null)
         {
             await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+            await RevokeTrustedDevicesAndRecordAsync(user.Id, actorUserId, cancellationToken).ConfigureAwait(false);
             await RecordSecurityEventAsync(
                     user.Id,
                     actorUserId,
@@ -700,6 +749,191 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
             .ConfigureAwait(false);
 
         return revoked;
+    }
+
+    public async Task<AccountDeletionRequestResult> RequestAccountDeletionAsync(
+        Guid userId,
+        string currentPassword,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString()).ConfigureAwait(false);
+        if (user is null)
+            return new AccountDeletionRequestResult(IdentityResult.Failure(UserNotFoundErrors), null);
+
+        if (!await _userManager.CheckPasswordAsync(user, currentPassword).ConfigureAwait(false))
+            return new AccountDeletionRequestResult(IdentityResult.Failure(["Invalid current password."]), null);
+
+        if (user.Status == AccountStatus.Deleted)
+            return new AccountDeletionRequestResult(IdentityResult.Success(), null);
+
+        var payload = new AccountDeletionTokenPayload(
+            user.Id,
+            user.Email ?? string.Empty,
+            user.SecurityStamp ?? string.Empty,
+            DateTimeOffset.UtcNow.AddHours(AccountDeletionTokenLifetimeHours));
+        var protectedBytes = _accountDeletionProtector.Protect(JsonSerializer.SerializeToUtf8Bytes(payload));
+        var encodedToken = WebEncoders.Base64UrlEncode(protectedBytes);
+
+        await RecordSecurityEventAsync(
+                user.Id,
+                user.Id,
+                AccountSecurityEventTypes.AccountDeletionRequested,
+                "Account deletion was requested.",
+                cancellationToken)
+            .ConfigureAwait(false);
+
+        return new AccountDeletionRequestResult(
+            IdentityResult.Success(),
+            new AccountDeletionTicket(user.Email ?? string.Empty, user.FullName, encodedToken));
+    }
+
+    public async Task<IdentityResult> ConfirmAccountDeletionAsync(
+        string email,
+        string token,
+        CancellationToken cancellationToken = default)
+    {
+        var payload = DecodeAccountDeletionToken(token);
+        if (payload is null
+         || payload.ExpiresAtUtc <= DateTimeOffset.UtcNow
+         || !string.Equals(payload.Email, email, StringComparison.OrdinalIgnoreCase))
+            return IdentityResult.Failure(["Invalid account deletion token."]);
+
+        var user = await _userManager.FindByIdAsync(payload.UserId.ToString()).ConfigureAwait(false);
+        if (user is null)
+            return IdentityResult.Failure(UserNotFoundErrors);
+
+        if (!string.Equals(user.SecurityStamp, payload.SecurityStamp, StringComparison.Ordinal))
+            return IdentityResult.Failure(["Invalid account deletion token."]);
+
+        if (user.Status == AccountStatus.Deleted)
+            return IdentityResult.Success();
+
+        return await ApplyStatusAsync(
+                user,
+                AccountStatus.Deleted,
+                "Deleted by owner.",
+                shouldLockOut: true,
+                actorUserId: user.Id,
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task<IdentityResult> RequestPhoneVerificationAsync(
+        Guid userId,
+        string phoneNumber,
+        bool isChange,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString()).ConfigureAwait(false);
+        if (user is null)
+            return IdentityResult.Failure(UserNotFoundErrors);
+
+        if (isChange && string.IsNullOrWhiteSpace(user.PhoneNumber))
+            return IdentityResult.Failure(["An existing phone number is required before it can be changed."]);
+
+        if (string.Equals(user.PhoneNumber, phoneNumber, StringComparison.OrdinalIgnoreCase) && user.PhoneNumberConfirmed)
+            return IdentityResult.Failure(["The phone number is already verified."]);
+
+        var now = DateTimeOffset.UtcNow;
+        var purpose = isChange ? "change" : "verify";
+        var existing = await _accountDbContextWrite.PhoneVerifications
+            .Where(
+                item =>
+                    item.UserId == user.Id
+                 && item.PhoneNumber == phoneNumber
+                 && item.Purpose == purpose
+                 && item.ConsumedAtUtc == null
+                 && item.ExpiresAtUtc > now)
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        if (existing.Count > 0)
+            _accountDbContextWrite.PhoneVerifications.RemoveRange(existing);
+
+        var code = GeneratePhoneVerificationCode();
+        _accountDbContextWrite.PhoneVerifications.Add(
+            new Persistence.Entities.AccountPhoneVerification
+            {
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+                PhoneNumber = phoneNumber,
+                Purpose = purpose,
+                CodeHash = HashVerificationCode(code),
+                CreatedAtUtc = now,
+                ExpiresAtUtc = now.AddMinutes(GetPhoneVerificationExpirationInMinutes()),
+                CreatedByIp = GetRemoteIp()
+            });
+
+        await _accountDbContextWrite.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await _phoneVerificationSender
+            .SendVerificationCodeAsync(phoneNumber, code, isChange, cancellationToken)
+            .ConfigureAwait(false);
+        await RecordSecurityEventAsync(
+                user.Id,
+                user.Id,
+                AccountSecurityEventTypes.PhoneVerificationRequested,
+                isChange
+                    ? $"Phone change verification was requested for '{phoneNumber}'."
+                    : $"Phone verification was requested for '{phoneNumber}'.",
+                cancellationToken)
+            .ConfigureAwait(false);
+
+        return IdentityResult.Success();
+    }
+
+    public async Task<IdentityResult> VerifyPhoneVerificationAsync(
+        Guid userId,
+        string phoneNumber,
+        string code,
+        bool isChange,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString()).ConfigureAwait(false);
+        if (user is null)
+            return IdentityResult.Failure(UserNotFoundErrors);
+
+        var purpose = isChange ? "change" : "verify";
+        var verification = await _accountDbContextWrite.PhoneVerifications
+            .Where(
+                item =>
+                    item.UserId == user.Id
+                 && item.PhoneNumber == phoneNumber
+                 && item.Purpose == purpose
+                 && item.ConsumedAtUtc == null)
+            .OrderByDescending(item => item.CreatedAtUtc)
+            .FirstOrDefaultAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        if (verification is null || verification.ExpiresAtUtc <= DateTimeOffset.UtcNow)
+            return IdentityResult.Failure(["Invalid phone verification code."]);
+
+        var expectedHash = Convert.FromHexString(verification.CodeHash);
+        var presentedHash = Convert.FromHexString(HashVerificationCode(code));
+        if (!CryptographicOperations.FixedTimeEquals(expectedHash, presentedHash))
+            return IdentityResult.Failure(["Invalid phone verification code."]);
+
+        verification.ConsumedAtUtc = DateTimeOffset.UtcNow;
+        user.PhoneNumber = phoneNumber;
+        user.PhoneNumberConfirmed = true;
+
+        var updateResult = await _userManager.UpdateAsync(user).ConfigureAwait(false);
+        if (!updateResult.Succeeded)
+            return updateResult.ToApplicationResult();
+
+        await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
+        await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+        await RevokeTrustedDevicesAndRecordAsync(user.Id, user.Id, cancellationToken).ConfigureAwait(false);
+        await RecordSecurityEventAsync(
+                user.Id,
+                user.Id,
+                isChange ? AccountSecurityEventTypes.PhoneChanged : AccountSecurityEventTypes.PhoneVerified,
+                isChange
+                    ? $"Phone number changed to '{phoneNumber}'."
+                    : $"Phone number '{phoneNumber}' was verified.",
+                cancellationToken)
+            .ConfigureAwait(false);
+
+        return IdentityResult.Success();
     }
 
     public async Task<EmailConfirmationTicket?> GenerateEmailConfirmationAsync(
@@ -792,14 +1026,20 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         if (user is null)
             return IdentityResult.Failure(UserNotFoundErrors);
 
+        var reuseCheck = await EnsurePasswordNotReusedAsync(user, newPassword, cancellationToken).ConfigureAwait(false);
+        if (reuseCheck is not null)
+            return IdentityResult.Failure([reuseCheck]);
+
         var decodedToken = DecodeToken(token);
         var result = await _userManager.ResetPasswordAsync(user, decodedToken, newPassword).ConfigureAwait(false);
 
         if (!result.Succeeded)
             return result.ToApplicationResult();
 
+        await RecordPasswordHistoryAsync(user, cancellationToken).ConfigureAwait(false);
         await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
         await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+        await RevokeTrustedDevicesAndRecordAsync(user.Id, user.Id, cancellationToken).ConfigureAwait(false);
         await RecordSecurityEventAsync(
                 user.Id,
                 user.Id,
@@ -822,13 +1062,19 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         if (user is null)
             return IdentityResult.Failure(UserNotFoundErrors);
 
+        var reuseCheck = await EnsurePasswordNotReusedAsync(user, newPassword, cancellationToken).ConfigureAwait(false);
+        if (reuseCheck is not null)
+            return IdentityResult.Failure([reuseCheck]);
+
         var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword).ConfigureAwait(false);
 
         if (!result.Succeeded)
             return result.ToApplicationResult();
 
+        await RecordPasswordHistoryAsync(user, cancellationToken).ConfigureAwait(false);
         await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
         await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+        await RevokeTrustedDevicesAndRecordAsync(user.Id, user.Id, cancellationToken).ConfigureAwait(false);
         await RecordSecurityEventAsync(
                 user.Id,
                 user.Id,
@@ -1150,6 +1396,34 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         return revoked;
     }
 
+    public async Task<IReadOnlyCollection<AccountTrustedDeviceDto>> GetTrustedDevicesAsync(
+        Guid userId,
+        CancellationToken cancellationToken = default) =>
+        await _trustedDeviceManager.GetTrustedDevicesAsync(userId, cancellationToken).ConfigureAwait(false);
+
+    public async Task<bool> RevokeTrustedDeviceAsync(
+        Guid userId,
+        Guid trustedDeviceId,
+        CancellationToken cancellationToken = default)
+    {
+        var revoked = await _trustedDeviceManager
+            .RevokeTrustedDeviceAsync(userId, trustedDeviceId, cancellationToken)
+            .ConfigureAwait(false);
+
+        if (revoked)
+        {
+            await RecordSecurityEventAsync(
+                    userId,
+                    userId,
+                    AccountSecurityEventTypes.TrustedDeviceRevoked,
+                    $"Trusted device '{trustedDeviceId}' was revoked.",
+                    cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        return revoked;
+    }
+
     public async Task<IdentityResult> ConfirmEmailAsync(
         string token,
         string email,
@@ -1251,6 +1525,7 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
 
         await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
         await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+        await RevokeTrustedDevicesAndRecordAsync(user.Id, user.Id, cancellationToken).ConfigureAwait(false);
         await RecordSecurityEventAsync(
                 user.Id,
                 user.Id,
@@ -1330,7 +1605,10 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         var addRolesResult = await _userManager.AddToRolesAsync(user, normalizedRoles).ConfigureAwait(false);
 
         if (addRolesResult.Succeeded)
+        {
+            await RecordPasswordHistoryAsync(user, cancellationToken).ConfigureAwait(false);
             return (IdentityResult.Success(), user.Id);
+        }
 
         await _userManager.DeleteAsync(user).ConfigureAwait(false);
 
@@ -1357,6 +1635,170 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
 
         return result.ToApplicationResult();
     }
+
+    private async Task<string?> EnsurePasswordNotReusedAsync(
+        AccountUser user,
+        string newPassword,
+        CancellationToken cancellationToken)
+    {
+        var historyDepth = GetPasswordHistoryDepth();
+        if (historyDepth <= 0)
+            return null;
+
+        var history = await _accountDbContextWrite.PasswordHistory
+            .Where(item => item.UserId == user.Id)
+            .OrderByDescending(item => item.CreatedAtUtc)
+            .Take(historyDepth)
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        foreach (var entry in history)
+        {
+            var verification = _userManager.PasswordHasher.VerifyHashedPassword(user, entry.PasswordHash, newPassword);
+            if (verification is PasswordVerificationResult.Success or PasswordVerificationResult.SuccessRehashNeeded)
+                return $"You cannot reuse any of your last {historyDepth} passwords.";
+        }
+
+        return null;
+    }
+
+    private async Task RecordPasswordHistoryAsync(
+        AccountUser user,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(user.PasswordHash))
+            return;
+
+        var latestHash = await _accountDbContextWrite.PasswordHistory
+            .Where(item => item.UserId == user.Id)
+            .OrderByDescending(item => item.CreatedAtUtc)
+            .Select(item => item.PasswordHash)
+            .FirstOrDefaultAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        if (string.Equals(latestHash, user.PasswordHash, StringComparison.Ordinal))
+            return;
+
+        _accountDbContextWrite.PasswordHistory.Add(
+            new Persistence.Entities.AccountPasswordHistory
+            {
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+                PasswordHash = user.PasswordHash,
+                CreatedAtUtc = DateTimeOffset.UtcNow
+            });
+
+        await _accountDbContextWrite.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await PrunePasswordHistoryAsync(user.Id, cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task PrunePasswordHistoryAsync(
+        Guid userId,
+        CancellationToken cancellationToken)
+    {
+        var historyDepth = GetPasswordHistoryDepth();
+        if (historyDepth <= 0)
+            return;
+
+        var staleEntries = await _accountDbContextWrite.PasswordHistory
+            .Where(item => item.UserId == userId)
+            .OrderByDescending(item => item.CreatedAtUtc)
+            .Skip(historyDepth)
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        if (staleEntries.Count == 0)
+            return;
+
+        _accountDbContextWrite.PasswordHistory.RemoveRange(staleEntries);
+        await _accountDbContextWrite.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    private int GetPasswordHistoryDepth()
+    {
+        if (int.TryParse(
+                _configuration["PasswordHistory:RememberCount"],
+                CultureInfo.InvariantCulture,
+                out var rememberCount)
+         && rememberCount >= 0)
+            return rememberCount;
+
+        return 5;
+    }
+
+    private async Task RevokeTrustedDevicesAndRecordAsync(
+        Guid userId,
+        Guid? actorUserId,
+        CancellationToken cancellationToken)
+    {
+        var revoked = await _trustedDeviceManager.RevokeAllTrustedDevicesAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (revoked > 0)
+        {
+            await RecordSecurityEventAsync(
+                    userId,
+                    actorUserId,
+                    AccountSecurityEventTypes.TrustedDevicesRevoked,
+                    $"All trusted devices were revoked ({revoked} devices).",
+                    cancellationToken)
+                .ConfigureAwait(false);
+        }
+    }
+
+    private AccountDeletionTokenPayload? DecodeAccountDeletionToken(string token)
+    {
+        try
+        {
+            var protectedBytes = WebEncoders.Base64UrlDecode(token);
+            var bytes = _accountDeletionProtector.Unprotect(protectedBytes);
+
+            return JsonSerializer.Deserialize<AccountDeletionTokenPayload>(bytes);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private sealed record AccountDeletionTokenPayload(
+        Guid UserId,
+        string Email,
+        string SecurityStamp,
+        DateTimeOffset ExpiresAtUtc);
+
+    private int GetPhoneVerificationExpirationInMinutes()
+    {
+        if (int.TryParse(
+                _configuration["PhoneVerification:ExpirationDurationInMinutes"],
+                CultureInfo.InvariantCulture,
+                out var minutes)
+         && minutes > 0)
+            return minutes;
+
+        return 10;
+    }
+
+    private int GetPhoneVerificationCodeLength()
+    {
+        if (int.TryParse(
+                _configuration["PhoneVerification:CodeLength"],
+                CultureInfo.InvariantCulture,
+                out var codeLength)
+         && codeLength is >= 4 and <= 10)
+            return codeLength;
+
+        return 6;
+    }
+
+    private string GeneratePhoneVerificationCode()
+    {
+        var maxValueExclusive = (int)Math.Pow(10, GetPhoneVerificationCodeLength());
+        var value = RandomNumberGenerator.GetInt32(maxValueExclusive);
+
+        return value.ToString($"D{GetPhoneVerificationCodeLength()}", CultureInfo.InvariantCulture);
+    }
+
+    private static string HashVerificationCode(string code) =>
+        Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(code.Trim())));
 
     private static string DecodeToken(string token)
     {
@@ -1461,11 +1903,15 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
 
         await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
         await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+        await RevokeTrustedDevicesAndRecordAsync(user.Id, actorUserId, cancellationToken).ConfigureAwait(false);
         var eventType = status switch
         {
             AccountStatus.Deactivated => AccountSecurityEventTypes.AccountDeactivated,
             AccountStatus.Suspended => AccountSecurityEventTypes.AccountSuspended,
+            AccountStatus.Active when string.Equals(reason, "Reactivated by administrator.", StringComparison.Ordinal) =>
+                AccountSecurityEventTypes.AccountReactivated,
             AccountStatus.Active => AccountSecurityEventTypes.AccountUnsuspended,
+            AccountStatus.Deleted => AccountSecurityEventTypes.AccountDeleted,
             _ => nameof(AccountStatus)
         };
         await RecordSecurityEventAsync(user.Id, actorUserId, eventType, reason, cancellationToken).ConfigureAwait(false);

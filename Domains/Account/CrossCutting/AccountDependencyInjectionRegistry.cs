@@ -16,6 +16,7 @@ using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminGetClaims;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminGetRoles;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminListAccounts;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminForcePasswordReset;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminReactivate;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminSecurityEvents;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminRevokeAllSessions;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminResendConfirmation;
@@ -26,6 +27,7 @@ using CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangeEmailReque
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Deactivate;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.DeleteAccount;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ExternalBegin;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ExternalComplete;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ExternalLogins;
@@ -40,12 +42,14 @@ using CleanDDDArchitecture.Domains.Account.Application.UseCases.MfaRecoveryCodes
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.MfaSetup;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.MfaVerify;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Profile;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.PhoneVerification;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.RefreshToken;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ResendConfirmation;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ResetPassword;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.RevokeSession;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Sessions;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.SecurityEvents;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.TrustedDevices;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails;
 using Aviant.Application.EventSourcing.EventBus;
 using Aviant.Application.Identity;
@@ -61,6 +65,7 @@ using Aviant.Infrastructure.EventSourcing.Transport.Kafka;
 using CleanDDDArchitecture.Domains.Account.Core;
 using CleanDDDArchitecture.Domains.Account.Infrastructure;
 using CleanDDDArchitecture.Domains.Account.Infrastructure.Identity;
+using CleanDDDArchitecture.Domains.Account.Infrastructure.Notifications;
 using CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contexts;
 using CleanDDDArchitecture.Domains.Account.Infrastructure.Repositories;
 using CleanDDDArchitecture.Domains.Account.Infrastructure.Workers;
@@ -150,6 +155,7 @@ public static class AccountDependencyInjectionRegistry
         services.AddScoped<IIdentityService>(provider => provider.GetRequiredService<IdentityService>());
         services.AddScoped<IAccountAuthenticationService>(provider => provider.GetRequiredService<IdentityService>());
         services.AddScoped<IAccountAdministrationService>(provider => provider.GetRequiredService<IdentityService>());
+        services.AddScoped<Application.Notifications.IPhoneVerificationSender, LoggingPhoneVerificationSender>();
         services.AddHttpClient();
 
         services
@@ -254,6 +260,7 @@ public static class AccountDependencyInjectionRegistry
         services.AddScoped<AdminSuspendUseCase>();
         services.AddScoped<AdminUnsuspendUseCase>();
         services.AddScoped<AdminUnlockUseCase>();
+        services.AddScoped<AdminReactivateUseCase>();
         services.AddScoped<AdminListAccountsUseCase>();
         services.AddScoped<AdminGetRolesUseCase>();
         services.AddScoped<AdminUpdateRolesUseCase>();
@@ -275,11 +282,17 @@ public static class AccountDependencyInjectionRegistry
         services.AddScoped<ChangeEmailConfirmUseCase>();
         services.AddScoped<ConfirmEmailUseCase>();
         services.AddScoped<AccountCreateUseCase>();
+        services.AddScoped<RequestPhoneVerificationUseCase>();
+        services.AddScoped<VerifyPhoneVerificationUseCase>();
+        services.AddScoped<DeleteAccountRequestUseCase>();
+        services.AddScoped<DeleteAccountConfirmUseCase>();
         services.AddScoped<RefreshTokenUseCase>();
         services.AddScoped<LogoutUseCase>();
         services.AddScoped<LogoutAllUseCase>();
         services.AddScoped<ListSessionsUseCase>();
         services.AddScoped<RevokeSessionUseCase>();
+        services.AddScoped<ListTrustedDevicesUseCase>();
+        services.AddScoped<RevokeTrustedDeviceUseCase>();
         services.AddScoped<SecurityEventsUseCase>();
         services.AddScoped<UpdateDetailsUseCase>();
         services.AddScoped<GetAccountUseCase>();

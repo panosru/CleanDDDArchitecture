@@ -61,7 +61,10 @@ public sealed class Account
                     dto.LoginIdentifier,
                     dto.Password,
                     dto.TwoFactorCode,
-                    dto.RecoveryCode))
+                    dto.RecoveryCode,
+                    dto.TrustedDeviceToken,
+                    dto.RememberDevice,
+                    dto.DeviceName))
            .ConfigureAwait(false);
 
         return ViewModel;
