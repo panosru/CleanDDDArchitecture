@@ -466,3 +466,7 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+
+# Local tools and malformed generated output paths
+.tools/
+**/bin\\Debug/
