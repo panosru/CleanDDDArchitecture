@@ -1,0 +1,62 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageVersion Include="AppSettings.DependentUpon" Version="0.1.0" />
+    <PackageVersion Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageVersion Include="BouncyCastle.Cryptography" Version="2.6.2" />
+    <PackageVersion Include="Confluent.Kafka" Version="2.12.0" />
+    <PackageVersion Include="EasyCaching.Core" Version="1.9.2" />
+    <PackageVersion Include="EasyCaching.InMemory" Version="1.9.2" />
+    <PackageVersion Include="EasyCaching.Redis" Version="1.9.2" />
+    <PackageVersion Include="FluentAssertions" Version="8.8.0" />
+    <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.10" />
+    <PackageVersion Include="Hangfire.Core" Version="1.8.10" />
+    <PackageVersion Include="Hangfire.PostgreSql" Version="1.21.0" />
+    <PackageVersion Include="Hangfire.SqlServer" Version="1.8.10" />
+    <PackageVersion Include="Lamar" Version="13.0.2" />
+    <PackageVersion Include="MailKit" Version="4.15.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="8.0.2" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.2" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
+    <PackageVersion Include="Microsoft.Data.SqlClient" Version="5.1.5" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.FeatureManagement.AspNetCore" Version="3.1.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageVersion Include="Microsoft.Playwright" Version="1.58.0" />
+    <PackageVersion Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.21.0" />
+    <PackageVersion Include="NetEscapades.AspNetCore.SecurityHeaders.TagHelpers" Version="0.21.0" />
+    <PackageVersion Include="NetEscapades.Configuration.Yaml" Version="3.1.0" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageVersion Include="Npgsql" Version="10.0.1" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+    <PackageVersion Include="ReportGenerator" Version="5.5.1" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="5.0.1" />
+    <PackageVersion Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Grafana.Loki" Version="8.3.1" />
+    <PackageVersion Include="StackExchange.Redis" Version="2.11.8" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUi" Version="6.5.0" />
+    <PackageVersion Include="MimeKit" Version="4.15.1" />
+    <PackageVersion Include="Testcontainers" Version="4.10.0" />
+    <PackageVersion Include="Westwind.AspnetCore.LiveReload" Version="0.5.0" />
+    <PackageVersion Include="xunit.v3" Version="3.2.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
+    <PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0" />
+    <PackageVersion Include="coverlet.collector" Version="8.0.0" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,3 @@
+---
+DataProtection:
+  KeysPath: "./DataProtection-Keys"

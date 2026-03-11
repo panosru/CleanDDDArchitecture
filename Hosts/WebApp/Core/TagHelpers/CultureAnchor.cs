@@ -77,16 +77,15 @@ public class CultureAnchor : AnchorTagHelper
 
     /// <summary>
     /// </summary>
-    private readonly string _defaultRequestCulture = Cultures.DefaultRequestCulture.Culture.ToString().ToLower();
+    private readonly string _defaultRequestCulture = Cultures.DefaultRequestCulture.Culture.ToString().ToLowerInvariant();
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
-        #pragma warning disable 8600
-        #pragma warning disable 8602
-        RouteValues["culture"] = (string)_contextAccessor.HttpContext.Request.RouteValues["culture"]
-                              ?? _defaultRequestCulture;
-        #pragma warning restore 8602
-        #pragma warning restore 8600
+        var culture = _contextAccessor.HttpContext?.Request.RouteValues["culture"]?.ToString();
+
+        RouteValues["culture"] = string.IsNullOrWhiteSpace(culture)
+            ? _defaultRequestCulture
+            : culture;
 
         base.Process(context, output);
     }

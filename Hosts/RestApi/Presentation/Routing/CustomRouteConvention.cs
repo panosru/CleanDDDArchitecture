@@ -27,14 +27,17 @@ public class CustomRouteConvention : IApplicationModelConvention
             // Iterate through each route selector in the controller.
             foreach (var selector in controller.Selectors)
             {
-                if (selector.AttributeRouteModel != null)
-                {
-                    // Replace the placeholder [segments] in the route template with the generated route.
-                    var template = selector.AttributeRouteModel.Template.Replace("[segments]", routeTemplate);
+                var attributeRouteModel = selector.AttributeRouteModel;
+                var template = attributeRouteModel?.Template;
 
-                    // Update the controller's route model with the new template, ensuring no trailing slashes.
-                    selector.AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(template.TrimEnd('/')));
-                }
+                if (string.IsNullOrWhiteSpace(template))
+                    continue;
+
+                // Replace the placeholder [segments] in the route template with the generated route.
+                var updatedTemplate = template.Replace("[segments]", routeTemplate, StringComparison.Ordinal);
+
+                // Update the controller's route model with the new template, ensuring no trailing slashes.
+                selector.AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(updatedTemplate.TrimEnd('/')));
             }
         }
     }
@@ -54,7 +57,7 @@ public class CustomRouteConvention : IApplicationModelConvention
             if (IsBaseControllerType(controllerType))
             {
                 // Skip custom base controller types in route template generation.
-                controllerType = controllerType.BaseType;
+                controllerType = controllerType.BaseType!;
                 continue;
             }
 
@@ -65,7 +68,9 @@ public class CustomRouteConvention : IApplicationModelConvention
                 // Add the custom segment from the attribute to the segments list.
                 segments.Insert(0, segmentAttribute.Segment);
             }
-            else if (!IsBaseControllerType(controllerType.BaseType) && !IsAnyParentControllerHasRouteSegmentAttribute(controllerType))
+            else if (controllerType.BaseType is not null
+                && !IsBaseControllerType(controllerType.BaseType)
+                && !IsAnyParentControllerHasRouteSegmentAttribute(controllerType))
             {
                 // Use the default controller name as a segment if no RouteSegmentAttribute is present in the inheritance chain.
                 var segmentName = GetSegmentNameFromType(controllerType);
@@ -73,7 +78,7 @@ public class CustomRouteConvention : IApplicationModelConvention
             }
 
             // Move up the inheritance chain.
-            controllerType = controllerType.BaseType;
+            controllerType = controllerType.BaseType!;
         }
 
         // Join the collected segments to form the complete route template.
@@ -137,6 +142,6 @@ public class CustomRouteConvention : IApplicationModelConvention
         }
 
         // For non-generic types, remove 'Controller' from the end to derive the segment name.
-        return type.Name.Replace("Controller", "");
+        return type.Name.Replace("Controller", string.Empty, StringComparison.Ordinal);
     }
 }

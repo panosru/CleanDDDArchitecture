@@ -1,0 +1,15 @@
+---
+ReverseProxy:
+  Clusters:
+    account:
+      Destinations:
+        primary:
+          Address: "http://localhost:5201/"
+    todo:
+      Destinations:
+        primary:
+          Address: "http://localhost:5202/"
+    weather:
+      Destinations:
+        primary:
+          Address: "http://localhost:5203/"

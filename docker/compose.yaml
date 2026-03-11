@@ -1,109 +1,414 @@
-version: '3.9'
-
 services:
-  
-  mssql:
-    extends:
-      file:    ./services/mssql.yaml
-      service: mssql
-    networks:
-      - mssql_net
-    volumes:
-      - mssql-data:/var/opt/mssql/data
-      - mssql-logs:/var/opt/mssql/log
-      - mssql-secrets:/var/opt/mssql/secrets
-  
   postgres:
-    extends:
-      file:    ./services/postgres.yaml
-      service: postgres
-    networks: 
-      - postgres_net
-    volumes:
-      - postgres-data:/var/lib/postgresql/data/
-      - ./services/postgres.init.sql:/docker-entrypoint-initdb.d/postgres.init.sql
-  
-  redis:
-    extends:
-      file:    ./services/redis.yaml
-      service: redis
+    profiles: ["core", "monolith", "microservices"]
+    image: postgres:16-alpine
+    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-cleandddarchitecture}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     ports:
-      - ${REDIS_PUBLIC_PORT}:${REDIS_PORT}
-    networks:
-      - redis_net
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./services/postgres.init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-cleandddarchitecture}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [data]
+
+  redis:
+    profiles: ["core", "monolith", "microservices"]
+    image: redis:7-alpine
+    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-redis
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:-redis}"]
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-redis}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - redis-data:/data
-  
-  loki:
-    extends:
-      file:    ./services/monitor.yaml
-      service: loki
-    networks:
-      - monitor_net
-    volumes:
-      - ./services/config-loki.yaml:/etc/loki/loki-config.yaml
-      - loki_data:/etc/loki
-  
+    networks: [data]
+
+  mailpit:
+    profiles: ["core", "monolith", "microservices"]
+    image: axllent/mailpit:latest
+    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-mailpit
+    ports:
+      - "${MAILPIT_PORT:-8025}:8025"
+      - "${MAILPIT_SMTP_PORT:-1025}:1025"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8025"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [data]
+
   zookeeper:
-    extends:
-      file:    ./services/kafka.yaml
-      service: zookeeper
-    networks:
-      - kafka_net
-  
+    profiles: ["eventing"]
+    image: confluentinc/cp-zookeeper:7.6.1
+    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks: [eventing]
+
   kafka:
-    extends:
-      file:    ./services/kafka.yaml
-      service: kafka
-    networks:
-      - kafka_net
-    depends_on: 
+    profiles: ["eventing"]
+    image: confluentinc/cp-kafka:7.6.1
+    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-kafka
+    depends_on:
       - zookeeper
+    ports:
+      - "${KAFKA_PORT:-19092}:19092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:19092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: ["CMD-SHELL", "cub kafka-ready -b localhost:9092 1 20"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+    networks: [eventing]
 
   eventstore:
-    extends:
-      file:    ./services/eventstore.yaml
-      service: eventstore
+    profiles: ["eventing"]
+    image: eventstore/eventstore:21.10.11-buster-slim
+    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-eventstore
+    environment:
+      EVENTSTORE_CLUSTER_SIZE: 1
+      EVENTSTORE_RUN_PROJECTIONS: All
+      EVENTSTORE_START_STANDARD_PROJECTIONS: "true"
+      EVENTSTORE_INSECURE: "true"
+      EVENTSTORE_ENABLE_EXTERNAL_TCP: "true"
+      EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP: "true"
+      EVENTSTORE_EXT_TCP_PORT: 1113
+      EVENTSTORE_HTTP_PORT: 2113
+    ports:
+      - "${EVENTSTORE_HTTP_PORT:-2113}:2113"
+      - "${EVENTSTORE_TCP_PORT:-1113}:1113"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://127.0.0.1:2113/health/live || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     volumes:
-      - type: volume
-        source: eventstore-volume-data
-        target: /var/lib/eventstore
-      - type: volume
-        source: eventstore-volume-logs
-        target: /var/log/eventstore
-    networks:
-      - eventstore_net
+      - eventstore-data:/var/lib/eventstore
+      - eventstore-logs:/var/log/eventstore
+    networks: [eventing]
 
-# Volumes
+  loki:
+    profiles: ["observability"]
+    image: grafana/loki:3.4.2
+    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-loki
+    command: -config.file=/etc/loki/loki-config.yaml
+    volumes:
+      - ./services/config-loki.yaml:/etc/loki/loki-config.yaml:ro
+    ports:
+      - "${LOKI_PORT:-3100}:3100"
+    networks: [observability]
+
+  grafana:
+    profiles: ["observability"]
+    image: grafana/grafana:11.5.2
+    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-grafana
+    user: "0"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./services/grafana/provisioning:/etc/grafana/provisioning:ro
+    networks: [observability]
+
+  pgadmin:
+    profiles: ["admin"]
+    image: dpage/pgadmin4:latest
+    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+      - ./services/pgadmin_servers.json:/pgadmin4/servers.json:ro
+      - ./services/pgadmin-entrypoint.sh:/pgadmin4/pgadmin-entrypoint.sh:ro
+    entrypoint:
+      - "/bin/sh"
+      - "/pgadmin4/pgadmin-entrypoint.sh"
+    networks: [data]
+
+  redis-commander:
+    profiles: ["admin"]
+    image: rediscommander/redis-commander:latest
+    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-redis-commander
+    environment:
+      REDIS_HOSTS: local:redis:6379:0:${REDIS_PASSWORD:-redis}
+      HTTP_USER: admin
+      HTTP_PASSWORD: admin
+    ports:
+      - "${REDIS_COMMANDER_PORT:-18081}:8081"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks: [data]
+
+  kowl:
+    profiles: ["admin", "eventing"]
+    image: quay.io/cloudhut/kowl:master
+    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-kowl
+    depends_on:
+      kafka:
+        condition: service_healthy
+    volumes:
+      - ./services/config-kowl.yaml:/etc/kowl/config.yml:ro
+    ports:
+      - "${KOWL_PORT:-18080}:8080"
+    entrypoint: ./kowl --config.filepath=/etc/kowl/config.yml
+    networks: [eventing]
+
+  rest-api:
+    profiles: ["monolith"]
+    build:
+      context: ..
+      dockerfile: ./docker/RestAPI.Dockerfile
+    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-rest-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mailpit:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      DOTNET_ENVIRONMENT: Development
+      DataProtection__KeysPath: /keys
+      UseInMemoryDatabase: "false"
+      ConnectionStrings__PGSQLConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-cleandddarchitecture};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-postgres}
+      ConnectionStrings__Hangfire: Host=postgres;Port=5432;Database=${POSTGRES_DB:-cleandddarchitecture};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-postgres}
+      ConnectionStrings__eventstore: tcp://admin:changeit@eventstore:1113
+      ConnectionStrings__kafka: kafka:9092
+      EmailSettings__SmtpHost: mailpit
+      EmailSettings__SmtpPort: 1025
+      EmailSettings__EnableSsl: "false"
+      Jwt__Issuer: ${JWT_ISSUER:-cleandddarchitecture}
+      Jwt__Audience: ${JWT_AUDIENCE:-cleandddarchitecture-clients}
+      Jwt__Access__Key256Bit: ${JWT_ACCESS_KEY256:-0123456789abcdef0123456789abcdef}
+      Jwt__Access__Key512Bit: ${JWT_ACCESS_KEY512:-0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef}
+      Jwt__Access__ExpirationDurationInMinutes: ${JWT_ACCESS_EXPIRATION_MINUTES:-15}
+      Jwt__Refresh__Key256Bit: ${JWT_REFRESH_KEY256:-fedcba9876543210fedcba9876543210}
+      Jwt__Refresh__Key512Bit: ${JWT_REFRESH_KEY512:-fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210}
+      Jwt__Refresh__ExpirationDurationInMinutes: ${JWT_REFRESH_EXPIRATION_MINUTES:-10080}
+      Jwt__ClockSkewInMinutes: ${JWT_CLOCK_SKEW_MINUTES:-1}
+    ports:
+      - "${REST_API_PORT:-8081}:8080"
+    volumes:
+      - restapi-dp:/keys
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8080/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    networks: [public, data, eventing, observability]
+
+  web-app:
+    profiles: ["monolith"]
+    build:
+      context: ..
+      dockerfile: ./docker/WebApp.Dockerfile
+    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-web-app
+    depends_on:
+      rest-api:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      DOTNET_ENVIRONMENT: Development
+      DataProtection__KeysPath: /keys
+    ports:
+      - "${WEB_APP_PORT:-8082}:8080"
+    volumes:
+      - webapp-dp:/keys
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8080"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    networks: [public, data]
+
+  worker:
+    profiles: ["monolith", "microservices"]
+    build:
+      context: ..
+      dockerfile: ./docker/Worker.Dockerfile
+    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-worker
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DOTNET_ENVIRONMENT: Development
+      ConnectionStrings__PGSQLConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-cleandddarchitecture};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-postgres}
+    healthcheck:
+      test: ["CMD-SHELL", "ps -ef | grep CleanDDDArchitecture.Hosts.Worker.dll | grep -v grep"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    networks: [data]
+
+  gateway:
+    profiles: ["microservices"]
+    build:
+      context: ..
+      dockerfile: ./docker/Gateway.Dockerfile
+    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-gateway
+    depends_on:
+      account-service:
+        condition: service_healthy
+      todo-service:
+        condition: service_healthy
+      weather-service:
+        condition: service_healthy
+    ports:
+      - "${GATEWAY_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8080/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    networks: [public, data, eventing]
+
+  account-service:
+    profiles: ["microservices"]
+    build:
+      context: ..
+      dockerfile: ./docker/AccountService.Dockerfile
+    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-account-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mailpit:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      DOTNET_ENVIRONMENT: Development
+      DataProtection__KeysPath: /keys
+      ConnectionStrings__PGSQLConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-cleandddarchitecture};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-postgres}
+      ConnectionStrings__eventstore: tcp://admin:changeit@eventstore:1113
+      ConnectionStrings__kafka: kafka:9092
+      EmailSettings__SmtpHost: mailpit
+      EmailSettings__SmtpPort: 1025
+      EventSourcing__EnableConsumer: "false"
+      Jwt__Issuer: ${JWT_ISSUER:-cleandddarchitecture}
+      Jwt__Audience: ${JWT_AUDIENCE:-cleandddarchitecture-clients}
+      Jwt__Access__Key256Bit: ${JWT_ACCESS_KEY256:-0123456789abcdef0123456789abcdef}
+      Jwt__Access__Key512Bit: ${JWT_ACCESS_KEY512:-0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef}
+      Jwt__Access__ExpirationDurationInMinutes: ${JWT_ACCESS_EXPIRATION_MINUTES:-15}
+      Jwt__Refresh__Key256Bit: ${JWT_REFRESH_KEY256:-fedcba9876543210fedcba9876543210}
+      Jwt__Refresh__Key512Bit: ${JWT_REFRESH_KEY512:-fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210}
+      Jwt__Refresh__ExpirationDurationInMinutes: ${JWT_REFRESH_EXPIRATION_MINUTES:-10080}
+      Jwt__ClockSkewInMinutes: ${JWT_CLOCK_SKEW_MINUTES:-1}
+    ports:
+      - "${ACCOUNT_SERVICE_PORT:-5201}:8080"
+    volumes:
+      - account-dp:/keys
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8080/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    networks: [data, eventing]
+
+  todo-service:
+    profiles: ["microservices"]
+    build:
+      context: ..
+      dockerfile: ./docker/TodoService.Dockerfile
+    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-todo-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      DOTNET_ENVIRONMENT: Development
+      DataProtection__KeysPath: /keys
+      ConnectionStrings__PGSQLConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-cleandddarchitecture};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-postgres}
+      Jwt__Issuer: ${JWT_ISSUER:-cleandddarchitecture}
+      Jwt__Audience: ${JWT_AUDIENCE:-cleandddarchitecture-clients}
+      Jwt__Access__Key256Bit: ${JWT_ACCESS_KEY256:-0123456789abcdef0123456789abcdef}
+      Jwt__Access__Key512Bit: ${JWT_ACCESS_KEY512:-0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef}
+      Jwt__ClockSkewInMinutes: ${JWT_CLOCK_SKEW_MINUTES:-1}
+    ports:
+      - "${TODO_SERVICE_PORT:-5202}:8080"
+    volumes:
+      - todo-dp:/keys
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8080/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    networks: [data]
+
+  weather-service:
+    profiles: ["microservices"]
+    build:
+      context: ..
+      dockerfile: ./docker/WeatherService.Dockerfile
+    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-weather-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      DOTNET_ENVIRONMENT: Development
+      DataProtection__KeysPath: /keys
+      ConnectionStrings__PGSQLConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-cleandddarchitecture};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-postgres}
+      Jwt__Issuer: ${JWT_ISSUER:-cleandddarchitecture}
+      Jwt__Audience: ${JWT_AUDIENCE:-cleandddarchitecture-clients}
+      Jwt__Access__Key256Bit: ${JWT_ACCESS_KEY256:-0123456789abcdef0123456789abcdef}
+      Jwt__Access__Key512Bit: ${JWT_ACCESS_KEY512:-0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef}
+      Jwt__ClockSkewInMinutes: ${JWT_CLOCK_SKEW_MINUTES:-1}
+    ports:
+      - "${WEATHER_SERVICE_PORT:-5203}:8080"
+    volumes:
+      - weather-dp:/keys
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8080/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    networks: [data]
+
 volumes:
-  mssql-data:
-    name: ${MSSQL_HOST}-data
-  mssql-logs:
-    name: ${MSSQL_HOST}-logs
-  mssql-secrets:
-    name: ${MSSQL_HOST}-secrets
   postgres-data:
-    name: ${POSTGRES_HOST}-data
   redis-data:
-    name: ${REDIS_HOST}-data
-  loki_data:
-    name: ${LOKI_HOST}-data
-  eventstore-volume-data:
-    name: ${EVENTSTORE_HOST}-data
-  eventstore-volume-logs:
-    name: ${EVENTSTORE_HOST}-logs
+  eventstore-data:
+  eventstore-logs:
+  grafana-data:
+  pgadmin-data:
+  restapi-dp:
+  webapp-dp:
+  account-dp:
+  todo-dp:
+  weather-dp:
 
-# Networks
 networks:
-  mssql_net:
-    driver: bridge
-  postgres_net:
-    driver: bridge
-  redis_net:
-    driver: bridge
-  monitor_net:
-    driver: bridge
-  kafka_net:
-    driver: bridge
-  eventstore_net:
-    driver: bridge
+  public:
+  data:
+  eventing:
+  observability:

@@ -1,17 +1,3 @@
-CREATE DATABASE "CleanDDDArchitecture"
-    WITH
-    OWNER = panosru
-    ENCODING = 'UTF8'
-    LC_COLLATE = 'en_GB.utf8'
-    LC_CTYPE = 'en_GB.utf8'
-    TABLESPACE = pg_default
-    CONNECTION LIMIT = -1;
-
-CREATE DATABASE "Hangfire"
-    WITH
-    OWNER = panosru
-    ENCODING = 'UTF8'
-    LC_COLLATE = 'en_GB.utf8'
-    LC_CTYPE = 'en_GB.utf8'
-    TABLESPACE = pg_default
-    CONNECTION LIMIT = -1;
+-- Database bootstrap is intentionally minimal.
+-- The main application database is created by the postgres image via POSTGRES_DB,
+-- and schema creation is handled by application migrations on startup.

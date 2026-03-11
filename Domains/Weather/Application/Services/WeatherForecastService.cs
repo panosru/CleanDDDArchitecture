@@ -31,10 +31,11 @@ public sealed class WeatherForecastService : IWeatherForecastService
         int      temperatureC,
         string   summary)
     {
-        Date = date;
-        TemperatureC = temperatureC;
-        Summary = summary ?? throw new ArgumentNullException(nameof(summary));
-
-        return this;
+        return new WeatherForecastService
+        {
+            Date = date,
+            TemperatureC = temperatureC,
+            Summary = summary ?? throw new ArgumentNullException(nameof(summary))
+        };
     }
 }

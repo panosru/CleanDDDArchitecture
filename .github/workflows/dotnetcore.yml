@@ -1,4 +1,4 @@
-name: Clean DDD Architecture .NET Core Template
+name: Build And Test
 
 on:
   push:
@@ -6,20 +6,46 @@ on:
   pull_request:
     branches: [ master ]
 
-jobs:
-  build:
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
 
+jobs:
+  build-test:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v4
       with:
         submodules: recursive
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v3
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 7.0.203
-    - name: Install dotnet ef
-      run: dotnet tool install --global dotnet-ef --version 7.0.5
-    - name: Build with dotnet
-      run: dotnet build --configuration Release
+        global-json-file: global.json
+
+    - name: Restore solutions
+      run: |
+        dotnet restore CleanDDDArchitecture.sln
+        dotnet restore Library/Aviant/Aviant.sln
+
+    - name: Build solutions
+      run: |
+        dotnet build CleanDDDArchitecture.sln --configuration Release --no-restore
+        dotnet build Library/Aviant/Aviant.sln --configuration Release --no-restore
+
+    - name: Install ReportGenerator
+      run: dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.5.1
+
+    - name: Run tests with coverage
+      run: ./scripts/test-and-coverage.sh
+
+    - name: Publish coverage summary
+      run: cat artifacts/coverage/report/Summary.txt >> "$GITHUB_STEP_SUMMARY"
+
+    - name: Upload coverage artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: artifacts/coverage

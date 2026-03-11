@@ -1,0 +1,14 @@
+---
+AppSettings:
+  Title: Account Service
+  BaseUrl: "http://account-service:8080"
+  Emails:
+    NoReply: "noreply@cleanddd.local"
+EmailSettings:
+  SmtpHost: "mailpit"
+  SmtpPort: 1025
+  EnableSsl: false
+  SmtpUsername: ""
+  SmtpPassword: ""
+DataProtection:
+  KeysPath: "./DataProtection-Keys"

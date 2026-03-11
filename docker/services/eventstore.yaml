@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   eventstore:
-    image: eventstore/eventstore:latest
+    image: eventstore/eventstore:21.10.11-buster-slim
     container_name: ${EVENTSTORE_HOST}
     restart: 'no'
     logging:
@@ -31,4 +31,3 @@ services:
       interval: 5s
       timeout: 5s
       retries: 24
-
