@@ -56,4 +56,26 @@ public interface IAccountAdministrationService
         Guid actorUserId,
         Guid targetUserId,
         CancellationToken cancellationToken = default);
+
+    public Task<IReadOnlyCollection<AccountAdminSummaryDto>?> SearchAccountsAsync(
+        Guid actorUserId,
+        string? query,
+        string? status,
+        string? role,
+        CancellationToken cancellationToken = default);
+
+    public Task<EmailConfirmationTicket?> GenerateEmailConfirmationForUserAsync(
+        Guid actorUserId,
+        Guid targetUserId,
+        CancellationToken cancellationToken = default);
+
+    public Task<PasswordResetTicket?> GeneratePasswordResetForUserAsync(
+        Guid actorUserId,
+        Guid targetUserId,
+        CancellationToken cancellationToken = default);
+
+    public Task<int?> RevokeAllSessionsAsync(
+        Guid actorUserId,
+        Guid targetUserId,
+        CancellationToken cancellationToken = default);
 }
