@@ -1,6 +1,4 @@
 using Aviant.Application.ApplicationEvents;
-using Polly;
-
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
 
 internal sealed record CreatedTodoListApplicationEvent(string Name) : ApplicationEvent
@@ -22,25 +20,10 @@ internal sealed class TodoCreatedApplicationEventHandler : ApplicationEventHandl
 
 internal sealed class TodoCreatedApplicationEventHandler2 : ApplicationEventHandler<CreatedTodoListApplicationEvent>
 {
-    private Random Random { get; } = new Random();
-
     public override Task Handle(
         CreatedTodoListApplicationEvent @event,
         CancellationToken               cancellationToken)
     {
-        Console.WriteLine($"from 2 {@event.Name}");
-
-        // 80% probability to fail
-        if (Random.Next(100) <= 80)
-            throw new ArgumentException("Test2");
-
         return Task.CompletedTask;
     }
-
-    public override IAsyncPolicy RetryPolicy() =>
-        Policy
-           .Handle<ArgumentException>()
-           .WaitAndRetryAsync(
-                3,
-                i => TimeSpan.FromSeconds(i));
 }

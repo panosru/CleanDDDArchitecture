@@ -28,6 +28,7 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
 
     private readonly string _repositoryRoot;
     private readonly string _artifactsRoot;
+    private readonly string _startupLogPath;
     private readonly JsonSerializerOptions _jsonOptions = new() { PropertyNameCaseInsensitive = true };
     private readonly HttpClient _mailpitClient = new() { Timeout = TimeSpan.FromSeconds(10) };
     private readonly HttpClient _eventStoreClient = new() { Timeout = TimeSpan.FromSeconds(10) };
@@ -54,6 +55,7 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
             Path.GetTempPath(),
             "cleandddarchitecture-account-integration",
             Guid.NewGuid().ToString("N"));
+        _startupLogPath = Path.Combine(_artifactsRoot, "startup.log");
     }
 
     public Uri AccountBaseAddress { get; private set; } = null!;
@@ -63,14 +65,24 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
         Directory.CreateDirectory(_artifactsRoot);
+        Log($"environment: initializing in '{_artifactsRoot}'");
 
-        Console.WriteLine("integration: starting infrastructure");
-        await StartInfrastructureAsync(cancellationToken).ConfigureAwait(false);
-        Console.WriteLine("integration: building hosts");
-        await BuildHostsAsync(cancellationToken).ConfigureAwait(false);
-        Console.WriteLine("integration: starting hosts");
-        await StartHostsAsync(cancellationToken).ConfigureAwait(false);
-        Console.WriteLine("integration: environment ready");
+        try
+        {
+            Log("environment: starting infrastructure");
+            await StartInfrastructureAsync(cancellationToken).ConfigureAwait(false);
+            Log("environment: building hosts");
+            await BuildHostsAsync(cancellationToken).ConfigureAwait(false);
+            Log("environment: starting hosts");
+            await StartHostsAsync(cancellationToken).ConfigureAwait(false);
+            Log("environment: ready");
+        }
+        catch (Exception exception)
+        {
+            throw new InvalidOperationException(
+                $"Account integration environment failed to initialize. See startup log at '{_startupLogPath}'.",
+                exception);
+        }
     }
 
     public async Task<MailpitMessageDetail> WaitForMailAsync(
@@ -79,34 +91,43 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
         TimeSpan timeout,
         CancellationToken cancellationToken = default)
     {
-        return await WaitForResultAsync(
-                async () =>
-                {
-                    var response = await _mailpitClient.GetFromJsonAsync<MailpitMessagesResponse>(
-                        $"{_mailpitBaseUrl}/api/v1/messages",
-                        _jsonOptions,
-                        cancellationToken).ConfigureAwait(false);
-
-                    var message = response?.Messages?.FirstOrDefault(
-                        candidate => string.Equals(candidate.Subject, subject, StringComparison.Ordinal)
-                            && candidate.To.Any(recipient =>
-                                string.Equals(recipient.Address, email, StringComparison.OrdinalIgnoreCase)));
-
-                    if (message is null)
+        try
+        {
+            return await WaitForResultAsync(
+                    async () =>
                     {
-                        return (false, (MailpitMessageDetail?)null);
-                    }
+                        var response = await _mailpitClient.GetFromJsonAsync<MailpitMessagesResponse>(
+                            $"{_mailpitBaseUrl}/api/v1/messages",
+                            _jsonOptions,
+                            cancellationToken).ConfigureAwait(false);
 
-                    var detail = await _mailpitClient.GetFromJsonAsync<MailpitMessageDetail>(
-                        $"{_mailpitBaseUrl}/api/v1/message/{message.Id}",
-                        _jsonOptions,
-                        cancellationToken).ConfigureAwait(false);
-                    return (detail is not null, detail);
-                },
-                timeout,
-                $"mail for '{email}'",
-                cancellationToken).ConfigureAwait(false)
-            ?? throw new InvalidOperationException($"Mailpit did not return a message for {email}.");
+                        var message = response?.Messages?.FirstOrDefault(
+                            candidate => string.Equals(candidate.Subject, subject, StringComparison.Ordinal)
+                                && candidate.To.Any(recipient =>
+                                    string.Equals(recipient.Address, email, StringComparison.OrdinalIgnoreCase)));
+
+                        if (message is null)
+                        {
+                            return (false, (MailpitMessageDetail?)null);
+                        }
+
+                        var detail = await _mailpitClient.GetFromJsonAsync<MailpitMessageDetail>(
+                            $"{_mailpitBaseUrl}/api/v1/message/{message.Id}",
+                            _jsonOptions,
+                            cancellationToken).ConfigureAwait(false);
+                        return (detail is not null, detail);
+                    },
+                    timeout,
+                    $"mail for '{email}'",
+                    cancellationToken).ConfigureAwait(false)
+                ?? throw new InvalidOperationException($"Mailpit did not return a message for {email}.");
+        }
+        catch (TimeoutException exception)
+        {
+            throw new TimeoutException(
+                $"{exception.Message}{Environment.NewLine}{GetServiceLogs()}",
+                exception);
+        }
     }
 
     public static string ExtractConfirmationLink(MailpitMessageDetail message)
@@ -341,15 +362,15 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
             .Build();
 
         await _postgresContainer.StartAsync(cancellationToken).ConfigureAwait(false);
-        Console.WriteLine("integration: postgres started");
+        Log($"infrastructure: postgres container started on port {postgresPort}");
         await _zookeeperContainer.StartAsync(cancellationToken).ConfigureAwait(false);
-        Console.WriteLine("integration: zookeeper started");
+        Log("infrastructure: zookeeper container started");
         await _kafkaContainer.StartAsync(cancellationToken).ConfigureAwait(false);
-        Console.WriteLine("integration: kafka started");
+        Log($"infrastructure: kafka container started on port {kafkaExternalPort}");
         await _eventStoreContainer.StartAsync(cancellationToken).ConfigureAwait(false);
-        Console.WriteLine("integration: eventstore started");
+        Log($"infrastructure: eventstore container started on ports http={eventStoreHttpPort}, tcp={eventStoreTcpPort}");
         await _mailpitContainer.StartAsync(cancellationToken).ConfigureAwait(false);
-        Console.WriteLine("integration: mailpit started");
+        Log($"infrastructure: mailpit container started on ports http={mailpitHttpPort}, smtp={mailpitSmtpPort}");
 
         _postgresConnectionString =
             $"Host=127.0.0.1;Port={postgresPort};Database={DatabaseName};Username={DatabaseUser};Password={DatabasePassword}";
@@ -360,25 +381,31 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
         _mailpitSmtpPort = mailpitSmtpPort;
 
         await WaitForPostgresAsync(cancellationToken).ConfigureAwait(false);
-        Console.WriteLine("integration: postgres ready");
+        Log("infrastructure: postgres ready");
         await WaitForMailpitAsync(cancellationToken).ConfigureAwait(false);
-        Console.WriteLine("integration: mailpit ready");
+        Log("infrastructure: mailpit ready");
         await WaitForEventStoreAsync(cancellationToken).ConfigureAwait(false);
-        Console.WriteLine("integration: eventstore ready");
+        Log("infrastructure: eventstore ready");
         await WaitForKafkaAsync(cancellationToken).ConfigureAwait(false);
-        Console.WriteLine("integration: kafka ready");
+        Log("infrastructure: kafka ready");
     }
 
     private async Task BuildHostsAsync(CancellationToken cancellationToken)
     {
-        await BuildProjectAsync(
+        await EnsureProjectBuiltAsync(
             "Hosts/Services/AccountService/Presentation/Presentation.csproj",
+            "Hosts/Services/AccountService/Presentation",
+            "CleanDDDArchitecture.Hosts.Services.AccountService.Presentation.dll",
             cancellationToken).ConfigureAwait(false);
-        await BuildProjectAsync(
+        await EnsureProjectBuiltAsync(
             "Hosts/Services/TodoService/Presentation/Presentation.csproj",
+            "Hosts/Services/TodoService/Presentation",
+            "CleanDDDArchitecture.Hosts.Services.TodoService.Presentation.dll",
             cancellationToken).ConfigureAwait(false);
-        await BuildProjectAsync(
+        await EnsureProjectBuiltAsync(
             "Hosts/Gateway/Presentation/Presentation.csproj",
+            "Hosts/Gateway/Presentation",
+            "CleanDDDArchitecture.Hosts.Gateway.Presentation.dll",
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -405,7 +432,7 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
             "account-service",
             accountOutputPath,
             Path.GetDirectoryName(accountOutputPath)!,
-            new Uri($"{AccountBaseAddress}/health"),
+            new Uri(AccountBaseAddress, "health"),
             new Dictionary<string, string>
             {
                 ["ASPNETCORE_URLS"] = AccountBaseAddress.ToString(),
@@ -416,8 +443,15 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
                 ["ConnectionStrings__eventstore"] = _eventStoreTcpConnectionString!,
                 ["ConnectionStrings__kafka"] = _kafkaBootstrapServers!,
                 ["EmailSettings__SmtpHost"] = "127.0.0.1",
+                ["EmailSettings:SmtpHost"] = "127.0.0.1",
                 ["EmailSettings__SmtpPort"] = _mailpitSmtpPort.ToString(CultureInfo.InvariantCulture),
+                ["EmailSettings:SmtpPort"] = _mailpitSmtpPort.ToString(CultureInfo.InvariantCulture),
                 ["EmailSettings__EnableSsl"] = "false",
+                ["EmailSettings:EnableSsl"] = "false",
+                ["EmailSettings__SmtpUsername"] = string.Empty,
+                ["EmailSettings:SmtpUsername"] = string.Empty,
+                ["EmailSettings__SmtpPassword"] = string.Empty,
+                ["EmailSettings:SmtpPassword"] = string.Empty,
                 ["EventSourcing__EnableConsumer"] = "false",
                 ["Jwt__Issuer"] = JwtIssuer,
                 ["Jwt__Audience"] = JwtAudience,
@@ -428,7 +462,8 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
                 ["Jwt__Refresh__Key512Bit"] = JwtRefreshKey512,
                 ["Jwt__Refresh__ExpirationDurationInMinutes"] = "10080",
                 ["Jwt__ClockSkewInMinutes"] = "1"
-            });
+            },
+            Log);
 
         var todoService = new ServiceProcess(
             "todo-service",
@@ -446,13 +481,14 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
                 ["Jwt__Access__Key256Bit"] = JwtAccessKey256,
                 ["Jwt__Access__Key512Bit"] = JwtAccessKey512,
                 ["Jwt__ClockSkewInMinutes"] = "1"
-            });
+            },
+            Log);
 
         var gatewayService = new ServiceProcess(
             "gateway",
             gatewayOutputPath,
             Path.GetDirectoryName(gatewayOutputPath)!,
-            new Uri($"{GatewayBaseAddress}/health"),
+            new Uri(GatewayBaseAddress, "health"),
             new Dictionary<string, string>
             {
                 ["ASPNETCORE_URLS"] = GatewayBaseAddress.ToString(),
@@ -460,15 +496,22 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
                 ["ReverseProxy__Clusters__account__Destinations__primary__Address"] = AccountBaseAddress.ToString(),
                 ["ReverseProxy__Clusters__todo__Destinations__primary__Address"] = $"http://127.0.0.1:{todoPort}/",
                 ["ReverseProxy__Clusters__weather__Destinations__primary__Address"] = $"http://127.0.0.1:{todoPort}/"
-            });
+            },
+            Log);
 
         _serviceProcesses.Add(accountService);
         _serviceProcesses.Add(todoService);
         _serviceProcesses.Add(gatewayService);
 
+        Log("hosts: starting account-service");
         await accountService.StartAsync(TimeSpan.FromMinutes(2), cancellationToken).ConfigureAwait(false);
+        Log("hosts: account-service healthy");
+        Log("hosts: starting todo-service");
         await todoService.StartAsync(TimeSpan.FromMinutes(2), cancellationToken).ConfigureAwait(false);
+        Log("hosts: todo-service healthy");
+        Log("hosts: starting gateway");
         await gatewayService.StartAsync(TimeSpan.FromMinutes(1), cancellationToken).ConfigureAwait(false);
+        Log("hosts: gateway healthy");
     }
 
     private async Task WaitForPostgresAsync(CancellationToken cancellationToken)
@@ -591,7 +634,7 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
 
     private async Task BuildProjectAsync(string relativeProjectPath, CancellationToken cancellationToken)
     {
-        Console.WriteLine($"integration: building {relativeProjectPath}");
+        Log($"build: starting {relativeProjectPath}");
         var projectPath = Path.Combine(_repositoryRoot, relativeProjectPath);
         using Process process = new();
         process.StartInfo = new ProcessStartInfo(
@@ -619,7 +662,23 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
             throw new InvalidOperationException(
                 $"Failed to build '{relativeProjectPath}'.{Environment.NewLine}{output}{Environment.NewLine}{error}");
         }
-        Console.WriteLine($"integration: built {relativeProjectPath}");
+        Log($"build: completed {relativeProjectPath}");
+    }
+
+    private async Task EnsureProjectBuiltAsync(
+        string relativeProjectPath,
+        string relativeProjectDirectory,
+        string assemblyName,
+        CancellationToken cancellationToken)
+    {
+        var outputPath = GetProjectOutputPath(relativeProjectDirectory, assemblyName);
+        if (File.Exists(outputPath))
+        {
+            Log($"build: reusing existing output for {relativeProjectPath} at '{outputPath}'");
+            return;
+        }
+
+        await BuildProjectAsync(relativeProjectPath, cancellationToken).ConfigureAwait(false);
     }
 
     private string GetProjectOutputPath(string relativeProjectDirectory, string assemblyName)
@@ -716,6 +775,26 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
         }
 
         throw new TimeoutException($"Timed out waiting for {description}.");
+    }
+
+    private void Log(string message)
+    {
+        var line = $"{DateTimeOffset.UtcNow:O} {message}";
+        Console.WriteLine(line);
+        File.AppendAllLines(_startupLogPath, [line]);
+    }
+
+    private string GetServiceLogs()
+    {
+        if (_serviceProcesses.Count == 0)
+        {
+            return "No service processes were started.";
+        }
+
+        return string.Join(
+            $"{Environment.NewLine}{Environment.NewLine}",
+            _serviceProcesses.Select(
+                process => process.GetLogs()));
     }
 
     [GeneratedRegex("href='(?<url>[^']+)'", RegexOptions.IgnoreCase | RegexOptions.Compiled)]

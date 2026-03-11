@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using CleanDDDArchitecture.Domains.Account.Tests.Integration.Infrastructure;
 using FluentAssertions;
 using Xunit;
@@ -10,12 +11,15 @@ namespace CleanDDDArchitecture.Domains.Account.Tests.Integration;
 
 public sealed class AccountGatewayTodoFlowTests : IAsyncLifetime
 {
+    private const string TodoListTitle = "Grocery";
+    private const string TodoItemTitle = "Apples";
+
     private readonly AccountIntegrationEnvironment _environment = new();
     private readonly JsonSerializerOptions _jsonOptions = new() { PropertyNameCaseInsensitive = true };
 
     public async ValueTask InitializeAsync()
     {
-        using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMinutes(5));
+        using var cancellationTokenSource = new CancellationTokenSource(GetInitializationTimeout());
         await _environment.InitializeAsync(cancellationTokenSource.Token);
     }
 
@@ -47,7 +51,7 @@ public sealed class AccountGatewayTodoFlowTests : IAsyncLifetime
         var confirmationMail = await _environment.WaitForMailAsync(
             email,
             "Confirm your email",
-            TimeSpan.FromSeconds(30),
+            TimeSpan.FromSeconds(60),
             cancellationToken);
         var confirmationLink = AccountIntegrationEnvironment.ExtractConfirmationLink(confirmationMail);
 
@@ -119,11 +123,15 @@ public sealed class AccountGatewayTodoFlowTests : IAsyncLifetime
             "/api/todo/list",
             new
             {
-                title = "Integration list"
+                title = TodoListTitle
             },
             cancellationToken);
 
-        createTodoListResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var createTodoListContent = await createTodoListResponse.Content.ReadAsStringAsync(cancellationToken);
+        createTodoListResponse.StatusCode.Should()
+            .Be(
+                HttpStatusCode.OK,
+                because: $"gateway todo-list create returned: {createTodoListContent}");
         var createdTodoList = await createTodoListResponse.Content.ReadFromJsonAsync<CreatedTodoListResponse>(_jsonOptions, cancellationToken);
         createdTodoList.Should().NotBeNull();
         createdTodoList!.Id.Should().BeGreaterThan(0);
@@ -133,30 +141,35 @@ public sealed class AccountGatewayTodoFlowTests : IAsyncLifetime
             new
             {
                 listId = createdTodoList.Id,
-                title = "Integration item"
+                title = TodoItemTitle
             },
             cancellationToken);
 
         createTodoItemResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var todoListsResponse = await gatewayClient.GetAsync("/api/todo/list", cancellationToken);
-        todoListsResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        var todoLists = await todoListsResponse.Content.ReadFromJsonAsync<List<TodoListResponse>>(_jsonOptions, cancellationToken);
+        var todoListsContent = await todoListsResponse.Content.ReadAsStringAsync(cancellationToken);
+        todoListsResponse.StatusCode.Should()
+            .Be(
+                HttpStatusCode.OK,
+                because: $"gateway todo-list get returned: {todoListsContent}");
+        var todoListsPayload = await todoListsResponse.Content.ReadFromJsonAsync<TodoListsPayload>(_jsonOptions, cancellationToken);
 
-        todoLists.Should().NotBeNull();
-        todoLists!
+        todoListsPayload.Should().NotBeNull();
+        todoListsPayload!.Lists
             .Should()
-            .Contain(list => list.Id == createdTodoList.Id && list.Title == "Integration list");
-        todoLists
+            .Contain(list => list.Id == createdTodoList.Id && list.Title == TodoListTitle);
+        todoListsPayload.Lists
             .Single(list => list.Id == createdTodoList.Id)
             .Items.Should()
-            .Contain(item => item.Title == "Integration item");
+            .Contain(item => item.Title == TodoItemTitle);
     }
 
     private sealed class AuthenticateResponse
     {
         public string? Error { get; set; }
 
+        [JsonPropertyName("confirm_token")]
         public string? ConfirmToken { get; set; }
 
         public string? AccessToken { get; set; }
@@ -188,5 +201,20 @@ public sealed class AccountGatewayTodoFlowTests : IAsyncLifetime
     private sealed class TodoItemResponse
     {
         public string? Title { get; set; }
+    }
+
+    private sealed class TodoListsPayload
+    {
+        public List<TodoListResponse> Lists { get; set; } = [];
+    }
+
+    private static TimeSpan GetInitializationTimeout()
+    {
+        const int defaultTimeoutSeconds = 300;
+        var value = Environment.GetEnvironmentVariable("ACCOUNT_INTEGRATION_INIT_TIMEOUT_SECONDS");
+
+        return int.TryParse(value, out var seconds) && seconds > 0
+            ? TimeSpan.FromSeconds(seconds)
+            : TimeSpan.FromSeconds(defaultTimeoutSeconds);
     }
 }

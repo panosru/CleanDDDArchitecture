@@ -10,6 +10,7 @@ internal sealed class ServiceProcess : IAsyncDisposable
     private readonly string _workingDirectory;
     private readonly Uri _healthUri;
     private readonly IReadOnlyDictionary<string, string> _environmentVariables;
+    private readonly Action<string>? _log;
     private readonly List<string> _output = new();
     private readonly object _outputLock = new();
     private Process? _process;
@@ -19,13 +20,15 @@ internal sealed class ServiceProcess : IAsyncDisposable
         string dllPath,
         string workingDirectory,
         Uri healthUri,
-        IReadOnlyDictionary<string, string> environmentVariables)
+        IReadOnlyDictionary<string, string> environmentVariables,
+        Action<string>? log = null)
     {
         _displayName = displayName;
         _dllPath = dllPath;
         _workingDirectory = workingDirectory;
         _healthUri = healthUri;
         _environmentVariables = environmentVariables;
+        _log = log;
     }
 
     public async Task StartAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
@@ -68,6 +71,9 @@ internal sealed class ServiceProcess : IAsyncDisposable
         {
             throw new InvalidOperationException($"Failed to start {_displayName}.");
         }
+
+        _log?.Invoke(
+            $"{_displayName}: started process {_process.Id} using '{_dllPath}' in '{_workingDirectory}'");
 
         _process.BeginOutputReadLine();
         _process.BeginErrorReadLine();
@@ -160,5 +166,7 @@ internal sealed class ServiceProcess : IAsyncDisposable
         {
             _output.Add(line);
         }
+
+        _log?.Invoke(line);
     }
 }
