@@ -594,7 +594,9 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
         Console.WriteLine($"integration: building {relativeProjectPath}");
         var projectPath = Path.Combine(_repositoryRoot, relativeProjectPath);
         using Process process = new();
-        process.StartInfo = new ProcessStartInfo("dotnet", $"build \"{projectPath}\" --configuration Release --nologo")
+        process.StartInfo = new ProcessStartInfo(
+            "dotnet",
+            $"build \"{projectPath}\" --configuration Release --nologo --no-restore")
         {
             WorkingDirectory = _repositoryRoot,
             RedirectStandardOutput = true,
@@ -603,9 +605,14 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
         };
 
         process.Start();
-        var output = await process.StandardOutput.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
-        var error = await process.StandardError.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
-        await process.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
+        var outputTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
+        var errorTask = process.StandardError.ReadToEndAsync(cancellationToken);
+        var waitForExitTask = process.WaitForExitAsync(cancellationToken);
+
+        await Task.WhenAll(outputTask, errorTask, waitForExitTask).ConfigureAwait(false);
+
+        var output = await outputTask.ConfigureAwait(false);
+        var error = await errorTask.ConfigureAwait(false);
 
         if (process.ExitCode != 0)
         {
