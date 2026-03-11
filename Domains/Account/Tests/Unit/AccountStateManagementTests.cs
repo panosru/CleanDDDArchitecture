@@ -1,5 +1,6 @@
 using Aviant.Application.Identity;
 using CleanDDDArchitecture.Domains.Account.Application.Identity;
+using CleanDDDArchitecture.Domains.Account.Core.Identity.Dto;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminSuspend;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminUnlock;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminUnsuspend;
@@ -146,6 +147,37 @@ public sealed class AccountStateManagementTests
 
             return Task.FromResult(IdentityResult.Success());
         }
+
+        public Task<IReadOnlyCollection<string>?> GetRolesAsync(
+            Guid actorUserId,
+            Guid targetUserId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IdentityResult> ReplaceRolesAsync(
+            Guid actorUserId,
+            Guid targetUserId,
+            IEnumerable<string> roles,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyCollection<AccountClaimDto>?> GetClaimsAsync(
+            Guid actorUserId,
+            Guid targetUserId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IdentityResult> ReplaceClaimsAsync(
+            Guid actorUserId,
+            Guid targetUserId,
+            IEnumerable<AccountClaimDto> claims,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyCollection<AccountSecurityEventDto>> GetOwnSecurityEventsAsync(
+            Guid userId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyCollection<AccountSecurityEventDto>?> GetSecurityEventsAsync(
+            Guid actorUserId,
+            Guid targetUserId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     private sealed class StubCurrentUserService : ICurrentUserService

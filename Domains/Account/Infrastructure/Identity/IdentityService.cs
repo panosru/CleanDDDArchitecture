@@ -9,11 +9,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.WebUtilities;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using Serilog;
 using System.Text.Encodings.Web;
 using System.Globalization;
+using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 using IdentityResult = Aviant.Application.Identity.IdentityResult;
 
 namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Identity;
@@ -22,13 +24,32 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
 {
     private const int EmailChangeTokenLifetimeHours = 24;
     private const int RecoveryCodesCount = 10;
+    private static readonly HashSet<string> ReservedClaimTypes =
+    [
+        ClaimTypes.Role,
+        ClaimTypes.NameIdentifier,
+        ClaimTypes.Name,
+        ClaimTypes.Email,
+        JwtRegisteredClaimNames.Sub,
+        JwtRegisteredClaimNames.Jti,
+        JwtRegisteredClaimNames.Iat,
+        JwtRegisteredClaimNames.NameId,
+        JwtRegisteredClaimNames.UniqueName,
+        JwtRegisteredClaimNames.Email,
+        JwtRegisteredClaimNames.GivenName,
+        JwtRegisteredClaimNames.FamilyName,
+        "sid",
+        "family_id"
+    ];
     private static readonly string[] AdminRoles = ["root", "superadmin", "admin"];
     private static readonly string[] UserNotFoundErrors = ["User not found."];
     private static readonly string[] InvalidEmailChangeTokenErrors = ["Invalid token."];
 
+    private readonly AccountDbContextWrite _accountDbContextWrite;
     private readonly Authenticator _authenticator;
     private readonly ConfirmEmail _confirmEmail;
     private readonly IDataProtector _emailChangeProtector;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly RefreshSessionManager _refreshSessionManager;
     private readonly RoleManager<AccountRole> _roleManager;
     private readonly UserManager<AccountUser> _userManager;
@@ -41,9 +62,11 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         IDataProtectionProvider dataProtectionProvider,
         IHttpContextAccessor httpContextAccessor)
     {
+        _accountDbContextWrite = accountDbContextWrite;
+        _httpContextAccessor = httpContextAccessor;
         _userManager = userManager;
         _roleManager = roleManager;
-        _refreshSessionManager = new RefreshSessionManager(accountDbContextWrite, config, httpContextAccessor);
+        _refreshSessionManager = new RefreshSessionManager(accountDbContextWrite, config, httpContextAccessor, userManager);
         _authenticator = new Authenticator(userManager, _refreshSessionManager);
         _confirmEmail = new ConfirmEmail(userManager);
         _emailChangeProtector = dataProtectionProvider.CreateProtector("CleanDDDArchitecture.Account.EmailChange");
@@ -115,6 +138,13 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
 
         await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
         await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+        await RecordSecurityEventAsync(
+                user.Id,
+                user.Id,
+                AccountSecurityEventTypes.MfaEnabled,
+                "Authenticator app MFA was enabled.",
+                cancellationToken)
+            .ConfigureAwait(false);
 
         return new MfaRecoveryCodesTicket(recoveryCodes);
     }
@@ -142,6 +172,13 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         await _userManager.ResetAuthenticatorKeyAsync(user).ConfigureAwait(false);
         await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
         await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+        await RecordSecurityEventAsync(
+                user.Id,
+                user.Id,
+                AccountSecurityEventTypes.MfaDisabled,
+                "Authenticator app MFA was disabled.",
+                cancellationToken)
+            .ConfigureAwait(false);
 
         return IdentityResult.Success();
     }
@@ -168,6 +205,13 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
 
         await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
         await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+        await RecordSecurityEventAsync(
+                user.Id,
+                user.Id,
+                AccountSecurityEventTypes.MfaRecoveryCodesRegenerated,
+                "Recovery codes were regenerated.",
+                cancellationToken)
+            .ConfigureAwait(false);
 
         return new MfaRecoveryCodesTicket(recoveryCodes);
     }
@@ -193,6 +237,7 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
                 AccountStatus.Deactivated,
                 "Self deactivated.",
                 shouldLockOut: true,
+                actorUserId: user.Id,
                 cancellationToken)
             .ConfigureAwait(false);
     }
@@ -225,6 +270,7 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
                 AccountStatus.Suspended,
                 string.IsNullOrWhiteSpace(reason) ? "Suspended by administrator." : reason.Trim(),
                 shouldLockOut: true,
+                actorUserId: actorUserId,
                 cancellationToken)
             .ConfigureAwait(false);
     }
@@ -253,6 +299,7 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
                 AccountStatus.Active,
                 "Unsuspended by administrator.",
                 shouldLockOut: false,
+                actorUserId: actorUserId,
                 cancellationToken)
             .ConfigureAwait(false);
     }
@@ -276,7 +323,223 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
             await _userManager.ResetAccessFailedCountAsync(user).ConfigureAwait(false);
         }
 
+        await RecordSecurityEventAsync(
+                user.Id,
+                actorUserId,
+                AccountSecurityEventTypes.AccountUnlocked,
+                "Account was unlocked by an administrator.",
+                cancellationToken)
+            .ConfigureAwait(false);
+
         return IdentityResult.Success();
+    }
+
+    public async Task<IReadOnlyCollection<string>?> GetRolesAsync(
+        Guid actorUserId,
+        Guid targetUserId,
+        CancellationToken cancellationToken = default)
+    {
+        if (!await IsAdministratorAsync(actorUserId).ConfigureAwait(false))
+            return null;
+
+        var user = await _userManager.FindByIdAsync(targetUserId.ToString()).ConfigureAwait(false);
+        if (user is null)
+            return null;
+
+        return (await _userManager.GetRolesAsync(user).ConfigureAwait(false))
+            .OrderBy(role => role, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+    }
+
+    public async Task<IdentityResult> ReplaceRolesAsync(
+        Guid actorUserId,
+        Guid targetUserId,
+        IEnumerable<string> roles,
+        CancellationToken cancellationToken = default)
+    {
+        if (!await IsAdministratorAsync(actorUserId).ConfigureAwait(false))
+            return IdentityResult.Failure(["Administrator access is required."]);
+
+        if (actorUserId == targetUserId)
+            return IdentityResult.Failure(["Administrators cannot change their own role assignments."]);
+
+        var user = await _userManager.FindByIdAsync(targetUserId.ToString()).ConfigureAwait(false);
+        if (user is null)
+            return IdentityResult.Failure(UserNotFoundErrors);
+
+        var normalizedRoles = roles
+            .Where(role => !string.IsNullOrWhiteSpace(role))
+            .Select(role => role.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(role => role, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        foreach (var role in normalizedRoles)
+        {
+            if (await _roleManager.RoleExistsAsync(role).ConfigureAwait(false))
+                continue;
+
+            var createRoleResult = await _roleManager.CreateAsync(new AccountRole { Name = role }).ConfigureAwait(false);
+            if (!createRoleResult.Succeeded)
+                return createRoleResult.ToApplicationResult();
+        }
+
+        var currentRoles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+        var currentRoleSet = currentRoles.ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var targetRoleSet = normalizedRoles.ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var rolesToRemove = currentRoles.Where(role => !targetRoleSet.Contains(role)).ToArray();
+        var rolesToAdd = normalizedRoles.Where(role => !currentRoleSet.Contains(role)).ToArray();
+
+        if (rolesToRemove.Length > 0)
+        {
+            var removeResult = await _userManager.RemoveFromRolesAsync(user, rolesToRemove).ConfigureAwait(false);
+            if (!removeResult.Succeeded)
+                return removeResult.ToApplicationResult();
+        }
+
+        if (rolesToAdd.Length > 0)
+        {
+            var addResult = await _userManager.AddToRolesAsync(user, rolesToAdd).ConfigureAwait(false);
+            if (!addResult.Succeeded)
+                return addResult.ToApplicationResult();
+        }
+
+        await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
+        await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+        await RecordSecurityEventAsync(
+                user.Id,
+                actorUserId,
+                AccountSecurityEventTypes.RolesUpdated,
+                normalizedRoles.Length == 0
+                    ? "All role assignments were removed by an administrator."
+                    : $"Role assignments were updated to: {string.Join(", ", normalizedRoles)}.",
+                cancellationToken)
+            .ConfigureAwait(false);
+
+        return IdentityResult.Success();
+    }
+
+    public async Task<IReadOnlyCollection<AccountClaimDto>?> GetClaimsAsync(
+        Guid actorUserId,
+        Guid targetUserId,
+        CancellationToken cancellationToken = default)
+    {
+        if (!await IsAdministratorAsync(actorUserId).ConfigureAwait(false))
+            return null;
+
+        var user = await _userManager.FindByIdAsync(targetUserId.ToString()).ConfigureAwait(false);
+        if (user is null)
+            return null;
+
+        return (await _userManager.GetClaimsAsync(user).ConfigureAwait(false))
+            .Where(claim => !ReservedClaimTypes.Contains(claim.Type))
+            .Select(claim => new AccountClaimDto(claim.Type, claim.Value))
+            .OrderBy(claim => claim.Type, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(claim => claim.Value, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+    }
+
+    public async Task<IdentityResult> ReplaceClaimsAsync(
+        Guid actorUserId,
+        Guid targetUserId,
+        IEnumerable<AccountClaimDto> claims,
+        CancellationToken cancellationToken = default)
+    {
+        if (!await IsAdministratorAsync(actorUserId).ConfigureAwait(false))
+            return IdentityResult.Failure(["Administrator access is required."]);
+
+        if (actorUserId == targetUserId)
+            return IdentityResult.Failure(["Administrators cannot change their own direct claims."]);
+
+        var user = await _userManager.FindByIdAsync(targetUserId.ToString()).ConfigureAwait(false);
+        if (user is null)
+            return IdentityResult.Failure(UserNotFoundErrors);
+
+        var normalizedClaims = claims
+            .Where(claim => !string.IsNullOrWhiteSpace(claim.Type) && !string.IsNullOrWhiteSpace(claim.Value))
+            .Select(claim => new AccountClaimDto(claim.Type.Trim(), claim.Value.Trim()))
+            .Distinct()
+            .OrderBy(claim => claim.Type, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(claim => claim.Value, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        var reservedType = normalizedClaims.FirstOrDefault(claim => ReservedClaimTypes.Contains(claim.Type));
+        if (reservedType is not null)
+            return IdentityResult.Failure([$"Claim type '{reservedType.Type}' is reserved and cannot be assigned directly."]);
+
+        var currentClaims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
+        var removableClaims = currentClaims.Where(claim => !ReservedClaimTypes.Contains(claim.Type)).ToArray();
+        if (removableClaims.Length > 0)
+        {
+            var removeResult = await _userManager.RemoveClaimsAsync(user, removableClaims).ConfigureAwait(false);
+            if (!removeResult.Succeeded)
+                return removeResult.ToApplicationResult();
+        }
+
+        if (normalizedClaims.Length > 0)
+        {
+            var addResult = await _userManager.AddClaimsAsync(
+                    user,
+                    normalizedClaims.Select(claim => new Claim(claim.Type, claim.Value)))
+                .ConfigureAwait(false);
+            if (!addResult.Succeeded)
+                return addResult.ToApplicationResult();
+        }
+
+        await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
+        await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+        await RecordSecurityEventAsync(
+                user.Id,
+                actorUserId,
+                AccountSecurityEventTypes.ClaimsUpdated,
+                normalizedClaims.Length == 0
+                    ? "All direct user claims were removed by an administrator."
+                    : $"Direct user claims were updated ({normalizedClaims.Length} claims).",
+                cancellationToken)
+            .ConfigureAwait(false);
+
+        return IdentityResult.Success();
+    }
+
+    public async Task<IReadOnlyCollection<AccountSecurityEventDto>> GetOwnSecurityEventsAsync(
+        Guid userId,
+        CancellationToken cancellationToken = default)
+    {
+        return await _accountDbContextWrite.SecurityEvents
+            .Where(item => item.UserId == userId)
+            .OrderByDescending(item => item.OccurredAtUtc)
+            .Take(100)
+            .Select(
+                item =>
+                    new AccountSecurityEventDto
+                    {
+                        Id = item.Id,
+                        UserId = item.UserId,
+                        ActorUserId = item.ActorUserId,
+                        Type = item.Type,
+                        Description = item.Description,
+                        OccurredAtUtc = item.OccurredAtUtc,
+                        IpAddress = item.IpAddress,
+                        UserAgent = item.UserAgent
+                    })
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyCollection<AccountSecurityEventDto>?> GetSecurityEventsAsync(
+        Guid actorUserId,
+        Guid targetUserId,
+        CancellationToken cancellationToken = default)
+    {
+        if (!await IsAdministratorAsync(actorUserId).ConfigureAwait(false))
+            return null;
+
+        var userExists = await _userManager.FindByIdAsync(targetUserId.ToString()).ConfigureAwait(false) is not null;
+        if (!userExists)
+            return null;
+
+        return await GetOwnSecurityEventsAsync(targetUserId, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<EmailConfirmationTicket?> GenerateEmailConfirmationAsync(
@@ -290,6 +553,13 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
 
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user).ConfigureAwait(false);
         var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+        await RecordSecurityEventAsync(
+                user.Id,
+                user.Id,
+                AccountSecurityEventTypes.EmailConfirmationRequested,
+                "Email confirmation was requested.",
+                cancellationToken)
+            .ConfigureAwait(false);
 
         return new EmailConfirmationTicket(user.Email!, user.FullName, encodedToken);
     }
@@ -318,6 +588,13 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
             DateTimeOffset.UtcNow.AddHours(EmailChangeTokenLifetimeHours));
         var protectedBytes = _emailChangeProtector.Protect(JsonSerializer.SerializeToUtf8Bytes(payload));
         var encodedToken = WebEncoders.Base64UrlEncode(protectedBytes);
+        await RecordSecurityEventAsync(
+                user.Id,
+                user.Id,
+                AccountSecurityEventTypes.EmailChangeRequested,
+                $"Email change was requested to '{newEmail}'.",
+                cancellationToken)
+            .ConfigureAwait(false);
 
         return new EmailChangeTicket(user.Email!, newEmail, user.FullName, encodedToken);
     }
@@ -333,6 +610,13 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user).ConfigureAwait(false);
         var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+        await RecordSecurityEventAsync(
+                user.Id,
+                user.Id,
+                AccountSecurityEventTypes.PasswordResetRequested,
+                "Password reset was requested.",
+                cancellationToken)
+            .ConfigureAwait(false);
 
         return new PasswordResetTicket(user.Id, user.Email!, user.FullName, encodedToken);
     }
@@ -356,6 +640,13 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
 
         await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
         await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+        await RecordSecurityEventAsync(
+                user.Id,
+                user.Id,
+                AccountSecurityEventTypes.PasswordResetCompleted,
+                "Password was reset successfully.",
+                cancellationToken)
+            .ConfigureAwait(false);
 
         return IdentityResult.Success();
     }
@@ -378,6 +669,13 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
 
         await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
         await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+        await RecordSecurityEventAsync(
+                user.Id,
+                user.Id,
+                AccountSecurityEventTypes.PasswordChanged,
+                "Password was changed successfully.",
+                cancellationToken)
+            .ConfigureAwait(false);
 
         return IdentityResult.Success();
     }
@@ -395,7 +693,7 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
     public async Task<int> RevokeAllRefreshTokensAsync(
         Guid userId,
         CancellationToken cancellationToken = default) =>
-        await _refreshSessionManager.RevokeAllRefreshTokensAsync(userId, cancellationToken).ConfigureAwait(false);
+        await RevokeAllAndRecordAsync(userId, cancellationToken).ConfigureAwait(false);
 
     public async Task<IReadOnlyCollection<AccountSessionDto>> GetActiveSessionsAsync(
         Guid userId,
@@ -405,14 +703,44 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
     public async Task<bool> RevokeSessionAsync(
         Guid userId,
         Guid sessionId,
-        CancellationToken cancellationToken = default) =>
-        await _refreshSessionManager.RevokeSessionAsync(userId, sessionId, cancellationToken).ConfigureAwait(false);
+        CancellationToken cancellationToken = default)
+    {
+        var revoked = await _refreshSessionManager.RevokeSessionAsync(userId, sessionId, cancellationToken).ConfigureAwait(false);
+        if (revoked)
+        {
+            await RecordSecurityEventAsync(
+                    userId,
+                    userId,
+                    AccountSecurityEventTypes.SessionRevoked,
+                    $"Session '{sessionId}' was revoked.",
+                    cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        return revoked;
+    }
 
     public async Task<IdentityResult> ConfirmEmailAsync(
         string token,
         string email,
-        CancellationToken cancellationToken = default) =>
-        await _confirmEmail.ConfirmEmailAsync(token, email).ConfigureAwait(false);
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByEmailAsync(email).ConfigureAwait(false);
+        var result = await _confirmEmail.ConfirmEmailAsync(token, email).ConfigureAwait(false);
+
+        if (result.Succeeded && user is not null)
+        {
+            await RecordSecurityEventAsync(
+                    user.Id,
+                    user.Id,
+                    AccountSecurityEventTypes.EmailConfirmed,
+                    "Email address was confirmed.",
+                    cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        return result;
+    }
 
     public async Task<IdentityResult> ConfirmEmailChangeAsync(
         string currentEmail,
@@ -493,6 +821,13 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
 
         await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
         await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+        await RecordSecurityEventAsync(
+                user.Id,
+                user.Id,
+                AccountSecurityEventTypes.EmailChanged,
+                $"Primary email address was changed to '{newEmail}'.",
+                cancellationToken)
+            .ConfigureAwait(false);
 
         return IdentityResult.Success();
     }
@@ -672,6 +1007,7 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         AccountStatus status,
         string reason,
         bool shouldLockOut,
+        Guid? actorUserId,
         CancellationToken cancellationToken)
     {
         user.Status = status;
@@ -695,7 +1031,65 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
 
         await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
         await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+        var eventType = status switch
+        {
+            AccountStatus.Deactivated => AccountSecurityEventTypes.AccountDeactivated,
+            AccountStatus.Suspended => AccountSecurityEventTypes.AccountSuspended,
+            AccountStatus.Active => AccountSecurityEventTypes.AccountUnsuspended,
+            _ => nameof(AccountStatus)
+        };
+        await RecordSecurityEventAsync(user.Id, actorUserId, eventType, reason, cancellationToken).ConfigureAwait(false);
 
         return IdentityResult.Success();
     }
+
+    private async Task<int> RevokeAllAndRecordAsync(
+        Guid userId,
+        CancellationToken cancellationToken)
+    {
+        var revokedCount = await _refreshSessionManager.RevokeAllRefreshTokensAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (revokedCount > 0)
+        {
+            await RecordSecurityEventAsync(
+                    userId,
+                    userId,
+                    AccountSecurityEventTypes.SessionsRevoked,
+                    $"All active sessions were revoked ({revokedCount} sessions).",
+                    cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        return revokedCount;
+    }
+
+    private async Task RecordSecurityEventAsync(
+        Guid userId,
+        Guid? actorUserId,
+        string eventType,
+        string description,
+        CancellationToken cancellationToken)
+    {
+        _accountDbContextWrite.SecurityEvents.Add(
+            new Persistence.Entities.AccountSecurityEvent
+            {
+                Id = Guid.NewGuid(),
+                UserId = userId,
+                ActorUserId = actorUserId,
+                Type = eventType,
+                Description = description,
+                OccurredAtUtc = DateTimeOffset.UtcNow,
+                IpAddress = GetRemoteIp(),
+                UserAgent = GetUserAgent()
+            });
+
+        await _accountDbContextWrite.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    private string? GetRemoteIp() => HttpContext.Connection.RemoteIpAddress?.ToString();
+
+    private string? GetUserAgent() => HttpContext.Request.Headers.UserAgent.ToString();
+
+    private HttpContext HttpContext =>
+        _httpContextAccessor.HttpContext
+        ?? throw new InvalidOperationException("No active HttpContext is available.");
 }
