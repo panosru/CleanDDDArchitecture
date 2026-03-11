@@ -31,13 +31,13 @@ internal sealed class Authenticator
     /// Main method to handle user authentication
     /// </summary>
     internal async Task<object?> AuthenticateAsync(
-        string username,
+        string loginIdentifier,
         string password,
         string? twoFactorCode,
         string? recoveryCode,
         CancellationToken cancellationToken)
     {
-        var user = await FindUserAsync(username, cancellationToken).ConfigureAwait(false);
+        var user = await FindUserAsync(loginIdentifier, cancellationToken).ConfigureAwait(false);
         if (user is null)
             return null;
 
@@ -84,11 +84,11 @@ internal sealed class Authenticator
     }
 
     private async Task<AccountUser?> FindUserAsync(
-        string username,
+        string loginIdentifier,
         CancellationToken cancellationToken)
     {
         return await _userManager.Users.FirstOrDefaultAsync(
-                user => user.UserName == username,
+                user => user.UserName == loginIdentifier || user.Email == loginIdentifier,
                 cancellationToken)
             .ConfigureAwait(false);
     }
