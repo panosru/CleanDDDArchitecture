@@ -38,6 +38,7 @@ FeatureManagement:
   AccountResendConfirmation: true
   AccountChangeEmail: true
   AccountRefreshToken: true
+  AccountExternalIdentity: true
   AccountConfirmEmail: true
   AccountDeactivate: true
   AccountAdministration: true
@@ -47,3 +48,7 @@ FeatureManagement:
   AccountProfile: true
   AccountSessions: true
   AccountUpdateDetails: true
+
+ExternalIdentity:
+  StateLifetimeInMinutes: 15
+  Providers: {}
