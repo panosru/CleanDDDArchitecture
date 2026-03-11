@@ -20,4 +20,8 @@ public static class AccountSecurityEventTypes
     public const string SessionRevoked = nameof(SessionRevoked);
     public const string RolesUpdated = nameof(RolesUpdated);
     public const string ClaimsUpdated = nameof(ClaimsUpdated);
+    public const string ExternalLoginLinked = nameof(ExternalLoginLinked);
+    public const string ExternalLoginUnlinked = nameof(ExternalLoginUnlinked);
+    public const string ExternalLoginSignedIn = nameof(ExternalLoginSignedIn);
+    public const string ExternalAccountCreated = nameof(ExternalAccountCreated);
 }

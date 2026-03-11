@@ -15,6 +15,32 @@ public interface IAccountAuthenticationService
         string refreshToken,
         CancellationToken cancellationToken = default);
 
+    public Task<IReadOnlyCollection<ExternalIdentityProviderDto>> GetExternalProvidersAsync(
+        CancellationToken cancellationToken = default);
+
+    public Task<ExternalAuthenticationStartDto?> BeginExternalAuthenticationAsync(
+        string provider,
+        string redirectUri,
+        Guid? userId,
+        CancellationToken cancellationToken = default);
+
+    public Task<ExternalAuthenticationResultDto?> CompleteExternalAuthenticationAsync(
+        string provider,
+        string code,
+        string state,
+        string redirectUri,
+        Guid? userId,
+        CancellationToken cancellationToken = default);
+
+    public Task<IReadOnlyCollection<ExternalLoginDto>> GetExternalLoginsAsync(
+        Guid userId,
+        CancellationToken cancellationToken = default);
+
+    public Task<Aviant.Application.Identity.IdentityResult> UnlinkExternalLoginAsync(
+        Guid userId,
+        string provider,
+        CancellationToken cancellationToken = default);
+
     public Task<bool> RevokeRefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default);

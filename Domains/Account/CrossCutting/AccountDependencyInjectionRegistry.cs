@@ -26,6 +26,11 @@ using CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangeEmailReque
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Deactivate;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.ExternalBegin;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.ExternalComplete;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.ExternalLogins;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.ExternalProviders;
+using CleanDDDArchitecture.Domains.Account.Application.UseCases.ExternalUnlink;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ForgotPassword;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.GetBy;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Logout;
@@ -145,6 +150,7 @@ public static class AccountDependencyInjectionRegistry
         services.AddScoped<IIdentityService>(provider => provider.GetRequiredService<IdentityService>());
         services.AddScoped<IAccountAuthenticationService>(provider => provider.GetRequiredService<IdentityService>());
         services.AddScoped<IAccountAdministrationService>(provider => provider.GetRequiredService<IdentityService>());
+        services.AddHttpClient();
 
         services
            .AddAuthentication(
@@ -239,6 +245,11 @@ public static class AccountDependencyInjectionRegistry
                 });
 
         services.AddScoped<AuthenticateUseCase>();
+        services.AddScoped<ExternalProvidersUseCase>();
+        services.AddScoped<ExternalBeginUseCase>();
+        services.AddScoped<ExternalCompleteUseCase>();
+        services.AddScoped<ExternalLoginsUseCase>();
+        services.AddScoped<ExternalUnlinkUseCase>();
         services.AddScoped<DeactivateUseCase>();
         services.AddScoped<AdminSuspendUseCase>();
         services.AddScoped<AdminUnsuspendUseCase>();

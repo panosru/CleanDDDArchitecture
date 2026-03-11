@@ -22,6 +22,8 @@ public enum Features
 
     AccountRefreshToken,
 
+    AccountExternalIdentity,
+
     AccountConfirmEmail,
 
     AccountDeactivate,

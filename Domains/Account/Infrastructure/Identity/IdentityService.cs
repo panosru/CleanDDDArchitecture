@@ -9,12 +9,17 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Serilog;
 using System.Text.Encodings.Web;
 using System.Globalization;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 using IdentityResult = Aviant.Application.Identity.IdentityResult;
 
@@ -23,6 +28,7 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Identity;
 public sealed class IdentityService : IIdentityService, IAccountAuthenticationService, IAccountAdministrationService
 {
     private const int EmailChangeTokenLifetimeHours = 24;
+    private const int ExternalStateLifetimeMinutesDefault = 15;
     private const int RecoveryCodesCount = 10;
     private static readonly HashSet<string> ReservedClaimTypes =
     [
@@ -49,10 +55,13 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
     private readonly Authenticator _authenticator;
     private readonly ConfirmEmail _confirmEmail;
     private readonly IDataProtector _emailChangeProtector;
+    private readonly IDataProtector _externalStateProtector;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IHttpClientFactory _httpClientFactory;
     private readonly RefreshSessionManager _refreshSessionManager;
     private readonly RoleManager<AccountRole> _roleManager;
     private readonly UserManager<AccountUser> _userManager;
+    private readonly IConfiguration _configuration;
 
     public IdentityService(
         UserManager<AccountUser> userManager,
@@ -60,16 +69,20 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         IAccountDomainConfiguration config,
         AccountDbContextWrite accountDbContextWrite,
         IDataProtectionProvider dataProtectionProvider,
-        IHttpContextAccessor httpContextAccessor)
+        IHttpContextAccessor httpContextAccessor,
+        IHttpClientFactory httpClientFactory)
     {
+        _configuration = config.Configuration();
         _accountDbContextWrite = accountDbContextWrite;
         _httpContextAccessor = httpContextAccessor;
+        _httpClientFactory = httpClientFactory;
         _userManager = userManager;
         _roleManager = roleManager;
         _refreshSessionManager = new RefreshSessionManager(accountDbContextWrite, config, httpContextAccessor, userManager);
         _authenticator = new Authenticator(userManager, _refreshSessionManager);
         _confirmEmail = new ConfirmEmail(userManager);
         _emailChangeProtector = dataProtectionProvider.CreateProtector("CleanDDDArchitecture.Account.EmailChange");
+        _externalStateProtector = dataProtectionProvider.CreateProtector("CleanDDDArchitecture.Account.ExternalIdentity.State");
     }
 
     public async Task<object?> AuthenticateAsync(
@@ -832,6 +845,276 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         CancellationToken cancellationToken = default) =>
         await _refreshSessionManager.RefreshAsync(refreshToken, cancellationToken).ConfigureAwait(false);
 
+    public Task<IReadOnlyCollection<ExternalIdentityProviderDto>> GetExternalProvidersAsync(
+        CancellationToken cancellationToken = default)
+    {
+        IReadOnlyCollection<ExternalIdentityProviderDto> providers = GetExternalProviders()
+            .Select(
+                provider =>
+                    new ExternalIdentityProviderDto
+                    {
+                        Provider = provider.Key,
+                        DisplayName = provider.DisplayName
+                    })
+            .OrderBy(provider => provider.DisplayName, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        return Task.FromResult(providers);
+    }
+
+    public async Task<ExternalAuthenticationStartDto?> BeginExternalAuthenticationAsync(
+        string provider,
+        string redirectUri,
+        Guid? userId,
+        CancellationToken cancellationToken = default)
+    {
+        if (!TryGetExternalProvider(provider, out var externalProvider)
+         || !IsAllowedRedirectUri(redirectUri))
+            return null;
+
+        var metadata = await LoadOpenIdMetadataAsync(externalProvider, cancellationToken).ConfigureAwait(false);
+        if (metadata?.AuthorizationEndpoint is null)
+            return null;
+
+        var expiresAtUtc = DateTimeOffset.UtcNow.AddMinutes(GetExternalStateLifetimeMinutes());
+        var state = ProtectExternalState(
+            new ExternalStatePayload(
+                externalProvider.Key,
+                redirectUri,
+                userId.HasValue && userId.Value != Guid.Empty,
+                userId is { } currentUserId && currentUserId != Guid.Empty ? currentUserId : null,
+                expiresAtUtc,
+                Convert.ToHexString(RandomNumberGenerator.GetBytes(16))));
+
+        Dictionary<string, string?> query = new(StringComparer.Ordinal)
+        {
+            ["client_id"] = externalProvider.ClientId,
+            ["response_type"] = "code",
+            ["redirect_uri"] = redirectUri,
+            ["scope"] = string.Join(' ', externalProvider.Scopes),
+            ["state"] = state
+        };
+
+        var authorizationUrl = QueryHelpers.AddQueryString(metadata.AuthorizationEndpoint, query!);
+
+        return new ExternalAuthenticationStartDto
+        {
+            Provider = externalProvider.Key,
+            DisplayName = externalProvider.DisplayName,
+            AuthorizationUrl = authorizationUrl,
+            ExpiresAtUtc = expiresAtUtc
+        };
+    }
+
+    public async Task<ExternalAuthenticationResultDto?> CompleteExternalAuthenticationAsync(
+        string provider,
+        string code,
+        string state,
+        string redirectUri,
+        Guid? userId,
+        CancellationToken cancellationToken = default)
+    {
+        if (!TryGetExternalProvider(provider, out var externalProvider)
+         || !IsAllowedRedirectUri(redirectUri))
+            return null;
+
+        var statePayload = UnprotectExternalState(state);
+        if (statePayload is null
+         || !string.Equals(statePayload.Provider, externalProvider.Key, StringComparison.OrdinalIgnoreCase)
+         || !string.Equals(statePayload.RedirectUri, redirectUri, StringComparison.Ordinal)
+         || statePayload.ExpiresAtUtc <= DateTimeOffset.UtcNow)
+            return null;
+
+        var metadata = await LoadOpenIdMetadataAsync(externalProvider, cancellationToken).ConfigureAwait(false);
+        if (metadata?.TokenEndpoint is null || metadata.UserInfoEndpoint is null)
+            return null;
+
+        var tokenResponse = await ExchangeAuthorizationCodeAsync(
+                metadata.TokenEndpoint,
+                externalProvider,
+                code,
+                redirectUri,
+                cancellationToken)
+            .ConfigureAwait(false);
+        if (tokenResponse?.AccessToken is null)
+            return null;
+
+        var profile = await LoadExternalProfileAsync(
+                metadata.UserInfoEndpoint,
+                tokenResponse.AccessToken,
+                cancellationToken)
+            .ConfigureAwait(false);
+        if (profile?.Subject is null)
+            return null;
+
+        var currentUserId = userId is { } requestedUserId && requestedUserId != Guid.Empty
+            ? requestedUserId
+            : (Guid?)null;
+        var isLinkFlow = statePayload.LinkCurrentUser;
+
+        if (isLinkFlow)
+        {
+            if (currentUserId is null || statePayload.RequestedByUserId != currentUserId)
+                return null;
+
+            var linkedUser = await LinkExternalLoginAsync(
+                    currentUserId.Value,
+                    externalProvider,
+                    profile,
+                    cancellationToken)
+                .ConfigureAwait(false);
+            if (linkedUser is null)
+                return null;
+
+            await RecordSecurityEventAsync(
+                    linkedUser.Id,
+                    linkedUser.Id,
+                    AccountSecurityEventTypes.ExternalLoginLinked,
+                    $"External login '{externalProvider.DisplayName}' was linked to the account.",
+                    cancellationToken)
+                .ConfigureAwait(false);
+
+            return new ExternalAuthenticationResultDto
+            {
+                Provider = externalProvider.Key,
+                DisplayName = externalProvider.DisplayName,
+                Email = linkedUser.Email ?? string.Empty,
+                IsLinked = true,
+                IsCreated = false
+            };
+        }
+
+        var existingByLogin = await _userManager.FindByLoginAsync(externalProvider.Key, profile.Subject).ConfigureAwait(false);
+        var created = false;
+        var linked = false;
+        AccountUser? user = existingByLogin;
+
+        if (user is null)
+        {
+            if (!profile.EmailVerified || string.IsNullOrWhiteSpace(profile.Email))
+                return null;
+
+            user = await _userManager.FindByEmailAsync(profile.Email).ConfigureAwait(false);
+
+            if (user is not null)
+            {
+                user = await LinkExternalLoginAsync(user.Id, externalProvider, profile, cancellationToken).ConfigureAwait(false);
+                if (user is null)
+                    return null;
+
+                linked = true;
+                await RecordSecurityEventAsync(
+                        user.Id,
+                        user.Id,
+                        AccountSecurityEventTypes.ExternalLoginLinked,
+                        $"External login '{externalProvider.DisplayName}' was linked after verified email sign-in.",
+                        cancellationToken)
+                    .ConfigureAwait(false);
+            }
+            else
+            {
+                user = await CreateExternalUserAsync(externalProvider, profile, cancellationToken).ConfigureAwait(false);
+                if (user is null)
+                    return null;
+
+                created = true;
+                linked = true;
+                await RecordSecurityEventAsync(
+                        user.Id,
+                        user.Id,
+                        AccountSecurityEventTypes.ExternalAccountCreated,
+                        $"An account was created from external identity provider '{externalProvider.DisplayName}'.",
+                        cancellationToken)
+                    .ConfigureAwait(false);
+            }
+        }
+
+        if (user.Status != AccountStatus.Active)
+            return null;
+
+        user.LastAccessed = DateTime.UtcNow;
+        await _userManager.UpdateAsync(user).ConfigureAwait(false);
+
+        var tokens = await _refreshSessionManager.IssueTokensAsync(user, cancellationToken).ConfigureAwait(false);
+        await RecordSecurityEventAsync(
+                user.Id,
+                user.Id,
+                AccountSecurityEventTypes.ExternalLoginSignedIn,
+                $"External login '{externalProvider.DisplayName}' was used to sign in.",
+                cancellationToken)
+            .ConfigureAwait(false);
+
+        return new ExternalAuthenticationResultDto
+        {
+            Provider = externalProvider.Key,
+            DisplayName = externalProvider.DisplayName,
+            Email = user.Email ?? string.Empty,
+            IsLinked = existingByLogin is not null || linked,
+            IsCreated = created,
+            Tokens = tokens
+        };
+    }
+
+    public async Task<IReadOnlyCollection<ExternalLoginDto>> GetExternalLoginsAsync(
+        Guid userId,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString()).ConfigureAwait(false);
+        if (user is null)
+            return [];
+
+        var configuredProviders = GetExternalProviders()
+            .ToDictionary(item => item.Key, item => item.DisplayName, StringComparer.OrdinalIgnoreCase);
+
+        return (await _userManager.GetLoginsAsync(user).ConfigureAwait(false))
+            .Select(
+                login =>
+                    new ExternalLoginDto
+                    {
+                        Provider = login.LoginProvider,
+                        DisplayName = configuredProviders.TryGetValue(login.LoginProvider, out var displayName)
+                            ? displayName
+                            : login.ProviderDisplayName ?? login.LoginProvider
+                    })
+            .OrderBy(item => item.DisplayName, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+    }
+
+    public async Task<IdentityResult> UnlinkExternalLoginAsync(
+        Guid userId,
+        string provider,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString()).ConfigureAwait(false);
+        if (user is null)
+            return IdentityResult.Failure(UserNotFoundErrors);
+
+        var logins = await _userManager.GetLoginsAsync(user).ConfigureAwait(false);
+        var login = logins.FirstOrDefault(
+            item => string.Equals(item.LoginProvider, provider, StringComparison.OrdinalIgnoreCase));
+        if (login is null)
+            return IdentityResult.Failure(["External login not found."]);
+
+        if (logins.Count == 1 && !await _userManager.HasPasswordAsync(user).ConfigureAwait(false))
+            return IdentityResult.Failure(["Set a password or add another sign-in method before removing the last external login."]);
+
+        var result = await _userManager.RemoveLoginAsync(user, login.LoginProvider, login.ProviderKey).ConfigureAwait(false);
+        if (!result.Succeeded)
+            return result.ToApplicationResult();
+
+        await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
+        await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+        await RecordSecurityEventAsync(
+                user.Id,
+                user.Id,
+                AccountSecurityEventTypes.ExternalLoginUnlinked,
+                $"External login '{login.ProviderDisplayName ?? login.LoginProvider}' was removed from the account.",
+                cancellationToken)
+            .ConfigureAwait(false);
+
+        return IdentityResult.Success();
+    }
+
     public async Task<bool> RevokeRefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default) =>
@@ -1239,4 +1522,313 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
     private HttpContext HttpContext =>
         _httpContextAccessor.HttpContext
         ?? throw new InvalidOperationException("No active HttpContext is available.");
+
+    private IReadOnlyCollection<ExternalProviderConfiguration> GetExternalProviders()
+    {
+        return _configuration
+            .GetSection("ExternalIdentity:Providers")
+            .GetChildren()
+            .Select(
+                child => new ExternalProviderConfiguration(
+                    child.Key,
+                    child["DisplayName"] ?? child.Key,
+                    child["Authority"] ?? string.Empty,
+                    child["ClientId"] ?? string.Empty,
+                    child["ClientSecret"] ?? string.Empty,
+                    child.GetSection("Scopes").Get<string[]>() is { Length: > 0 } scopes
+                        ? scopes
+                        : ["openid", "profile", "email"]))
+            .Where(
+                item =>
+                    !string.IsNullOrWhiteSpace(item.Authority)
+                 && !string.IsNullOrWhiteSpace(item.ClientId)
+                 && !string.IsNullOrWhiteSpace(item.ClientSecret))
+            .ToArray();
+    }
+
+    private bool TryGetExternalProvider(string provider, out ExternalProviderConfiguration externalProvider)
+    {
+        var match = GetExternalProviders()
+            .FirstOrDefault(item => string.Equals(item.Key, provider, StringComparison.OrdinalIgnoreCase));
+
+        if (match is null)
+        {
+            externalProvider = default!;
+            return false;
+        }
+
+        externalProvider = match;
+        return true;
+    }
+
+    private bool IsAllowedRedirectUri(string redirectUri)
+    {
+        if (!Uri.TryCreate(redirectUri, UriKind.Absolute, out var uri))
+            return false;
+
+        if (uri.Scheme == Uri.UriSchemeHttps)
+            return true;
+
+        return uri.Scheme == Uri.UriSchemeHttp && uri.Host is "localhost" or "127.0.0.1";
+    }
+
+    private int GetExternalStateLifetimeMinutes()
+    {
+        if (int.TryParse(
+                _configuration["ExternalIdentity:StateLifetimeInMinutes"],
+                CultureInfo.InvariantCulture,
+                out var minutes)
+         && minutes > 0)
+            return minutes;
+
+        return ExternalStateLifetimeMinutesDefault;
+    }
+
+    private string ProtectExternalState(ExternalStatePayload payload)
+    {
+        var bytes = JsonSerializer.SerializeToUtf8Bytes(payload);
+
+        return WebEncoders.Base64UrlEncode(_externalStateProtector.Protect(bytes));
+    }
+
+    private ExternalStatePayload? UnprotectExternalState(string state)
+    {
+        try
+        {
+            var protectedBytes = WebEncoders.Base64UrlDecode(state);
+            var json = _externalStateProtector.Unprotect(protectedBytes);
+
+            return JsonSerializer.Deserialize<ExternalStatePayload>(json);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private async Task<OpenIdMetadata?> LoadOpenIdMetadataAsync(
+        ExternalProviderConfiguration provider,
+        CancellationToken cancellationToken)
+    {
+        var client = _httpClientFactory.CreateClient();
+        client.Timeout = TimeSpan.FromSeconds(15);
+
+        var authority = provider.Authority.TrimEnd('/');
+        var metadata = await client.GetFromJsonAsync<OpenIdMetadata>(
+                $"{authority}/.well-known/openid-configuration",
+                cancellationToken)
+            .ConfigureAwait(false);
+
+        return metadata;
+    }
+
+    private async Task<ExternalTokenResponse?> ExchangeAuthorizationCodeAsync(
+        string tokenEndpoint,
+        ExternalProviderConfiguration provider,
+        string code,
+        string redirectUri,
+        CancellationToken cancellationToken)
+    {
+        using var client = _httpClientFactory.CreateClient();
+        using FormUrlEncodedContent content = new(
+        [
+            new KeyValuePair<string, string>("grant_type", "authorization_code"),
+            new KeyValuePair<string, string>("code", code),
+            new KeyValuePair<string, string>("redirect_uri", redirectUri),
+            new KeyValuePair<string, string>("client_id", provider.ClientId),
+            new KeyValuePair<string, string>("client_secret", provider.ClientSecret)
+        ]);
+
+        using var response = await client.PostAsync(tokenEndpoint, content, cancellationToken).ConfigureAwait(false);
+        if (!response.IsSuccessStatusCode)
+            return null;
+
+        return await response.Content.ReadFromJsonAsync<ExternalTokenResponse>(cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    private async Task<ExternalUserProfile?> LoadExternalProfileAsync(
+        string userInfoEndpoint,
+        string accessToken,
+        CancellationToken cancellationToken)
+    {
+        using var client = _httpClientFactory.CreateClient();
+        using HttpRequestMessage request = new(HttpMethod.Get, userInfoEndpoint);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+        using var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        if (!response.IsSuccessStatusCode)
+            return null;
+
+        return await response.Content.ReadFromJsonAsync<ExternalUserProfile>(cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    private async Task<AccountUser?> LinkExternalLoginAsync(
+        Guid userId,
+        ExternalProviderConfiguration provider,
+        ExternalUserProfile profile,
+        CancellationToken cancellationToken)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString()).ConfigureAwait(false);
+        if (user is null)
+            return null;
+
+        var existingUser = await _userManager.FindByLoginAsync(provider.Key, profile.Subject).ConfigureAwait(false);
+        if (existingUser is not null)
+            return existingUser.Id == user.Id ? user : null;
+
+        var result = await _userManager.AddLoginAsync(
+                user,
+                new UserLoginInfo(provider.Key, profile.Subject, provider.DisplayName))
+            .ConfigureAwait(false);
+        if (!result.Succeeded)
+            return null;
+
+        if (profile.EmailVerified
+         && string.IsNullOrWhiteSpace(user.Email)
+         && !string.IsNullOrWhiteSpace(profile.Email))
+        {
+            user.Email = profile.Email;
+            user.UserName = profile.Email;
+            user.EmailConfirmed = true;
+            await _userManager.UpdateAsync(user).ConfigureAwait(false);
+        }
+
+        await _userManager.UpdateSecurityStampAsync(user).ConfigureAwait(false);
+        await _refreshSessionManager.RevokeAllRefreshTokensAsync(user.Id, cancellationToken).ConfigureAwait(false);
+
+        return user;
+    }
+
+    private async Task<AccountUser?> CreateExternalUserAsync(
+        ExternalProviderConfiguration provider,
+        ExternalUserProfile profile,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(profile.Email))
+            return null;
+
+        AccountUser user = new()
+        {
+            UserName = profile.Email,
+            Email = profile.Email,
+            FirstName = ResolveFirstName(profile),
+            LastName = ResolveLastName(profile),
+            EmailConfirmed = profile.EmailVerified,
+            Status = AccountStatus.Active
+        };
+
+        var createResult = await _userManager.CreateAsync(user).ConfigureAwait(false);
+        if (!createResult.Succeeded)
+            return null;
+
+        await EnsureRoleExistsAsync("user").ConfigureAwait(false);
+        await _userManager.AddToRoleAsync(user, "user").ConfigureAwait(false);
+
+        var loginResult = await _userManager.AddLoginAsync(
+                user,
+                new UserLoginInfo(provider.Key, profile.Subject, provider.DisplayName))
+            .ConfigureAwait(false);
+        if (!loginResult.Succeeded)
+        {
+            await _userManager.DeleteAsync(user).ConfigureAwait(false);
+            return null;
+        }
+
+        return user;
+    }
+
+    private async Task EnsureRoleExistsAsync(string role)
+    {
+        if (await _roleManager.RoleExistsAsync(role).ConfigureAwait(false))
+            return;
+
+        await _roleManager.CreateAsync(new AccountRole { Name = role }).ConfigureAwait(false);
+    }
+
+    private static string ResolveFirstName(ExternalUserProfile profile)
+    {
+        if (!string.IsNullOrWhiteSpace(profile.GivenName))
+            return profile.GivenName;
+
+        if (!string.IsNullOrWhiteSpace(profile.Name))
+        {
+            var parts = profile.Name.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            if (parts.Length > 0)
+                return parts[0];
+        }
+
+        return "External";
+    }
+
+    private static string ResolveLastName(ExternalUserProfile profile)
+    {
+        if (!string.IsNullOrWhiteSpace(profile.FamilyName))
+            return profile.FamilyName;
+
+        if (!string.IsNullOrWhiteSpace(profile.Name))
+        {
+            var parts = profile.Name.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            if (parts.Length > 1)
+                return parts[1];
+        }
+
+        return "User";
+    }
+
+    private sealed record ExternalProviderConfiguration(
+        string Key,
+        string DisplayName,
+        string Authority,
+        string ClientId,
+        string ClientSecret,
+        IReadOnlyCollection<string> Scopes);
+
+    private sealed record ExternalStatePayload(
+        string Provider,
+        string RedirectUri,
+        bool LinkCurrentUser,
+        Guid? RequestedByUserId,
+        DateTimeOffset ExpiresAtUtc,
+        string Nonce);
+
+    private sealed class OpenIdMetadata
+    {
+        [JsonPropertyName("authorization_endpoint")]
+        public string? AuthorizationEndpoint { get; set; }
+
+        [JsonPropertyName("token_endpoint")]
+        public string? TokenEndpoint { get; set; }
+
+        [JsonPropertyName("userinfo_endpoint")]
+        public string? UserInfoEndpoint { get; set; }
+    }
+
+    private sealed class ExternalTokenResponse
+    {
+        [JsonPropertyName("access_token")]
+        public string? AccessToken { get; set; }
+    }
+
+    private sealed class ExternalUserProfile
+    {
+        [JsonPropertyName("sub")]
+        public string? Subject { get; set; }
+
+        [JsonPropertyName("email")]
+        public string? Email { get; set; }
+
+        [JsonPropertyName("email_verified")]
+        public bool EmailVerified { get; set; }
+
+        [JsonPropertyName("given_name")]
+        public string? GivenName { get; set; }
+
+        [JsonPropertyName("family_name")]
+        public string? FamilyName { get; set; }
+
+        [JsonPropertyName("name")]
+        public string? Name { get; set; }
+    }
 }

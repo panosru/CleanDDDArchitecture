@@ -215,6 +215,13 @@ services:
       Jwt__Refresh__Key512Bit: ${JWT_REFRESH_KEY512:-fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210}
       Jwt__Refresh__ExpirationDurationInMinutes: ${JWT_REFRESH_EXPIRATION_MINUTES:-10080}
       Jwt__ClockSkewInMinutes: ${JWT_CLOCK_SKEW_MINUTES:-1}
+      ExternalIdentity__Providers__Google__DisplayName: ${EXT_AUTH_GOOGLE_DISPLAY_NAME:-Google}
+      ExternalIdentity__Providers__Google__Authority: ${EXT_AUTH_GOOGLE_AUTHORITY:-}
+      ExternalIdentity__Providers__Google__ClientId: ${EXT_AUTH_GOOGLE_CLIENT_ID:-}
+      ExternalIdentity__Providers__Google__ClientSecret: ${EXT_AUTH_GOOGLE_CLIENT_SECRET:-}
+      ExternalIdentity__Providers__Google__Scopes__0: ${EXT_AUTH_GOOGLE_SCOPE0:-openid}
+      ExternalIdentity__Providers__Google__Scopes__1: ${EXT_AUTH_GOOGLE_SCOPE1:-profile}
+      ExternalIdentity__Providers__Google__Scopes__2: ${EXT_AUTH_GOOGLE_SCOPE2:-email}
     ports:
       - "${REST_API_PORT:-8081}:8080"
     volumes:
@@ -323,6 +330,13 @@ services:
       Jwt__Refresh__Key512Bit: ${JWT_REFRESH_KEY512:-fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210}
       Jwt__Refresh__ExpirationDurationInMinutes: ${JWT_REFRESH_EXPIRATION_MINUTES:-10080}
       Jwt__ClockSkewInMinutes: ${JWT_CLOCK_SKEW_MINUTES:-1}
+      ExternalIdentity__Providers__Google__DisplayName: ${EXT_AUTH_GOOGLE_DISPLAY_NAME:-Google}
+      ExternalIdentity__Providers__Google__Authority: ${EXT_AUTH_GOOGLE_AUTHORITY:-}
+      ExternalIdentity__Providers__Google__ClientId: ${EXT_AUTH_GOOGLE_CLIENT_ID:-}
+      ExternalIdentity__Providers__Google__ClientSecret: ${EXT_AUTH_GOOGLE_CLIENT_SECRET:-}
+      ExternalIdentity__Providers__Google__Scopes__0: ${EXT_AUTH_GOOGLE_SCOPE0:-openid}
+      ExternalIdentity__Providers__Google__Scopes__1: ${EXT_AUTH_GOOGLE_SCOPE1:-profile}
+      ExternalIdentity__Providers__Google__Scopes__2: ${EXT_AUTH_GOOGLE_SCOPE2:-email}
     ports:
       - "${ACCOUNT_SERVICE_PORT:-5201}:8080"
     volumes:
