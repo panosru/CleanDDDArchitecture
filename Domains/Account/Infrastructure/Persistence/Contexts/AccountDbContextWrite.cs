@@ -15,4 +15,6 @@ public sealed class AccountDbContextWrite
     { }
 
     public DbSet<AccountRefreshSession> RefreshSessions => Set<AccountRefreshSession>();
+
+    public DbSet<AccountSecurityEvent> SecurityEvents => Set<AccountSecurityEvent>();
 }

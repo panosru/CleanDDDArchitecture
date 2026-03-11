@@ -11,6 +11,7 @@ using CleanDDDArchitecture.Domains.Account.Core.Identity.Dto;
 using CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contexts;
 using CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
@@ -26,15 +27,18 @@ internal sealed class RefreshSessionManager
     private readonly AccountDbContextWrite _dbContext;
     private readonly IAccountDomainConfiguration _config;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly UserManager<AccountUser> _userManager;
 
     internal RefreshSessionManager(
         AccountDbContextWrite accountDbContextWrite,
         IAccountDomainConfiguration config,
-        IHttpContextAccessor httpContextAccessor)
+        IHttpContextAccessor httpContextAccessor,
+        UserManager<AccountUser> userManager)
     {
         _dbContext = accountDbContextWrite;
         _config = config;
         _httpContextAccessor = httpContextAccessor;
+        _userManager = userManager;
     }
 
     internal async Task<AuthResult> IssueTokensAsync(
@@ -44,7 +48,7 @@ internal sealed class RefreshSessionManager
         var now = UtcNow();
         var sessionId = Guid.NewGuid();
         var tokenFamilyId = sessionId;
-        var authResult = CreateTokens(user, sessionId, tokenFamilyId, now);
+        var authResult = await CreateTokensAsync(user, sessionId, tokenFamilyId, now).ConfigureAwait(false);
 
         _dbContext.RefreshSessions.Add(
             new AccountRefreshSession
@@ -107,7 +111,7 @@ internal sealed class RefreshSessionManager
             return null;
 
         var nextSessionId = Guid.NewGuid();
-        var authResult = CreateTokens(user, nextSessionId, session.TokenFamilyId, now);
+        var authResult = await CreateTokensAsync(user, nextSessionId, session.TokenFamilyId, now).ConfigureAwait(false);
 
         session.LastUsedAtUtc = now;
         session.RotatedAtUtc = now;
@@ -259,16 +263,17 @@ internal sealed class RefreshSessionManager
             await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    private AuthResult CreateTokens(
+    private async Task<AuthResult> CreateTokensAsync(
         AccountUser user,
         Guid sessionId,
         Guid tokenFamilyId,
         DateTime now)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
+        var accessClaims = await CreateAccessClaimsAsync(user, sessionId, tokenFamilyId, now).ConfigureAwait(false);
 
         var accessToken = tokenHandler.CreateJwtSecurityToken(
-            BuildTokenDescriptor(CreateAccessClaims(user, sessionId, tokenFamilyId, now), false, now));
+            BuildTokenDescriptor(accessClaims, false, now));
         var refreshToken = tokenHandler.CreateEncodedJwt(
             BuildTokenDescriptor(CreateRefreshClaims(user, sessionId, tokenFamilyId, now), true, now));
 
@@ -281,14 +286,14 @@ internal sealed class RefreshSessionManager
         };
     }
 
-    private IEnumerable<Claim> CreateAccessClaims(
+    private async Task<IReadOnlyCollection<Claim>> CreateAccessClaimsAsync(
         AccountUser user,
         Guid sessionId,
         Guid tokenFamilyId,
         DateTime now)
     {
-        return
-        [
+        var claims = new List<Claim>
+        {
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.Iat, now.ToUnixTimestamp().ToString(CultureInfo.InvariantCulture), ClaimValueTypes.Integer64),
@@ -299,7 +304,26 @@ internal sealed class RefreshSessionManager
             new(JwtRegisteredClaimNames.FamilyName, user.LastName),
             new(SessionIdClaim, sessionId.ToString()),
             new(TokenFamilyIdClaim, tokenFamilyId.ToString())
-        ];
+        };
+
+        var roles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
+        var userClaims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
+        claims.AddRange(
+            userClaims.Where(claim => claim.Type != ClaimTypes.Role
+                                   && claim.Type != JwtRegisteredClaimNames.Sub
+                                   && claim.Type != JwtRegisteredClaimNames.Jti
+                                   && claim.Type != JwtRegisteredClaimNames.Iat
+                                   && claim.Type != JwtRegisteredClaimNames.NameId
+                                   && claim.Type != JwtRegisteredClaimNames.UniqueName
+                                   && claim.Type != JwtRegisteredClaimNames.Email
+                                   && claim.Type != JwtRegisteredClaimNames.GivenName
+                                   && claim.Type != JwtRegisteredClaimNames.FamilyName
+                                   && claim.Type != SessionIdClaim
+                                   && claim.Type != TokenFamilyIdClaim));
+
+        return claims;
     }
 
     private IEnumerable<Claim> CreateRefreshClaims(
