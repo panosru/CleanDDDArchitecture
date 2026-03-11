@@ -5,6 +5,7 @@ using CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.FeatureManagement.Mvc;
 
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Presentation.UseCases.V1_0.ConfirmEmail;
@@ -15,6 +16,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Presentation.UseCas
 [ApiVersion("1.1")]
 [AllowAnonymous]
 [FeatureGate(Features.AccountConfirmEmail)]
+[EnableRateLimiting("public-recovery")]
 public sealed class Account
     : ApiController<ConfirmEmailUseCase, Account>,
       IConfirmEmailOutput

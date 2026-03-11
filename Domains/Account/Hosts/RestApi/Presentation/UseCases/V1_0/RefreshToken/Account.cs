@@ -7,6 +7,7 @@ using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.FeatureManagement.Mvc;
 
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Presentation.UseCases.V1_0.RefreshToken;
@@ -15,6 +16,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Presentation.UseCas
 [ApiVersion("1.1")]
 [AllowAnonymous]
 [FeatureGate(Features.AccountRefreshToken)]
+[EnableRateLimiting("public-auth")]
 public sealed class Account
     : ApiController<RefreshTokenUseCase, Account>,
       IRefreshTokenOutput

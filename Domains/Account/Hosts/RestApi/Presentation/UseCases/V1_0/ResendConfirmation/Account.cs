@@ -5,6 +5,7 @@ using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.FeatureManagement.Mvc;
 
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Presentation.UseCases.V1_0.ResendConfirmation;
@@ -13,6 +14,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Presentation.UseCas
 [ApiVersion("1.1")]
 [AllowAnonymous]
 [FeatureGate(Features.AccountResendConfirmation)]
+[EnableRateLimiting("public-recovery")]
 public sealed class Account
     : ApiController<ResendConfirmationUseCase, Account>,
       IResendConfirmationOutput

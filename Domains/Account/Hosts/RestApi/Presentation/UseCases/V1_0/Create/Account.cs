@@ -9,6 +9,7 @@ using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.FeatureManagement.Mvc;
 
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Presentation.UseCases.V1_0.Create;
@@ -18,6 +19,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Presentation.UseCas
 [ApiVersion("1.0")]
 [AllowAnonymous]
 [FeatureGate(Features.AccountCreate)]
+[EnableRateLimiting("public-registration")]
 public sealed class Account
     : ApiController<AccountCreateUseCase, Account>,
       ICreateAccountOutput

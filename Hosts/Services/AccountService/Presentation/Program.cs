@@ -24,8 +24,10 @@ using MediatR.Pipeline;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.FeatureManagement;
 using System.Globalization;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +47,14 @@ builder.Services.AddScoped<IMessages, Messages>();
 builder.Services.AddScoped<IApplicationEventDispatcher, ApplicationEventDispatcher>();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("public-auth", context => BuildIpPolicy(context, 5, TimeSpan.FromMinutes(1)));
+    options.AddPolicy("public-recovery", context => BuildIpPolicy(context, 3, TimeSpan.FromMinutes(5)));
+    options.AddPolicy("public-registration", context => BuildIpPolicy(context, 2, TimeSpan.FromMinutes(10)));
+    options.AddPolicy("authenticated-sensitive", context => BuildIpPolicy(context, 10, TimeSpan.FromMinutes(1)));
+});
 var dataProtectionKeysPath = Environment.GetEnvironmentVariable("DataProtection__KeysPath")
     ?? Environment.GetEnvironmentVariable("DATA_PROTECTION_KEYS_PATH")
     ?? builder.Configuration["DataProtection:KeysPath"]
@@ -144,9 +154,25 @@ app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHealthChecks("/health");
 app.UseSession();
+app.UseRateLimiter();
 app.UseRouting();
 app.UseAccountAuth();
 app.MapControllers().RequireAuthorization();
 app.MapHangfireDashboard("/jobs");
 
 await app.RunAsync().ConfigureAwait(false);
+
+static RateLimitPartition<string> BuildIpPolicy(HttpContext context, int permitLimit, TimeSpan window)
+{
+    var partitionKey = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+    return RateLimitPartition.GetFixedWindowLimiter(
+        partitionKey,
+        _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = permitLimit,
+            Window = window,
+            QueueLimit = 0,
+            AutoReplenishment = true
+        });
+}
