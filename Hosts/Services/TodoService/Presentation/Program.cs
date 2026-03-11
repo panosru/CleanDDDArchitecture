@@ -7,6 +7,7 @@ using Aviant.Application.Identity;
 using Aviant.Application.Interceptors;
 using Aviant.Application.Processors;
 using Aviant.Application.Services;
+using Aviant.Core.Timing;
 using Aviant.Core.Messages;
 using Aviant.Core.Services;
 using Aviant.Infrastructure.CrossCutting;
@@ -28,11 +29,13 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddYamlFile("appsettings.yaml", false, true)
-    .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yaml", true, true);
+    .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yaml", true, true)
+    .AddEnvironmentVariables();
 
 DependencyInjectionRegistry.ConfigurationBuilder = builder.Configuration;
 DependencyInjectionRegistry.CurrentEnvironment = builder.Environment;
 DependencyInjectionRegistry.SetConfiguration(builder.Configuration);
+Clock.Provider = ClockProviders.Utc;
 JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);

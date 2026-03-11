@@ -1,4 +1,5 @@
-﻿using Hangfire;
+﻿using Aviant.Core.Timing;
+using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -9,7 +10,10 @@ try
 
     builder.Configuration
         .AddYamlFile("appsettings.yaml", false, true)
-        .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yaml", true, true);
+        .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yaml", true, true)
+        .AddEnvironmentVariables();
+
+    Clock.Provider = ClockProviders.Utc;
 
     builder.Services
         .AddHangfire(
