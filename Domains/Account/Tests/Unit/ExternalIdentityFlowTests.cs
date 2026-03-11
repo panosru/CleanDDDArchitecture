@@ -22,7 +22,7 @@ public sealed class ExternalIdentityFlowTests
         var result = await handler.Handle(new ExternalProvidersQuery(), CancellationToken.None);
 
         result.Should().ContainSingle();
-        result[0].Provider.Should().Be("google");
+        result.Single().Provider.Should().Be("google");
     }
 
     [Fact]
