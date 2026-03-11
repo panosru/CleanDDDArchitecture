@@ -1,0 +1,35 @@
+---
+ReverseProxy:
+  Routes:
+    identity:
+      ClusterId: account
+      Match:
+        Path: "/api/identity/{**catch-all}"
+    account-legacy:
+      ClusterId: account
+      Match:
+        Path: "/api/account/{**catch-all}"
+      Transforms:
+        - PathRemovePrefix: "/api/account"
+        - PathPrefix: "/api/identity"
+    todo:
+      ClusterId: todo
+      Match:
+        Path: "/api/todo/{**catch-all}"
+    weather:
+      ClusterId: weather
+      Match:
+        Path: "/api/weather/{**catch-all}"
+  Clusters:
+    account:
+      Destinations:
+        primary:
+          Address: "http://account-service:8080/"
+    todo:
+      Destinations:
+        primary:
+          Address: "http://todo-service:8080/"
+    weather:
+      Destinations:
+        primary:
+          Address: "http://weather-service:8080/"

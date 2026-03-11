@@ -32,26 +32,27 @@ public sealed class RedirectUnsupportedCulturesRule : IRule
            .OfType<RouteDataRequestCultureProvider>()
            .First();
 
-        _cultureItems = options.Value.SupportedUICultures;
+        _cultureItems = options.Value.SupportedUICultures ?? Array.Empty<CultureInfo>();
 
         _cultureRouteKey = provider.RouteDataStringKey;
     }
 
-    public void ApplyRule(RewriteContext rewriteContext)
+    public void ApplyRule(RewriteContext context)
     {
         //TODO: find why non-existing resources that would give 404 (such as missing ico) send into infinite loop
-        if (rewriteContext.HttpContext.Request.Path.Value!.EndsWith(".ico", StringComparison.Ordinal))
+        string? path = context.HttpContext.Request.Path.Value;
+
+        if (path?.EndsWith(".ico", StringComparison.Ordinal) == true)
             return;
 
-        IRequestCultureFeature cultureFeature = rewriteContext.HttpContext.Features.Get<IRequestCultureFeature>();
+        IRequestCultureFeature? cultureFeature = context.HttpContext.Features.Get<IRequestCultureFeature>();
+        string actualCulture = cultureFeature?.RequestCulture.Culture.Name ?? Cultures.DefaultRequestCulture.Culture.Name;
 
-        var actualCulture = cultureFeature.RequestCulture.Culture.Name;
-
-        var requestedCulture = rewriteContext.HttpContext.GetRouteValue(_cultureRouteKey)?.ToString();
+        var requestedCulture = context.HttpContext.GetRouteValue(_cultureRouteKey)?.ToString();
 
         if ($"c={actualCulture}|uic={actualCulture}"
-         != rewriteContext.HttpContext.Request.Cookies[CookieRequestCultureProvider.DefaultCookieName])
-            rewriteContext.HttpContext.Response.Cookies.Append(
+         != context.HttpContext.Request.Cookies[CookieRequestCultureProvider.DefaultCookieName])
+            context.HttpContext.Response.Cookies.Append(
                 CookieRequestCultureProvider.DefaultCookieName,
                 CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(actualCulture)),
                 new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
@@ -64,18 +65,18 @@ public sealed class RedirectUnsupportedCulturesRule : IRule
           || string.Equals(requestedCulture, actualCulture, StringComparison.OrdinalIgnoreCase)))
             return;
 
-        rewriteContext.HttpContext.GetRouteData().Values[_cultureRouteKey] = actualCulture;
+        context.HttpContext.GetRouteData().Values[_cultureRouteKey] = actualCulture;
 
-        HttpResponse response = rewriteContext.HttpContext.Response;
+        HttpResponse response = context.HttpContext.Response;
         response.StatusCode   = StatusCodes.Status301MovedPermanently;
-        rewriteContext.Result = RuleResult.EndResponse;
+        context.Result = RuleResult.EndResponse;
 
         // preserve query part parameters of the URL (?parameters) if there were any
         response.Headers[HeaderNames.Location] =
             _linkGenerator.GetPathByAction(
-                rewriteContext.HttpContext,
-                values: rewriteContext.HttpContext.GetRouteData().Values
+                context.HttpContext,
+                values: context.HttpContext.GetRouteData().Values
             )
-          + rewriteContext.HttpContext.Request.QueryString;
+          + context.HttpContext.Request.QueryString;
     }
 }

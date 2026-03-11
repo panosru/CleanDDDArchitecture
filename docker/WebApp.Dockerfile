@@ -1,24 +1,18 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS base
-WORKDIR /app
-
-# Install cultures
-RUN apk add --no-cache icu-libs
-
-FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 WORKDIR /src
-# Currently this copies the whole solution (including submodules)
-# in a smaller solution with small number of projects it would be best
-# to copy only the relevant projects with COPY ["<project>/<project>.csproj", "<project>"]
-COPY . ./
+
+COPY Directory.Build.props Directory.Build.targets Directory.Packages.props global.json ./
+COPY CleanDDDArchitecture.sln ./
+COPY Hosts ./Hosts
+COPY Domains ./Domains
+COPY Library ./Library
+
 RUN dotnet restore "Hosts/WebApp/Presentation/Presentation.csproj"
-COPY . ./
-WORKDIR /src/Hosts/WebApp/Presentation
-RUN dotnet build --no-restore "Presentation.csproj" -c Release -o /app/build
+RUN dotnet publish "Hosts/WebApp/Presentation/Presentation.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-FROM build as publish
-RUN dotnet publish "Presentation.csproj" -c Release -o /app/publish
-
-FROM base as final
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+RUN apk add --no-cache icu-libs
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "CleanDDDArchitecture.Hosts.WebApp.Presentation.dll"]

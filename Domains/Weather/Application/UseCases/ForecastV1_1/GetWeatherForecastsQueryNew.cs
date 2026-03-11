@@ -31,10 +31,6 @@ internal sealed record GetWeatherForecastsQueryNew : Query<IEnumerable<WeatherFo
         {
             Random rng = new();
 
-            // 40% probability to fail
-            if (rng.Next(100) <= 40)
-                throw new Exception("Something gone really wrong...");
-
             IEnumerable<WeatherForecastService> vm = Enumerable.Range(1, 5)
                .Select(
                     index => _weatherForecastService.GetWeatherForecast(

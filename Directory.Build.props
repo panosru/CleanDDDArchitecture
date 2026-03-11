@@ -1,13 +1,21 @@
 <Project>
     <PropertyGroup Label="Common">
         <!-- Target framework version for all projects -->
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <!-- Language version for all projects -->
-        <LangVersion>latest</LangVersion>
+        <LangVersion>latestMajor</LangVersion>
         <!-- Enable nullable reference types for all projects -->
         <Nullable>enable</Nullable>
         <!-- Enable implicit usings for all projects -->
         <ImplicitUsings>enable</ImplicitUsings>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisLevel>latest-recommended</AnalysisLevel>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
+        <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1510;NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <Deterministic>true</Deterministic>
         <!-- Authors of the projects -->
         <Authors>Panagiotis Kosmidis</Authors>
         <!-- Copyright information -->

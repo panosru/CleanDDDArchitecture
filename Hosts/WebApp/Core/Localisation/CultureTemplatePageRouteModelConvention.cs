@@ -14,6 +14,8 @@ public sealed class CultureTemplatePageRouteModelConvention : IPageRouteModelCon
     public void Apply(PageRouteModel model)
     {
         (from selectorModel in model.Selectors
+         let template = selectorModel.AttributeRouteModel?.Template
+         where !string.IsNullOrWhiteSpace(template)
          select new SelectorModel
          {
              AttributeRouteModel = new AttributeRouteModel
@@ -21,7 +23,7 @@ public sealed class CultureTemplatePageRouteModelConvention : IPageRouteModelCon
                  Order = -1,
                  Template = AttributeRouteModel.CombineTemplates(
                      "/{culture:required}",
-                     selectorModel.AttributeRouteModel.Template)
+                     template)
              }
          })
            .ToList()

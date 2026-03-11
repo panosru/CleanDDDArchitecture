@@ -30,13 +30,30 @@ public static class TodoDependencyInjectionRegistry
 
         if (Configuration.GetValue<bool>("UseInMemoryDatabase"))
         {
-            // services.AddDbContext<TodoDbContextWrite>(
-            //     options =>
-            //         options.UseInMemoryDatabase("CleanDDDArchitectureDb"));
-            //
-            // services.AddDbContext<TodoDbContextRead>(
-            //     options =>
-            //         options.UseInMemoryDatabase("CleanDDDArchitectureDb"));
+            services.AddDbContext<TodoDbContextWrite>(
+                options =>
+                    options.UseInMemoryDatabase("CleanDDDArchitectureDb"));
+
+            services.AddDbContext<TodoDbContextRead>(
+                options =>
+                    options.UseInMemoryDatabase("CleanDDDArchitectureDb"));
+
+            services.AddScoped<ITodoDbContextWrite>(
+                provider =>
+                    provider.GetRequiredService<TodoDbContextWrite>());
+
+            services.AddScoped<ITodoDbContextRead>(
+                provider =>
+                    provider.GetRequiredService<TodoDbContextRead>());
+
+            services.AddTodoItemSubDomain();
+            services.AddTodoListSubDomain();
+
+            services.AddTransient<ICsvFileBuilder<TodoItemRecord>, CsvFileBuilder<TodoItemRecord, TodoItemRecordMap>>();
+            services.AddScoped<IUnitOfWork<ITodoDbContextWrite>, UnitOfWork<ITodoDbContextWrite>>();
+            services.AddScoped<IOrchestrator<ITodoDbContextWrite>, Orchestrator<ITodoDbContextWrite>>();
+
+            return services;
         }
 
         services.AddDbContext<TodoDbContextWrite>(

@@ -16,11 +16,14 @@ public static class DataProtection
     /// <returns></returns>
     public static IServiceCollection AddDataProtectionServices(this IServiceCollection services)
     {
+        var keysPath = Path.GetFullPath(
+            Environment.GetEnvironmentVariable("DataProtection__KeysPath")
+         ?? Environment.GetEnvironmentVariable("DATA_PROTECTION_KEYS_PATH")
+         ?? Path.Combine(AppContext.BaseDirectory, "DataProtection-Keys"));
+
         services.AddDataProtection()
             .SetApplicationName("RestApi")
-            .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "DataProtection-Keys")))
+            .PersistKeysToFileSystem(new DirectoryInfo(keysPath))
             .UseCryptographicAlgorithms(
                 new AuthenticatedEncryptorConfiguration
                 {
