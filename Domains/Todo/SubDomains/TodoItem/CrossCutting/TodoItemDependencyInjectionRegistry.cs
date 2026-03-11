@@ -11,6 +11,7 @@ using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Infrastructure.Repos
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using CleanDDDArchitecture.Domains.Todo.Infrastructure.Persistence.Contexts;
+using System.Globalization;
 
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.CrossCutting;
 
@@ -22,7 +23,7 @@ public static class TodoItemDependencyInjectionRegistry
 
     static TodoItemDependencyInjectionRegistry() => Configuration =
         DependencyInjectionRegistry.GetDomainConfiguration(
-            $"{CurrentDomain}.{CurrentSubDomain}".ToLower());
+            $"{CurrentDomain}.{CurrentSubDomain}".ToLower(CultureInfo.InvariantCulture));
 
     // ReSharper disable once UnusedAutoPropertyAccessor.Local
     private static IConfiguration Configuration { get; }
@@ -34,11 +35,11 @@ public static class TodoItemDependencyInjectionRegistry
         services.AddScoped<ITodoItemRepositoryRead, TodoItemRepositoryRead>();
         services.AddScoped<ITodoItemRepositoryWrite, TodoItemRepositoryWrite>();
 
-        services.AddScoped(typeof(TodoItemCreateUseCase));
-        services.AddScoped(typeof(TodoItemDeleteUseCase));
-        services.AddScoped(typeof(TodoItemGetByUseCase));
-        services.AddScoped(typeof(TodoItemUpdateUseCase));
-        services.AddScoped(typeof(TodoItemUpdatedetailsUseCase));
+        services.AddScoped<TodoItemCreateUseCase>();
+        services.AddScoped<TodoItemDeleteUseCase>();
+        services.AddScoped<TodoItemGetByUseCase>();
+        services.AddScoped<TodoItemUpdateUseCase>();
+        services.AddScoped<TodoItemUpdatedetailsUseCase>();
 
         TodoDbContextWrite.AddConfigurationAssemblyFromEntity(new TodoItemConfiguration());
 

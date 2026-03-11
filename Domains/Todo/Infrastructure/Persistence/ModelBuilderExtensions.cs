@@ -1,11 +1,12 @@
 namespace CleanDDDArchitecture.Domains.Todo.Infrastructure.Persistence;
 
-using Aviant.Core.Timing;
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
 internal static class ModelBuilderExtensions
 {
+    private static readonly DateTime SeedCreatedAtUtc = new(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
     public static void Seed(this ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<TodoListEntity>()
@@ -13,7 +14,7 @@ internal static class ModelBuilderExtensions
                 new TodoListEntity
                 {
                     Id        = -1,
-                    Created   = Clock.Now,
+                    Created   = SeedCreatedAtUtc,
                     CreatedBy = Guid.Empty,
                     IsDeleted = false,
                     Title     = "Shopping"

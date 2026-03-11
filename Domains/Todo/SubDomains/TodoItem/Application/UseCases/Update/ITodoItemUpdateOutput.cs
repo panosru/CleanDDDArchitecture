@@ -4,7 +4,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
 
 public interface ITodoItemUpdateOutput : IUseCaseOutput
 {
-    public void Ok(object? @object);
+    public void Ok(object? payload);
 
     public void Invalid(string message);
 }

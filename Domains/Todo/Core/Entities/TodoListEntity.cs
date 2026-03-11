@@ -1,6 +1,5 @@
 ﻿using Aviant.Core.Entities;
 using Aviant.Core.Identity.Entities;
-using Aviant.Core.Validators;
 
 namespace CleanDDDArchitecture.Domains.Todo.Core.Entities;
 
@@ -51,12 +50,6 @@ public sealed class TodoListEntity
 
     public override Task<bool> ValidateAsync(CancellationToken cancellationToken = default)
     {
-        var satisfied = AssertionsConcernValidator.IsSatisfiedBy(
-            AssertionsConcernValidator.IsGreaterThan(
-                Title.Length,
-                5,
-                "Title must have more than 5 chars"));
-
-        return Task.FromResult(satisfied);
+        return Task.FromResult(!string.IsNullOrWhiteSpace(Title) && Title.Length > 5);
     }
 }

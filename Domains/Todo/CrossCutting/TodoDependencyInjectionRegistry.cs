@@ -14,6 +14,8 @@ using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.CrossCutting;
 using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Export;
 using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.CrossCutting;
 using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Infrastructure.Files.Maps;
+using System.Globalization;
+using Microsoft.Extensions.Hosting;
 
 namespace CleanDDDArchitecture.Domains.Todo.CrossCutting;
 
@@ -22,7 +24,7 @@ public static class TodoDependencyInjectionRegistry
     private const string CurrentDomain = "Todo";
 
     private static IConfiguration Configuration { get; } =
-        DependencyInjectionRegistry.GetDomainConfiguration(CurrentDomain.ToLower());
+        DependencyInjectionRegistry.GetDomainConfiguration(CurrentDomain.ToLower(CultureInfo.InvariantCulture));
 
     public static IServiceCollection AddTodoDomain(this IServiceCollection services)
     {
@@ -30,6 +32,17 @@ public static class TodoDependencyInjectionRegistry
 
         if (Configuration.GetValue<bool>("UseInMemoryDatabase"))
         {
+            var environmentName = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")
+                               ?? Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var allowInMemory = string.Equals(environmentName, Environments.Development, StringComparison.OrdinalIgnoreCase)
+                             || Configuration.GetValue<bool>("AllowInMemoryDatabaseForTesting");
+
+            if (!allowInMemory)
+            {
+                throw new InvalidOperationException(
+                    "UseInMemoryDatabase is only supported for development or explicit testing scenarios.");
+            }
+
             services.AddDbContext<TodoDbContextWrite>(
                 options =>
                     options.UseInMemoryDatabase("CleanDDDArchitectureDb"));
