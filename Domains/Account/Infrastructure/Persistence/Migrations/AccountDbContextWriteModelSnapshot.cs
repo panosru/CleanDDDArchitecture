@@ -137,6 +137,74 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Migrat
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Entities.AccountPasswordHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "CreatedAtUtc");
+
+                    b.ToTable("AccountPasswordHistory", (string)null);
+                });
+
+            modelBuilder.Entity("CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Entities.AccountPhoneVerification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CodeHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<DateTimeOffset?>("ConsumedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedByIp")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<DateTimeOffset>("ExpiresAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("Purpose")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "PhoneNumber", "Purpose", "ConsumedAtUtc");
+
+                    b.ToTable("AccountPhoneVerifications", (string)null);
+                });
+
             modelBuilder.Entity("CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Entities.AccountRefreshSession", b =>
                 {
                     b.Property<Guid>("Id")
@@ -236,6 +304,54 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Migrat
                     b.HasIndex("UserId", "OccurredAtUtc");
 
                     b.ToTable("SecurityEvents");
+                });
+
+            modelBuilder.Entity("CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Entities.AccountTrustedDevice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedByIp")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("DeviceName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<DateTimeOffset>("ExpiresAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("LastUsedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("RevokedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("UserAgent")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.HasIndex("UserId", "RevokedAtUtc", "ExpiresAtUtc");
+
+                    b.ToTable("AccountTrustedDevices", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -341,7 +457,40 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Migrat
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Entities.AccountPasswordHistory", b =>
+                {
+                    b.HasOne("CleanDDDArchitecture.Domains.Account.Application.Identity.AccountUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Entities.AccountPhoneVerification", b =>
+                {
+                    b.HasOne("CleanDDDArchitecture.Domains.Account.Application.Identity.AccountUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Entities.AccountRefreshSession", b =>
+                {
+                    b.HasOne("CleanDDDArchitecture.Domains.Account.Application.Identity.AccountUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Entities.AccountTrustedDevice", b =>
                 {
                     b.HasOne("CleanDDDArchitecture.Domains.Account.Application.Identity.AccountUser", "User")
                         .WithMany()

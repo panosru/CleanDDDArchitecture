@@ -14,6 +14,7 @@ namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Identity.Mechanism
 internal sealed class Authenticator
 {
     private readonly RefreshSessionManager _refreshSessionManager;
+    private readonly TrustedDeviceManager _trustedDeviceManager;
     private readonly UserManager<AccountUser> _userManager;
 
     /// <summary>
@@ -21,10 +22,12 @@ internal sealed class Authenticator
     /// </summary>
     internal Authenticator(
         UserManager<AccountUser> userManager,
-        RefreshSessionManager refreshSessionManager)
+        RefreshSessionManager refreshSessionManager,
+        TrustedDeviceManager trustedDeviceManager)
     {
         _userManager = userManager;
         _refreshSessionManager = refreshSessionManager;
+        _trustedDeviceManager = trustedDeviceManager;
     }
 
     /// <summary>
@@ -35,6 +38,9 @@ internal sealed class Authenticator
         string password,
         string? twoFactorCode,
         string? recoveryCode,
+        string? trustedDeviceToken,
+        bool rememberDevice,
+        string? deviceName,
         CancellationToken cancellationToken)
     {
         var user = await FindUserAsync(loginIdentifier, cancellationToken).ConfigureAwait(false);
@@ -63,7 +69,11 @@ internal sealed class Authenticator
 
         if (await _userManager.GetTwoFactorEnabledAsync(user).ConfigureAwait(false))
         {
-            var isMfaValid = await ValidateSecondFactorAsync(user, twoFactorCode, recoveryCode).ConfigureAwait(false);
+            var isTrustedDevice = await _trustedDeviceManager
+                .IsTrustedDeviceAsync(user.Id, trustedDeviceToken, cancellationToken)
+                .ConfigureAwait(false);
+            var isMfaValid = isTrustedDevice
+                || await ValidateSecondFactorAsync(user, twoFactorCode, recoveryCode).ConfigureAwait(false);
 
             if (!isMfaValid)
             {
@@ -77,6 +87,15 @@ internal sealed class Authenticator
         var authResult = await _refreshSessionManager
             .IssueTokensAsync(user, cancellationToken)
             .ConfigureAwait(false);
+
+        if (rememberDevice
+         && await _userManager.GetTwoFactorEnabledAsync(user).ConfigureAwait(false)
+         && string.IsNullOrWhiteSpace(trustedDeviceToken))
+        {
+            authResult.TrustedDeviceToken = await _trustedDeviceManager
+                .IssueTrustedDeviceTokenAsync(user.Id, deviceName, cancellationToken)
+                .ConfigureAwait(false);
+        }
 
         await UpdateLastAccessedAsync(user).ConfigureAwait(false);
 

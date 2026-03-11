@@ -6,5 +6,7 @@ public enum AccountStatus
 
     Suspended = 1,
 
-    Deactivated = 2
+    Deactivated = 2,
+
+    Deleted = 3
 }

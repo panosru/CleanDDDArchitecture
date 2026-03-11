@@ -16,11 +16,17 @@ public enum Features
 
     Account2fa,
 
+    AccountPhoneVerification,
+
     AccountResendConfirmation,
 
     AccountChangeEmail,
 
+    AccountDelete,
+
     AccountRefreshToken,
+
+    AccountTrustedDevices,
 
     AccountExternalIdentity,
 

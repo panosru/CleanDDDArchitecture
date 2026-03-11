@@ -9,6 +9,9 @@ public interface IAccountAuthenticationService
         string password,
         string? twoFactorCode = null,
         string? recoveryCode = null,
+        string? trustedDeviceToken = null,
+        bool rememberDevice = false,
+        string? deviceName = null,
         CancellationToken cancellationToken = default);
 
     public Task<AuthResult?> RefreshAsync(
@@ -56,5 +59,14 @@ public interface IAccountAuthenticationService
     public Task<bool> RevokeSessionAsync(
         Guid userId,
         Guid sessionId,
+        CancellationToken cancellationToken = default);
+
+    public Task<IReadOnlyCollection<AccountTrustedDeviceDto>> GetTrustedDevicesAsync(
+        Guid userId,
+        CancellationToken cancellationToken = default);
+
+    public Task<bool> RevokeTrustedDeviceAsync(
+        Guid userId,
+        Guid trustedDeviceId,
         CancellationToken cancellationToken = default);
 }

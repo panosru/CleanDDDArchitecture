@@ -17,4 +17,10 @@ public sealed class AccountDbContextWrite
     public DbSet<AccountRefreshSession> RefreshSessions => Set<AccountRefreshSession>();
 
     public DbSet<AccountSecurityEvent> SecurityEvents => Set<AccountSecurityEvent>();
+
+    public DbSet<AccountPasswordHistory> PasswordHistory => Set<AccountPasswordHistory>();
+
+    public DbSet<AccountPhoneVerification> PhoneVerifications => Set<AccountPhoneVerification>();
+
+    public DbSet<AccountTrustedDevice> TrustedDevices => Set<AccountTrustedDevice>();
 }

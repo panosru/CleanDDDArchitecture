@@ -15,7 +15,10 @@ public sealed class AuthenticateUseCase
                     input.Username,
                     input.Password,
                     input.TwoFactorCode,
-                    input.RecoveryCode),
+                    input.RecoveryCode,
+                    input.TrustedDeviceToken,
+                    input.RememberDevice,
+                    input.DeviceName),
                 cancellationToken)
            .ConfigureAwait(false);
 

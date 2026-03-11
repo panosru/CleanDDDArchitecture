@@ -28,4 +28,10 @@ public class AuthResult
     /// This token is used to obtain a new access token once the current one expires.
     /// </summary>
     public string RefreshToken { get; set; }
+
+    /// <summary>
+    /// Gets or sets the trusted-device token issued after a successful MFA challenge
+    /// when the client asked to remember the current device.
+    /// </summary>
+    public string? TrustedDeviceToken { get; set; }
 }

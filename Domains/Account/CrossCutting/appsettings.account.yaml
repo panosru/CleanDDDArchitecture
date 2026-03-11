@@ -32,12 +32,15 @@ FeatureManagement:
   AccountCreate: true
   AccountAuthentication: true
   Account2fa: true
+  AccountPhoneVerification: true
   AccountForgotPassword: true
   AccountResetPassword: true
   AccountChangePassword: true
   AccountResendConfirmation: true
   AccountChangeEmail: true
+  AccountDelete: true
   AccountRefreshToken: true
+  AccountTrustedDevices: true
   AccountExternalIdentity: true
   AccountConfirmEmail: true
   AccountDeactivate: true
@@ -52,3 +55,13 @@ FeatureManagement:
 ExternalIdentity:
   StateLifetimeInMinutes: 15
   Providers: {}
+
+PhoneVerification:
+  ExpirationDurationInMinutes: 10
+  CodeLength: 6
+
+TrustedDevices:
+  ExpirationDurationInDays: 30
+
+PasswordHistory:
+  RememberCount: 5

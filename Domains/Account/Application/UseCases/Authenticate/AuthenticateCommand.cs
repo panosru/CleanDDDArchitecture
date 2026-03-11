@@ -7,7 +7,10 @@ internal sealed record AuthenticateCommand(
     string Username,
     string Password,
     string? TwoFactorCode,
-    string? RecoveryCode) : Command<object?>
+    string? RecoveryCode,
+    string? TrustedDeviceToken,
+    bool RememberDevice,
+    string? DeviceName) : Command<object?>
 {
     private string Username { get; } = Username;
 
@@ -16,6 +19,12 @@ internal sealed record AuthenticateCommand(
     private string? TwoFactorCode { get; } = TwoFactorCode;
 
     private string? RecoveryCode { get; } = RecoveryCode;
+
+    private string? TrustedDeviceToken { get; } = TrustedDeviceToken;
+
+    private bool RememberDevice { get; } = RememberDevice;
+
+    private string? DeviceName { get; } = DeviceName;
 
     #region Nested type: AuthenticateCommandHandler
 
@@ -34,6 +43,9 @@ internal sealed record AuthenticateCommand(
                    command.Password,
                    command.TwoFactorCode,
                    command.RecoveryCode,
+                   command.TrustedDeviceToken,
+                   command.RememberDevice,
+                   command.DeviceName,
                    cancellationToken)
                .ConfigureAwait(false);
         }
