@@ -32,6 +32,7 @@ public static class AppBuilderConfiguration
         app.UseStaticFilesBuilder();
         app.UseSession();
         app.UseRouting();
+        app.UseRateLimiter();
         app.UseAccountAuth();
         app.UseEndpointsBuilder();
     }

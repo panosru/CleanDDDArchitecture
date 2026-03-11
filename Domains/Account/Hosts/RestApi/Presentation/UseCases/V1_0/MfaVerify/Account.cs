@@ -5,12 +5,14 @@ using CleanDDDArchitecture.Hosts.RestApi.Core;
 using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.FeatureManagement.Mvc;
 
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Presentation.UseCases.V1_0.MfaVerify;
 
 [ApiVersion("1.0")]
 [FeatureGate(Features.Account2fa)]
+[EnableRateLimiting("authenticated-sensitive")]
 public sealed class Account : ApiController<MfaVerifyUseCase, Account>, IMfaVerifyOutput
 {
     public Account([FromServices] MfaVerifyUseCase useCase)

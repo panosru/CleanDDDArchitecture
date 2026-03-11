@@ -4,6 +4,7 @@ using CleanDDDArchitecture.Hosts.RestApi.Core;
 using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.FeatureManagement.Mvc;
 
 namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Presentation.UseCases.V1_0.ChangePassword;
@@ -11,6 +12,7 @@ namespace CleanDDDArchitecture.Domains.Account.Hosts.RestApi.Presentation.UseCas
 [ApiVersion("1.0")]
 [ApiVersion("1.1")]
 [FeatureGate(Features.AccountChangePassword)]
+[EnableRateLimiting("authenticated-sensitive")]
 public sealed class Account
     : ApiController<ChangePasswordUseCase, Account>,
       IChangePasswordOutput
