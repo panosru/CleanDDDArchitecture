@@ -16,8 +16,7 @@ public static class Swagger
     {
         services
             .AddApiVersionWithExplorer()
-            .AddSwaggerOptions()
-            .AddSwaggerGen();
+            .AddOpenApiOptions();
 
         return services;
     }

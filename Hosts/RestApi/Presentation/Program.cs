@@ -3,8 +3,6 @@ using CleanDDDArchitecture.Hosts.RestApi.Presentation.Setup;
 using CleanDDDArchitecture.Hosts.RestApi.Core.Resources;
 using Serilog;
 using Serilog.Debugging;
-using Console = Colorful.Console;
-
 try
 {
     // Create a Web Presentation Builder. This is the first step in setting up an ASP.NET Core application.
