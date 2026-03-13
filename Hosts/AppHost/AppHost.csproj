@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>CleanDDDArchitecture.Hosts.AppHost</RootNamespace>
+    <AssemblyName>CleanDDDArchitecture.Hosts.AppHost</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <IsAspireHost>true</IsAspireHost>
+    <!-- AppHost needs net10.0 to match the rest of the solution -->
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Microservices mode: each domain runs as an independent service -->
+    <ProjectReference Include="..\Services\AccountService\Presentation\Presentation.csproj"
+                      IsAspireProjectResource="true" />
+    <ProjectReference Include="..\Services\TodoService\Presentation\Presentation.csproj"
+                      IsAspireProjectResource="true" />
+    <ProjectReference Include="..\Services\WeatherService\Presentation\Presentation.csproj"
+                      IsAspireProjectResource="true" />
+    <!-- Monolith mode: single RestApi host aggregating all domains -->
+    <ProjectReference Include="..\RestApi\Presentation\Presentation.csproj"
+                      IsAspireProjectResource="true" />
+  </ItemGroup>
+</Project>
