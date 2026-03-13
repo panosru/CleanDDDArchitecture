@@ -27,13 +27,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Versioning;
-using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
+using Asp.Versioning;
+using Asp.Versioning.Conventions;
 using Microsoft.FeatureManagement;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -127,26 +126,20 @@ builder.Services.AddWeatherDomain();
 builder.Services.AddFeatureManagement(DependencyInjectionRegistry.ConfigurationWithDomains);
 builder.Services.AddHealthChecks();
 builder.Services.AddApiVersioning(options =>
-{
-    options.AssumeDefaultVersionWhenUnspecified = true;
-    options.ReportApiVersions = true;
-    options.DefaultApiVersion = new ApiVersion(1, 0);
-    options.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
-    options.Conventions.Add(new VersionByNamespaceConvention());
-});
-builder.Services.AddVersionedApiExplorer(options =>
-{
-    options.GroupNameFormat = "'v'VVV";
-    options.SubstituteApiVersionInUrl = true;
-});
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Weather Service API", Version = "v1" });
-    options.SwaggerDoc("v1.1", new OpenApiInfo { Title = "Weather Service API", Version = "v1.1" });
-    options.DocInclusionPredicate((documentName, apiDescription) =>
-        string.Equals(apiDescription.GroupName, documentName, StringComparison.OrdinalIgnoreCase));
-});
+    {
+        options.AssumeDefaultVersionWhenUnspecified = true;
+        options.ReportApiVersions = true;
+        options.DefaultApiVersion = new ApiVersion(1, 0);
+        options.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
+        options.Conventions.Add(new VersionByNamespaceConvention());
+    })
+    .AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'VVV";
+        options.SubstituteApiVersionInUrl = true;
+    });
+builder.Services.AddOpenApi("v1");
+builder.Services.AddOpenApi("v1.1");
 builder.Services.AddControllers(options =>
     {
         options.Filters.Add(new AuthorizeFilter());
@@ -155,19 +148,12 @@ builder.Services.AddControllers(options =>
     .AddApplicationPart(typeof(CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Presentation.ApiController).Assembly);
 
 var app = builder.Build();
-var apiVersionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
 ServiceLocator.Initialise(app.Services);
 
 app.UseApiExceptionHandling();
-app.UseSwagger();
-app.UseSwaggerUI(options =>
-{
-    foreach (var description in apiVersionProvider.ApiVersionDescriptions)
-    {
-        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName);
-    }
-});
+app.MapOpenApi();
+app.MapScalarApiReference();
 app.UseHealthChecks("/health");
 app.UseRouting();
 app.UseAuthentication();

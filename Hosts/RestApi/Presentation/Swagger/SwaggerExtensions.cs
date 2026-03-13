@@ -1,26 +1,19 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
+using Asp.Versioning;
+using Asp.Versioning.Conventions;
 using Aviant.Infrastructure.CrossCutting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Versioning;
-using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
-using Microsoft.Extensions.Options;
-using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace CleanDDDArchitecture.Hosts.RestApi.Presentation.Swagger;
 
 /// <summary>
-///     Service Collection(IServiceCollection) Extensions
+///     Service Collection (IServiceCollection) Extensions for API versioning and OpenAPI.
 /// </summary>
 [ExcludeFromCodeCoverage]
 internal static class SwaggerExtensions
 {
     /// <summary>
-    ///     Add AddVersionedApiExplorer and AddApiVersioning middlewares
+    ///     Registers API versioning with namespace-based conventions and API Explorer.
     /// </summary>
-    /// <param name="services"></param>
-    /// <returns>IServiceCollection</returns>
     public static IServiceCollection AddApiVersionWithExplorer(this IServiceCollection services)
     {
         var settings = DependencyInjectionRegistry.DefaultConfiguration
@@ -28,37 +21,38 @@ internal static class SwaggerExtensions
 
         services.Configure<SwaggerSettings>(settings);
 
-        return services
-           .AddVersionedApiExplorer(
-                options =>
-                {
-                    options.GroupNameFormat           = "'v'VVV";
-                    options.SubstituteApiVersionInUrl = true;
-                })
-           .AddApiVersioning(
-                options =>
-                {
-                    options.AssumeDefaultVersionWhenUnspecified = true;
-                    options.ReportApiVersions                   = true;
+        services.AddApiVersioning(options =>
+            {
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ReportApiVersions                   = true;
 
-                    options.DefaultApiVersion = new ApiVersion(
-                        settings.GetValue<int>("DefaultApiVersion:Major"),
-                        settings.GetValue<int>("DefaultApiVersion:Minor"));
+                options.DefaultApiVersion = new ApiVersion(
+                    settings.GetValue<int>("DefaultApiVersion:Major"),
+                    settings.GetValue<int>("DefaultApiVersion:Minor"));
 
-                    options.ApiVersionReader = new HeaderApiVersionReader(
-                        "x-api-version");
+                options.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
+                options.Conventions.Add(new VersionByNamespaceConvention());
+            })
+           .AddApiExplorer(options =>
+            {
+                options.GroupNameFormat           = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+            });
 
-                    options.Conventions.Add(new VersionByNamespaceConvention());
-                });
+        return services;
     }
 
     /// <summary>
-    ///     Add swagger services
+    ///     Registers one OpenAPI document per API version with JWT security transformer.
     /// </summary>
-    /// <param name="services"><see cref="IServiceCollection" />/></param>
-    /// <returns>IServiceCollection</returns>
-    public static IServiceCollection AddSwaggerOptions(this IServiceCollection services) => services
-       .AddTransient<IConfigureOptions<SwaggerOptions>, ConfigureSwaggerOptions>()
-       .AddTransient<IConfigureOptions<SwaggerUIOptions>, ConfigureSwaggerUiOptions>()
-       .AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();
+    public static IServiceCollection AddOpenApiOptions(this IServiceCollection services)
+    {
+        services.AddOpenApi("v1", options =>
+            options.AddDocumentTransformer<JwtBearerSecuritySchemeTransformer>());
+
+        services.AddOpenApi("v1.1", options =>
+            options.AddDocumentTransformer<JwtBearerSecuritySchemeTransformer>());
+
+        return services;
+    }
 }

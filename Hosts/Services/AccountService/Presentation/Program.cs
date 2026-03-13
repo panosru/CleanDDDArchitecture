@@ -1,4 +1,4 @@
-using AutoMapper;
+using Asp.Versioning;
 using Aviant.Application.ApplicationEvents;
 using Aviant.Application.Behaviours;
 using Aviant.Application.Extensions;
@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.FeatureManagement;
+using Scalar.AspNetCore;
 using System.Globalization;
 using System.Threading.RateLimiting;
 
@@ -124,18 +125,17 @@ builder.Services.AddAccountDomain();
 builder.Services.AddFeatureManagement(DependencyInjectionRegistry.ConfigurationWithDomains);
 builder.Services.AddHealthChecks().AddAccountChecks();
 builder.Services.AddApiVersioning(options =>
-{
-    options.AssumeDefaultVersionWhenUnspecified = true;
-    options.ReportApiVersions = true;
-    options.DefaultApiVersion = new ApiVersion(1, 0);
-});
-builder.Services.AddVersionedApiExplorer(options =>
-{
-    options.GroupNameFormat = "'v'VVV";
-    options.SubstituteApiVersionInUrl = true;
-});
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+    {
+        options.AssumeDefaultVersionWhenUnspecified = true;
+        options.ReportApiVersions = true;
+        options.DefaultApiVersion = new ApiVersion(1, 0);
+    })
+    .AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'VVV";
+        options.SubstituteApiVersionInUrl = true;
+    });
+builder.Services.AddOpenApi();
 builder.Services.AddControllers(options =>
     {
         options.Filters.Add(new AuthorizeFilter());
@@ -153,8 +153,8 @@ using (var scope = app.Services.CreateScope())
 ServiceLocator.Initialise(app.Services);
 
 app.UseApiExceptionHandling();
-app.UseSwagger();
-app.UseSwaggerUI();
+app.MapOpenApi();
+app.MapScalarApiReference();
 app.UseHealthChecks("/health");
 app.UseSession();
 app.UseRateLimiter();

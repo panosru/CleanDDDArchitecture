@@ -1,31 +1,30 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
+using Scalar.AspNetCore;
 
 namespace CleanDDDArchitecture.Hosts.RestApi.Presentation.Swagger;
 
 /// <summary>
-///     Extending Swagger services
+///     Middleware extensions for OpenAPI / Scalar UI.
 /// </summary>
 [ExcludeFromCodeCoverage]
 internal static class MiddlewareExtensions
 {
     /// <summary>
-    ///     Enabling Swagger UI.
-    ///     Excluding from test environment
+    ///     Maps OpenAPI endpoints and Scalar UI. Skipped in the TEST environment.
     /// </summary>
-    /// <param name="app">IApplicationBuilder</param>
     public static void UseSwaggerDocuments(this IApplicationBuilder app)
     {
-        var environment = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") 
+        var environment = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")
                           ?? Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
         if (environment == "TEST")
             return;
 
-        app.UseSwagger();
-
-        app.UseSwaggerUI(options =>
+        // WebApplication implements IEndpointRouteBuilder; the cast is valid at runtime.
+        if (app is IEndpointRouteBuilder endpoints)
         {
-            options.InjectStylesheet("/css/swagger-ui/dark-theme.css");
-        });
+            endpoints.MapOpenApi();
+            endpoints.MapScalarApiReference();
+        }
     }
 }

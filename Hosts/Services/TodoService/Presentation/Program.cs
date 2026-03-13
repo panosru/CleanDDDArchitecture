@@ -18,11 +18,13 @@ using CleanDDDArchitecture.Hosts.ServiceDefaults.Core.Services;
 using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.FeatureManagement;
+using Scalar.AspNetCore;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
@@ -106,18 +108,17 @@ builder.Services.AddTodoDomain();
 builder.Services.AddFeatureManagement(DependencyInjectionRegistry.ConfigurationWithDomains);
 builder.Services.AddHealthChecks().AddTodoChecks();
 builder.Services.AddApiVersioning(options =>
-{
-    options.AssumeDefaultVersionWhenUnspecified = true;
-    options.ReportApiVersions = true;
-    options.DefaultApiVersion = new ApiVersion(1, 0);
-});
-builder.Services.AddVersionedApiExplorer(options =>
-{
-    options.GroupNameFormat = "'v'VVV";
-    options.SubstituteApiVersionInUrl = true;
-});
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+    {
+        options.AssumeDefaultVersionWhenUnspecified = true;
+        options.ReportApiVersions = true;
+        options.DefaultApiVersion = new ApiVersion(1, 0);
+    })
+    .AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'VVV";
+        options.SubstituteApiVersionInUrl = true;
+    });
+builder.Services.AddOpenApi();
 builder.Services.AddControllers(options =>
     {
         options.Filters.Add(new AuthorizeFilter());
@@ -136,8 +137,8 @@ using (var scope = app.Services.CreateScope())
 ServiceLocator.Initialise(app.Services);
 
 app.UseApiExceptionHandling();
-app.UseSwagger();
-app.UseSwaggerUI();
+app.MapOpenApi();
+app.MapScalarApiReference();
 app.UseHealthChecks("/health");
 app.UseRouting();
 app.UseAuthentication();
