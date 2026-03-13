@@ -11,6 +11,13 @@ export PATH="$PATH:$HOME/.dotnet/tools"
 export DOTNET_ROLL_FORWARD="${DOTNET_ROLL_FORWARD:-Major}"
 
 declare -a TEST_PROJECTS=(
+  "$ROOT_DIR/Domains/Account/Tests/Unit/Unit.csproj"
+  "$ROOT_DIR/Domains/Account/Tests/Integration/Integration.csproj"
+  "$ROOT_DIR/Domains/Account/Tests/Behaviour/Behaviour.csproj"
+  "$ROOT_DIR/Domains/Todo/Tests/Unit/Unit.csproj"
+  "$ROOT_DIR/Domains/Todo/Tests/Integration/Integration.csproj"
+  "$ROOT_DIR/Domains/Todo/SubDomains/TodoItem/Tests/Behaviour/Behaviour.csproj"
+  "$ROOT_DIR/Domains/Todo/SubDomains/TodoList/Tests/Behaviour/Behaviour.csproj"
   "$ROOT_DIR/Domains/Weather/Tests/Behaviour/Behaviour.csproj"
   "$ROOT_DIR/Library/Aviant/tests/EventSourcing/Unit/Unit.csproj"
 )
