@@ -130,6 +130,9 @@ builder.Services.AddApiVersioning(options =>
         options.ReportApiVersions = true;
         options.DefaultApiVersion = new ApiVersion(1, 0);
         options.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
+    })
+    .AddMvc(options =>
+    {
         options.Conventions.Add(new VersionByNamespaceConvention());
     })
     .AddApiExplorer(options =>
