@@ -1,2 +1,1 @@
-Persistence/Migrations/*
-!Persistence/Migrations/.gitkeep
+Persistence/Migrations/.gitkeep

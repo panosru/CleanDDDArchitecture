@@ -42,19 +42,9 @@ public static class AccountCrossCutting
 
         if (context.Database.IsNpgsql())
         {
-            var migrationsAssembly = context.GetService<IMigrationsAssembly>();
-            var allMigrations = migrationsAssembly.Migrations;
-            Console.WriteLine($"[migration-discovery] Assembly: {migrationsAssembly.Assembly.FullName}");
-            Console.WriteLine($"[migration-discovery] Count: {allMigrations.Count}");
-            foreach (var migration in allMigrations)
-                Console.WriteLine($"[migration-discovery] Found: {migration.Key}");
+            var hasMigrations = context.GetService<IMigrationsAssembly>().Migrations.Any();
 
-            var pendingMigrations = (await context.Database.GetPendingMigrationsAsync().ConfigureAwait(false)).ToList();
-            Console.WriteLine($"[migration-discovery] Pending count: {pendingMigrations.Count}");
-            foreach (var pending in pendingMigrations)
-                Console.WriteLine($"[migration-discovery] Pending: {pending}");
-
-            if (allMigrations.Any())
+            if (hasMigrations)
                 await context.Database.MigrateAsync().ConfigureAwait(false);
             else
                 await context.Database.EnsureCreatedAsync().ConfigureAwait(false);
