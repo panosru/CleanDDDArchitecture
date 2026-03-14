@@ -93,7 +93,7 @@ internal sealed class ServiceProcess : IAsyncDisposable
     {
         lock (_outputLock)
         {
-            return string.Join(Environment.NewLine, _output.TakeLast(200));
+            return string.Join(Environment.NewLine, _output);
         }
     }
 
