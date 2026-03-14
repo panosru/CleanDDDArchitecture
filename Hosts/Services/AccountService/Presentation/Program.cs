@@ -23,7 +23,6 @@ using Hangfire.PostgreSql;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.FeatureManagement;
