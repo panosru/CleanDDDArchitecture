@@ -16,8 +16,12 @@ internal sealed class JwtBearerSecuritySchemeTransformer : IOpenApiDocumentTrans
         OpenApiDocumentTransformerContext context,
         CancellationToken                cancellationToken)
     {
+        // Ensure Components and its SecuritySchemes dict exist before writing
         document.Components ??= new OpenApiComponents();
-        document.Components.SecuritySchemes["Bearer"] = new OpenApiSecurityScheme
+        var securitySchemes = document.Components.SecuritySchemes
+            ??= new Dictionary<string, IOpenApiSecurityScheme>();
+
+        securitySchemes["Bearer"] = new OpenApiSecurityScheme
         {
             Name         = "Authorization",
             BearerFormat = "JWT",
@@ -27,17 +31,16 @@ internal sealed class JwtBearerSecuritySchemeTransformer : IOpenApiDocumentTrans
             Type         = SecuritySchemeType.Http,
         };
 
+        // In Microsoft.OpenApi 2.0 the key type for OpenApiSecurityRequirement is
+        // OpenApiSecuritySchemeReference (not OpenApiSecurityScheme with a Reference property)
         var requirement = new OpenApiSecurityRequirement
         {
-            [new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference { Id = "Bearer", Type = ReferenceType.SecurityScheme }
-            }] = []
+            [new OpenApiSecuritySchemeReference("Bearer", null, null)] = []
         };
 
         foreach (var path in document.Paths.Values)
-            foreach (var operation in path.Operations.Values)
-                operation.Security.Add(requirement);
+        foreach (var operation in (path.Operations ?? []).Values)
+            (operation.Security ??= []).Add(requirement);
 
         return Task.CompletedTask;
     }
