@@ -31,6 +31,9 @@ internal static class SwaggerExtensions
                     settings.GetValue<int>("DefaultApiVersion:Minor"));
 
                 options.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
+            })
+           .AddMvc(options =>
+            {
                 options.Conventions.Add(new VersionByNamespaceConvention());
             })
            .AddApiExplorer(options =>
