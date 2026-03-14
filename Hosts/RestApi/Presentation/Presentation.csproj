@@ -17,6 +17,9 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'CleanDDDArchitecture.Hosts.RestApi.Presentation' " />
   <ItemGroup>
+    <Using Include="Asp.Versioning" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Hangfire.PostgreSql" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
       <PrivateAssets>all</PrivateAssets>
