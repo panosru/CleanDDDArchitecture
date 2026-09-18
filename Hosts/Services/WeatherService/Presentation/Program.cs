@@ -114,6 +114,7 @@ builder.Services.AddApiVersioning(options =>
     });
 builder.Services.AddOpenApi("v1");
 builder.Services.AddOpenApi("v1.1");
+builder.Services.AddApiErrorHandling();
 builder.Services.AddControllers(options =>
     {
         options.Filters.Add(new AuthorizeFilter());
@@ -125,7 +126,7 @@ var app = builder.Build();
 
 ServiceLocator.Initialise(app.Services);
 
-app.UseApiExceptionHandling();
+app.UseApiErrorHandling();
 app.MapOpenApi();
 app.MapScalarApiReference();
 app.UseHealthChecks("/health");

@@ -107,6 +107,7 @@ builder.Services.AddApiVersioning(options =>
         options.SubstituteApiVersionInUrl = true;
     });
 builder.Services.AddOpenApi();
+builder.Services.AddApiErrorHandling();
 builder.Services.AddControllers(options =>
     {
         options.Filters.Add(new AuthorizeFilter());
@@ -123,7 +124,7 @@ using (var scope = app.Services.CreateScope())
 
 ServiceLocator.Initialise(app.Services);
 
-app.UseApiExceptionHandling();
+app.UseApiErrorHandling();
 app.MapOpenApi();
 app.MapScalarApiReference();
 app.UseHealthChecks("/health");

@@ -1,3 +1,4 @@
+using CleanDDDArchitecture.Hosts.ServiceDefaults.Core.Errors;
 using Aviant.Infrastructure.CrossCutting;
 using CleanDDDArchitecture.Domains.Shared.Core;
 using CleanDDDArchitecture.Hosts.RestApi.Presentation.ServiceExtensions;
@@ -56,6 +57,7 @@ public static class ServiceConfiguration
             services.AddDatabaseDeveloperPageExceptionFilter();
 
         services.AddControllersServices();
+        services.AddApiErrorHandling();
     }
 
     private static RateLimitPartition<string> BuildIpPolicy(HttpContext context, int permitLimit, TimeSpan window)
