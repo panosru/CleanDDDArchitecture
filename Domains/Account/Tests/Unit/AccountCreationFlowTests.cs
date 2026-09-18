@@ -4,7 +4,7 @@ using Aviant.Application.Jobs;
 using Aviant.Core.Messages;
 using Aviant.Core.EventSourcing.Services;
 using Aviant.Core.Services;
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail.Events;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Events;
@@ -14,6 +14,7 @@ using Hangfire.States;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.WebUtilities;
 using Xunit;
+using CleanDDDArchitecture.Domains.Account.Core.Events;
 
 namespace CleanDDDArchitecture.Domains.Account.Tests.Unit;
 

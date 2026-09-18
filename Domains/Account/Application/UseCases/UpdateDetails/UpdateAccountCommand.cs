@@ -1,4 +1,4 @@
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 using Ardalis.GuardClauses;
 using Aviant.Application.EventSourcing.Commands;
 using Aviant.Core.Messages;

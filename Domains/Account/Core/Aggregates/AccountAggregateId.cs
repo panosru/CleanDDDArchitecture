@@ -1,7 +1,7 @@
 using Aviant.Core.EventSourcing.Aggregates;
 using Newtonsoft.Json;
 
-namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+namespace CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 
 public sealed class AccountAggregateId : AggregateId<Guid>
 {

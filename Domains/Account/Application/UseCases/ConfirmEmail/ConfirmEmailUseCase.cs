@@ -1,6 +1,6 @@
 using Aviant.Application.Orchestration;
 using Aviant.Application.EventSourcing.UseCases;
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
 

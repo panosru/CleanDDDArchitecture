@@ -1,5 +1,5 @@
 using System.Reflection;
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 using CleanDDDArchitecture.Domains.Account.Application.Identity;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 using Ardalis.GuardClauses;

@@ -1,7 +1,7 @@
 using System.Net.Mime;
 using CleanDDDArchitecture.Hosts.RestApi.Core;
 using CleanDDDArchitecture.Hosts.RestApi.Core.Features;
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

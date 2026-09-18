@@ -3,7 +3,7 @@ using System.Globalization;
 using Microsoft.IdentityModel.JsonWebTokens;
 using System.Security.Claims;
 using System.Text;
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 using CleanDDDArchitecture.Domains.Account.Application.Identity;
 using CleanDDDArchitecture.Domains.Account.Application.Persistence;
 using CleanDDDArchitecture.Domains.Account.Application.Repositories;

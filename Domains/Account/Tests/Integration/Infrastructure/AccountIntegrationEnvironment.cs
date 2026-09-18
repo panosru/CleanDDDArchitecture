@@ -10,6 +10,7 @@ using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
 using AwesomeAssertions;
 using Npgsql;
+using CleanDDDArchitecture.Domains.Account.Core.Events;
 
 namespace CleanDDDArchitecture.Domains.Account.Tests.Integration.Infrastructure;
 

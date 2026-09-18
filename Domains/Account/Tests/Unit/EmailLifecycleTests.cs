@@ -3,7 +3,7 @@ using Aviant.Application.Jobs;
 using Aviant.Core.EventSourcing.Services;
 using Aviant.Core.Messages;
 using Aviant.Core.Services;
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangeEmail.Events;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangeEmailConfirm;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangeEmailRequest.Events;
@@ -15,6 +15,7 @@ using AwesomeAssertions;
 using Hangfire.States;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
+using CleanDDDArchitecture.Domains.Account.Core.Events;
 
 namespace CleanDDDArchitecture.Domains.Account.Tests.Unit;
 

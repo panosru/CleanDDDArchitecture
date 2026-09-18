@@ -1,4 +1,4 @@
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 using Aviant.Application.ApplicationEvents;
 using Aviant.Core.Messages;
 using Aviant.Application.EventSourcing.Commands;

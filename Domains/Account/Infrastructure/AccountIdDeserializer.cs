@@ -1,5 +1,5 @@
 using System.Text;
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 using Confluent.Kafka;
 
 namespace CleanDDDArchitecture.Domains.Account.Infrastructure;

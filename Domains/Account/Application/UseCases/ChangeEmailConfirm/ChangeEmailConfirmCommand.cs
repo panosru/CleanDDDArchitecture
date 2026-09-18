@@ -1,7 +1,7 @@
 using Aviant.Application.EventSourcing.Commands;
 using Aviant.Application.Identity;
 using Aviant.Core.Messages;
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangeEmailConfirm;
 

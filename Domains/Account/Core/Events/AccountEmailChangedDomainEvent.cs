@@ -1,11 +1,9 @@
 // ReSharper disable MemberCanBeInternal
 
 using Aviant.Core.EventSourcing.DomainEvents;
-using Aviant.Core.EventSourcing.EventBus;
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
-using Polly;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangeEmail.Events;
+namespace CleanDDDArchitecture.Domains.Account.Core.Events;
 
 public sealed record AccountEmailChangedDomainEvent : DomainEvent<AccountAggregate, AccountAggregateId>
 {
@@ -27,17 +25,4 @@ public sealed record AccountEmailChangedDomainEvent : DomainEvent<AccountAggrega
     public string Email { get; private set; }
 
     public bool EmailConfirmed { get; private set; }
-
-    internal sealed class AccountEmailChangedDomainEventConsumer : DomainEventHandler<AccountEmailChangedDomainEvent>
-    {
-        public override Task Handle(
-            EventReceived<AccountEmailChangedDomainEvent> @event,
-            CancellationToken cancellationToken) =>
-            Task.CompletedTask;
-
-        public override IAsyncPolicy RetryPolicy() =>
-            Policy
-                .Handle<ArgumentOutOfRangeException>()
-                .WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(i));
-    }
 }

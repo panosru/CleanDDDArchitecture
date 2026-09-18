@@ -9,6 +9,7 @@ using System.Globalization;
 using CleanDDDArchitecture.Domains.Account.Tests.Integration.Infrastructure;
 using AwesomeAssertions;
 using Xunit;
+using CleanDDDArchitecture.Domains.Account.Core.Events;
 
 namespace CleanDDDArchitecture.Domains.Account.Tests.Integration;
 

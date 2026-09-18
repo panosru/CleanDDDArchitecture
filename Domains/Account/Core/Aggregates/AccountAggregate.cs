@@ -3,12 +3,9 @@
 using Aviant.Core.Entities;
 using Aviant.Core.EventSourcing.Aggregates;
 using Aviant.Core.EventSourcing.DomainEvents;
-using CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangeEmail.Events;
-using CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail.Events;
-using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Events;
-using CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails.Events;
+using CleanDDDArchitecture.Domains.Account.Core.Events;
 
-namespace CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+namespace CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 
 public sealed class AccountAggregate
     : Aggregate<AccountAggregate, AccountAggregateId>,
@@ -60,7 +57,7 @@ public sealed class AccountAggregate
 
     #endregion
 
-    internal static AccountAggregate Create(
+    public static AccountAggregate Create(
         Guid                id,
         string              username,
         string              firstname,
@@ -79,7 +76,7 @@ public sealed class AccountAggregate
             emailConfirmed);
     }
 
-    internal void ChangeDetails(
+    public void ChangeDetails(
         string firstname,
         string lastname,
         string email)
@@ -91,7 +88,7 @@ public sealed class AccountAggregate
         AddEvent(new AccountUpdatedDomainEvent(this));
     }
 
-    internal void ConfirmEmail()
+    public void ConfirmEmail()
     {
         if (EmailConfirmed)
             return;
@@ -101,7 +98,7 @@ public sealed class AccountAggregate
         AddEvent(new AccountEmailConfirmedDomainEvent(this));
     }
 
-    internal void ChangeEmail(string email)
+    public void ChangeEmail(string email)
     {
         if (string.Equals(Email, email, StringComparison.OrdinalIgnoreCase))
             return;

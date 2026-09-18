@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
 using Aviant.Core.Enum;
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 using CleanDDDArchitecture.Domains.Shared.Core.Identity;
 using CleanDDDArchitecture.Hosts.RestApi.Core;

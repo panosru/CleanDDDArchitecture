@@ -1,13 +1,9 @@
 // ReSharper disable MemberCanBeInternal
 
-using System.Text;
-using Aviant.Application.ApplicationEvents;
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
 using Aviant.Core.EventSourcing.DomainEvents;
-using Aviant.Core.EventSourcing.EventBus;
-using Serilog;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 
-namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Events;
+namespace CleanDDDArchitecture.Domains.Account.Core.Events;
 
 public sealed record AccountCreatedDomainEvent : DomainEvent<AccountAggregate, AccountAggregateId>
 {
@@ -42,23 +38,4 @@ public sealed record AccountCreatedDomainEvent : DomainEvent<AccountAggregate, A
     public IEnumerable<string> Roles { get; private set; }
 
     public bool EmailConfirmed { get; private set; }
-
-    #region Nested type: AccountCreatedDomainEventConsumer
-
-    internal sealed class AccountCreatedDomainEventConsumer : DomainEventHandler<AccountCreatedDomainEvent>
-    {
-        public override async Task Handle(
-            EventReceived<AccountCreatedDomainEvent> @event,
-            CancellationToken                        cancellationToken)
-        {
-            Log.Information(
-                "AccountCreatedDomainEvent consumed for aggregate {AggregateId} and email {Email}",
-                @event.Event.Id,
-                @event.Event.Email);
-
-            await Task.CompletedTask.ConfigureAwait(false);
-        }
-    }
-
-    #endregion
 }
