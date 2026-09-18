@@ -16,4 +16,7 @@
       <ProjectReference Include="..\..\..\CrossCutting\CrossCutting.csproj" />
     </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="CleanDDDArchitecture.Domains.Weather.Tests.Behaviour" />
+  </ItemGroup>
 </Project>

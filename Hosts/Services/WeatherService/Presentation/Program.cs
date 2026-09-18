@@ -1,3 +1,4 @@
+using CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Presentation.Endpoints;
 using CleanDDDArchitecture.Hosts.ServiceDefaults.Core;
 using System.Globalization;
 using System.Text;
@@ -132,6 +133,7 @@ app.UseApiErrorHandling();
 app.MapOpenApi();
 app.MapScalarApiReference();
 app.MapDefaultEndpoints();
+app.MapWeatherEndpoints();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

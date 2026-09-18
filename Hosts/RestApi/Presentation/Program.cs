@@ -1,3 +1,4 @@
+using CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Presentation.Endpoints;
 using CleanDDDArchitecture.Hosts.ServiceDefaults.Core;
 using CleanDDDArchitecture.Hosts.RestApi.Presentation;
 using CleanDDDArchitecture.Hosts.RestApi.Presentation.Setup;
@@ -47,6 +48,7 @@ try
     // Configure middleware pipeline using extension method from AppBuilderConfiguration class
     app.ConfigureAppBuilder(app.Services, builder.Environment);
     app.MapDefaultEndpoints();
+    app.MapWeatherEndpoints();
     
     // Run the application
     await app.RunAsync()
