@@ -1,9 +1,9 @@
 using CleanDDDArchitecture.Domains.Account.Application.Notifications;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace CleanDDDArchitecture.Domains.Account.Infrastructure.Notifications;
 
-public sealed class LoggingPhoneVerificationSender : IPhoneVerificationSender
+public sealed class LoggingPhoneVerificationSender(ILogger<LoggingPhoneVerificationSender> logger) : IPhoneVerificationSender
 {
     public Task SendVerificationCodeAsync(
         string phoneNumber,
@@ -11,7 +11,7 @@ public sealed class LoggingPhoneVerificationSender : IPhoneVerificationSender
         bool isChangeRequest,
         CancellationToken cancellationToken = default)
     {
-        Log.Warning(
+        logger.LogWarning(
             "Demo phone verification code issued. PhoneNumber={PhoneNumber} Purpose={Purpose} Code={Code}",
             phoneNumber,
             isChangeRequest ? "change" : "add",

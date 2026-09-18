@@ -17,7 +17,6 @@ public static class Singleton
     /// <returns></returns>
     public static IServiceCollection AddSingletonServices(this IServiceCollection services)
     {
-        services.AddSingleton<IServiceContainer, HttpContextServiceProviderProxy>();
         services.AddSingleton<ICurrentUserService, CurrentUser>();
         
         return services;

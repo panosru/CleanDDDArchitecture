@@ -4,7 +4,7 @@ using Aviant.Application.Jobs;
 using CleanDDDArchitecture.Domains.Shared.Core;
 using Hangfire;
 using Microsoft.Extensions.Options;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ForgotPassword.Jobs;
 
@@ -20,13 +20,16 @@ internal sealed class SendPasswordResetEmailJobOptions : IJobOptions
 [Queue(JobQueue.Main)]
 internal sealed class SendPasswordResetEmailJob : IJob<SendPasswordResetEmailJobOptions>
 {
+    private readonly ILogger<SendPasswordResetEmailJob> _logger;
     private readonly AppSettings _appSettings;
     private readonly IEmailService _emailService;
 
     public SendPasswordResetEmailJob(
         IOptions<AppSettings> appSettings,
-        IEmailService emailService)
+        IEmailService emailService,
+        ILogger<SendPasswordResetEmailJob> logger)
     {
+        _logger = logger;
         _appSettings = appSettings.Value;
         _emailService = emailService;
     }
@@ -53,8 +56,8 @@ internal sealed class SendPasswordResetEmailJob : IJob<SendPasswordResetEmailJob
             .ConfigureAwait(false);
 
         if (sent)
-            Log.Information("Password reset instructions sent to {Email}", jobOptions.Email);
+            _logger.LogInformation("Password reset instructions sent to {Email}", jobOptions.Email);
         else
-            Log.Error("Password reset instructions failed to {Email}", jobOptions.Email);
+            _logger.LogError("Password reset instructions failed to {Email}", jobOptions.Email);
     }
 }

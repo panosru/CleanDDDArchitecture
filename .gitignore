@@ -473,3 +473,6 @@ _Pvt_Extensions
 
 # ASP.NET Core Data Protection keys written by local runs (key material; never commit)
 **/DataProtection-Keys/
+
+# Build output from IDE profiles
+bin-*/

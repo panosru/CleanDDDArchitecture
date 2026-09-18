@@ -26,7 +26,6 @@ services:
     ports:
       - ${KAFKA_PUBLIC_PORT}:${KAFKA_PUBLIC_PORT}
 
-  eventstore:
+  kurrentdb:
     ports:
-      - ${EVENTSTORE_PUBLIC_HTTP_PORT}:${EVENTSTORE_HTTP_PORT}
-      - ${EVENTSTORE_PUBLIC_TCP_PORT}:${EVENTSTORE_TCP_PORT}
+      - ${KURRENTDB_PORT}:2113

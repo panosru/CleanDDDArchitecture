@@ -6,7 +6,7 @@
 // Both modes run the same domain code; only the hosts differ. Integration events between
 // contexts travel in-process in the monolith and over Kafka between the services. Every service receives its
 // settings under the names it already reads (ConnectionStrings:PGSQLConnection, :kafka,
-// :eventstore, EmailSettings:*), so nothing in the services knows about Aspire beyond
+// :kurrentdb, EmailSettings:*), so nothing in the services knows about Aspire beyond
 // AddServiceDefaults(), which sends traces, metrics and logs to the Aspire dashboard.
 
 var builder = DistributedApplication.CreateBuilder(args);
@@ -20,19 +20,17 @@ var postgres = builder.AddPostgres("postgres")
 
 var kafka = builder.AddKafka("kafka");
 
-// EventStoreDB 21.10 over TCP, the protocol the current event store client speaks.
-var eventStore = builder.AddContainer("eventstore", "eventstore/eventstore", "21.10.11-buster-slim")
-    .WithEnvironment("EVENTSTORE_CLUSTER_SIZE", "1")
-    .WithEnvironment("EVENTSTORE_RUN_PROJECTIONS", "All")
-    .WithEnvironment("EVENTSTORE_START_STANDARD_PROJECTIONS", "true")
-    .WithEnvironment("EVENTSTORE_INSECURE", "true")
-    .WithEnvironment("EVENTSTORE_ENABLE_EXTERNAL_TCP", "true")
-    .WithEnvironment("EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP", "true")
-    .WithEndpoint(targetPort: 1113, name: "tcp", scheme: "tcp")
-    .WithHttpEndpoint(targetPort: 2113, name: "http");
+// KurrentDB (formerly EventStoreDB), reached over gRPC on its HTTP port.
+var kurrentDb = builder.AddContainer("kurrentdb", "kurrentplatform/kurrentdb", "26.1.2")
+    .WithEnvironment("KURRENTDB_CLUSTER_SIZE", "1")
+    .WithEnvironment("KURRENTDB_RUN_PROJECTIONS", "None")
+    .WithEnvironment("KURRENTDB_INSECURE", "true")
+    .WithVolume("cleanddd-kurrentdb-data", "/var/lib/kurrentdb")
+    .WithHttpEndpoint(targetPort: 2113, name: "http")
+    .WithHttpHealthCheck("/health/live", 204, "http");
 
-var eventStoreConnection = ReferenceExpression.Create(
-    $"tcp://admin:changeit@{eventStore.GetEndpoint("tcp").Property(EndpointProperty.HostAndPort)}");
+var kurrentDbConnection = ReferenceExpression.Create(
+    $"kurrentdb://admin:changeit@{kurrentDb.GetEndpoint("http").Property(EndpointProperty.HostAndPort)}?tls=false");
 
 var mailpit = builder.AddContainer("mailpit", "axllent/mailpit")
     .WithHttpEndpoint(targetPort: 8025, name: "ui")
@@ -51,12 +49,12 @@ if (microservices)
         .WithReference(postgres.AddDatabase("account-db", "cleanddd_account"), "PGSQLConnection")
         .WithReference(kafka, "kafka")
         .WithEnvironment("IntegrationEvents__Transport", "Kafka")
-        .WithEnvironment("ConnectionStrings__eventstore", eventStoreConnection)
+        .WithEnvironment("ConnectionStrings__kurrentdb", kurrentDbConnection)
         .WithEnvironment("EmailSettings__SmtpHost", smtp.Property(EndpointProperty.Host))
         .WithEnvironment("EmailSettings__SmtpPort", smtp.Property(EndpointProperty.Port))
         .WaitFor(postgres)
         .WaitFor(kafka)
-        .WaitFor(eventStore);
+        .WaitFor(kurrentDb);
 
     var todo = builder.AddProject<Projects.CleanDDDArchitecture_Hosts_Services_TodoService_Presentation>("todo-service")
         .WithHttpEndpoint()
@@ -93,13 +91,13 @@ else
         .WithTokenIssuance()
         .WithReference(database, "PGSQLConnection")
         .WithReference(kafka, "kafka")
-        .WithEnvironment("ConnectionStrings__eventstore", eventStoreConnection)
+        .WithEnvironment("ConnectionStrings__kurrentdb", kurrentDbConnection)
         .WithEnvironment("EmailSettings__SmtpHost", smtp.Property(EndpointProperty.Host))
         .WithEnvironment("EmailSettings__SmtpPort", smtp.Property(EndpointProperty.Port))
         .WithExternalHttpEndpoints()
         .WaitFor(postgres)
         .WaitFor(kafka)
-        .WaitFor(eventStore);
+        .WaitFor(kurrentDb);
 
     // Hangfire: the API enqueues jobs, the worker runs them, both against the same database.
     builder.AddProject<Projects.CleanDDDArchitecture_Hosts_Worker>("worker")

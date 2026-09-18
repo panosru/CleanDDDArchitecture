@@ -1,25 +1,25 @@
 using Aviant.Application.Interceptors;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace CleanDDDArchitecture.Domains.Weather.Application.Interceptors;
 
-public sealed class WeatherInterceptor : InterceptorBase<WeatherInterceptor>
+public sealed class WeatherInterceptor(ILogger<WeatherInterceptor> logger) : InterceptorBase<WeatherInterceptor>
 {
     /// <inheritdoc />
     protected override void OnPre(InterceptorContext context)
     {
-        Log.Information("Before weather service");
+        logger.LogInformation("Before weather service");
     }
 
     /// <inheritdoc />
     protected override void OnPost(InterceptorContext context)
     {
-        Log.Information("After weather service");
+        logger.LogInformation("After weather service");
     }
 
     /// <inheritdoc />
     protected override void OnExit(InterceptorContext context)
     {
-        Log.Information("Exiting weather service");
+        logger.LogInformation("Exiting weather service");
     }
 }

@@ -57,7 +57,7 @@ services:
       - redis_net
       - monitor_net
       - kafka_net
-      - eventstore_net
+      - kurrentdb_net
       - rest_api_net
   
   worker:
@@ -99,7 +99,7 @@ networks:
     external: true
   kafka_net:
     external: true
-  eventstore_net:
+  kurrentdb_net:
     external: true
   rest_api_net:
     driver: bridge

@@ -74,9 +74,4 @@ public sealed class TodoListEntity
     public bool IsDeleted { get; set; }
 
     #endregion
-
-    public override Task<bool> ValidateAsync(CancellationToken cancellationToken = default)
-    {
-        return Task.FromResult(!string.IsNullOrWhiteSpace(Title) && Title.Length > 5);
-    }
 }

@@ -1,3 +1,4 @@
+using Aviant.Core.EventSourcing.Services;
 using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 using Ardalis.GuardClauses;
 using Aviant.Application.EventSourcing.Commands;
@@ -25,7 +26,8 @@ internal sealed record UpdateAccountCommand(
     {
         private readonly IMessages _messages;
 
-        public UpdateAccountHandler(IMessages messages) => _messages = messages;
+        public UpdateAccountHandler(IEventsService<AccountAggregate, AccountAggregateId> eventsService, IMessages messages)
+            : base(eventsService) => _messages = messages;
 
         public override async Task<AccountAggregate> Handle(
             UpdateAccountCommand command,

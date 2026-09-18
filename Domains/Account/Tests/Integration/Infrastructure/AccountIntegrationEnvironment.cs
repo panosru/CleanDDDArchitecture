@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Globalization;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -8,6 +7,7 @@ using Confluent.Kafka;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
+using KurrentDB.Client;
 using AwesomeAssertions;
 using Npgsql;
 using CleanDDDArchitecture.Domains.Account.Core.Events;
@@ -32,20 +32,18 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
     private readonly string _startupLogPath;
     private readonly JsonSerializerOptions _jsonOptions = new() { PropertyNameCaseInsensitive = true };
     private readonly HttpClient _mailpitClient = new() { Timeout = TimeSpan.FromSeconds(10) };
-    private readonly HttpClient _eventStoreClient = new() { Timeout = TimeSpan.FromSeconds(10) };
     private readonly List<ServiceProcess> _serviceProcesses = new();
 
     private INetwork? _network;
     private IContainer? _postgresContainer;
     private IContainer? _zookeeperContainer;
     private IContainer? _kafkaContainer;
-    private IContainer? _eventStoreContainer;
+    private IContainer? _kurrentDbContainer;
     private IContainer? _mailpitContainer;
 
     private string? _postgresConnectionString;
     private string? _kafkaBootstrapServers;
-    private string? _eventStoreHttpBaseUrl;
-    private string? _eventStoreTcpConnectionString;
+    private string? _kurrentDbConnectionString;
     private string? _mailpitBaseUrl;
     private int _mailpitSmtpPort;
 
@@ -228,45 +226,36 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
         TimeSpan timeout,
         CancellationToken cancellationToken = default)
     {
+        await using var client = new KurrentDBClient(KurrentDBClientSettings.Create(_kurrentDbConnectionString!));
+
         return await WaitForResultAsync(
                 async () =>
                 {
-                    using var request = new HttpRequestMessage(
-                        HttpMethod.Get,
-                        $"{_eventStoreHttpBaseUrl}/streams/AccountAggregate_{userId}");
-                    request.Headers.Accept.ParseAdd("application/vnd.eventstore.atom+json");
-                    request.Headers.Authorization = new AuthenticationHeaderValue(
-                        "Basic",
-                        Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes("admin:changeit")));
+                    var stream = client.ReadStreamAsync(
+                        Direction.Forwards,
+                        $"AccountAggregate_{userId}",
+                        StreamPosition.Start,
+                        cancellationToken: cancellationToken);
 
-                    using var response = await _eventStoreClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
-                    if (!response.IsSuccessStatusCode)
+                    if (await stream.ReadState.ConfigureAwait(false) == ReadState.StreamNotFound)
                     {
                         return (false, Array.Empty<string>() as IReadOnlyCollection<string>);
                     }
 
-                    await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-                    var payload = await JsonSerializer.DeserializeAsync<EventStoreStreamResponse>(
-                        stream,
-                        _jsonOptions,
-                        cancellationToken).ConfigureAwait(false);
+                    List<string> eventTypes = [];
+                    await foreach (var resolvedEvent in stream.ConfigureAwait(false))
+                    {
+                        eventTypes.Add(resolvedEvent.Event.EventType);
+                    }
 
-                    var summaries = payload?.Entries?
-                        .Select(entry => entry.Summary)
-                        .Where(summary => !string.IsNullOrWhiteSpace(summary))
-                        .Cast<string>()
-                        .ToArray();
-
-                    return summaries is { Length: > 0 } summariesResult
-                        && summariesResult.Contains("AccountCreatedDomainEvent", StringComparer.Ordinal)
-                        && summariesResult.Contains("AccountEmailConfirmedDomainEvent", StringComparer.Ordinal)
-                            ? (true, summariesResult as IReadOnlyCollection<string>)
+                    return eventTypes.Contains("AccountCreatedDomainEvent", StringComparer.Ordinal)
+                        && eventTypes.Contains("AccountEmailConfirmedDomainEvent", StringComparer.Ordinal)
+                            ? (true, eventTypes as IReadOnlyCollection<string>)
                             : (false, Array.Empty<string>() as IReadOnlyCollection<string>);
                 },
                 timeout,
                 $"event stream for account '{userId}'",
-                cancellationToken).ConfigureAwait(false)
-            ;
+                cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyCollection<string>> WaitForKafkaAccountEventsAsync(
@@ -328,9 +317,9 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
             await _mailpitContainer.DisposeAsync().ConfigureAwait(false);
         }
 
-        if (_eventStoreContainer is not null)
+        if (_kurrentDbContainer is not null)
         {
-            await _eventStoreContainer.DisposeAsync().ConfigureAwait(false);
+            await _kurrentDbContainer.DisposeAsync().ConfigureAwait(false);
         }
 
         if (_kafkaContainer is not null)
@@ -369,8 +358,7 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
     private async Task StartInfrastructureAsync(CancellationToken cancellationToken)
     {
         var postgresPort = GetFreePort();
-        var eventStoreHttpPort = GetFreePort();
-        var eventStoreTcpPort = GetFreePort();
+        var kurrentDbPort = GetFreePort();
         var mailpitHttpPort = GetFreePort();
         var mailpitSmtpPort = GetFreePort();
         var kafkaExternalPort = GetFreePort();
@@ -417,19 +405,15 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
             .WithCleanUp(true)
             .Build();
 
-        _eventStoreContainer = new ContainerBuilder("eventstore/eventstore:21.10.11-buster-slim")
-            .WithName($"account-it-eventstore-{Guid.NewGuid():N}")
-            .WithPortBinding(eventStoreHttpPort, 2113)
-            .WithPortBinding(eventStoreTcpPort, 1113)
-            .WithEnvironment("EVENTSTORE_CLUSTER_SIZE", "1")
-            .WithEnvironment("EVENTSTORE_RUN_PROJECTIONS", "All")
-            .WithEnvironment("EVENTSTORE_START_STANDARD_PROJECTIONS", "true")
-            .WithEnvironment("EVENTSTORE_INSECURE", "true")
-            .WithEnvironment("EVENTSTORE_ENABLE_EXTERNAL_TCP", "true")
-            .WithEnvironment("EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP", "true")
-            .WithEnvironment("EVENTSTORE_EXT_TCP_PORT", "1113")
-            .WithEnvironment("EVENTSTORE_HTTP_PORT", "2113")
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilInternalTcpPortIsAvailable(2113))
+        _kurrentDbContainer = new ContainerBuilder("kurrentplatform/kurrentdb:26.1.2")
+            .WithName($"account-it-kurrentdb-{Guid.NewGuid():N}")
+            .WithPortBinding(kurrentDbPort, 2113)
+            .WithEnvironment("KURRENTDB_CLUSTER_SIZE", "1")
+            .WithEnvironment("KURRENTDB_RUN_PROJECTIONS", "None")
+            .WithEnvironment("KURRENTDB_INSECURE", "true")
+            .WithEnvironment("KURRENTDB_MEM_DB", "true")
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilHttpRequestIsSucceeded(
+                request => request.ForPort(2113).ForPath("/health/live").ForStatusCode(System.Net.HttpStatusCode.NoContent)))
             .WithCleanUp(true)
             .Build();
 
@@ -447,16 +431,15 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
         Log("infrastructure: zookeeper container started");
         await _kafkaContainer.StartAsync(cancellationToken).ConfigureAwait(false);
         Log($"infrastructure: kafka container started on port {kafkaExternalPort}");
-        await _eventStoreContainer.StartAsync(cancellationToken).ConfigureAwait(false);
-        Log($"infrastructure: eventstore container started on ports http={eventStoreHttpPort}, tcp={eventStoreTcpPort}");
+        await _kurrentDbContainer.StartAsync(cancellationToken).ConfigureAwait(false);
+        Log($"infrastructure: kurrentdb container started and live on port {kurrentDbPort}");
         await _mailpitContainer.StartAsync(cancellationToken).ConfigureAwait(false);
         Log($"infrastructure: mailpit container started on ports http={mailpitHttpPort}, smtp={mailpitSmtpPort}");
 
         _postgresConnectionString =
             $"Host=127.0.0.1;Port={postgresPort};Database={DatabaseName};Username={DatabaseUser};Password={DatabasePassword}";
         _kafkaBootstrapServers = $"127.0.0.1:{kafkaExternalPort}";
-        _eventStoreHttpBaseUrl = $"http://127.0.0.1:{eventStoreHttpPort}";
-        _eventStoreTcpConnectionString = $"tcp://admin:changeit@127.0.0.1:{eventStoreTcpPort}";
+        _kurrentDbConnectionString = $"kurrentdb://admin:changeit@127.0.0.1:{kurrentDbPort}?tls=false";
         _mailpitBaseUrl = $"http://127.0.0.1:{mailpitHttpPort}";
         _mailpitSmtpPort = mailpitSmtpPort;
 
@@ -464,8 +447,6 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
         Log("infrastructure: postgres ready");
         await WaitForMailpitAsync(cancellationToken).ConfigureAwait(false);
         Log("infrastructure: mailpit ready");
-        await WaitForEventStoreAsync(cancellationToken).ConfigureAwait(false);
-        Log("infrastructure: eventstore ready");
         await WaitForKafkaAsync(cancellationToken).ConfigureAwait(false);
         Log("infrastructure: kafka ready");
     }
@@ -520,7 +501,7 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
                 ["DataProtection__KeysPath"] = Path.Combine(_artifactsRoot, "account-dp"),
                 ["AppSettings__BaseUrl"] = AccountBaseAddress.ToString().TrimEnd('/'),
                 ["ConnectionStrings__PGSQLConnection"] = _postgresConnectionString!,
-                ["ConnectionStrings__eventstore"] = _eventStoreTcpConnectionString!,
+                ["ConnectionStrings__kurrentdb"] = _kurrentDbConnectionString!,
                 ["ConnectionStrings__kafka"] = _kafkaBootstrapServers!,
                 ["EmailSettings__SmtpHost"] = "127.0.0.1",
                 ["EmailSettings:SmtpHost"] = "127.0.0.1",
@@ -638,28 +619,6 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
                 },
                 TimeSpan.FromMinutes(1),
                 "mailpit readiness",
-                cancellationToken).ConfigureAwait(false);
-    }
-
-    private async Task WaitForEventStoreAsync(CancellationToken cancellationToken)
-    {
-        await WaitForConditionAsync(
-                async () =>
-                {
-                    try
-                    {
-                        using var response = await _eventStoreClient.GetAsync(
-                            $"{_eventStoreHttpBaseUrl}/health/live",
-                            cancellationToken).ConfigureAwait(false);
-                        return response.IsSuccessStatusCode;
-                    }
-                    catch
-                    {
-                        return false;
-                    }
-                },
-                TimeSpan.FromMinutes(1),
-                "eventstore readiness",
                 cancellationToken).ConfigureAwait(false);
     }
 
@@ -916,15 +875,5 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
         public string? Html { get; set; }
 
         public string? Text { get; set; }
-    }
-
-    private sealed class EventStoreStreamResponse
-    {
-        public List<EventStoreStreamEntry> Entries { get; set; } = [];
-    }
-
-    private sealed class EventStoreStreamEntry
-    {
-        public string? Summary { get; set; }
     }
 }

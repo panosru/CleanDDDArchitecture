@@ -1,6 +1,6 @@
 using Aviant.Application.Jobs;
 using Hangfire;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using CleanDDDArchitecture.Domains.Shared.Core;
 
 namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherService;
@@ -8,7 +8,7 @@ namespace CleanDDDArchitecture.Domains.Weather.Application.UseCases.SyncWeatherS
 internal sealed class SyncWeatherServiceJobOptions : IJobOptions;
 
 [Queue(JobQueue.Main)]
-internal class SyncWeatherServiceJob : IJob<SyncWeatherServiceJobOptions>
+internal class SyncWeatherServiceJob(ILogger<SyncWeatherServiceJob> logger) : IJob<SyncWeatherServiceJobOptions>
 {
     /// <inheritdoc />
     public async Task PerformAsync(SyncWeatherServiceJobOptions jobOptions)
@@ -16,6 +16,6 @@ internal class SyncWeatherServiceJob : IJob<SyncWeatherServiceJobOptions>
         await Task.Delay(TimeSpan.FromSeconds(10))
            .ConfigureAwait(false);
 
-        Log.Information("Weather service syncronised!!");
+        logger.LogInformation("Weather service synchronised");
     }
 }

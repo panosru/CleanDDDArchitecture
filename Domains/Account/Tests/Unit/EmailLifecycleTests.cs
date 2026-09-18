@@ -2,7 +2,6 @@ using Aviant.Application.Identity;
 using Aviant.Application.Jobs;
 using Aviant.Core.EventSourcing.Services;
 using Aviant.Core.Messages;
-using Aviant.Core.Services;
 using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangeEmail.Events;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangeEmailConfirm;
@@ -71,8 +70,7 @@ public sealed class EmailLifecycleTests
             PersonName.From("Test", "User"),
             ["member"],
             true);
-        InitialiseServiceLocator(new StubEventsService(aggregate));
-        var handler = new ChangeEmailConfirmCommand.ChangeEmailConfirmCommandHandler(identityService, new StubMessages());
+        var handler = new ChangeEmailConfirmCommand.ChangeEmailConfirmCommandHandler(new StubEventsService(aggregate), identityService, new StubMessages());
         const string protectedToken = "protected-email-change-token";
 
         var result = await handler.Handle(
@@ -97,9 +95,8 @@ public sealed class EmailLifecycleTests
             PersonName.From("Test", "User"),
             ["member"],
             true);
-        InitialiseServiceLocator(new StubEventsService(aggregate));
         var messages = new StubMessages();
-        var handler = new UpdateAccountCommand.UpdateAccountHandler(messages);
+        var handler = new UpdateAccountCommand.UpdateAccountHandler(new StubEventsService(aggregate), messages);
 
         var result = await handler.Handle(
             new UpdateAccountCommand(
@@ -289,31 +286,5 @@ public sealed class EmailLifecycleTests
         public void CleanMessages() => _messages.Clear();
     }
 
-    private sealed class StubServiceContainer : IServiceContainer
-    {
-        private readonly IServiceProvider _serviceProvider;
 
-        public StubServiceContainer(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
-
-        public object GetRequiredService(Type type) =>
-            _serviceProvider.GetRequiredService(type);
-
-        public T GetRequiredService<T>(Type type) =>
-            (T)_serviceProvider.GetRequiredService(type);
-
-        public object GetService(Type type) =>
-            _serviceProvider.GetService(type)!;
-
-        public T GetService<T>(Type type) =>
-            (T)_serviceProvider.GetService(type)!;
-    }
-
-    private static void InitialiseServiceLocator(IEventsService<AccountAggregate, AccountAggregateId> eventsService)
-    {
-        var services = new ServiceCollection();
-        services.AddSingleton(eventsService);
-        services.AddSingleton<IServiceContainer, StubServiceContainer>();
-        var serviceProvider = services.BuildServiceProvider();
-        ServiceLocator.Initialise(serviceProvider);
-    }
 }

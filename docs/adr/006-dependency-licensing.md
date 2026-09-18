@@ -13,6 +13,8 @@ Several libraries that .NET templates traditionally ship with have changed licen
 - **AutoMapper** 15 and later are dual-licensed RPL-1.5 / commercial. RPL-1.5 is reciprocal: using it without the commercial licence obliges you to publish your source.
 - **FluentAssertions** 8 is licensed for non-commercial use only.
 
+The event store is a server, not a library, and its licence works differently. **KurrentDB** (formerly EventStoreDB) is distributed under the Kurrent License v1: free to run, including in production and for commercial products, but it may not be offered to others as a hosted or managed service. Its .NET client, `KurrentDB.Client`, is Apache-2.0.
+
 Separately, the build suppressed NuGet vulnerability warnings (NU1901–NU1904), so advisories in transitive packages went unnoticed.
 
 ## Decision
@@ -20,6 +22,7 @@ Separately, the build suppressed NuGet vulnerability warnings (NU1901–NU1904),
 - **MediatR is pinned to 12.5.0**, the last Apache-2.0 release (it arrives through Aviant). The version must not float to 13+.
 - **No object mapper.** DTOs and view models map themselves: a static `From(entity)` for in-memory mapping, and an `Expression<Func<TEntity, TDto>> Projection` where EF Core should translate the mapping into SQL (`.Select(TodoListDto.Projection)`). If mapping grows large, use a source generator such as Mapperly (Apache-2.0), not a runtime mapper.
 - **AwesomeAssertions** (Apache-2.0, a continuation of the FluentAssertions API) replaces FluentAssertions.
+- **KurrentDB is used as a server you run yourself.** The template references only the Apache-2.0 client and the stock container image. A product that would sell event storage as a service must license KurrentDB commercially or replace it; nothing in the domain code depends on it beyond `IEventsRepository`.
 - **Vulnerable packages fail the build.** NU1902–NU1904 (moderate, high, critical) are errors and `NuGetAuditMode` is `all`, so transitive packages are audited. A vulnerable transitive package is fixed by pinning the patched version in `Directory.Packages.props` with a comment naming the advisory.
 
 ## Consequences

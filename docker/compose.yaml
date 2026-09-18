@@ -80,30 +80,25 @@ services:
       retries: 10
     networks: [eventing]
 
-  eventstore:
+  # KurrentDB (formerly EventStoreDB): clients connect over gRPC on 2113, which also serves the UI.
+  kurrentdb:
     profiles: ["eventing"]
-    image: eventstore/eventstore:21.10.11-buster-slim
-    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-eventstore
+    image: kurrentplatform/kurrentdb:26.1.2
+    container_name: ${SOLUTION_NAME:-cleandddarchitecture}-kurrentdb
     environment:
-      EVENTSTORE_CLUSTER_SIZE: 1
-      EVENTSTORE_RUN_PROJECTIONS: All
-      EVENTSTORE_START_STANDARD_PROJECTIONS: "true"
-      EVENTSTORE_INSECURE: "true"
-      EVENTSTORE_ENABLE_EXTERNAL_TCP: "true"
-      EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP: "true"
-      EVENTSTORE_EXT_TCP_PORT: 1113
-      EVENTSTORE_HTTP_PORT: 2113
+      KURRENTDB_CLUSTER_SIZE: 1
+      KURRENTDB_RUN_PROJECTIONS: None
+      KURRENTDB_INSECURE: "true"
     ports:
-      - "${EVENTSTORE_HTTP_PORT:-2113}:2113"
-      - "${EVENTSTORE_TCP_PORT:-1113}:1113"
+      - "${KURRENTDB_PORT:-2113}:2113"
     healthcheck:
-      test: ["CMD-SHELL", "wget --spider -q http://127.0.0.1:2113/health/live || exit 1"]
+      test: ["CMD-SHELL", "curl -fs http://127.0.0.1:2113/health/live || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 10
     volumes:
-      - eventstore-data:/var/lib/eventstore
-      - eventstore-logs:/var/log/eventstore
+      - kurrentdb-data:/var/lib/kurrentdb
+      - kurrentdb-logs:/var/log/kurrentdb
     networks: [eventing]
 
   loki:
@@ -201,7 +196,7 @@ services:
       UseInMemoryDatabase: "false"
       ConnectionStrings__PGSQLConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-cleandddarchitecture};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-postgres}
       ConnectionStrings__Hangfire: Host=postgres;Port=5432;Database=${POSTGRES_DB:-cleandddarchitecture};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-postgres}
-      ConnectionStrings__eventstore: tcp://admin:changeit@eventstore:1113
+      ConnectionStrings__kurrentdb: kurrentdb://admin:changeit@kurrentdb:2113?tls=false
       ConnectionStrings__kafka: kafka:9092
       EmailSettings__SmtpHost: mailpit
       EmailSettings__SmtpPort: 1025
@@ -316,7 +311,7 @@ services:
       DOTNET_ENVIRONMENT: Development
       DataProtection__KeysPath: /keys
       ConnectionStrings__PGSQLConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-cleandddarchitecture};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-postgres}
-      ConnectionStrings__eventstore: tcp://admin:changeit@eventstore:1113
+      ConnectionStrings__kurrentdb: kurrentdb://admin:changeit@kurrentdb:2113?tls=false
       ConnectionStrings__kafka: kafka:9092
       IntegrationEvents__Transport: Kafka
       EmailSettings__SmtpHost: mailpit
@@ -414,8 +409,8 @@ services:
 volumes:
   postgres-data:
   redis-data:
-  eventstore-data:
-  eventstore-logs:
+  kurrentdb-data:
+  kurrentdb-logs:
   grafana-data:
   pgadmin-data:
   restapi-dp:

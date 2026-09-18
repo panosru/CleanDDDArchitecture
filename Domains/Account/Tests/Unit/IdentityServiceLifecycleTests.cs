@@ -226,7 +226,8 @@ public sealed class IdentityServiceLifecycleTests
                 DataProtectionProvider.Create(dataProtectionDirectory),
                 new HttpContextAccessor { HttpContext = httpContext },
                 new StubHttpClientFactory(),
-                phoneSender),
+                phoneSender,
+                NullLogger<IdentityService>.Instance),
             dataProtectionDirectory);
     }
 

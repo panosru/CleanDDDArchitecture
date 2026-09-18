@@ -6,7 +6,7 @@ using Hangfire;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Options;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangeEmailRequest.Jobs;
 
@@ -24,6 +24,7 @@ internal sealed class SendChangeEmailConfirmationJobOptions : IJobOptions
 [Queue(JobQueue.Main)]
 internal sealed class SendChangeEmailConfirmationJob : IJob<SendChangeEmailConfirmationJobOptions>
 {
+    private readonly ILogger<SendChangeEmailConfirmationJob> _logger;
     private readonly AppSettings _appSettings;
     private readonly IEmailService _emailService;
     private readonly LinkGenerator _linkGenerator;
@@ -31,8 +32,10 @@ internal sealed class SendChangeEmailConfirmationJob : IJob<SendChangeEmailConfi
     public SendChangeEmailConfirmationJob(
         IOptions<AppSettings> appSettings,
         LinkGenerator linkGenerator,
-        IEmailService emailService)
+        IEmailService emailService,
+        ILogger<SendChangeEmailConfirmationJob> logger)
     {
+        _logger = logger;
         _appSettings = appSettings.Value;
         _linkGenerator = linkGenerator;
         _emailService = emailService;
@@ -62,8 +65,8 @@ internal sealed class SendChangeEmailConfirmationJob : IJob<SendChangeEmailConfi
             .ConfigureAwait(false);
 
         if (sent)
-            Log.Information("Email change confirmation sent to {Email}", jobOptions.NewEmail);
+            _logger.LogInformation("Email change confirmation sent to {Email}", jobOptions.NewEmail);
         else
-            Log.Error("Email change confirmation failed to {Email}", jobOptions.NewEmail);
+            _logger.LogError("Email change confirmation failed to {Email}", jobOptions.NewEmail);
     }
 }

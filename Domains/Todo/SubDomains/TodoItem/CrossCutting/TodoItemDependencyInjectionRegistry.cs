@@ -35,12 +35,6 @@ public static class TodoItemDependencyInjectionRegistry
         services.AddScoped<ITodoItemRepositoryRead, TodoItemRepositoryRead>();
         services.AddScoped<ITodoItemRepositoryWrite, TodoItemRepositoryWrite>();
 
-        services.AddScoped<TodoItemCreateUseCase>();
-        services.AddScoped<TodoItemDeleteUseCase>();
-        services.AddScoped<TodoItemGetByUseCase>();
-        services.AddScoped<TodoItemUpdateUseCase>();
-        services.AddScoped<TodoItemUpdatedetailsUseCase>();
-
         TodoDbContextWrite.AddConfigurationAssemblyFromEntity(new TodoItemConfiguration());
 
         return services;
