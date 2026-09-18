@@ -4,6 +4,7 @@ using Aviant.Core.Entities;
 using Aviant.Core.EventSourcing.Aggregates;
 using Aviant.Core.EventSourcing.DomainEvents;
 using CleanDDDArchitecture.Domains.Account.Core.Events;
+using CleanDDDArchitecture.Domains.Account.Core.ValueObjects;
 
 namespace CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 
@@ -57,33 +58,38 @@ public sealed class AccountAggregate
 
     #endregion
 
+    /// <summary>
+    ///     Opens an account. The email address doubles as the user name.
+    /// </summary>
     public static AccountAggregate Create(
         Guid                id,
-        string              username,
-        string              firstname,
-        string              lastname,
-        string              email,
+        EmailAddress        email,
+        PersonName          name,
         IEnumerable<string> roles,
         bool                emailConfirmed)
     {
+        ArgumentNullException.ThrowIfNull(email);
+        ArgumentNullException.ThrowIfNull(name);
+
         return new AccountAggregate(
             new AccountAggregateId(id),
-            username,
-            firstname,
-            lastname,
-            email,
+            email.Value,
+            name.First,
+            name.Last,
+            email.Value,
             roles,
             emailConfirmed);
     }
 
-    public void ChangeDetails(
-        string firstname,
-        string lastname,
-        string email)
+    public void Rename(PersonName name)
     {
-        FirstName = firstname;
-        LastName  = lastname;
-        Email     = email;
+        ArgumentNullException.ThrowIfNull(name);
+
+        if (FirstName == name.First && LastName == name.Last)
+            return;
+
+        FirstName = name.First;
+        LastName  = name.Last;
 
         AddEvent(new AccountUpdatedDomainEvent(this));
     }
@@ -98,13 +104,19 @@ public sealed class AccountAggregate
         AddEvent(new AccountEmailConfirmedDomainEvent(this));
     }
 
-    public void ChangeEmail(string email)
+    /// <summary>
+    ///     Switches to a new email address whose ownership has just been proven through the
+    ///     change-email confirmation link, so the new address is confirmed.
+    /// </summary>
+    public void ConfirmEmailChange(EmailAddress newEmail)
     {
-        if (string.Equals(Email, email, StringComparison.OrdinalIgnoreCase))
+        ArgumentNullException.ThrowIfNull(newEmail);
+
+        if (string.Equals(Email, newEmail.Value, StringComparison.OrdinalIgnoreCase))
             return;
 
-        UserName = email;
-        Email = email;
+        UserName       = newEmail.Value;
+        Email          = newEmail.Value;
         EmailConfirmed = true;
 
         AddEvent(new AccountEmailChangedDomainEvent(this));

@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.WebUtilities;
 using Xunit;
 using CleanDDDArchitecture.Domains.Account.Core.Events;
+using CleanDDDArchitecture.Domains.Account.Core.ValueObjects;
 
 namespace CleanDDDArchitecture.Domains.Account.Tests.Unit;
 
@@ -25,10 +26,8 @@ public sealed class AccountCreationFlowTests
     {
         var aggregate = AccountAggregate.Create(
             Guid.Parse("d63f0041-bc4c-4aad-aa50-9fa68735e8b7"),
-            "user@example.com",
-            "Test",
-            "User",
-            "user@example.com",
+            EmailAddress.From("user@example.com"),
+            PersonName.From("Test", "User"),
             ["member"],
             false);
 
@@ -49,10 +48,8 @@ public sealed class AccountCreationFlowTests
         var aggregateId = Guid.Parse("d63f0041-bc4c-4aad-aa50-9fa68735e8b7");
         var aggregate = AccountAggregate.Create(
             aggregateId,
-            "user@example.com",
-            "Test",
-            "User",
-            "user@example.com",
+            EmailAddress.From("user@example.com"),
+            PersonName.From("Test", "User"),
             ["member"],
             false);
         InitialiseServiceLocator(new StubEventsService(aggregate));
@@ -76,10 +73,8 @@ public sealed class AccountCreationFlowTests
     {
         var aggregate = AccountAggregate.Create(
             Guid.Parse("d63f0041-bc4c-4aad-aa50-9fa68735e8b7"),
-            "user@example.com",
-            "Test",
-            "User",
-            "user@example.com",
+            EmailAddress.From("user@example.com"),
+            PersonName.From("Test", "User"),
             ["member"],
             false);
         var initialEventCount = aggregate.Events.Count;
