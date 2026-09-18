@@ -21,8 +21,6 @@ public static class AppBuilderConfiguration
         IServiceProvider serviceProvider,
         IHostEnvironment environment)
     {
-        ServiceLocator.Initialise(serviceProvider);
-
         // One error pipeline for every environment: problem details, with the exception
         // message included only in Development.
         app.UseApiErrorHandling();

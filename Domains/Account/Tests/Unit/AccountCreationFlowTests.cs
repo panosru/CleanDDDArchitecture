@@ -3,7 +3,6 @@ using Aviant.Application.Identity;
 using Aviant.Application.Jobs;
 using Aviant.Core.Messages;
 using Aviant.Core.EventSourcing.Services;
-using Aviant.Core.Services;
 using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail.Events;
@@ -52,8 +51,7 @@ public sealed class AccountCreationFlowTests
             PersonName.From("Test", "User"),
             ["member"],
             false);
-        InitialiseServiceLocator(new StubEventsService(aggregate));
-        var handler = new ConfirmEmailCommand.ConfirmEmailCommandHandler(identityService, new StubMessages());
+        var handler = new ConfirmEmailCommand.ConfirmEmailCommandHandler(new StubEventsService(aggregate), identityService, new StubMessages());
         const string rawToken = "test-token/with+symbols=";
         var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(rawToken));
 
@@ -241,33 +239,7 @@ public sealed class AccountCreationFlowTests
         public void CleanMessages() => _messages.Clear();
     }
 
-    private sealed class StubServiceContainer : IServiceContainer
-    {
-        private readonly IServiceProvider _serviceProvider;
 
-        public StubServiceContainer(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
-
-        public object GetRequiredService(Type type) =>
-            _serviceProvider.GetRequiredService(type);
-
-        public T GetRequiredService<T>(Type type) =>
-            (T)_serviceProvider.GetRequiredService(type);
-
-        public object GetService(Type type) =>
-            _serviceProvider.GetService(type)!;
-
-        public T GetService<T>(Type type) =>
-            (T)_serviceProvider.GetService(type)!;
-    }
-
-    private static void InitialiseServiceLocator(IEventsService<AccountAggregate, AccountAggregateId> eventsService)
-    {
-        var services = new ServiceCollection();
-        services.AddSingleton(eventsService);
-        services.AddSingleton<IServiceContainer, StubServiceContainer>();
-        var serviceProvider = services.BuildServiceProvider();
-        ServiceLocator.Initialise(serviceProvider);
-    }
 
     private sealed class CapturingJobRunner : IJobRunner
     {

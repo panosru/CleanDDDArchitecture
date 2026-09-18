@@ -1,4 +1,6 @@
+using System.Reflection;
 using Aviant.Application.Extensions;
+using Aviant.Application.UseCases;
 using AwesomeAssertions;
 using CleanDDDArchitecture.Hosts.RestApi.Presentation.ServiceExtensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,5 +29,40 @@ public sealed class MediatorRegistrationTests
         var act = () => validator.StartAsync(TestContext.Current.CancellationToken);
 
         await act.Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public void EveryUseCaseTheApiReferencesIsRegisteredWithItsActivation()
+    {
+        var services = new ServiceCollection();
+        services.AddMediatorServices();
+
+        var unregistered = ReferencedAssemblies(typeof(Mediator).Assembly)
+           .SelectMany(assembly => assembly.GetTypes())
+           .Where(type => type is { IsClass: true, IsAbstract: false, ContainsGenericParameters: false }
+                       && typeof(IUseCaseActivation).IsAssignableFrom(type))
+           .Where(type => !services.Any(d => d.ServiceType == type && d.ImplementationFactory is not null))
+           .Select(type => type.FullName)
+           .ToList();
+
+        unregistered.Should().BeEmpty("a use case must be registered through AddAviantUseCases so it is activated with its scope");
+    }
+
+    private static IEnumerable<Assembly> ReferencedAssemblies(Assembly root)
+    {
+        var seen    = new HashSet<string>(StringComparer.Ordinal);
+        var pending = new Queue<Assembly>([root]);
+
+        while (pending.TryDequeue(out var assembly))
+        {
+            if (!seen.Add(assembly.GetName().Name!))
+                continue;
+
+            yield return assembly;
+
+            foreach (var reference in assembly.GetReferencedAssemblies()
+                        .Where(name => name.Name!.StartsWith("CleanDDDArchitecture.", StringComparison.Ordinal)))
+                pending.Enqueue(Assembly.Load(reference));
+        }
     }
 }

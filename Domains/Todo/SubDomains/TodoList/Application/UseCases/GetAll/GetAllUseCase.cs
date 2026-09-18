@@ -1,16 +1,14 @@
+using Microsoft.Extensions.DependencyInjection;
 using Aviant.Application.Orchestration;
 using Aviant.Application.UseCases;
 using Aviant.Application.Persistence.Orchestration;
-using Aviant.Core.Services;
 using CleanDDDArchitecture.Domains.Todo.Application.Persistence;
 
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll;
 
 public sealed class GetAllUseCase : UseCase<IGetAllOutput>
 {
-    private static IOrchestrator<ITodoDbContextWrite> TodoOrchestrator =>
-        ServiceLocator.ServiceContainer.GetRequiredService<IOrchestrator<ITodoDbContextWrite>>(
-            typeof(IOrchestrator<ITodoDbContextWrite>));
+    private IOrchestrator<ITodoDbContextWrite> TodoOrchestrator => Services.GetRequiredService<IOrchestrator<ITodoDbContextWrite>>();
 
     public override async Task ExecuteAsync(CancellationToken cancellationToken = default)
     {

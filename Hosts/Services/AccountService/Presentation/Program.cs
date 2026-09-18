@@ -47,7 +47,6 @@ Clock.Provider = ClockProviders.Utc;
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddSingleton<IServiceContainer, HttpContextServiceProviderProxy>();
 builder.Services.AddSingleton<Aviant.Application.Identity.ICurrentUserService, CurrentUser>();
 builder.Services.AddScoped<IMessages, Messages>();
 builder.Services.AddScoped<IApplicationEventDispatcher, ApplicationEventDispatcher>();
@@ -82,6 +81,7 @@ builder.Services.AddTransient<Aviant.Application.Email.IEmailService, EmailServi
 builder.Services.AddValidatorsFromAssemblies(AccountCrossCutting.ValidatorAssemblies().ToArray());
 
 builder.Services.AddAviantCqrs([typeof(Program).Assembly, .. AccountCrossCutting.MediatorAssemblies()]);
+builder.Services.AddAviantUseCases([typeof(Program).Assembly, .. AccountCrossCutting.MediatorAssemblies()]);
 
 builder.Services.AddSingleton<IJobRunner, JobRunner>();
 builder.Services.AddHangfire(configuration => configuration
@@ -125,8 +125,6 @@ using (var scope = app.Services.CreateScope())
 {
     await AccountCrossCutting.GenerateDefaultUserIfNotExistsAsync(scope.ServiceProvider).ConfigureAwait(false);
 }
-
-ServiceLocator.Initialise(app.Services);
 
 app.UseApiErrorHandling();
 app.MapOpenApi();

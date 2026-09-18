@@ -1,3 +1,4 @@
+using Aviant.Core.EventSourcing.Services;
 using System.Text;
 using Aviant.Application.Identity;
 using Aviant.Application.EventSourcing.Commands;
@@ -22,8 +23,10 @@ internal sealed record ConfirmEmailCommand(string Token, string Email) : Command
         private readonly IMessages _messages;
 
         public ConfirmEmailCommandHandler(
+            IEventsService<AccountAggregate, AccountAggregateId> eventsService,
             IIdentityService identityIdentityService,
             IMessages messages)
+            : base(eventsService)
         {
             _identityIdentityService = identityIdentityService;
             _messages = messages;

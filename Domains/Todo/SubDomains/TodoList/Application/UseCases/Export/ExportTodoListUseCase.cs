@@ -1,8 +1,8 @@
+using Microsoft.Extensions.DependencyInjection;
 using System.Text;
 using Aviant.Application.Orchestration;
 using Aviant.Application.UseCases;
 using Aviant.Application.Persistence.Orchestration;
-using Aviant.Core.Services;
 using CleanDDDArchitecture.Domains.Todo.Application.Persistence;
 
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Export;
@@ -10,9 +10,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseC
 public sealed class ExportTodoListUseCase
     : UseCase<ExportTodoListInput, IExportTodoListOutput>
 {
-    private static IOrchestrator<ITodoDbContextWrite> TodoOrchestrator =>
-        ServiceLocator.ServiceContainer.GetRequiredService<IOrchestrator<ITodoDbContextWrite>>(
-            typeof(IOrchestrator<ITodoDbContextWrite>));
+    private IOrchestrator<ITodoDbContextWrite> TodoOrchestrator => Services.GetRequiredService<IOrchestrator<ITodoDbContextWrite>>();
 
     public override async Task ExecuteAsync(
         ExportTodoListInput input,

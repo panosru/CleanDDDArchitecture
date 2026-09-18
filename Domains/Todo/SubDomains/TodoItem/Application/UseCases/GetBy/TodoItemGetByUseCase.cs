@@ -1,7 +1,7 @@
+using Microsoft.Extensions.DependencyInjection;
 using Aviant.Application.Orchestration;
 using Aviant.Application.UseCases;
 using Aviant.Application.Persistence.Orchestration;
-using Aviant.Core.Services;
 using CleanDDDArchitecture.Domains.Todo.Application.Persistence;
 
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.GetBy;
@@ -9,9 +9,7 @@ namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseC
 public sealed class TodoItemGetByUseCase
     : UseCase<TodoItemGetByInput, ITodoItemGetByOutput>
 {
-    private static IOrchestrator<ITodoDbContextWrite> TodoOrchestrator =>
-        ServiceLocator.ServiceContainer.GetRequiredService<IOrchestrator<ITodoDbContextWrite>>(
-            typeof(IOrchestrator<ITodoDbContextWrite>));
+    private IOrchestrator<ITodoDbContextWrite> TodoOrchestrator => Services.GetRequiredService<IOrchestrator<ITodoDbContextWrite>>();
 
     public override async Task ExecuteAsync(
         TodoItemGetByInput input,

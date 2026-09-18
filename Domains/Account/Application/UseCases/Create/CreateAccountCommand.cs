@@ -1,3 +1,4 @@
+using Aviant.Core.EventSourcing.Services;
 using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 using Aviant.Application.ApplicationEvents;
 using Aviant.Core.Messages;
@@ -38,8 +39,10 @@ public sealed record CreateAccountCommand(
         private readonly IMessages _messages;
 
         public CreateAccountHandler(
+            IEventsService<AccountAggregate, AccountAggregateId> eventsService,
             IIdentityService identityService,
             IMessages messages)
+            : base(eventsService)
         {
             _identityService = identityService;
             _messages = messages;

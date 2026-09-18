@@ -50,7 +50,6 @@ JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddSingleton<IServiceContainer, HttpContextServiceProviderProxy>();
 builder.Services.AddSingleton<ICurrentUserService, CurrentUser>();
 builder.Services.AddScoped<IMessages, Messages>();
 builder.Services.AddScoped<IApplicationEventDispatcher, ApplicationEventDispatcher>();
@@ -83,6 +82,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddValidatorsFromAssemblies(WeatherCrossCutting.ValidatorAssemblies().ToArray());
 
 builder.Services.AddAviantCqrs([typeof(Program).Assembly, .. WeatherCrossCutting.MediatorAssemblies()]);
+builder.Services.AddAviantUseCases([typeof(Program).Assembly, .. WeatherCrossCutting.MediatorAssemblies()]);
 
 builder.Services.AddSingleton<IJobRunner, JobRunner>();
 builder.Services.AddHangfire(configuration => configuration
@@ -126,8 +126,6 @@ builder.Services.AddControllers(options =>
     .AddApplicationPart(typeof(CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Presentation.ApiController).Assembly);
 
 var app = builder.Build();
-
-ServiceLocator.Initialise(app.Services);
 
 app.UseApiErrorHandling();
 app.MapOpenApi();

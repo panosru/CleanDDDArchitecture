@@ -36,12 +36,6 @@ public static class TodoListDependencyInjectionRegistry
         services.AddScoped<ITodoListRepositoryWrite, TodoListRepositoryWrite>();
         services.AddScoped<ITodoListOwnerCleanup, TodoListRepositoryWrite>();
 
-        services.AddScoped<GetAllUseCase>();
-        services.AddScoped<CreateTodoListUseCase>();
-        services.AddScoped<UpdateTodoListUseCase>();
-        services.AddScoped<DeleteTodoListUseCase>();
-        services.AddScoped<ExportTodoListUseCase>();
-
         TodoDbContextWrite.AddConfigurationAssemblyFromEntity(new TodoListConfiguration());
 
         return services;

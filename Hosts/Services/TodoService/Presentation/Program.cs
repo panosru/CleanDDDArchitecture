@@ -44,7 +44,6 @@ JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddSingleton<IServiceContainer, HttpContextServiceProviderProxy>();
 builder.Services.AddSingleton<ICurrentUserService, CurrentUser>();
 builder.Services.AddScoped<IMessages, Messages>();
 builder.Services.AddScoped<IApplicationEventDispatcher, ApplicationEventDispatcher>();
@@ -77,6 +76,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddValidatorsFromAssemblies(TodoCrossCutting.ValidatorAssemblies().ToArray());
 
 builder.Services.AddAviantCqrs([typeof(Program).Assembly, .. TodoCrossCutting.MediatorAssemblies()]);
+builder.Services.AddAviantUseCases([typeof(Program).Assembly, .. TodoCrossCutting.MediatorAssemblies()]);
 
 builder.Services.AddTodoDomain();
 builder.Services.AddFeatureManagement(DependencyInjectionRegistry.ConfigurationWithDomains);
@@ -109,8 +109,6 @@ using (var scope = app.Services.CreateScope())
 {
     await TodoCrossCutting.GenerateTodoMigrationsIfNewExistsAsync(scope.ServiceProvider).ConfigureAwait(false);
 }
-
-ServiceLocator.Initialise(app.Services);
 
 app.UseApiErrorHandling();
 app.MapOpenApi();

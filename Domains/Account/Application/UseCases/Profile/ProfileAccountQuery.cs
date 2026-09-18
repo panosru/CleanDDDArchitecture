@@ -1,6 +1,5 @@
 using Aviant.Application.Identity;
 using Aviant.Application.Queries;
-using Aviant.Core.Services;
 using CleanDDDArchitecture.Domains.Account.Application.Identity;
 using Microsoft.AspNetCore.Identity;
 
@@ -14,12 +13,13 @@ internal sealed record ProfileAccountQuery : Query<AccountUser>
     {
         private readonly UserManager<AccountUser> _accountUserManager;
 
-        public GetAccountQueryHandler(UserManager<AccountUser> accountUserManager) =>
-            _accountUserManager = accountUserManager;
+        private readonly ICurrentUserService CurrentUserService;
 
-        private static ICurrentUserService CurrentUserService =>
-            ServiceLocator.ServiceContainer.GetService<ICurrentUserService>(
-                typeof(ICurrentUserService));
+        public GetAccountQueryHandler(UserManager<AccountUser> accountUserManager, ICurrentUserService currentUserService)
+        {
+            _accountUserManager = accountUserManager;
+            CurrentUserService  = currentUserService;
+        }
 
         public override async Task<AccountUser> Handle(
             ProfileAccountQuery request,

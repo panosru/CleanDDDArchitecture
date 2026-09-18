@@ -1,3 +1,4 @@
+using Aviant.Core.EventSourcing.Services;
 using Aviant.Application.EventSourcing.Commands;
 using Aviant.Application.Identity;
 using Aviant.Core.Messages;
@@ -22,8 +23,10 @@ internal sealed record ChangeEmailConfirmCommand(string CurrentEmail, string New
         private readonly IMessages _messages;
 
         public ChangeEmailConfirmCommandHandler(
+            IEventsService<AccountAggregate, AccountAggregateId> eventsService,
             IIdentityService identityService,
             IMessages messages)
+            : base(eventsService)
         {
             _identityService = identityService;
             _messages = messages;

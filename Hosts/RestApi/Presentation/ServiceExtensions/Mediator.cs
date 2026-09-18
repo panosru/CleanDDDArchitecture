@@ -19,11 +19,15 @@ public static class Mediator
     /// </remarks>
     public static IServiceCollection AddMediatorServices(this IServiceCollection services)
     {
-        IEnumerable<Assembly> assemblies = new List<Assembly> { typeof(Program).Assembly }
+        List<Assembly> assemblies = new List<Assembly> { typeof(Program).Assembly }
            .Union(TodoCrossCutting.MediatorAssemblies())
            .Union(AccountCrossCutting.MediatorAssemblies())
-           .Union(WeatherCrossCutting.MediatorAssemblies());
+           .Union(WeatherCrossCutting.MediatorAssemblies())
+           .ToList();
 
-        return services.AddAviantCqrs(assemblies);
+        services.AddAviantCqrs(assemblies);
+
+        // Every use case in those assemblies, activated with the scope it runs in.
+        return services.AddAviantUseCases(assemblies);
     }
 }

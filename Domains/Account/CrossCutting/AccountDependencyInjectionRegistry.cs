@@ -229,12 +229,10 @@ public static class AccountDependencyInjectionRegistry
            .AddSingleton(typeof(IEventConsumer<,,>), typeof(EventConsumer<,,>))
            .AddKafkaEventProducer<AccountAggregate, AccountAggregateId>(eventsProducerConfig);
 
-
         services.AddSingleton<IEventStoreConnectionWrapper>(
                 _ => new EventStoreConnectionWrapper(
                     new Uri(Configuration.GetConnectionString("eventstore"))))
            .AddEventsRepository<AccountAggregate, AccountAggregateId>();
-
 
         services.AddEventsService<AccountAggregate, AccountAggregateId>();
 
@@ -251,54 +249,6 @@ public static class AccountDependencyInjectionRegistry
 
                     return new EventsConsumerWorker(factory);
                 });
-
-        services.AddScoped<AuthenticateUseCase>();
-        services.AddScoped<ExternalProvidersUseCase>();
-        services.AddScoped<ExternalBeginUseCase>();
-        services.AddScoped<ExternalCompleteUseCase>();
-        services.AddScoped<ExternalLoginsUseCase>();
-        services.AddScoped<ExternalUnlinkUseCase>();
-        services.AddScoped<DeactivateUseCase>();
-        services.AddScoped<AdminSuspendUseCase>();
-        services.AddScoped<AdminUnsuspendUseCase>();
-        services.AddScoped<AdminUnlockUseCase>();
-        services.AddScoped<AdminReactivateUseCase>();
-        services.AddScoped<AdminListAccountsUseCase>();
-        services.AddScoped<AdminGetRolesUseCase>();
-        services.AddScoped<AdminUpdateRolesUseCase>();
-        services.AddScoped<AdminGetClaimsUseCase>();
-        services.AddScoped<AdminUpdateClaimsUseCase>();
-        services.AddScoped<AdminSecurityEventsUseCase>();
-        services.AddScoped<AdminResendConfirmationUseCase>();
-        services.AddScoped<AdminForcePasswordResetUseCase>();
-        services.AddScoped<AdminRevokeAllSessionsUseCase>();
-        services.AddScoped<ForgotPasswordUseCase>();
-        services.AddScoped<ResetPasswordUseCase>();
-        services.AddScoped<ChangePasswordUseCase>();
-        services.AddScoped<MfaSetupUseCase>();
-        services.AddScoped<MfaVerifyUseCase>();
-        services.AddScoped<MfaDisableUseCase>();
-        services.AddScoped<MfaRecoveryCodesUseCase>();
-        services.AddScoped<ResendConfirmationUseCase>();
-        services.AddScoped<ChangeEmailRequestUseCase>();
-        services.AddScoped<ChangeEmailConfirmUseCase>();
-        services.AddScoped<ConfirmEmailUseCase>();
-        services.AddScoped<AccountCreateUseCase>();
-        services.AddScoped<RequestPhoneVerificationUseCase>();
-        services.AddScoped<VerifyPhoneVerificationUseCase>();
-        services.AddScoped<DeleteAccountRequestUseCase>();
-        services.AddScoped<DeleteAccountConfirmUseCase>();
-        services.AddScoped<RefreshTokenUseCase>();
-        services.AddScoped<LogoutUseCase>();
-        services.AddScoped<LogoutAllUseCase>();
-        services.AddScoped<ListSessionsUseCase>();
-        services.AddScoped<RevokeSessionUseCase>();
-        services.AddScoped<ListTrustedDevicesUseCase>();
-        services.AddScoped<RevokeTrustedDeviceUseCase>();
-        services.AddScoped<SecurityEventsUseCase>();
-        services.AddScoped<UpdateDetailsUseCase>();
-        services.AddScoped<GetAccountUseCase>();
-        services.AddScoped<ProfileAccountUseCase>();
 
         services.AddScoped<
             Aviant.Application.Orchestration.IOrchestrator,
