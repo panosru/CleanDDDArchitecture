@@ -86,6 +86,16 @@ docker compose --profile core --profile eventing --profile microservices up -d -
 
 Each host also runs on its own: `dotnet run --project Hosts/RestApi/Presentation`.
 
+### As a `dotnet new` template
+
+```bash
+dotnet pack template/CleanDDDArchitecture.Templates.csproj -o artifacts/template
+dotnet new install artifacts/template/CleanDDDArchitecture.Templates.*.nupkg
+dotnet new cleanddd -n Acme.Shop
+```
+
+Every namespace, project and file named `CleanDDDArchitecture` becomes `Acme.Shop`. The Aviant sources come along in `Library/Aviant`.
+
 ## Tests
 
 | Kind | Where | Needs |

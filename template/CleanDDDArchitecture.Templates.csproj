@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Packs the repository as a `dotnet new` template:
+
+      dotnet pack template/CleanDDDArchitecture.Templates.csproj -o artifacts/template
+      dotnet new install artifacts/template/CleanDDDArchitecture.Templates.<version>.nupkg
+      dotnet new cleanddd -n Acme.Shop
+
+    The template definition is .template.config/template.json at the repository root.
+  -->
+  <PropertyGroup>
+    <PackageType>Template</PackageType>
+    <PackageId>CleanDDDArchitecture.Templates</PackageId>
+    <Version>1.0.0-preview.1</Version>
+    <Title>Clean DDD Architecture template</Title>
+    <Authors>Panagiotis Kosmidis</Authors>
+    <Description>dotnet new template: bounded contexts, CQRS, event sourcing, a transactional outbox, architecture tests and an Aspire AppHost for monolith or microservices, on .NET 10.</Description>
+    <PackageTags>dotnet-new;templates;ddd;cqrs;event-sourcing;clean-architecture;aspire</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/panosru/CleanDDDArchitecture</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <TargetFramework>net10.0</TargetFramework>
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+    <NoWarn>$(NoWarn);NU5128;NU5110;NU5111</NoWarn>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <!-- Not a real project: no restore/audit of the solution it packs. -->
+    <NuGetAudit>false</NuGetAudit>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <RepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/..'))/</RepoRoot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <!--
+    The template content is exactly what git tracks, submodules included. Untracked local files
+    (build output, IDE settings, local notes, Data Protection keys) can never end up in the package.
+  -->
+  <Target Name="AddTrackedFilesAsTemplateContent" BeforeTargets="_GetPackageFiles">
+    <Exec Command="git ls-files --recurse-submodules" WorkingDirectory="$(RepoRoot)"
+          ConsoleToMSBuild="true" StandardOutputImportance="low">
+      <Output TaskParameter="ConsoleOutput" ItemName="_TrackedFile" />
+    </Exec>
+
+    <ItemGroup>
+      <_TrackedFile Remove="template/**;CONTRIBUTORS.md;CHANGELOG.md;.gitmodules;.github/workflows/contributors.yml" />
+      <_TemplateFile Include="@(_TrackedFile)" SourceFile="$(RepoRoot)%(Identity)" />
+      <Content Include="%(_TemplateFile.SourceFile)" Pack="true" PackagePath="content/%(_TemplateFile.Identity)" />
+    </ItemGroup>
+  </Target>
+
+</Project>
