@@ -1,51 +1,105 @@
+// Local orchestration with .NET Aspire.
+//
+//   dotnet run --project Hosts/AppHost                          # monolith (default)
+//   dotnet run --project Hosts/AppHost -- --mode microservices  # one service per domain + gateway
+//
+// Both modes run the same domain code; only the hosts differ. Every service receives its
+// settings under the names it already reads (ConnectionStrings:PGSQLConnection, :kafka,
+// :eventstore, EmailSettings:*), so nothing in the services knows about Aspire beyond
+// AddServiceDefaults(), which sends traces, metrics and logs to the Aspire dashboard.
+
 var builder = DistributedApplication.CreateBuilder(args);
+
+var microservices = string.Equals(builder.Configuration["mode"], "microservices", StringComparison.OrdinalIgnoreCase);
 
 // ── Infrastructure ───────────────────────────────────────────────────────────
 
 var postgres = builder.AddPostgres("postgres")
-    .WithEnvironment("POSTGRES_DB", "cleandddarchitecture")
-    .WithDataVolume("postgres-data");
+    .WithDataVolume("cleanddd-postgres-data");
 
-var accountDb  = postgres.AddDatabase("account-db",  "cleandddarchitecture_account");
-var todoDb     = postgres.AddDatabase("todo-db",     "cleandddarchitecture_todo");
-var weatherDb  = postgres.AddDatabase("weather-db",  "cleandddarchitecture_weather");
-var monolithDb = postgres.AddDatabase("monolith-db", "cleandddarchitecture");
+var kafka = builder.AddKafka("kafka");
 
-var redis = builder.AddRedis("redis")
-    .WithDataVolume("redis-data");
+// EventStoreDB 21.10 over TCP, the protocol the current event store client speaks.
+var eventStore = builder.AddContainer("eventstore", "eventstore/eventstore", "21.10.11-buster-slim")
+    .WithEnvironment("EVENTSTORE_CLUSTER_SIZE", "1")
+    .WithEnvironment("EVENTSTORE_RUN_PROJECTIONS", "All")
+    .WithEnvironment("EVENTSTORE_START_STANDARD_PROJECTIONS", "true")
+    .WithEnvironment("EVENTSTORE_INSECURE", "true")
+    .WithEnvironment("EVENTSTORE_ENABLE_EXTERNAL_TCP", "true")
+    .WithEnvironment("EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP", "true")
+    .WithEndpoint(targetPort: 1113, name: "tcp", scheme: "tcp")
+    .WithHttpEndpoint(targetPort: 2113, name: "http");
+
+var eventStoreConnection = ReferenceExpression.Create(
+    $"tcp://admin:changeit@{eventStore.GetEndpoint("tcp").Property(EndpointProperty.HostAndPort)}");
 
 var mailpit = builder.AddContainer("mailpit", "axllent/mailpit")
-    .WithHttpEndpoint(port: 8025, targetPort: 8025, name: "ui")
-    .WithEndpoint(port: 1025, targetPort: 1025, name: "smtp");
+    .WithHttpEndpoint(targetPort: 8025, name: "ui")
+    .WithEndpoint(targetPort: 1025, name: "smtp", scheme: "tcp");
 
-// ── Microservices mode ───────────────────────────────────────────────────────
+var smtp = mailpit.GetEndpoint("smtp");
 
-builder.AddProject<Projects.CleanDDDArchitecture_Hosts_Services_AccountService_Presentation>("account-service")
-    .WithReference(accountDb)
-    .WithReference(redis)
-    .WithReference(mailpit.GetEndpoint("smtp"))
-    .WaitFor(postgres)
-    .WaitFor(redis);
+if (microservices)
+{
+    // ── Microservices: one host per domain behind the YARP gateway ──────────
+    // These hosts have no launch profile, so their HTTP endpoints are declared here.
 
-builder.AddProject<Projects.CleanDDDArchitecture_Hosts_Services_TodoService_Presentation>("todo-service")
-    .WithReference(todoDb)
-    .WithReference(redis)
-    .WaitFor(postgres)
-    .WaitFor(redis);
+    var account = builder.AddProject<Projects.CleanDDDArchitecture_Hosts_Services_AccountService_Presentation>("account-service")
+        .WithHttpEndpoint()
+        .WithTokenIssuance()
+        .WithReference(postgres.AddDatabase("account-db", "cleanddd_account"), "PGSQLConnection")
+        .WithReference(kafka, "kafka")
+        .WithEnvironment("ConnectionStrings__eventstore", eventStoreConnection)
+        .WithEnvironment("EmailSettings__SmtpHost", smtp.Property(EndpointProperty.Host))
+        .WithEnvironment("EmailSettings__SmtpPort", smtp.Property(EndpointProperty.Port))
+        .WaitFor(postgres)
+        .WaitFor(kafka)
+        .WaitFor(eventStore);
 
-builder.AddProject<Projects.CleanDDDArchitecture_Hosts_Services_WeatherService_Presentation>("weather-service")
-    .WithReference(weatherDb)
-    .WithReference(redis)
-    .WaitFor(postgres)
-    .WaitFor(redis);
+    var todo = builder.AddProject<Projects.CleanDDDArchitecture_Hosts_Services_TodoService_Presentation>("todo-service")
+        .WithHttpEndpoint()
+        .WithTokenValidation()
+        .WithReference(postgres.AddDatabase("todo-db", "cleanddd_todo"), "PGSQLConnection")
+        .WaitFor(postgres);
 
-// ── Monolith mode ────────────────────────────────────────────────────────────
+    var weather = builder.AddProject<Projects.CleanDDDArchitecture_Hosts_Services_WeatherService_Presentation>("weather-service")
+        .WithHttpEndpoint()
+        .WithTokenValidation()
+        .WithReference(postgres.AddDatabase("weather-db", "cleanddd_weather"), "PGSQLConnection")
+        .WaitFor(postgres);
 
-builder.AddProject<Projects.CleanDDDArchitecture_Hosts_RestApi_Presentation>("restapi")
-    .WithReference(monolithDb)
-    .WithReference(redis)
-    .WithReference(mailpit.GetEndpoint("smtp"))
-    .WaitFor(postgres)
-    .WaitFor(redis);
+    builder.AddProject<Projects.CleanDDDArchitecture_Hosts_Gateway_Presentation>("gateway")
+        .WithHttpEndpoint()
+        .WithEnvironment("ReverseProxy__Clusters__account__Destinations__primary__Address", account.GetEndpoint("http"))
+        .WithEnvironment("ReverseProxy__Clusters__todo__Destinations__primary__Address", todo.GetEndpoint("http"))
+        .WithEnvironment("ReverseProxy__Clusters__weather__Destinations__primary__Address", weather.GetEndpoint("http"))
+        .WithExternalHttpEndpoints()
+        .WaitFor(account)
+        .WaitFor(todo)
+        .WaitFor(weather);
+}
+else
+{
+    // ── Monolith: every domain in one API, plus the background job worker ──
+
+    var database = postgres.AddDatabase("monolith-db", "cleanddd");
+
+    var api = builder.AddProject<Projects.CleanDDDArchitecture_Hosts_RestApi_Presentation>("restapi")
+        .WithTokenIssuance()
+        .WithReference(database, "PGSQLConnection")
+        .WithReference(kafka, "kafka")
+        .WithEnvironment("ConnectionStrings__eventstore", eventStoreConnection)
+        .WithEnvironment("EmailSettings__SmtpHost", smtp.Property(EndpointProperty.Host))
+        .WithEnvironment("EmailSettings__SmtpPort", smtp.Property(EndpointProperty.Port))
+        .WithExternalHttpEndpoints()
+        .WaitFor(postgres)
+        .WaitFor(kafka)
+        .WaitFor(eventStore);
+
+    // Hangfire: the API enqueues jobs, the worker runs them, both against the same database.
+    builder.AddProject<Projects.CleanDDDArchitecture_Hosts_Worker>("worker")
+        .WithReference(database, "PGSQLConnection")
+        .WaitFor(api);
+}
 
 await builder.Build().RunAsync().ConfigureAwait(false);

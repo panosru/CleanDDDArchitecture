@@ -14,12 +14,9 @@
     <PackageVersion Include="BouncyCastle.Cryptography" Version="2.7.0" />
 
     <!-- Messaging / Eventing -->
-    <PackageVersion Include="Confluent.Kafka" Version="2.12.0" />
+    <PackageVersion Include="Confluent.Kafka" Version="2.15.1" />
 
     <!-- Caching -->
-    <PackageVersion Include="EasyCaching.Core" Version="1.9.2" />
-    <PackageVersion Include="EasyCaching.InMemory" Version="1.9.2" />
-    <PackageVersion Include="EasyCaching.Redis" Version="1.9.2" />
     <PackageVersion Include="StackExchange.Redis" Version="2.13.17" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.12" />
 
@@ -92,7 +89,7 @@
     <!-- .NET Aspire -->
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.5.4" />
     <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.5.4" />
-    <PackageVersion Include="Aspire.Hosting.Redis" Version="13.5.4" />
+    <PackageVersion Include="Aspire.Hosting.Kafka" Version="13.5.4" />
 
     <!-- Testing -->
     <PackageVersion Include="AwesomeAssertions" Version="9.6.0" />
