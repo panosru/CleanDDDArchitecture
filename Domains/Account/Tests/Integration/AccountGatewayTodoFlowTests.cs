@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Globalization;
 using CleanDDDArchitecture.Domains.Account.Tests.Integration.Infrastructure;
-using FluentAssertions;
+using AwesomeAssertions;
 using Xunit;
 
 namespace CleanDDDArchitecture.Domains.Account.Tests.Integration;

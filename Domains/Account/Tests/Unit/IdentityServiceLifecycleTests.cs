@@ -5,7 +5,7 @@ using CleanDDDArchitecture.Domains.Account.Application.Notifications;
 using CleanDDDArchitecture.Domains.Account.Infrastructure;
 using CleanDDDArchitecture.Domains.Account.Infrastructure.Identity;
 using CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contexts;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

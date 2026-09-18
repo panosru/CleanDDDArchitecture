@@ -6,7 +6,7 @@ using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Infrastructure.Repos
 using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
 using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll;
 using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Infrastructure.Repositories;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Aviant.Application.Exceptions;

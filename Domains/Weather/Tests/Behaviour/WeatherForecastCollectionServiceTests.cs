@@ -1,5 +1,5 @@
 using CleanDDDArchitecture.Domains.Weather.Application.Services;
-using FluentAssertions;
+using AwesomeAssertions;
 using Xunit;
 
 namespace CleanDDDArchitecture.Domains.Weather.Tests.Behaviour;

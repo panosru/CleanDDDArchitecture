@@ -80,7 +80,7 @@
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.2.0" />
 
     <!-- Testing -->
-    <PackageVersion Include="FluentAssertions" Version="8.8.0" />
+    <PackageVersion Include="AwesomeAssertions" Version="9.6.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageVersion Include="Microsoft.Playwright" Version="1.58.0" />
     <PackageVersion Include="Testcontainers" Version="4.10.0" />

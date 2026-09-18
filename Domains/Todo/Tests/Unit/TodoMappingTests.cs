@@ -3,7 +3,7 @@ using CleanDDDArchitecture.Domains.Todo.Core.Entities;
 using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
 using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Export;
 using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll.Dtos;
-using FluentAssertions;
+using AwesomeAssertions;
 using Xunit;
 using CreatedTodoItemViewModel = CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Create.TodoItemViewModel;
 using UpdatedTodoItemViewModel = CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update.TodoItemViewModel;

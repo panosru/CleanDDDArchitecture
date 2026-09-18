@@ -4,7 +4,7 @@ using CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangePassword;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ForgotPassword.Events;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ForgotPassword.Jobs;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ResetPassword;
-using FluentAssertions;
+using AwesomeAssertions;
 using Hangfire.States;
 using Xunit;
 

@@ -6,7 +6,7 @@ using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminSecurityEve
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminUpdateClaims;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminUpdateRoles;
 using CleanDDDArchitecture.Domains.Account.Core.Identity.Dto;
-using FluentAssertions;
+using AwesomeAssertions;
 using Xunit;
 
 namespace CleanDDDArchitecture.Domains.Account.Tests.Unit;

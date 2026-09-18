@@ -5,7 +5,7 @@ using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminListAccount
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminResendConfirmation;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminRevokeAllSessions;
 using CleanDDDArchitecture.Domains.Account.Core.Identity.Dto;
-using FluentAssertions;
+using AwesomeAssertions;
 using Xunit;
 
 namespace CleanDDDArchitecture.Domains.Account.Tests.Unit;
