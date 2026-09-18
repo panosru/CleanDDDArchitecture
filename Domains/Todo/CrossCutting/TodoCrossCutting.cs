@@ -1,6 +1,4 @@
 using System.Reflection;
-using AutoMapper;
-using Aviant.Application.Mappings;
 using CleanDDDArchitecture.Domains.Todo.Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -17,12 +15,6 @@ public static class TodoCrossCutting
     private static readonly Assembly TodoItemApplicationAssembly = typeof(TodoItemCreateUseCase).Assembly;
 
     private static readonly Assembly TodoListApplicationAssembly = typeof(CreateTodoListUseCase).Assembly;
-
-    public static IEnumerable<Profile> AutoMapperProfiles() => new List<Profile>
-    {
-        new MappingProfile(TodoItemApplicationAssembly),
-        new MappingProfile(TodoListApplicationAssembly)
-    };
 
     public static IEnumerable<Assembly> ValidatorAssemblies() => new List<Assembly>
     {

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Aviant.Application.ApplicationEvents;
+﻿using Aviant.Application.ApplicationEvents;
 using Aviant.Application.Commands;
 using Aviant.Application.Exceptions;
 using Aviant.Application.Processors;
@@ -25,20 +24,16 @@ internal sealed record UpdateTodoItemCommand(
     internal sealed class UpdateTodoItemCommandHandler
         : CommandHandler<UpdateTodoItemCommand, TodoItemViewModel>
     {
-        private readonly IMapper _mapper;
-
         private readonly ITodoItemRepositoryRead _todoItemReadRepository;
 
         private readonly ITodoItemRepositoryWrite _todoItemWriteRepository;
 
         public UpdateTodoItemCommandHandler(
             ITodoItemRepositoryRead  todoItemReadRepository,
-            ITodoItemRepositoryWrite todoItemWriteRepository,
-            IMapper                  mapper)
+            ITodoItemRepositoryWrite todoItemWriteRepository)
         {
             _todoItemReadRepository  = todoItemReadRepository;
             _todoItemWriteRepository = todoItemWriteRepository;
-            _mapper                  = mapper;
         }
 
         public override async Task<TodoItemViewModel> Handle(
@@ -57,7 +52,7 @@ internal sealed record UpdateTodoItemCommand(
             await _todoItemWriteRepository.UpdateAsync(entity, cancellationToken)
                .ConfigureAwait(false);
 
-            return _mapper.Map<TodoItemViewModel>(entity);
+            return TodoItemViewModel.From(entity);
         }
     }
 

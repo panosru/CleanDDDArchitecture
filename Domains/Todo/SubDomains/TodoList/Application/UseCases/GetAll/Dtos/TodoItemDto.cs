@@ -2,11 +2,10 @@
 
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll.Dtos;
 
-using AutoMapper;
-using Aviant.Application.Mappings;
+using System.Linq.Expressions;
 using Todo.Core.Entities;
 
-public sealed class TodoItemDto : IMapFrom<TodoItemEntity>
+public sealed class TodoItemDto
 {
     public int Id { get; set; }
 
@@ -20,17 +19,16 @@ public sealed class TodoItemDto : IMapFrom<TodoItemEntity>
 
     public string Note { get; set; }
 
-    #region IMapFrom<TodoItemEntity> Members
-
-    public void Mapping(Profile profile)
+    /// <summary>
+    ///     Translated to SQL by EF Core when used inside a query projection.
+    /// </summary>
+    public static readonly Expression<Func<TodoItemEntity, TodoItemDto>> Projection = item => new TodoItemDto
     {
-        profile.CreateMap<TodoItemEntity, TodoItemDto>()
-           .ForMember(
-                d =>
-                    d.Priority,
-                opt =>
-                    opt.MapFrom(s => (int)s.Priority));
-    }
-
-    #endregion
+        Id       = item.Id,
+        ListId   = item.ListId,
+        Title    = item.Title,
+        Done     = item.IsCompleted,
+        Priority = (int)item.Priority,
+        Note     = item.Note!
+    };
 }

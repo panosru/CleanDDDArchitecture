@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Aviant.Application.ApplicationEvents;
+﻿using Aviant.Application.ApplicationEvents;
 using Aviant.Application.Commands;
 using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Core.Repositories;
 using CleanDDDArchitecture.Domains.Todo.Core.Entities;
@@ -21,18 +20,14 @@ internal sealed record CreateTodoListCommand(string Title) : Command<Lazy<Create
     {
         private readonly IApplicationEventDispatcher _applicationEventDispatcher;
 
-        private readonly IMapper _mapper;
-
         private readonly ITodoListRepositoryWrite _todoListWriteRepository;
 
         public CreateTodoListCommandHandler(
             ITodoListRepositoryWrite    todoListWriteRepository,
-            IApplicationEventDispatcher applicationEventDispatcher,
-            IMapper                     mapper)
+            IApplicationEventDispatcher applicationEventDispatcher)
         {
             _todoListWriteRepository    = todoListWriteRepository;
             _applicationEventDispatcher = applicationEventDispatcher;
-            _mapper                     = mapper;
         }
 
         public override async Task<Lazy<CreatedTodoListViewModel>> Handle(
@@ -51,7 +46,7 @@ internal sealed record CreateTodoListCommand(string Title) : Command<Lazy<Create
             // _applicationEventDispatcher.AddPostCommitEvent(
             //     new CreatedTodoListApplicationEvent(entity.Title));
 
-            return new Lazy<CreatedTodoListViewModel>(() => _mapper.Map<CreatedTodoListViewModel>(entity));
+            return new Lazy<CreatedTodoListViewModel>(() => CreatedTodoListViewModel.From(entity));
         }
     }
 

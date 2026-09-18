@@ -30,7 +30,6 @@ public static class ServiceConfiguration
         services.Configure<AppSettings>(appSettings);
 
         services.AddEmailService(configuration);
-        services.AddAutoMapperServices();
         services.AddValidatorServices();
         services.AddDataProtectionServices();
         services.AddMediatorServices();

@@ -10,11 +10,8 @@
     <PackageVersion Include="NetEscapades.Configuration.Yaml" Version="3.1.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
 
-    <!-- AutoMapper -->
-    <PackageVersion Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-
     <!-- Cryptography -->
-    <PackageVersion Include="BouncyCastle.Cryptography" Version="2.6.2" />
+    <PackageVersion Include="BouncyCastle.Cryptography" Version="2.7.0" />
 
     <!-- Messaging / Eventing -->
     <PackageVersion Include="Confluent.Kafka" Version="2.12.0" />
@@ -35,8 +32,8 @@
     <PackageVersion Include="Lamar" Version="13.0.2" />
 
     <!-- Email -->
-    <PackageVersion Include="MailKit" Version="4.15.1" />
-    <PackageVersion Include="MimeKit" Version="4.15.1" />
+    <PackageVersion Include="MailKit" Version="4.18.0" />
+    <PackageVersion Include="MimeKit" Version="4.18.0" />
 
     <!-- ASP.NET Core / Authentication -->
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.3" />

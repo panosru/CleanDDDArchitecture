@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Aviant.Application.Queries;
+﻿using Aviant.Application.Queries;
 using Aviant.Core.Configuration;
 using CleanDDDArchitecture.Domains.Todo.Application.Persistence;
 using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll.Dtos;
@@ -16,13 +14,7 @@ internal sealed record GetTodosQuery : Query<TodosVm>
     {
         private readonly ITodoDbContextRead _context;
 
-        private readonly IMapper _mapper;
-
-        public GetTodosQueryHandler(ITodoDbContextRead context, IMapper mapper)
-        {
-            _context = context;
-            _mapper  = mapper;
-        }
+        public GetTodosQueryHandler(ITodoDbContextRead context) => _context = context;
 
         public override async Task<TodosVm> Handle(GetTodosQuery request, CancellationToken cancellationToken)
         {
@@ -33,7 +25,7 @@ internal sealed record GetTodosQuery : Query<TodosVm>
                    .ToList(),
 
                 Lists = await _context.TodoLists
-                   .ProjectTo<TodoListDto>(_mapper.ConfigurationProvider)
+                   .Select(TodoListDto.Projection)
                    .OrderBy(t => t.Title)
                    .ToListAsync(cancellationToken)
                    .ConfigureAwait(false)

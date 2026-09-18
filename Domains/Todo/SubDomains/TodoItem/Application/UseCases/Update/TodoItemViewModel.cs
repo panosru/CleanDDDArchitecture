@@ -1,12 +1,10 @@
-﻿using AutoMapper;
-using Aviant.Application.Mappings;
 using CleanDDDArchitecture.Domains.Todo.Core.Entities;
 
 #pragma warning disable 8618
 
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update;
 
-public sealed class TodoItemViewModel : IMapFrom<TodoItemEntity>
+public sealed class TodoItemViewModel
 {
     public int Id { get; set; }
 
@@ -16,12 +14,11 @@ public sealed class TodoItemViewModel : IMapFrom<TodoItemEntity>
 
     public bool IsCompleted { get; set; }
 
-    #region IMapFrom<TodoItemEntity> Members
-
-    public void Mapping(Profile profile)
+    public static TodoItemViewModel From(TodoItemEntity entity) => new()
     {
-        profile.CreateMap<TodoItemEntity, TodoItemViewModel>();
-    }
-
-    #endregion
+        Id          = entity.Id,
+        ListId      = entity.ListId,
+        Title       = entity.Title,
+        IsCompleted = entity.IsCompleted
+    };
 }
