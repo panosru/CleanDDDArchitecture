@@ -1,5 +1,6 @@
-using CleanDDDArchitecture.Domains.Todo.Core.Entities;
+using Aviant.Core.Exceptions;
 using AwesomeAssertions;
+using CleanDDDArchitecture.Domains.Todo.Core.Entities;
 using Xunit;
 
 namespace CleanDDDArchitecture.Domains.Todo.Tests.Unit;
@@ -7,22 +8,31 @@ namespace CleanDDDArchitecture.Domains.Todo.Tests.Unit;
 public sealed class TodoListEntityTests
 {
     [Fact]
-    public async Task ValidateAsyncShouldRejectShortTitles()
+    public void CreateTrimsTheTitle() =>
+        TodoListEntity.Create("  Groceries ").Title.Should().Be("Groceries");
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void CreateRefusesABlankTitle(string title)
     {
-        var entity = TodoListEntity.Create("Tiny");
+        var act = () => TodoListEntity.Create(title);
 
-        var isValid = await entity.ValidateAsync(TestContext.Current.CancellationToken);
-
-        isValid.Should().BeFalse();
+        act.Should().Throw<DomainRuleException>();
     }
 
     [Fact]
-    public async Task ValidateAsyncShouldAcceptTitlesLongerThanFiveCharacters()
+    public void RenameRefusesATitleLongerThanTheLimit()
     {
-        var entity = TodoListEntity.Create("Groceries");
+        var list = TodoListEntity.Create("Groceries");
 
-        var isValid = await entity.ValidateAsync(TestContext.Current.CancellationToken);
+        var act = () => list.Rename(new string('x', TodoListEntity.TitleMaxLength + 1));
 
-        isValid.Should().BeTrue();
+        act.Should().Throw<DomainRuleException>();
+        list.Title.Should().Be("Groceries");
     }
+
+    [Fact]
+    public async Task AListThatObeysItsRulesIsValidForPersistence() =>
+        (await TodoListEntity.Create("Tiny").ValidateAsync(TestContext.Current.CancellationToken)).Should().BeTrue();
 }

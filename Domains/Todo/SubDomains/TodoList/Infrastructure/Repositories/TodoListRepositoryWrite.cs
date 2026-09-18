@@ -11,10 +11,9 @@ public sealed class TodoListRepositoryWrite
       ITodoListRepositoryWrite,
       ITodoListOwnerCleanup
 {
-    private readonly TodoDbContextWrite _context;
-
     public TodoListRepositoryWrite(TodoDbContextWrite context)
-        : base(context) => _context = context;
+        : base(context)
+    { }
 
     public async Task<int> SoftDeleteOwnedByAsync(
         Guid              ownerId,
@@ -23,18 +22,18 @@ public sealed class TodoListRepositoryWrite
     {
         // Set-based updates: no entities are loaded, and nothing goes through SaveChanges, whose
         // auditing needs a current HTTP user that a background event handler does not have.
-        IQueryable<int> ownedLists = _context.TodoLists
+        IQueryable<int> ownedLists = DbContext.TodoLists
            .Where(list => list.CreatedBy == ownerId && !list.IsDeleted)
            .Select(list => list.Id);
 
-        await _context.TodoItems
+        await DbContext.TodoItems
            .Where(item => ownedLists.Contains(item.ListId) && !item.IsDeleted)
            .ExecuteUpdateAsync(
                 set => set.SetProperty(item => item.IsDeleted, true).SetProperty(item => item.Deleted, deletedAtUtc),
                 cancellationToken)
            .ConfigureAwait(false);
 
-        return await _context.TodoLists
+        return await DbContext.TodoLists
            .Where(list => list.CreatedBy == ownerId && !list.IsDeleted)
            .ExecuteUpdateAsync(
                 set => set.SetProperty(list => list.IsDeleted, true).SetProperty(list => list.Deleted, deletedAtUtc),
