@@ -1,3 +1,4 @@
+using CleanDDDArchitecture.Domains.Shared.Infrastructure.IntegrationEvents;
 using CleanDDDArchitecture.Hosts.ServiceDefaults.Core;
 using System.Globalization;
 using System.Text;
@@ -93,6 +94,7 @@ builder.Services.AddApiVersioning(options =>
     });
 builder.Services.AddOpenApi();
 builder.Services.AddApiErrorHandling();
+builder.Services.AddIntegrationEvents(builder.Configuration);
 builder.Services.AddControllers(options =>
     {
         options.Filters.Add(new AuthorizeFilter());

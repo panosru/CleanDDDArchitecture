@@ -3,7 +3,8 @@
 //   dotnet run --project Hosts/AppHost                          # monolith (default)
 //   dotnet run --project Hosts/AppHost -- --mode microservices  # one service per domain + gateway
 //
-// Both modes run the same domain code; only the hosts differ. Every service receives its
+// Both modes run the same domain code; only the hosts differ. Integration events between
+// contexts travel in-process in the monolith and over Kafka between the services. Every service receives its
 // settings under the names it already reads (ConnectionStrings:PGSQLConnection, :kafka,
 // :eventstore, EmailSettings:*), so nothing in the services knows about Aspire beyond
 // AddServiceDefaults(), which sends traces, metrics and logs to the Aspire dashboard.
@@ -49,6 +50,7 @@ if (microservices)
         .WithTokenIssuance()
         .WithReference(postgres.AddDatabase("account-db", "cleanddd_account"), "PGSQLConnection")
         .WithReference(kafka, "kafka")
+        .WithEnvironment("IntegrationEvents__Transport", "Kafka")
         .WithEnvironment("ConnectionStrings__eventstore", eventStoreConnection)
         .WithEnvironment("EmailSettings__SmtpHost", smtp.Property(EndpointProperty.Host))
         .WithEnvironment("EmailSettings__SmtpPort", smtp.Property(EndpointProperty.Port))
@@ -60,7 +62,10 @@ if (microservices)
         .WithHttpEndpoint()
         .WithTokenValidation()
         .WithReference(postgres.AddDatabase("todo-db", "cleanddd_todo"), "PGSQLConnection")
-        .WaitFor(postgres);
+        .WithReference(kafka, "kafka")
+        .WithEnvironment("IntegrationEvents__Transport", "Kafka")
+        .WaitFor(postgres)
+        .WaitFor(kafka);
 
     var weather = builder.AddProject<Projects.CleanDDDArchitecture_Hosts_Services_WeatherService_Presentation>("weather-service")
         .WithHttpEndpoint()
