@@ -1,135 +1,147 @@
-# CleanDDDArchitecture Template
+# CleanDDDArchitecture
 
 [![Build And Test](https://github.com/panosru/CleanDDDArchitecture/actions/workflows/dotnetcore.yml/badge.svg)](https://github.com/panosru/CleanDDDArchitecture/actions/workflows/dotnetcore.yml)
 [![CodeQL](https://github.com/panosru/CleanDDDArchitecture/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/panosru/CleanDDDArchitecture/actions/workflows/codeql-analysis.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-A reference template demonstrating how to build production-quality .NET 10 applications using the [Aviant Library](https://github.com/panosru/Aviant) — a framework for DDD, CQRS, and Event Sourcing.
+A reference application for **Domain-Driven Design, CQRS and Event Sourcing on .NET 10**, built on the [Aviant](https://github.com/tecfinity/Aviant) library. The same domain code runs as **one monolith or as separate microservices**, switched with a flag.
 
-## Architecture Overview
+## What it shows
 
+- **Bounded contexts that stay independent.** Account, Todo and Weather never reference each other. When an account is deleted, Todo removes that user's lists by consuming an `AccountDeletedIntegrationEvent`, written to a **transactional outbox** and delivered in-process (monolith) or over **Kafka** (microservices).
+- **An event-sourced aggregate.** `AccountAggregate` is rebuilt from its events in EventStoreDB; the events are also published to Kafka.
+- **A rich domain model.** Aggregates and entities change only through behaviour (`Rename`, `Complete`, `ConfirmEmailChange`), guarded by value objects (`EmailAddress`, `PersonName`). A broken rule is a `DomainRuleException`, which the pipeline turns into a 400, not a 500.
+- **Architecture enforced by tests.** `Tests/Architecture` fails the build if Core depends on an outer layer, if a domain references another domain, or if an aggregate lives outside Core.
+- **Observability from the start.** Every host sends OpenTelemetry traces, metrics and logs; under Aspire they appear in one dashboard.
+- **A clean licence story.** Every dependency is free for commercial use, and a package with a known vulnerability fails the build ([ADR 006](docs/adr/006-dependency-licensing.md)).
+
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph Hosts
+        API[RestApi<br/>monolith]
+        GW[Gateway<br/>YARP] --> AS[AccountService]
+        GW --> TS[TodoService]
+        GW --> WS[WeatherService]
+        WK[Worker<br/>Hangfire]
+    end
+
+    subgraph Domains
+        direction TB
+        ACC[Account<br/>event-sourced]
+        TODO[Todo<br/>TodoList + TodoItem]
+        WEA[Weather]
+        SH[Shared<br/>integration event contracts]
+    end
+
+    API --> ACC & TODO & WEA
+    AS --> ACC
+    TS --> TODO
+    WS --> WEA
+    ACC -. AccountDeletedIntegrationEvent<br/>outbox → in-process / Kafka .-> TODO
+    ACC --> SH
+    TODO --> SH
 ```
-CleanDDDArchitecture/
-├── Domains/
-│   ├── Account/      # Event Sourcing + Identity (user auth, registration)
-│   ├── Todo/         # Subdomain pattern (TodoItem + TodoList subdomains)
-│   ├── Weather/      # Simple DDD reference domain
-│   └── Shared/       # Cross-cutting domain concerns
-├── Hosts/
-│   ├── AppHost/      # .NET Aspire orchestration (dev inner loop)
-│   ├── RestApi/      # Monolith mode: all domains in one process
-│   ├── Services/     # Microservices mode: one process per domain
-│   │   ├── AccountService/
-│   │   ├── TodoService/
-│   │   └── WeatherService/
-│   ├── WebApp/       # Blazor WebApp
-│   ├── Worker/       # Background worker
-│   ├── Gateway/      # YARP reverse proxy
-│   └── ServiceDefaults/ # Shared host infrastructure
-└── Library/
-    └── Aviant/       # Git submodule — the framework itself
-```
 
-Each domain follows the same structure:
-- **Core** — Entities, Value Objects, Domain Events, Repository interfaces
-- **Application** — Commands/Queries (CQRS via MediatR)
-- **Infrastructure** — EF Core + PostgreSQL
-- **CrossCutting** — DI registration
-- **Hosts/RestApi/Presentation** — Versioned controllers
+Every domain has the same layers, and the dependency rules between them are tested:
 
-## Domains
-
-| Domain | Pattern | Key concepts |
+| Layer | Contains | May depend on |
 |---|---|---|
-| **Account** | Event Sourcing + Identity | JWT auth, registration, password reset |
-| **Todo** | DDD with Subdomains | TodoList → TodoItem hierarchy, subdomain isolation |
-| **Weather** | Simple DDD | Minimal example, good starting point |
-| **Shared** | Cross-cutting | Base types shared across all domains |
+| **Core** | Aggregates, entities, value objects, domain events, repository interfaces | Aviant core, Shared.Core |
+| **Application** | Use cases, commands and queries (CQRS), validators, event handlers | Core |
+| **Infrastructure** | EF Core contexts, repositories, EventStore, Kafka | Application, Core |
+| **CrossCutting** | Dependency registration for the domain | all of the above |
+| **Hosts/…/Presentation** | Controllers and minimal API endpoints | Application |
 
-## Prerequisites
+A request goes: **controller or endpoint → use case → orchestrator → MediatR pipeline** (validation, logging, retries) **→ handler → aggregate**. Then either a success, a refusal returned as a failed response, or a fault handled by the single ProblemDetails error handler.
 
-- [.NET 10 SDK](https://dotnet.microsoft.com/download)
-- [Docker](https://www.docker.com/products/docker-desktop)
-- Make (optional, for convenience targets)
+## Getting started
 
-## Getting Started
-
-### Option 1: .NET Aspire (recommended for development)
-
-Aspire orchestrates all infrastructure (PostgreSQL, Redis, Mailpit) and services automatically:
+Prerequisites: the [.NET 10 SDK](https://dotnet.microsoft.com/download) and Docker.
 
 ```bash
 git clone --recurse-submodules https://github.com/panosru/CleanDDDArchitecture.git
 cd CleanDDDArchitecture
-dotnet run --project Hosts/AppHost/AppHost.csproj
 ```
 
-The Aspire dashboard opens at `http://localhost:15888` and shows all services.
-
-### Option 2: Docker Compose
+### With .NET Aspire (recommended)
 
 ```bash
-git clone --recurse-submodules https://github.com/panosru/CleanDDDArchitecture.git
-cd CleanDDDArchitecture
-
-# Start infrastructure (PostgreSQL, Redis, Mailpit)
-docker compose --profile core up -d
-
-# Run the monolith REST API
-make RestApi
-# or: dotnet run --project Hosts/RestApi/Presentation/Presentation.csproj
+dotnet run --project Hosts/AppHost                          # monolith: RestApi + Worker
+dotnet run --project Hosts/AppHost -- --mode microservices  # Account, Todo, Weather services + Gateway
 ```
 
-API docs (Scalar UI) available at: `http://localhost:5000/scalar/v1`
+Aspire starts PostgreSQL, Kafka, EventStoreDB and Mailpit, wires every connection string, and opens the dashboard at **http://localhost:15888** with logs, traces, metrics and health for each resource. In monolith mode the API serves Scalar at **https://localhost:8091/scalar/v1**.
 
-### Deployment Modes
+### With Docker Compose
 
-| Mode | Command | Description |
+```bash
+cd docker
+cp .env.example .env
+docker compose --profile core up -d                                   # PostgreSQL, Redis, Mailpit
+docker compose --profile core --profile eventing up -d                # + Kafka (needed by Account)
+docker compose --profile core --profile eventing --profile microservices up -d --build
+```
+
+Each host also runs on its own: `dotnet run --project Hosts/RestApi/Presentation`.
+
+## Tests
+
+| Kind | Where | Needs |
 |---|---|---|
-| Aspire | `dotnet run --project Hosts/AppHost/AppHost.csproj` | Orchestrated dev environment |
-| Monolith | `make RestApi` | All domains in one process |
-| Microservices | `docker compose --profile microservices up` | Each domain as a separate service |
-
-## Running Tests
+| Architecture rules | `Tests/Architecture` | — |
+| Unit | `Domains/*/Tests/Unit`, `Domains/Shared/Tests/Unit` | — |
+| Behaviour (in-process HTTP, TestHost) | `Hosts/RestApi/Tests/Behaviour`, `Domains/Weather/Tests/Behaviour` | — |
+| Todo queries on EF Core in-memory | `Domains/Todo/Tests/Integration` | — |
+| End-to-end: services, gateway, Kafka, EventStore, PostgreSQL | `Domains/Account/Tests/Integration` | Docker |
 
 ```bash
-# All tests with coverage report
-./scripts/test-and-coverage.sh
-
-# Single project
-dotnet test Domains/Weather/Tests/Behaviour/Behaviour.csproj
-
-# Integration tests (require Docker)
-dotnet test Domains/Account/Tests/Integration/Integration.csproj
+dotnet test CleanDDDArchitecture.sln     # everything
+./scripts/test-and-coverage.sh           # with coverage, as CI runs it
 ```
 
-## Key Technology Choices
+The end-to-end tests start real containers with Testcontainers, build and launch the services, and drive them through the gateway: sign-up, email confirmation, login, MFA, email change, todos, and account deletion reaching the Todo service.
 
-| Concern | Technology |
+## Technology
+
+| Concern | Choice |
 |---|---|
-| Framework | .NET 10 / ASP.NET Core |
-| CQRS | MediatR 12.5 (pinned — last Apache-2.0 release) |
+| Framework | .NET 10, ASP.NET Core |
+| DDD / CQRS / Event Sourcing | [Aviant](https://github.com/tecfinity/Aviant), MediatR 12.5 (Apache-2.0, pinned) |
+| Persistence | EF Core 10 + PostgreSQL; EventStoreDB for event-sourced aggregates |
+| Messaging | Kafka (Confluent.Kafka), transactional outbox |
 | Validation | FluentValidation |
-| ORM | Entity Framework Core 10 + Npgsql |
-| Background Jobs | Hangfire (PostgreSQL storage) |
-| API Versioning | Asp.Versioning.Mvc 8.x |
-| API Docs | Microsoft.AspNetCore.OpenApi + Scalar |
-| Auth | ASP.NET Core Identity + JWT Bearer |
-| Caching | EasyCaching (Redis / in-memory) |
-| Messaging | Confluent.Kafka |
-| Object Mapping | Explicit — `From(entity)` factories and EF Core projection expressions |
-| Dev Orchestration | .NET Aspire 13 |
-| Testing | xunit v3 + Testcontainers + AwesomeAssertions |
+| API | Controllers and minimal APIs, Asp.Versioning, Microsoft.AspNetCore.OpenApi + Scalar, RFC 9457 problem details |
+| Auth | ASP.NET Core Identity, JWT bearer, TOTP MFA, refresh sessions |
+| Background jobs | Hangfire on PostgreSQL |
+| Observability | OpenTelemetry (OTLP), Serilog |
+| Local orchestration | .NET Aspire 13 |
+| Web UI | ASP.NET Core Razor Pages (`Hosts/WebApp`) |
+| Testing | xUnit v3, AwesomeAssertions, Testcontainers, NetArchTest |
 
-Every dependency is free for commercial use, and known-vulnerable packages fail the build. See [ADR 006](docs/adr/006-dependency-licensing.md).
+Mapping is explicit (a `From(entity)` factory or an EF Core projection expression on each DTO). There is no runtime mapper.
 
-## Contribution
+## Design decisions
 
-Pull requests are welcome. Contributions to documentation, tests, and new domain examples are especially encouraged.
+Recorded as ADRs in [docs/adr](docs/adr):
 
-## Support
+1. [Event Sourcing for the Account domain](docs/adr/001-event-sourcing-account-domain.md)
+2. [Kafka for eventing](docs/adr/002-kafka-for-eventing.md)
+3. [Vertical slice architecture](docs/adr/003-vertical-slice-architecture.md)
+4. [OpenAPI + Scalar over Swashbuckle](docs/adr/004-openapi-scalar-over-swashbuckle.md)
+5. [.NET Aspire AppHost](docs/adr/005-aspire-apphost.md)
+6. [Dependency licensing](docs/adr/006-dependency-licensing.md)
+7. [Controllers and minimal APIs](docs/adr/007-controllers-and-minimal-apis.md)
 
-- [GitHub Issues](https://github.com/panosru/CleanDDDArchitecture/issues)
+## Contributing
+
+Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md), and report security issues privately as described in [SECURITY.md](SECURITY.md). Changes are recorded in [CHANGELOG.md](CHANGELOG.md).
+
+## Credits
+
+This repository began from Jason Taylor's [Clean Architecture template](https://github.com/jasontaylordev/CleanArchitecture) and has since been rebuilt around DDD, event sourcing and Aviant. The early history keeps his commits and those of the template's contributors.
 
 ## License
 
-MIT — see [LICENSE](LICENSE) for details.
+MIT. See [LICENSE](LICENSE).
