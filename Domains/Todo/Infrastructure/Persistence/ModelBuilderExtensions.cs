@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 internal static class ModelBuilderExtensions
 {
-    private static readonly DateTime SeedCreatedAtUtc = new(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+    private static readonly DateTimeOffset SeedCreatedAtUtc = new(2024, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
     public static void Seed(this ModelBuilder modelBuilder)
     {

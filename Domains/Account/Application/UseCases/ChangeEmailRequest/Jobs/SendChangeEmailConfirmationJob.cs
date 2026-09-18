@@ -41,7 +41,7 @@ internal sealed class SendChangeEmailConfirmationJob : IJob<SendChangeEmailConfi
         _emailService = emailService;
     }
 
-    public async Task PerformAsync(SendChangeEmailConfirmationJobOptions jobOptions)
+    public async Task PerformAsync(SendChangeEmailConfirmationJobOptions jobOptions, CancellationToken cancellationToken)
     {
         var baseUri = new Uri(_appSettings.BaseUrl);
         var confirmationLink = _linkGenerator.GetUriByAction(

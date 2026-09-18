@@ -44,7 +44,7 @@ public static class ServiceConfiguration
             options.AddPolicy("public-registration", context => BuildIpPolicy(context, 2, TimeSpan.FromMinutes(10)));
             options.AddPolicy("authenticated-sensitive", context => BuildIpPolicy(context, 10, TimeSpan.FromMinutes(1)));
         });
-        services.AddHangfireServices(configuration);
+        services.AddHangfireServices(configuration, environment);
         services.AddDomainsServices();
         services.AddFeaturesServices();
         services.AddScopedServices();

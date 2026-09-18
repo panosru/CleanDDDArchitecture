@@ -213,7 +213,7 @@ public sealed class PasswordLifecycleTests
             where TJobOptions : class, IJobOptions
             where TJob : IJob<TJobOptions> => throw new NotSupportedException();
 
-        public string RunAtDateTime<TJob, TJobOptions>(DateTime dateTime, Action<TJobOptions>? configureJobOptions = null)
+        public string RunAtDateTime<TJob, TJobOptions>(DateTimeOffset dateTime, Action<TJobOptions>? configureJobOptions = null)
             where TJobOptions : class, IJobOptions
             where TJob : IJob<TJobOptions> => throw new NotSupportedException();
 
@@ -221,9 +221,14 @@ public sealed class PasswordLifecycleTests
             where TJobOptions : class, IJobOptions
             where TJob : IJob<TJobOptions> => throw new NotSupportedException();
 
-        public string RunRecurring<TJob, TJobOptions>(string jobId, string cron, Action<TJobOptions>? configureJobOptions = null)
+        public string RunRecurring<TJob, TJobOptions>(string jobId, string cron, Action<TJobOptions>? configureJobOptions = null,
+            TimeZoneInfo? timeZone = null,
+            string? queue = null)
             where TJobOptions : class, IJobOptions
             where TJob : IJob<TJobOptions> => throw new NotSupportedException();
+
+        public string RunRecurring<TJob>(string jobId, string cron, TimeZoneInfo? timeZone = null, string? queue = null)
+            where TJob : IRecurringJob => throw new NotSupportedException();
 
         public void TriggerRecurringJob(string id) => throw new NotSupportedException();
 

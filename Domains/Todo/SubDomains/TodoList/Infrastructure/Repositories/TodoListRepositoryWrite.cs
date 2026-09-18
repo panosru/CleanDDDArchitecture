@@ -17,7 +17,7 @@ public sealed class TodoListRepositoryWrite
 
     public async Task<int> SoftDeleteOwnedByAsync(
         Guid              ownerId,
-        DateTime          deletedAtUtc,
+        DateTimeOffset    deletedAtUtc,
         CancellationToken cancellationToken = default)
     {
         // Set-based updates: no entities are loaded, and nothing goes through SaveChanges, whose

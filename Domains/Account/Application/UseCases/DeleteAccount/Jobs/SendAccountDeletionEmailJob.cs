@@ -39,7 +39,7 @@ internal sealed class SendAccountDeletionEmailJob : IJob<SendAccountDeletionEmai
         _emailService = emailService;
     }
 
-    public async Task PerformAsync(SendAccountDeletionEmailJobOptions jobOptions)
+    public async Task PerformAsync(SendAccountDeletionEmailJobOptions jobOptions, CancellationToken cancellationToken)
     {
         var baseUri = new Uri(_appSettings.BaseUrl);
         var confirmationLink = _linkGenerator.GetUriByAction(

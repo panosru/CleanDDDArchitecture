@@ -1,5 +1,7 @@
 using Aviant.Application.Jobs;
 using Aviant.Infrastructure.Jobs;
+using CleanDDDArchitecture.Domains.Account.CrossCutting;
+using CleanDDDArchitecture.Domains.Weather.CrossCutting;
 using CleanDDDArchitecture.Domains.Shared.Core;
 using Hangfire;
 using Hangfire.PostgreSql;
@@ -16,12 +18,26 @@ public static class Hangfire
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>
+    /// <param name="environment"></param>
     /// <returns></returns>
     public static IServiceCollection AddHangfireServices(
         this IServiceCollection services,
-        IConfiguration      configuration)
+        IConfiguration      configuration,
+        IHostEnvironment    environment)
     {
-        services.AddSingleton<IJobRunner, JobRunner>();
+        // Registers the runner and every job in the domains, and checks at startup that
+        // each can be constructed: Hangfire builds a job only when it runs. A job that
+        // cannot be built stops the app in development; in production it is logged and
+        // the other jobs keep running.
+        services.AddAviantJobs(jobs =>
+        {
+            jobs.AddAssemblies(
+            [
+                .. AccountCrossCutting.MediatorAssemblies(),
+                .. WeatherCrossCutting.MediatorAssemblies()
+            ]);
+            jobs.FailOnUnresolvableJobs = environment.IsDevelopment();
+        });
 
         services.AddHangfire(
                 config => config

@@ -1,5 +1,6 @@
 ﻿using CleanDDDArchitecture.Domains.Todo.Application.Persistence;
 using Aviant.Infrastructure.Identity.Persistence.Contexts;
+using Aviant.Infrastructure.Persistence.Conventions;
 using CleanDDDArchitecture.Domains.Todo.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,5 +28,8 @@ public sealed class TodoDbContextWrite
         modelBuilder.Seed();
 
         base.OnModelCreating(modelBuilder);
+
+        // PostgreSQL stores an instant only with a zero offset.
+        modelBuilder.UseUtcTimestamps();
     }
 }

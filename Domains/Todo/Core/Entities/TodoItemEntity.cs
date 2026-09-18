@@ -77,7 +77,7 @@ public sealed class TodoItemEntity
 
     #region ICreationAudited Members
 
-    public DateTime Created { get; set; }
+    public DateTimeOffset Created { get; set; }
 
     public Guid CreatedBy { get; set; }
 
@@ -85,7 +85,7 @@ public sealed class TodoItemEntity
 
     #region IDeletionAudited Members
 
-    public DateTime? Deleted { get; set; }
+    public DateTimeOffset? Deleted { get; set; }
 
     public Guid? DeletedBy { get; set; }
 
@@ -93,7 +93,7 @@ public sealed class TodoItemEntity
 
     #region IUpdatedAudited Members
 
-    public DateTime? Updated { get; set; }
+    public DateTimeOffset? Updated { get; set; }
 
     public Guid? UpdatedBy { get; set; }
 

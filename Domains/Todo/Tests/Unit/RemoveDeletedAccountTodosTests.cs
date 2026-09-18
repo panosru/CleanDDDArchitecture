@@ -40,9 +40,9 @@ public sealed class RemoveDeletedAccountTodosTests
 
     private sealed class RecordingRepository : ITodoListOwnerCleanup
     {
-        public List<(Guid OwnerId, DateTime DeletedAtUtc)> Calls { get; } = [];
+        public List<(Guid OwnerId, DateTimeOffset DeletedAtUtc)> Calls { get; } = [];
 
-        public Task<int> SoftDeleteOwnedByAsync(Guid ownerId, DateTime deletedAtUtc, CancellationToken cancellationToken = default)
+        public Task<int> SoftDeleteOwnedByAsync(Guid ownerId, DateTimeOffset deletedAtUtc, CancellationToken cancellationToken = default)
         {
             var removed = Calls.Any(call => call.OwnerId == ownerId) ? 0 : 2;
             Calls.Add((ownerId, deletedAtUtc));

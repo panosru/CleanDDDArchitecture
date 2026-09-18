@@ -44,7 +44,7 @@
           "exclude": [
             ".git/**", "**/.git", "**/.git/**", ".gitmodules",
             "**/bin/**", "**/obj/**", "**/bin-*/**", "**/DataProtection-Keys/**",
-            "artifacts/**", ".idea/**", ".vs/**", ".tools/**", ".claude/**", "CLAUDE.md", "AGENTS.md",
+            "artifacts/**", ".idea/**", ".vs/**", ".tools/**",
             "template/**", "**/*.DotSettings.user", "**/node_modules/**",
             "CONTRIBUTORS.md", "CHANGELOG.md", ".github/workflows/contributors.yml"
           ]

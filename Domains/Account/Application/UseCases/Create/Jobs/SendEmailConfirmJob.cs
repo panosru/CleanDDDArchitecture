@@ -42,7 +42,7 @@ internal sealed class SendEmailConfirmJob : IJob<SendEmailConfirmJobOptions>
         _emailService = emailService;
     }
     
-    public async Task PerformAsync(SendEmailConfirmJobOptions jobOptions)
+    public async Task PerformAsync(SendEmailConfirmJobOptions jobOptions, CancellationToken cancellationToken)
     {
         // Get User by Email
         AccountUser? user = await _userManager.FindByEmailAsync(jobOptions.Email)
