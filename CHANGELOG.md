@@ -19,6 +19,7 @@ Notable changes to this reference application. The format follows [Keep a Change
 - **Aviant 2:** use cases are registered with `AddAviantUseCases` and no longer depend on a static service locator, repositories are async-only and validate entities, and the library logs through `ILogger<T>`.
 - **KurrentDB** (formerly EventStoreDB) 26 over gRPC replaces EventStoreDB 21.10 over TCP in Compose, Aspire and the end-to-end tests. The connection string is `ConnectionStrings:kurrentdb`.
 - Jobs take a `CancellationToken`, and hosts register them with `AddAviantJobs`. In development the monolith refuses to start if a job cannot be built; in production it logs it.
+- Email goes through Aviant's `AddAviantEmail`. SMTP connects only when a message is sent, and the TLS setting is optional.
 - Todo audit times are `DateTimeOffset`, stamped by Aviant's auditing interceptor, and stored as UTC.
 - Domain code logs through `ILogger<T>` instead of the static Serilog logger, so the services' logs reach OpenTelemetry. Serilog is configured only in the RestApi host.
 - The Account aggregate and its domain events moved from Application to Core.

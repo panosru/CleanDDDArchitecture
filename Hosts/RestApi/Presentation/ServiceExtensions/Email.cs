@@ -1,6 +1,5 @@
 using Aviant.Application.Email;
 using Aviant.Infrastructure.Email;
-using System.Globalization;
 
 namespace CleanDDDArchitecture.Hosts.RestApi.Presentation.ServiceExtensions;
 
@@ -17,27 +16,19 @@ public static class Email
     /// <returns></returns>
     public static IServiceCollection AddEmailService(
         this IServiceCollection services,
-        IConfiguration configuration)
-    {
-        services.AddSingleton<ISmtpClientFactory, SmtpClientFactory>(
-            provider => new SmtpClientFactory(
-                configuration["EmailSettings:SmtpHost"],
-                int.Parse(configuration["EmailSettings:SmtpPort"]!, CultureInfo.InvariantCulture),
-                // Optional: Aspire and Compose point at Mailpit, which has no TLS.
-                configuration.GetValue("EmailSettings:EnableSsl", defaultValue: false),
-                configuration["EmailSettings:SmtpUsername"],
-                configuration["EmailSettings:SmtpPassword"]));
-        
-        services.AddTransient<IEmailService, EmailService>(
-            provider =>
-            {
-                var smtpClientFactory = provider.GetRequiredService<ISmtpClientFactory>();
-
-                return new EmailService(smtpClientFactory,
-                    configuration["AppSettings:Title"],
-                    configuration["AppSettings:Emails:NoReply"]);
-            });
-        
-        return services;
-    }
+        IConfiguration configuration) =>
+        services.AddAviantEmail(new SmtpSettings
+        {
+            Host     = configuration["EmailSettings:SmtpHost"] ?? "localhost",
+            Port     = configuration.GetValue("EmailSettings:SmtpPort", defaultValue: 1025),
+            // Optional: Aspire and Compose point at Mailpit, which has no TLS.
+            Security = configuration.GetValue("EmailSettings:EnableSsl", defaultValue: false)
+                ? SmtpSecurity.SslOnConnect
+                : SmtpSecurity.None,
+            Username = configuration["EmailSettings:SmtpUsername"],
+            Password = configuration["EmailSettings:SmtpPassword"],
+            From     = new Mailbox(
+                configuration["AppSettings:Emails:NoReply"] ?? "no-reply@localhost",
+                configuration["AppSettings:Title"]),
+        });
 }

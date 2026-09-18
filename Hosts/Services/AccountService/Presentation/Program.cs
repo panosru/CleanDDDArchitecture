@@ -1,3 +1,4 @@
+using Aviant.Application.Email;
 using CleanDDDArchitecture.Domains.Shared.Infrastructure.IntegrationEvents;
 using CleanDDDArchitecture.Hosts.ServiceDefaults.Core;
 using Asp.Versioning;
@@ -66,16 +67,18 @@ var dataProtectionKeysPath = Environment.GetEnvironmentVariable("DataProtection_
     ?? "DataProtection-Keys";
 builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(Path.GetFullPath(dataProtectionKeysPath)));
-builder.Services.AddSingleton<ISmtpClientFactory, SmtpClientFactory>(_ => new SmtpClientFactory(
-    builder.Configuration["EmailSettings:SmtpHost"],
-    int.Parse(builder.Configuration["EmailSettings:SmtpPort"] ?? "1025", CultureInfo.InvariantCulture),
-    bool.Parse(builder.Configuration["EmailSettings:EnableSsl"] ?? "false"),
-    builder.Configuration["EmailSettings:SmtpUsername"],
-    builder.Configuration["EmailSettings:SmtpPassword"]));
-builder.Services.AddTransient<Aviant.Application.Email.IEmailService, EmailService>(provider =>
+builder.Services.AddAviantEmail(new SmtpSettings
 {
-    var smtpClientFactory = provider.GetRequiredService<ISmtpClientFactory>();
-    return new EmailService(smtpClientFactory, builder.Configuration["AppSettings:Title"], builder.Configuration["AppSettings:Emails:NoReply"]);
+    Host     = builder.Configuration["EmailSettings:SmtpHost"] ?? "localhost",
+    Port     = builder.Configuration.GetValue("EmailSettings:SmtpPort", defaultValue: 1025),
+    Security = builder.Configuration.GetValue("EmailSettings:EnableSsl", defaultValue: false)
+        ? SmtpSecurity.SslOnConnect
+        : SmtpSecurity.None,
+    Username = builder.Configuration["EmailSettings:SmtpUsername"],
+    Password = builder.Configuration["EmailSettings:SmtpPassword"],
+    From     = new Mailbox(
+        builder.Configuration["AppSettings:Emails:NoReply"] ?? "no-reply@localhost",
+        builder.Configuration["AppSettings:Title"]),
 });
 
 builder.Services.AddValidatorsFromAssemblies(AccountCrossCutting.ValidatorAssemblies().ToArray());
