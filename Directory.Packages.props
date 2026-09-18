@@ -46,6 +46,10 @@
 
     <!-- OpenAPI / API Documentation (replaces Swashbuckle) -->
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3" />
+    <!-- Microsoft.OpenApi arrives transitively at 2.0.0, which carries GHSA-v5pm-xwqc-g5wc (high).
+         Fixed on the 2.x line from 2.7.5. Stay on 2.x: 3.x breaks the ASP.NET Core 10
+         XML-comment source generator. -->
+    <PackageVersion Include="Microsoft.OpenApi" Version="2.12.2" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.6.0" />
 
     <!-- Security Headers -->
@@ -83,6 +87,8 @@
 
     <!-- Testing -->
     <PackageVersion Include="AwesomeAssertions" Version="9.6.0" />
+    <!-- SSH.NET arrives via Testcontainers; 2025.1.0 has GHSA-mggc-4xg6-vcxf and GHSA-q939-rpr3-3284 (high) -->
+    <PackageVersion Include="SSH.NET" Version="2026.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageVersion Include="Microsoft.Playwright" Version="1.58.0" />
     <PackageVersion Include="Testcontainers" Version="4.10.0" />

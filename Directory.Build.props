@@ -13,7 +13,10 @@
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
-        <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1510;NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
+        <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1510;NU1901</WarningsNotAsErrors>
+        <!-- Known vulnerabilities (moderate and above) fail the build, including transitive ones -->
+        <NuGetAudit>true</NuGetAudit>
+        <NuGetAuditMode>all</NuGetAuditMode>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <Deterministic>true</Deterministic>
         <!-- Authors of the projects -->
