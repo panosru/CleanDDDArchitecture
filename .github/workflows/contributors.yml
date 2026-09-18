@@ -19,7 +19,7 @@ jobs:
       - name: Contribute List
         # You may pin to the exact commit or the version.
         # uses: akhilmhdh/contributors-readme-action@91b97a109db8e973e87e236e887db27f076e4a29
-        uses: akhilmhdh/contributors-readme-action@v2.0.2
+        uses: akhilmhdh/contributors-readme-action@v2.3.11
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
