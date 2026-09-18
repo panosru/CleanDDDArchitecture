@@ -79,27 +79,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddValidatorsFromAssemblies(WeatherCrossCutting.ValidatorAssemblies().ToArray());
 
-builder.Services.AddTransient<IMediator, MediatR.Mediator>();
-builder.Services.Scan(scan => scan.FromAssemblies(
-        typeof(Program).Assembly,
-        typeof(LoggerBehaviour<>).Assembly,
-        WeatherCrossCutting.MediatorAssemblies().Single())
-    .RegisterHandlers(typeof(IRequestHandler<>))
-    .RegisterHandlers(typeof(IRequestHandler<,>))
-    .RegisterHandlers(typeof(InterceptorBase<>))
-    .RegisterHandlers(typeof(INotificationHandler<>))
-    .RegisterHandlers(typeof(IRequestPreProcessor<>))
-    .RegisterHandlers(typeof(IRequestPostProcessor<,>))
-    .RegisterHandlers(typeof(IRequestExceptionHandler<,,>))
-    .RegisterHandlers(typeof(IRequestExceptionAction<,>)));
-builder.Services.Decorate(typeof(IRequestHandler<,>), typeof(RetryRequestProcessor<,>));
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPostProcessorBehavior<,>));
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestExceptionActionProcessorBehavior<,>));
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestExceptionProcessorBehavior<,>));
+builder.Services.AddAviantCqrs([typeof(Program).Assembly, .. WeatherCrossCutting.MediatorAssemblies()]);
 
 builder.Services.AddSingleton<IJobRunner, JobRunner>();
 builder.Services.AddHangfire(configuration => configuration

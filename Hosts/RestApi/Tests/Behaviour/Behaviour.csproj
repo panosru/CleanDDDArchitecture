@@ -3,7 +3,20 @@
     <PropertyGroup>
         <RootNamespace>CleanDDDArchitecture.Hosts.RestApi.Tests.Behaviour</RootNamespace>
         <AssemblyName>CleanDDDArchitecture.Hosts.RestApi.Tests.Behaviour</AssemblyName>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="coverlet.collector">
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
+      <PackageReference Include="AwesomeAssertions" />
+      <PackageReference Include="Microsoft.NET.Test.Sdk" />
+      <PackageReference Include="xunit.v3" />
+      <PackageReference Include="xunit.runner.visualstudio">
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
+    </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\Presentation\Presentation.csproj" />

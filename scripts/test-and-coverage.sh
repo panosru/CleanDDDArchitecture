@@ -19,7 +19,10 @@ declare -a TEST_PROJECTS=(
   "$ROOT_DIR/Domains/Todo/SubDomains/TodoItem/Tests/Behaviour/Behaviour.csproj"
   "$ROOT_DIR/Domains/Todo/SubDomains/TodoList/Tests/Behaviour/Behaviour.csproj"
   "$ROOT_DIR/Domains/Weather/Tests/Behaviour/Behaviour.csproj"
+  "$ROOT_DIR/Hosts/RestApi/Tests/Behaviour/Behaviour.csproj"
   "$ROOT_DIR/Library/Aviant/tests/EventSourcing/Unit/Unit.csproj"
+  "$ROOT_DIR/Library/Aviant/tests/Kernel/Unit/Unit.csproj"
+  "$ROOT_DIR/Library/Aviant/tests/Persistence/Unit/Unit.csproj"
 )
 
 rm -rf "$OUTPUT_DIR"
