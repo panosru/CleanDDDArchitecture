@@ -9,7 +9,7 @@ A reference application for **Domain-Driven Design, CQRS and Event Sourcing on .
 ## What it shows
 
 - **Bounded contexts that stay independent.** Account, Todo and Weather never reference each other. When an account is deleted, Todo removes that user's lists by consuming an `AccountDeletedIntegrationEvent`, written to a **transactional outbox** and delivered in-process (monolith) or over **Kafka** (microservices).
-- **An event-sourced aggregate.** `AccountAggregate` is rebuilt from its events in EventStoreDB; the events are also published to Kafka.
+- **An event-sourced aggregate.** `AccountAggregate` is rebuilt from its events in KurrentDB (formerly EventStoreDB); the events are also published to Kafka.
 - **A rich domain model.** Aggregates and entities change only through behaviour (`Rename`, `Complete`, `ConfirmEmailChange`), guarded by value objects (`EmailAddress`, `PersonName`). A broken rule is a `DomainRuleException`, which the pipeline turns into a 400, not a 500.
 - **Architecture enforced by tests.** `Tests/Architecture` fails the build if Core depends on an outer layer, if a domain references another domain, or if an aggregate lives outside Core.
 - **Observability from the start.** Every host sends OpenTelemetry traces, metrics and logs; under Aspire they appear in one dashboard.
@@ -50,7 +50,7 @@ Every domain has the same layers, and the dependency rules between them are test
 |---|---|---|
 | **Core** | Aggregates, entities, value objects, domain events, repository interfaces | Aviant core, Shared.Core |
 | **Application** | Use cases, commands and queries (CQRS), validators, event handlers | Core |
-| **Infrastructure** | EF Core contexts, repositories, EventStore, Kafka | Application, Core |
+| **Infrastructure** | EF Core contexts, repositories, KurrentDB, Kafka | Application, Core |
 | **CrossCutting** | Dependency registration for the domain | all of the above |
 | **Hosts/…/Presentation** | Controllers and minimal API endpoints | Application |
 
@@ -72,7 +72,7 @@ dotnet run --project Hosts/AppHost                          # monolith: RestApi 
 dotnet run --project Hosts/AppHost -- --mode microservices  # Account, Todo, Weather services + Gateway
 ```
 
-Aspire starts PostgreSQL, Kafka, EventStoreDB and Mailpit, wires every connection string, and opens the dashboard at **http://localhost:15888** with logs, traces, metrics and health for each resource. In monolith mode the API serves Scalar at **https://localhost:8091/scalar/v1**.
+Aspire starts PostgreSQL, Kafka, KurrentDB and Mailpit, wires every connection string, and opens the dashboard at **http://localhost:15888** with logs, traces, metrics and health for each resource. In monolith mode the API serves Scalar at **https://localhost:8091/scalar/v1**.
 
 ### With Docker Compose
 
@@ -80,7 +80,7 @@ Aspire starts PostgreSQL, Kafka, EventStoreDB and Mailpit, wires every connectio
 cd docker
 cp .env.example .env
 docker compose --profile core up -d                                   # PostgreSQL, Redis, Mailpit
-docker compose --profile core --profile eventing up -d                # + Kafka (needed by Account)
+docker compose --profile core --profile eventing up -d                # + Kafka and KurrentDB (needed by Account)
 docker compose --profile core --profile eventing --profile microservices up -d --build
 ```
 
@@ -104,7 +104,7 @@ Every namespace, project and file named `CleanDDDArchitecture` becomes `Acme.Sho
 | Unit | `Domains/*/Tests/Unit`, `Domains/Shared/Tests/Unit` | — |
 | Behaviour (in-process HTTP, TestHost) | `Hosts/RestApi/Tests/Behaviour`, `Domains/Weather/Tests/Behaviour` | — |
 | Todo queries on EF Core in-memory | `Domains/Todo/Tests/Integration` | — |
-| End-to-end: services, gateway, Kafka, EventStore, PostgreSQL | `Domains/Account/Tests/Integration` | Docker |
+| End-to-end: services, gateway, Kafka, KurrentDB, PostgreSQL | `Domains/Account/Tests/Integration` | Docker |
 
 ```bash
 dotnet test CleanDDDArchitecture.sln     # everything
@@ -119,7 +119,7 @@ The end-to-end tests start real containers with Testcontainers, build and launch
 |---|---|
 | Framework | .NET 10, ASP.NET Core |
 | DDD / CQRS / Event Sourcing | [Aviant](https://github.com/tecfinity/Aviant), MediatR 12.5 (Apache-2.0, pinned) |
-| Persistence | EF Core 10 + PostgreSQL; EventStoreDB for event-sourced aggregates |
+| Persistence | EF Core 10 + PostgreSQL; KurrentDB (gRPC client, Apache-2.0) for event-sourced aggregates |
 | Messaging | Kafka (Confluent.Kafka), transactional outbox |
 | Validation | FluentValidation |
 | API | Controllers and minimal APIs, Asp.Versioning, Microsoft.AspNetCore.OpenApi + Scalar, RFC 9457 problem details |

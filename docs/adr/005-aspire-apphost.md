@@ -5,7 +5,7 @@
 
 ## Context
 
-The project supports two deployment shapes: a monolith (`Hosts/RestApi/`) and microservices (one service per domain behind a YARP gateway). Both need PostgreSQL, Kafka, EventStoreDB and an SMTP sink (Mailpit), and every host needs connection strings, JWT settings and telemetry wired consistently.
+The project supports two deployment shapes: a monolith (`Hosts/RestApi/`) and microservices (one service per domain behind a YARP gateway). Both need PostgreSQL, Kafka, KurrentDB (formerly EventStoreDB) and an SMTP sink (Mailpit), and every host needs connection strings, JWT settings and telemetry wired consistently.
 
 Starting that by hand (`docker compose`, then each process, then copying connection strings between YAML files) is slow and easy to get wrong.
 
@@ -19,7 +19,7 @@ dotnet run --project Hosts/AppHost -- --mode microservices  # Account, Todo, Wea
 ```
 
 - Aspire ships as an MSBuild SDK (`Aspire.AppHost.Sdk`, pinned in `global.json`); no workload is needed.
-- Each host receives its settings **under the names it already reads**: `ConnectionStrings:PGSQLConnection`, `:kafka`, `:eventstore`, `EmailSettings:*`. The services contain no Aspire-specific configuration code.
+- Each host receives its settings **under the names it already reads**: `ConnectionStrings:PGSQLConnection`, `:kafka`, `:kurrentdb`, `EmailSettings:*`. The services contain no Aspire-specific configuration code.
 - Every host calls `AddServiceDefaults()` (`Hosts/ServiceDefaults`), which adds OpenTelemetry logs, metrics and traces, `/health` (readiness) and `/alive` (liveness), HTTP resilience and service discovery. Aspire points the OTLP exporter at its dashboard, `http://localhost:15888`.
 - Development JWT settings are the same public dev values `docker/compose.yaml` uses. Aspire's generated secrets, such as the Postgres password, are kept in the AppHost's user secrets, so they keep matching the data volume across restarts.
 

@@ -229,9 +229,9 @@ public static class AccountDependencyInjectionRegistry
            .AddSingleton(typeof(IEventConsumer<,,>), typeof(EventConsumer<,,>))
            .AddKafkaEventProducer<AccountAggregate, AccountAggregateId>(eventsProducerConfig);
 
-        services.AddSingleton<IEventStoreConnectionWrapper>(
-                _ => new EventStoreConnectionWrapper(
-                    new Uri(Configuration.GetConnectionString("eventstore"))))
+        services.AddKurrentDb(
+                Configuration.GetConnectionString("kurrentdb")
+             ?? throw new InvalidOperationException("ConnectionStrings:kurrentdb is not configured."))
            .AddEventsRepository<AccountAggregate, AccountAggregateId>();
 
         services.AddEventsService<AccountAggregate, AccountAggregateId>();

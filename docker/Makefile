@@ -19,7 +19,7 @@ help:
 	@echo "  core         		: Start shared infrastructure"
 	@echo "  monolith     		: Start the monolith demo stack"
 	@echo "  microservices		: Start the gateway + service demo stack"
-	@echo "  microservices-eventing	: Start microservices with Kafka + EventStore"
+	@echo "  microservices-eventing	: Start microservices with Kafka + KurrentDB"
 	@echo "  eventing     		: Start eventing dependencies"
 	@echo "  observability		: Start Grafana and Loki"
 	@echo "  admin       		: Start admin tooling"
