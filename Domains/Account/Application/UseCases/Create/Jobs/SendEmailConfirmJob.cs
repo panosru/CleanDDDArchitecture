@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Jobs;
 
@@ -22,6 +22,7 @@ internal sealed class SendEmailConfirmJobOptions : IJobOptions
 [Queue(JobQueue.Main)]
 internal sealed class SendEmailConfirmJob : IJob<SendEmailConfirmJobOptions>
 {
+    private readonly ILogger<SendEmailConfirmJob> _logger;
     private readonly UserManager<AccountUser> _userManager;
     private readonly AppSettings _appSettings;
     private readonly LinkGenerator _linkGenerator;
@@ -31,8 +32,10 @@ internal sealed class SendEmailConfirmJob : IJob<SendEmailConfirmJobOptions>
         UserManager<AccountUser> userManager, 
         IOptions<AppSettings> appSettings,
         LinkGenerator linkGenerator,
-        IEmailService            emailService)
+        IEmailService            emailService,
+        ILogger<SendEmailConfirmJob> logger)
     {
+        _logger = logger;
         _userManager = userManager;
         _appSettings = appSettings.Value;
         _linkGenerator = linkGenerator;
@@ -48,7 +51,7 @@ internal sealed class SendEmailConfirmJob : IJob<SendEmailConfirmJobOptions>
         // Check that user is not null
         if (user is null)
         {
-            Log.Error($"User with Email {jobOptions.Email} not found!");
+            _logger.LogError("No user with email {Email}", jobOptions.Email);
             return;
         }
 
@@ -76,8 +79,8 @@ internal sealed class SendEmailConfirmJob : IJob<SendEmailConfirmJobOptions>
         
         // If the email was send log success, otherwise report error log
         if (email)
-            Log.Information($"Email confirmation sent to {user.Email}");
+            _logger.LogInformation("Email confirmation sent to {Email}", user.Email);
         else
-            Log.Error($"Email confirmation failed to {user.Email}");
+            _logger.LogError("Email confirmation failed to {Email}", user.Email);
     }
 }

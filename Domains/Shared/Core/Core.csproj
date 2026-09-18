@@ -11,9 +11,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Serilog.Sinks.Console" />
-        <PackageReference Include="Serilog.Sinks.File" />
-        <PackageReference Include="Serilog.Sinks.Grafana.Loki" />
     </ItemGroup>
 
 </Project>

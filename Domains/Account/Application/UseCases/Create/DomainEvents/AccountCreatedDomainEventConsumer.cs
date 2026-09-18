@@ -2,17 +2,18 @@ using Aviant.Application.ApplicationEvents;
 using Aviant.Core.EventSourcing.DomainEvents;
 using Aviant.Core.EventSourcing.EventBus;
 using CleanDDDArchitecture.Domains.Account.Core.Events;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Events;
 
-internal sealed class AccountCreatedDomainEventConsumer : DomainEventHandler<AccountCreatedDomainEvent>
+internal sealed class AccountCreatedDomainEventConsumer(ILogger<AccountCreatedDomainEventConsumer> logger)
+    : DomainEventHandler<AccountCreatedDomainEvent>
 {
     public override async Task Handle(
         EventReceived<AccountCreatedDomainEvent> @event,
         CancellationToken                        cancellationToken)
     {
-        Log.Information(
+        logger.LogInformation(
             "AccountCreatedDomainEvent consumed for aggregate {AggregateId} and email {Email}",
             @event.Event.Id,
             @event.Event.Email);

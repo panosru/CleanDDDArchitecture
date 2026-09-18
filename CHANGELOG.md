@@ -13,8 +13,12 @@ Notable changes to this reference application. The format follows [Keep a Change
 - A minimal API version of the weather forecast (ADR 007).
 - ADR 006 (dependency licensing) and ADR 007 (controllers and minimal APIs).
 - CONTRIBUTING, SECURITY and this changelog.
+- A `dotnet new cleanddd` template.
 
 ### Changed
+- **Aviant 2:** use cases are registered with `AddAviantUseCases` and no longer depend on a static service locator, repositories are async-only and validate entities, and the library logs through `ILogger<T>`.
+- **KurrentDB** (formerly EventStoreDB) 26 over gRPC replaces EventStoreDB 21.10 over TCP in Compose, Aspire and the end-to-end tests. The connection string is `ConnectionStrings:kurrentdb`.
+- Domain code logs through `ILogger<T>` instead of the static Serilog logger, so the services' logs reach OpenTelemetry. Serilog is configured only in the RestApi host.
 - The Account aggregate and its domain events moved from Application to Core.
 - One error pipeline (`IExceptionHandler` + RFC 9457 problem details) for every host, replacing three.
 - Hosts register the CQRS pipeline with Aviant's `AddAviantCqrs`, which fails startup when a request has no handler.
@@ -27,6 +31,8 @@ Notable changes to this reference application. The format follows [Keep a Change
 - `PUT …/updatedetails/{id}` ignored the route id, which also broke the OpenAPI document for the whole API.
 - Startup errors in the API were swallowed and the process exited with code 0; the Worker did the same.
 - The Aspire AppHost did not build or start the services it listed.
+- Logs written from domain code were lost in the microservices, which do not configure Serilog.
+- Security stamps were written to the log when an email change token was rejected.
 
 ### Removed
 - Ten empty test projects, the unused EasyCaching packages, and Redis from the AppHost.

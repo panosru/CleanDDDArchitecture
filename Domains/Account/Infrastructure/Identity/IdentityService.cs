@@ -18,7 +18,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using System.Text.Encodings.Web;
 using System.Globalization;
 using System.Net.Http.Headers;
@@ -69,6 +69,7 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
     private readonly TrustedDeviceManager _trustedDeviceManager;
     private readonly UserManager<AccountUser> _userManager;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<IdentityService> _logger;
 
     public IdentityService(
         UserManager<AccountUser> userManager,
@@ -78,8 +79,10 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         IDataProtectionProvider dataProtectionProvider,
         IHttpContextAccessor httpContextAccessor,
         IHttpClientFactory httpClientFactory,
-        IPhoneVerificationSender phoneVerificationSender)
+        IPhoneVerificationSender phoneVerificationSender,
+        ILogger<IdentityService> logger)
     {
+        _logger = logger;
         _configuration = config.Configuration();
         _accountDbContextWrite = accountDbContextWrite;
         _httpContextAccessor = httpContextAccessor;
@@ -1481,7 +1484,7 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
          || !string.Equals(payload.CurrentEmail, currentEmail, StringComparison.OrdinalIgnoreCase)
          || !string.Equals(payload.NewEmail, newEmail, StringComparison.OrdinalIgnoreCase))
         {
-            Log.Warning(
+            _logger.LogWarning(
                 "Email change token validation failed before user lookup. CurrentEmail={CurrentEmail} NewEmail={NewEmail} HasPayload={HasPayload} ExpiresAt={ExpiresAtUtc} PayloadCurrentEmail={PayloadCurrentEmail} PayloadNewEmail={PayloadNewEmail}",
                 currentEmail,
                 newEmail,
@@ -1509,11 +1512,9 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
 
         if (!string.Equals(user.SecurityStamp, payload.SecurityStamp, StringComparison.Ordinal))
         {
-            Log.Warning(
-                "Email change token rejected due to security stamp mismatch. UserId={UserId} CurrentStamp={CurrentStamp} PayloadStamp={PayloadStamp}",
-                user.Id,
-                user.SecurityStamp,
-                payload.SecurityStamp);
+            _logger.LogWarning(
+                "Email change token rejected due to security stamp mismatch. UserId={UserId}",
+                user.Id);
             return IdentityResult.Failure(InvalidEmailChangeTokenErrors);
         }
 
@@ -1524,7 +1525,7 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
 
         if (!string.Equals(user.Email, currentEmail, StringComparison.OrdinalIgnoreCase))
         {
-            Log.Warning(
+            _logger.LogWarning(
                 "Email change token rejected due to stale current email. UserId={UserId} ActualEmail={ActualEmail} ExpectedEmail={ExpectedEmail}",
                 user.Id,
                 user.Email,
@@ -1852,7 +1853,7 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         }
         catch
         {
-            Log.Warning("Failed to decode email change token.");
+            _logger.LogWarning("Failed to decode email change token.");
             return null;
         }
     }

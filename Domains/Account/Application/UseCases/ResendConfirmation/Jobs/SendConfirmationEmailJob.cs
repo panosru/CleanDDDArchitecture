@@ -6,7 +6,7 @@ using Hangfire;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Options;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ResendConfirmation.Jobs;
 
@@ -22,6 +22,7 @@ internal sealed class SendConfirmationEmailJobOptions : IJobOptions
 [Queue(JobQueue.Main)]
 internal sealed class SendConfirmationEmailJob : IJob<SendConfirmationEmailJobOptions>
 {
+    private readonly ILogger<SendConfirmationEmailJob> _logger;
     private readonly AppSettings _appSettings;
     private readonly IEmailService _emailService;
     private readonly LinkGenerator _linkGenerator;
@@ -29,8 +30,10 @@ internal sealed class SendConfirmationEmailJob : IJob<SendConfirmationEmailJobOp
     public SendConfirmationEmailJob(
         IOptions<AppSettings> appSettings,
         LinkGenerator linkGenerator,
-        IEmailService emailService)
+        IEmailService emailService,
+        ILogger<SendConfirmationEmailJob> logger)
     {
+        _logger = logger;
         _appSettings = appSettings.Value;
         _linkGenerator = linkGenerator;
         _emailService = emailService;
@@ -55,8 +58,8 @@ internal sealed class SendConfirmationEmailJob : IJob<SendConfirmationEmailJobOp
             .ConfigureAwait(false);
 
         if (sent)
-            Log.Information("Email confirmation sent to {Email}", jobOptions.Email);
+            _logger.LogInformation("Email confirmation sent to {Email}", jobOptions.Email);
         else
-            Log.Error("Email confirmation failed to {Email}", jobOptions.Email);
+            _logger.LogError("Email confirmation failed to {Email}", jobOptions.Email);
     }
 }
