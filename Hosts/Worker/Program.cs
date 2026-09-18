@@ -1,4 +1,5 @@
-﻿using Aviant.Core.Timing;
+﻿using CleanDDDArchitecture.Hosts.ServiceDefaults.Core;
+using Aviant.Core.Timing;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.Extensions.Configuration;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 // No try/catch: a startup failure must end the process with a non-zero exit code
 // so the orchestrator restarts it instead of treating it as a clean shutdown.
 var builder = Host.CreateApplicationBuilder(args);
+builder.AddServiceDefaults();
 
 builder.Configuration
     .AddYamlFile("appsettings.yaml", false, true)

@@ -1,3 +1,4 @@
+using CleanDDDArchitecture.Hosts.ServiceDefaults.Core;
 using CleanDDDArchitecture.Hosts.RestApi.Presentation;
 using CleanDDDArchitecture.Hosts.RestApi.Presentation.Setup;
 using CleanDDDArchitecture.Hosts.RestApi.Core.Resources;
@@ -12,6 +13,7 @@ try
 {
     // Create a Web Presentation Builder. This is the first step in setting up an ASP.NET Core application.
     var builder = WebApplication.CreateBuilder(args);
+    builder.AddServiceDefaults();
 
     // Create a new logger for the application using Serilog
     Log.Logger = new LoggerConfiguration()
@@ -43,6 +45,7 @@ try
     
     // Configure middleware pipeline using extension method from AppBuilderConfiguration class
     app.ConfigureAppBuilder(app.Services, builder.Environment);
+    app.MapDefaultEndpoints();
     
     // Run the application
     await app.RunAsync()

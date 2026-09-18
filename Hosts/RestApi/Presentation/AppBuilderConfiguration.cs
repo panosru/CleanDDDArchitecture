@@ -30,7 +30,6 @@ public static class AppBuilderConfiguration
         app.UseNotInDevelopmentBuilder(environment);
         app.UseSerilogBuilder();
         app.UseHangfireBuilder();
-        app.UseHealthChecksBuilder();
         app.UseSwaggerBuilder();
         app.UseHttpsRedirection();
         app.UseStaticFilesBuilder();

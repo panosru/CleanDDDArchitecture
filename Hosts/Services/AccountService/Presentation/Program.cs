@@ -1,3 +1,4 @@
+using CleanDDDArchitecture.Hosts.ServiceDefaults.Core;
 using Asp.Versioning;
 using Aviant.Application.ApplicationEvents;
 using Aviant.Application.Behaviours;
@@ -31,6 +32,7 @@ using System.Globalization;
 using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddServiceDefaults();
 
 builder.Configuration.AddYamlFile("appsettings.yaml", false, true)
     .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yaml", true, true)
@@ -127,7 +129,7 @@ ServiceLocator.Initialise(app.Services);
 app.UseApiErrorHandling();
 app.MapOpenApi();
 app.MapScalarApiReference();
-app.UseHealthChecks("/health");
+app.MapDefaultEndpoints();
 app.UseSession();
 app.UseRateLimiter();
 app.UseRouting();
