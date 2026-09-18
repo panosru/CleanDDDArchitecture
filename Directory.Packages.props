@@ -21,7 +21,7 @@
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.12" />
 
     <!-- Background Jobs (PostgreSQL storage only - no SqlServer) -->
-    <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.10" />
+    <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.25" />
     <PackageVersion Include="Hangfire.Core" Version="1.8.10" />
     <PackageVersion Include="Hangfire.PostgreSql" Version="1.21.0" />
 
