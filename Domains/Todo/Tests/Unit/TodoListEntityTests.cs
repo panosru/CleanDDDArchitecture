@@ -9,7 +9,7 @@ public sealed class TodoListEntityTests
     [Fact]
     public async Task ValidateAsyncShouldRejectShortTitles()
     {
-        var entity = new TodoListEntity { Title = "Tiny" };
+        var entity = TodoListEntity.Create("Tiny");
 
         var isValid = await entity.ValidateAsync(TestContext.Current.CancellationToken);
 
@@ -19,7 +19,7 @@ public sealed class TodoListEntityTests
     [Fact]
     public async Task ValidateAsyncShouldAcceptTitlesLongerThanFiveCharacters()
     {
-        var entity = new TodoListEntity { Title = "Groceries" };
+        var entity = TodoListEntity.Create("Groceries");
 
         var isValid = await entity.ValidateAsync(TestContext.Current.CancellationToken);
 

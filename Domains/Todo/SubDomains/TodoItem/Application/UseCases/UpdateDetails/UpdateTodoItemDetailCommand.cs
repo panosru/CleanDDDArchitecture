@@ -48,9 +48,9 @@ internal sealed record UpdateTodoItemDetailCommand(
             if (entity is null)
                 throw new NotFoundException(nameof(TodoItemEntity), command.Id);
 
-            entity.ListId   = command.ListId;
-            entity.Priority = command.Priority;
-            entity.Note     = command.Note;
+            entity.MoveTo(command.ListId);
+            entity.SetPriority(command.Priority);
+            entity.SetNote(command.Note);
 
             await _todoItemWriteRepository.UpdateAsync(entity, cancellationToken)
                .ConfigureAwait(false);

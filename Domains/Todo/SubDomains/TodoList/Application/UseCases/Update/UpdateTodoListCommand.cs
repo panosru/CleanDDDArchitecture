@@ -43,7 +43,7 @@ internal sealed record UpdateTodoListCommand(int Id, string Title) : Command
             if (entity is null)
                 throw new NotFoundException(nameof(TodoListEntity), command.Id);
 
-            entity.Title = command.Title;
+            entity.Rename(command.Title);
 
             await _todoListWriteRepository.UpdateAsync(entity, cancellationToken)
                .ConfigureAwait(false);

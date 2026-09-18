@@ -47,8 +47,12 @@ internal sealed partial record UpdateTodoItemCommand(
             if (entity is null)
                 throw new NotFoundException(nameof(TodoItemEntity), command.Id);
 
-            entity.Title       = command.Title;
-            entity.IsCompleted = command.Done;
+            entity.Rename(command.Title);
+
+            if (command.Done)
+                entity.Complete();
+            else
+                entity.Reopen();
 
             await _todoItemWriteRepository.UpdateAsync(entity, cancellationToken)
                .ConfigureAwait(false);

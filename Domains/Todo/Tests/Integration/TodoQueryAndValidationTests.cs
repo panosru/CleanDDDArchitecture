@@ -117,21 +117,15 @@ public sealed class TodoQueryAndValidationTests
 
             if (!await environment.WriteContext.TodoLists.AnyAsync(cancellationToken))
             {
-                environment.WriteContext.TodoLists.Add(
-                    new TodoListEntity
-                    {
-                        Id = -1,
-                        Title = "Shopping",
-                        Created = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                        CreatedBy = Guid.Empty
-                    });
-                environment.WriteContext.TodoItems.Add(
-                    new TodoItemEntity
-                    {
-                        Id = -1,
-                        ListId = -1,
-                        Title = "Apples"
-                    });
+                var shopping = TodoListEntity.Create("Shopping");
+                shopping.Id        = -1;
+                shopping.Created   = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                shopping.CreatedBy = Guid.Empty;
+                environment.WriteContext.TodoLists.Add(shopping);
+
+                var apples = TodoItemEntity.Create(listId: -1, title: "Apples");
+                apples.Id = -1;
+                environment.WriteContext.TodoItems.Add(apples);
                 await environment.WriteContext.SaveChangesAsync(cancellationToken);
             }
 

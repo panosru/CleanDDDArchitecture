@@ -34,7 +34,7 @@ internal sealed record CreateTodoListCommand(string Title) : Command<Lazy<Create
             CreateTodoListCommand command,
             CancellationToken     cancellationToken)
         {
-            var entity = new TodoListEntity { Title = command.Title };
+            var entity = TodoListEntity.Create(command.Title);
 
 
             _applicationEventDispatcher.AddPreCommitEvent(
