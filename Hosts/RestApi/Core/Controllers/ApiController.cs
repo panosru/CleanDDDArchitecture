@@ -1,49 +1,15 @@
-﻿using Aviant.Application.Orchestration;
-using Aviant.Application.UseCases;
+﻿using Aviant.Application.UseCases;
+using Aviant.Presentation.AspNetCore.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanDDDArchitecture.Hosts.RestApi.Core.Controllers;
 
-/// <inheritdoc />
-/// <summary>
-/// API Shared Controller
-/// </summary>
-[ApiController]
+// Every API controller routes as api/{domain segment}/...; see RouteSegmentAttribute.
 [Route("api/[segments]")]
-public abstract class ApiSharedController : ControllerBase;
+public abstract class ApiController : OrchestratorController;
 
-/// <inheritdoc />
-/// <summary>
-/// API Controller
-/// </summary>
-public abstract class ApiController : ApiSharedController
-{
-    /// <summary>
-    /// </summary>
-    protected IOrchestrator Orchestrator =>
-        HttpContext.RequestServices.GetRequiredService<IOrchestrator>();
-}
-
-/// <inheritdoc />
-/// <summary>
-/// API Controller Generic
-/// </summary>
-/// <typeparam name="TUseCase"></typeparam>
-/// <typeparam name="TUseCaseOutput"></typeparam>
-public abstract class ApiController<TUseCase, TUseCaseOutput> : ApiSharedController, IUseCaseOutput
+[Route("api/[segments]")]
+public abstract class ApiController<TUseCase, TUseCaseOutput>(TUseCase useCase)
+    : UseCaseController<TUseCase, TUseCaseOutput>(useCase)
     where TUseCase : class, IUseCase<TUseCaseOutput>
-    where TUseCaseOutput : class, IUseCaseOutput
-{
-    protected readonly TUseCase UseCase;
-
-    protected ApiController(TUseCase useCase) => UseCase = useCase;
-
-    protected IActionResult ViewModel { get; set; } = new NoContentResult();
-    
-    /// <summary>
-    /// </summary>
-    /// <param name="object"></param>
-    void IUseCaseOutput.BadRequest(object? @object) =>
-        ViewModel = BadRequest(@object);
-}
+    where TUseCaseOutput : class, IUseCaseOutput;

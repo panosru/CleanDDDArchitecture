@@ -54,7 +54,7 @@ Every domain has the same layers, and the dependency rules between them are test
 | **CrossCutting** | Dependency registration for the domain | all of the above |
 | **Hosts/…/Presentation** | Controllers and minimal API endpoints | Application |
 
-A request goes: **controller or endpoint → use case → orchestrator → MediatR pipeline** (validation, logging, retries) **→ handler → aggregate**. Then either a success, a refusal returned as a failed response, or a fault handled by the single ProblemDetails error handler.
+A request goes: **controller or endpoint → use case → orchestrator → MediatR pipeline** (validation, logging, retries) **→ handler → aggregate**. Then either a success, a refusal returned as a failed response, or an exception answered as RFC 9457 problem details: Aviant's handler maps validation failures (400), missing resources (404) and refused domain rules (400), and anything else is a logged 500.
 
 ## Getting started
 

@@ -1,3 +1,4 @@
+using Aviant.Presentation.AspNetCore.Controllers;
 using System.Reflection;
 using CleanDDDArchitecture.Hosts.RestApi.Core.Controllers;
 using CleanDDDArchitecture.Hosts.RestApi.Core.Routing;
@@ -123,9 +124,10 @@ public class CustomRouteConvention : IApplicationModelConvention
         // A controller type is considered a base controller if it is either ApiController or
         // a generic variant of ApiController<TUseCase, TUseCaseOutput>.
         return controllerType == typeof(ApiController) ||
-               controllerType == typeof(ApiSharedController) ||
+               controllerType == typeof(OrchestratorController) ||
                (controllerType.IsGenericType && 
-                controllerType.GetGenericTypeDefinition() == typeof(ApiController<,>));
+                (controllerType.GetGenericTypeDefinition() == typeof(ApiController<,>)
+                    || controllerType.GetGenericTypeDefinition() == typeof(UseCaseController<,>)));
     }
 
     /// <summary>

@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Hosts\RestApi\Core\Core.csproj" />
     <ProjectReference Include="..\..\..\Library\Aviant\src\Kernel\Application\Application.csproj" />
+    <ProjectReference Include="..\..\..\Library\Aviant\src\AspNetCore\Presentation\Presentation.csproj" />
     <ProjectReference Include="..\..\..\Library\Aviant\src\Identity\Application\Application.csproj" />
   </ItemGroup>
 </Project>

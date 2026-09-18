@@ -17,7 +17,7 @@ namespace CleanDDDArchitecture.Hosts.RestApi.Tests.Behaviour;
 /// <summary>
 ///     The one error pipeline every host uses: exceptions become RFC 9457 problem details.
 /// </summary>
-public sealed class ProblemDetailsExceptionHandlerTests
+public sealed class ErrorPipelineTests
 {
     [Fact]
     public async Task ValidationExceptionBecomes400WithTheFieldErrors()
@@ -59,6 +59,16 @@ public sealed class ProblemDetailsExceptionHandlerTests
 
         using var body = await ReadAsync(response);
         body.RootElement.GetProperty("detail").GetString().Should().Be("helpful detail");
+    }
+
+    [Fact]
+    public async Task ARefusedDomainRuleBecomes400WithItsMessage()
+    {
+        using var response = await SendAsync(new Aviant.Core.Exceptions.DomainRuleException("An archived list cannot take new items."));
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        using var body = await ReadAsync(response);
+        body.RootElement.GetProperty("detail").GetString().Should().Be("An archived list cannot take new items.");
     }
 
     private static async Task<HttpResponseMessage> SendAsync(Exception toThrow, string environment = "Production")

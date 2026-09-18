@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Library\Aviant\src\Kernel\Application\Application.csproj" />
+      <ProjectReference Include="..\..\..\Library\Aviant\src\AspNetCore\Presentation\Presentation.csproj" />
     </ItemGroup>
 
     <ItemGroup>
