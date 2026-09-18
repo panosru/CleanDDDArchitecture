@@ -3,6 +3,11 @@ using CleanDDDArchitecture.Hosts.RestApi.Presentation.Setup;
 using CleanDDDArchitecture.Hosts.RestApi.Core.Resources;
 using Serilog;
 using Serilog.Debugging;
+// Bootstrap logger: startup failures are logged even before configuration is read.
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
+
 try
 {
     // Create a Web Presentation Builder. This is the first step in setting up an ASP.NET Core application.
@@ -47,9 +52,7 @@ catch (Exception e)
     // Ignore HostAbortedException that is thrown when the application is stopped using Ctrl+C
     when (e is not HostAbortedException)
 {
-    // Log any fatal exception that occurs and print it on the console
     Log.Fatal(e, Resource.HostTerminatedUnexpectedly);
-    Console.WriteLine(e);
 }
 finally
 {
