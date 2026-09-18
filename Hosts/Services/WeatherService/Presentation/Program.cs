@@ -84,7 +84,7 @@ builder.Services.AddValidatorsFromAssemblies(WeatherCrossCutting.ValidatorAssemb
 builder.Services.AddAviantCqrs([typeof(Program).Assembly, .. WeatherCrossCutting.MediatorAssemblies()]);
 builder.Services.AddAviantUseCases([typeof(Program).Assembly, .. WeatherCrossCutting.MediatorAssemblies()]);
 
-builder.Services.AddSingleton<IJobRunner, JobRunner>();
+builder.Services.AddAviantJobs();
 builder.Services.AddHangfire(configuration => configuration
         .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
         .UseSimpleAssemblyNameTypeSerializer()

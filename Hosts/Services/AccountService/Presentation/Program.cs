@@ -83,7 +83,7 @@ builder.Services.AddValidatorsFromAssemblies(AccountCrossCutting.ValidatorAssemb
 builder.Services.AddAviantCqrs([typeof(Program).Assembly, .. AccountCrossCutting.MediatorAssemblies()]);
 builder.Services.AddAviantUseCases([typeof(Program).Assembly, .. AccountCrossCutting.MediatorAssemblies()]);
 
-builder.Services.AddSingleton<IJobRunner, JobRunner>();
+builder.Services.AddAviantJobs();
 builder.Services.AddHangfire(configuration => configuration
         .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
         .UseSimpleAssemblyNameTypeSerializer()

@@ -11,7 +11,7 @@ internal sealed class SyncWeatherServiceJobOptions : IJobOptions;
 internal class SyncWeatherServiceJob(ILogger<SyncWeatherServiceJob> logger) : IJob<SyncWeatherServiceJobOptions>
 {
     /// <inheritdoc />
-    public async Task PerformAsync(SyncWeatherServiceJobOptions jobOptions)
+    public async Task PerformAsync(SyncWeatherServiceJobOptions jobOptions, CancellationToken cancellationToken)
     {
         await Task.Delay(TimeSpan.FromSeconds(10))
            .ConfigureAwait(false);

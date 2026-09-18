@@ -23,7 +23,8 @@ public static class Email
             provider => new SmtpClientFactory(
                 configuration["EmailSettings:SmtpHost"],
                 int.Parse(configuration["EmailSettings:SmtpPort"]!, CultureInfo.InvariantCulture),
-                bool.Parse(configuration["EmailSettings:EnableSsl"]),
+                // Optional: Aspire and Compose point at Mailpit, which has no TLS.
+                configuration.GetValue("EmailSettings:EnableSsl", defaultValue: false),
                 configuration["EmailSettings:SmtpUsername"],
                 configuration["EmailSettings:SmtpPassword"]));
         

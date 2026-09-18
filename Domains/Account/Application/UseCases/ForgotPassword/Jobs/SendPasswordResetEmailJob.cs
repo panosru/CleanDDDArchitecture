@@ -34,7 +34,7 @@ internal sealed class SendPasswordResetEmailJob : IJob<SendPasswordResetEmailJob
         _emailService = emailService;
     }
 
-    public async Task PerformAsync(SendPasswordResetEmailJobOptions jobOptions)
+    public async Task PerformAsync(SendPasswordResetEmailJobOptions jobOptions, CancellationToken cancellationToken)
     {
         var apiBaseUrl = _appSettings.BaseUrl.TrimEnd('/');
         var instructions = $$"""
