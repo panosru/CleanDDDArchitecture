@@ -16,6 +16,7 @@ declare -a TEST_PROJECTS=(
   "$ROOT_DIR/Domains/Todo/Tests/Unit/Unit.csproj"
   "$ROOT_DIR/Domains/Todo/Tests/Integration/Integration.csproj"
   "$ROOT_DIR/Domains/Weather/Tests/Behaviour/Behaviour.csproj"
+  "$ROOT_DIR/Tests/Architecture/Architecture.csproj"
   "$ROOT_DIR/Hosts/RestApi/Tests/Behaviour/Behaviour.csproj"
   "$ROOT_DIR/Library/Aviant/tests/EventSourcing/Unit/Unit.csproj"
   "$ROOT_DIR/Library/Aviant/tests/Kernel/Unit/Unit.csproj"
