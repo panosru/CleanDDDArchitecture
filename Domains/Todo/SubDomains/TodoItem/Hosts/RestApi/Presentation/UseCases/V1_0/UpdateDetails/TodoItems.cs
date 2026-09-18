@@ -43,7 +43,7 @@ public sealed class TodoItems
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> UpdateDetails(
-        [FromQuery] int                      id,
+        [FromRoute] int                      id,
         [FromBody]  TodoItemUpdateDetailsDto dto)
     {
         if (id != dto.Id)
