@@ -13,19 +13,20 @@ try
 {
     // Create a Web Presentation Builder. This is the first step in setting up an ASP.NET Core application.
     var builder = WebApplication.CreateBuilder(args);
-    builder.AddServiceDefaults();
 
-    // Create a new logger for the application using Serilog
+    // Load the YAML configuration first: the Serilog section lives there.
+    new ConfigurationSetup().Setup(builder);
+
+    // Replace the bootstrap logger with the configured one. Creating it before the YAML
+    // files were loaded produced a logger with no sinks, which swallowed every startup error.
     Log.Logger = new LoggerConfiguration()
          .ReadFrom.Configuration(builder.Configuration)
          .CreateLogger();
-    
-    // Use Serilog as the logger for the application
-    builder.Host.UseSerilog((context, configuration) => 
+
+    builder.Host.UseSerilog((context, configuration) =>
         configuration.ReadFrom.Configuration(context.Configuration));
 
-    // Setup configuration using the ConfigurationSetup class
-    new ConfigurationSetup().Setup(builder);
+    builder.AddServiceDefaults();
 
     // Setup services using the ServicesSetup class
     new ServicesSetup().Setup(builder.Services);
@@ -56,6 +57,9 @@ catch (Exception e)
     when (e is not HostAbortedException)
 {
     Log.Fatal(e, Resource.HostTerminatedUnexpectedly);
+
+    // A failed start must not look like a clean exit to whatever supervises the process.
+    Environment.ExitCode = 1;
 }
 finally
 {
