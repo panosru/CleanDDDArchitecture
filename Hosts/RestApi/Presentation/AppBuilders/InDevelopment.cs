@@ -17,7 +17,6 @@ public static class InDevelopment
     {
         if (environment.IsDevelopment())
         {
-            app.UseDeveloperExceptionPage();
             app.UseMigrationsEndPoint();
         }
         

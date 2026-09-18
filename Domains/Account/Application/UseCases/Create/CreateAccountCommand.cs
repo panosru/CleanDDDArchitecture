@@ -1,10 +1,11 @@
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 using Aviant.Application.ApplicationEvents;
 using Aviant.Core.Messages;
 using Aviant.Application.EventSourcing.Commands;
 using Aviant.Application.Identity;
 using Aviant.Application.Processors;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Events;
+using CleanDDDArchitecture.Domains.Account.Core.ValueObjects;
 
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 
@@ -48,6 +49,10 @@ public sealed record CreateAccountCommand(
             CreateAccountCommand command,
             CancellationToken cancellationToken)
         {
+            // Build the value objects first: a refusal must come before the identity user exists.
+            var email = EmailAddress.From(command.Email);
+            var name  = PersonName.From(command.FirstName, command.LastName);
+
             var createUserResult = await _identityService.CreateUserAsync(
                     command.Email,
                     command.Password,
@@ -68,10 +73,8 @@ public sealed record CreateAccountCommand(
 
             return AccountAggregate.Create(
                 createUserResult.UserId,
-                command.Email,
-                command.FirstName,
-                command.LastName,
-                command.Email,
+                email,
+                name,
                 command.Roles,
                 command.EmailConfirmed);
         }

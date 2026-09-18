@@ -20,6 +20,7 @@
         <PackageReference Include="NetEscapades.Configuration.Yaml" />
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\ServiceDefaults\Core\Core.csproj" />
         <ProjectReference Include="..\..\Library\Aviant\src\Kernel\Core\Core.csproj" />
     </ItemGroup>
     <ItemGroup>

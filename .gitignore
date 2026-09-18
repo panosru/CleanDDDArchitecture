@@ -470,3 +470,6 @@ _Pvt_Extensions
 # Local tools and malformed generated output paths
 .tools/
 **/bin\\Debug/
+
+# ASP.NET Core Data Protection keys written by local runs (key material; never commit)
+**/DataProtection-Keys/

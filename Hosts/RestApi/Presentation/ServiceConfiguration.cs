@@ -1,8 +1,10 @@
+using CleanDDDArchitecture.Hosts.ServiceDefaults.Core.Errors;
 using Aviant.Infrastructure.CrossCutting;
 using CleanDDDArchitecture.Domains.Shared.Core;
 using CleanDDDArchitecture.Hosts.RestApi.Presentation.ServiceExtensions;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
+using CleanDDDArchitecture.Domains.Shared.Infrastructure.IntegrationEvents;
 
 namespace CleanDDDArchitecture.Hosts.RestApi.Presentation;
 
@@ -56,6 +58,8 @@ public static class ServiceConfiguration
             services.AddDatabaseDeveloperPageExceptionFilter();
 
         services.AddControllersServices();
+        services.AddApiErrorHandling();
+        services.AddIntegrationEvents(configuration);
     }
 
     private static RateLimitPartition<string> BuildIpPolicy(HttpContext context, int permitLimit, TimeSpan window)

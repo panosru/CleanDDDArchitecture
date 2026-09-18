@@ -1,3 +1,5 @@
+using CleanDDDArchitecture.Domains.Weather.Hosts.RestApi.Presentation.Endpoints;
+using CleanDDDArchitecture.Hosts.ServiceDefaults.Core;
 using System.Globalization;
 using System.Text;
 using Aviant.Application.ApplicationEvents;
@@ -34,6 +36,7 @@ using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddServiceDefaults();
 
 builder.Configuration.AddYamlFile("appsettings.yaml", false, true)
     .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yaml", true, true)
@@ -114,6 +117,7 @@ builder.Services.AddApiVersioning(options =>
     });
 builder.Services.AddOpenApi("v1");
 builder.Services.AddOpenApi("v1.1");
+builder.Services.AddApiErrorHandling();
 builder.Services.AddControllers(options =>
     {
         options.Filters.Add(new AuthorizeFilter());
@@ -125,10 +129,11 @@ var app = builder.Build();
 
 ServiceLocator.Initialise(app.Services);
 
-app.UseApiExceptionHandling();
+app.UseApiErrorHandling();
 app.MapOpenApi();
 app.MapScalarApiReference();
-app.UseHealthChecks("/health");
+app.MapDefaultEndpoints();
+app.MapWeatherEndpoints();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

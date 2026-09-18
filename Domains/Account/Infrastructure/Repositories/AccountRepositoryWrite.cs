@@ -1,4 +1,4 @@
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 using CleanDDDArchitecture.Domains.Account.Application.Identity;
 using CleanDDDArchitecture.Domains.Account.Application.Repositories;
 using Aviant.Infrastructure.Identity.Persistence.Repository;

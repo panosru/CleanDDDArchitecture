@@ -2,7 +2,7 @@ using System.Text;
 using Aviant.Application.Identity;
 using Aviant.Application.EventSourcing.Commands;
 using Aviant.Core.Messages;
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;

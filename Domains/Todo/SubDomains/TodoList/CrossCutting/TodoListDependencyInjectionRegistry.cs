@@ -34,6 +34,7 @@ public static class TodoListDependencyInjectionRegistry
 
         services.AddScoped<ITodoListRepositoryRead, TodoListRepositoryRead>();
         services.AddScoped<ITodoListRepositoryWrite, TodoListRepositoryWrite>();
+        services.AddScoped<ITodoListOwnerCleanup, TodoListRepositoryWrite>();
 
         services.AddScoped<GetAllUseCase>();
         services.AddScoped<CreateTodoListUseCase>();

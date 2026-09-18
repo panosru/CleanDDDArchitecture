@@ -1,4 +1,3 @@
-using CleanDDDArchitecture.Hosts.RestApi.Presentation.Filters;
 using CleanDDDArchitecture.Hosts.RestApi.Presentation.Routing;
 using Microsoft.AspNetCore.Mvc.Authorization;
 
@@ -19,7 +18,6 @@ public static class Controllers
         services.AddControllersWithViews(
             options =>
             {
-                options.Filters.Add(new ApiExceptionFilterAttribute());
                 options.Filters.Add(new AuthorizeFilter());
                 options.Conventions.Add(new CustomRouteConvention());
             });

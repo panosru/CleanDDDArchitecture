@@ -15,6 +15,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Xunit;
+using CleanDDDArchitecture.Domains.Shared.Infrastructure.IntegrationEvents;
+using CleanDDDArchitecture.Domains.Shared.Core.IntegrationEvents;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace CleanDDDArchitecture.Domains.Account.Tests.Unit;
 
@@ -122,6 +125,13 @@ public sealed class IdentityServiceLifecycleTests
 
         var user = await sut.Context.Users.SingleAsync(item => item.Id == created.UserId, cancellationToken);
         user.Status.Should().Be(AccountStatus.Deleted);
+
+        // Other contexts learn about the deletion through the outbox.
+        var outbox = await sut.Context.Outbox.SingleAsync(cancellationToken);
+        outbox.Type.Should().Be(typeof(AccountDeletedIntegrationEvent).FullName);
+        IntegrationEventSerializer.Deserialize(outbox.Type, outbox.Payload)
+            .Should().BeOfType<AccountDeletedIntegrationEvent>()
+            .Which.AccountId.Should().Be(created.UserId);
     }
 
     [Fact]
@@ -192,6 +202,8 @@ public sealed class IdentityServiceLifecycleTests
 
         var options = new DbContextOptionsBuilder<AccountDbContextWrite>()
             .UseInMemoryDatabase($"account-identity-lifecycle-tests-{Guid.NewGuid():N}")
+            // The in-memory store has no transactions; deletion opens one to write its outbox message.
+            .ConfigureWarnings(warnings => warnings.Ignore(InMemoryEventId.TransactionIgnoredWarning))
             .Options;
         var context = new AccountDbContextWrite(options);
         var userManager = CreateUserManager(context);

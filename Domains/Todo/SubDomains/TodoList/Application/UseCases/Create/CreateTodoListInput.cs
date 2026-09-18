@@ -1,6 +1,7 @@
 using Aviant.Application.Commands;
 using Aviant.Application.UseCases;
-using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Core.Enums;
+using Aviant.Application.Identity;
+using CleanDDDArchitecture.Domains.Todo.Core.Entities;
 using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Core.Repositories;
 using FluentValidation;
 
@@ -22,29 +23,37 @@ public sealed record CreateTodoListInput(string Title) : UseCaseInput
     /// </summary>
     public sealed class CreateTodoListInputValidator : CommandValidator<CreateTodoListInput>
     {
+        private readonly ICurrentUserService _currentUser;
+
         private readonly ITodoListRepositoryRead _todoListReadRepository;
 
         /// <summary>
         ///     Constructor for the current validator
         /// </summary>
         /// <param name="todoListReadRepository">The Read Repository of the TodoList</param>
-        public CreateTodoListInputValidator(ITodoListRepositoryRead todoListReadRepository)
+        /// <param name="currentUser">The user creating the list; titles are unique per owner</param>
+        public CreateTodoListInputValidator(ITodoListRepositoryRead todoListReadRepository, ICurrentUserService currentUser)
         {
             _todoListReadRepository = todoListReadRepository;
+            _currentUser            = currentUser;
 
             RuleFor(v => v.Title)
                .NotEmpty()
                .WithMessage("Title is required.")
-               .MaximumLength((int)ValidationSettings.TitleMaxLength)
+               .MaximumLength(TodoListEntity.TitleMaxLength)
                .WithMessage(
                     "Title must not exceed {MaxLength} characters, yours had the length of {TotalLength} characters.")
                .MustAsync(BeUniqueTitleAsync)
-               .WithMessage("The specified title already exists.");
+               .WithMessage("You already have a list with this title.");
         }
 
         private async Task<bool> BeUniqueTitleAsync(string title, CancellationToken cancellationToken)
         {
-            return await _todoListReadRepository.AllAsync(l => l.Title != title, cancellationToken)
+            // Titles are unique per owner: another user's list may have the same name.
+            var owner = _currentUser.UserId;
+
+            return await _todoListReadRepository
+               .AllAsync(l => l.CreatedBy != owner || l.Title != title, cancellationToken)
                .ConfigureAwait(false);
         }
     }

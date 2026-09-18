@@ -2,6 +2,7 @@
 
 using Aviant.Core.Configuration;
 using Aviant.Core.Entities;
+using Aviant.Core.Exceptions;
 using Aviant.Core.Identity.Entities;
 
 #pragma warning disable 8618
@@ -15,23 +16,62 @@ public sealed class TodoItemEntity
       IDeletionAudited,
       ISoftDelete
 {
-    public int ListId { get; set; }
+    public const int TitleMaxLength = 200;
 
-    public string Title { get; set; }
+    // For EF Core.
+    private TodoItemEntity()
+    { }
 
-    public string? Note { get; set; }
+    public int ListId { get; private set; }
 
-    public DateTime? Reminder { get; set; }
+    public string Title { get; private set; }
 
-    public bool IsCompleted { get; set; }
+    public string? Note { get; private set; }
 
-    public PriorityLevel Priority { get; set; } = PriorityLevel.Medium;
+    public DateTime? Reminder { get; private set; }
 
-    public State State { get; set; } = State.Active;
+    public bool IsCompleted { get; private set; }
+
+    public PriorityLevel Priority { get; private set; } = PriorityLevel.Medium;
+
+    public State State { get; private set; } = State.Active;
+
+    /// <summary>A new, open item on the given list.</summary>
+    public static TodoItemEntity Create(int listId, string title) => new()
+    {
+        ListId = listId,
+        Title  = ValidTitle(title)
+    };
+
+    public void Rename(string title) => Title = ValidTitle(title);
+
+    public void Complete() => IsCompleted = true;
+
+    public void Reopen() => IsCompleted = false;
+
+    public void MoveTo(int listId) => ListId = listId;
+
+    public void SetPriority(PriorityLevel priority) => Priority = priority;
+
+    /// <summary>Sets the note; a blank note means no note.</summary>
+    public void SetNote(string? note) => Note = string.IsNullOrWhiteSpace(note) ? null : note.Trim();
+
+    private static string ValidTitle(string title)
+    {
+        var trimmed = title?.Trim() ?? string.Empty;
+
+        if (trimmed.Length == 0)
+            throw new DomainRuleException("A todo item needs a title.");
+
+        if (trimmed.Length > TitleMaxLength)
+            throw new DomainRuleException($"A todo item title can be at most {TitleMaxLength} characters.");
+
+        return trimmed;
+    }
 
     #region .:: Navigation Properties ::.
 
-    public TodoListEntity List { get; set; }
+    public TodoListEntity List { get; private set; }
 
     #endregion
 

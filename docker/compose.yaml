@@ -318,6 +318,7 @@ services:
       ConnectionStrings__PGSQLConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-cleandddarchitecture};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-postgres}
       ConnectionStrings__eventstore: tcp://admin:changeit@eventstore:1113
       ConnectionStrings__kafka: kafka:9092
+      IntegrationEvents__Transport: Kafka
       EmailSettings__SmtpHost: mailpit
       EmailSettings__SmtpPort: 1025
       EventSourcing__EnableConsumer: "false"
@@ -358,6 +359,8 @@ services:
       postgres:
         condition: service_healthy
     environment:
+      ConnectionStrings__kafka: kafka:9092
+      IntegrationEvents__Transport: Kafka
       ASPNETCORE_URLS: http://+:8080
       DOTNET_ENVIRONMENT: Development
       DataProtection__KeysPath: /keys

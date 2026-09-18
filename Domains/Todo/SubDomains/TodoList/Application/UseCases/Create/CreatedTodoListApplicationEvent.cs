@@ -1,4 +1,6 @@
 using Aviant.Application.ApplicationEvents;
+using Microsoft.Extensions.Logging;
+
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
 
 internal sealed record CreatedTodoListApplicationEvent(string Name) : ApplicationEvent
@@ -6,24 +8,18 @@ internal sealed record CreatedTodoListApplicationEvent(string Name) : Applicatio
     public string Name { get; set; } = Name;
 }
 
-internal sealed class TodoCreatedApplicationEventHandler : ApplicationEventHandler<CreatedTodoListApplicationEvent>
+internal sealed partial class TodoCreatedApplicationEventHandler(ILogger<TodoCreatedApplicationEventHandler> logger)
+    : ApplicationEventHandler<CreatedTodoListApplicationEvent>
 {
     public override Task Handle(
         CreatedTodoListApplicationEvent @event,
         CancellationToken               cancellationToken)
     {
-        Console.WriteLine(@event.Name);
+        LogListCreated(@event.Name);
 
         return Task.CompletedTask;
     }
-}
 
-internal sealed class TodoCreatedApplicationEventHandler2 : ApplicationEventHandler<CreatedTodoListApplicationEvent>
-{
-    public override Task Handle(
-        CreatedTodoListApplicationEvent @event,
-        CancellationToken               cancellationToken)
-    {
-        return Task.CompletedTask;
-    }
+    [LoggerMessage(Level = LogLevel.Information, Message = "Todo list {Name} created")]
+    private partial void LogListCreated(string name);
 }

@@ -3,7 +3,7 @@ using System.Globalization;
 using Microsoft.IdentityModel.JsonWebTokens;
 using System.Security.Claims;
 using System.Text;
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 using CleanDDDArchitecture.Domains.Account.Application.Identity;
 using CleanDDDArchitecture.Domains.Account.Application.Persistence;
 using CleanDDDArchitecture.Domains.Account.Application.Repositories;
@@ -78,6 +78,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using CleanDDDArchitecture.Domains.Shared.Infrastructure.IntegrationEvents;
 
 namespace CleanDDDArchitecture.Domains.Account.CrossCutting;
 
@@ -236,6 +237,9 @@ public static class AccountDependencyInjectionRegistry
 
 
         services.AddEventsService<AccountAggregate, AccountAggregateId>();
+
+        // Publishes AccountDeletedIntegrationEvent and future account events from the outbox.
+        services.AddOutboxDispatcher<AccountDbContextWrite>();
 
         services.AddSingleton<IEventConsumerFactory, EventConsumerFactory>();
 

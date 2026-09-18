@@ -10,6 +10,7 @@ using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
 using AwesomeAssertions;
 using Npgsql;
+using CleanDDDArchitecture.Domains.Account.Core.Events;
 
 namespace CleanDDDArchitecture.Domains.Account.Tests.Integration.Infrastructure;
 
@@ -181,6 +182,45 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
                 $"confirmed user '{email}' in postgres",
                 cancellationToken).ConfigureAwait(false)
             ;
+    }
+
+    /// <summary>Waits until <paramref name="owner" /> has exactly <paramref name="expected" /> live todo lists.</summary>
+    public async Task WaitForActiveTodoListCountAsync(
+        Guid owner,
+        int expected,
+        TimeSpan timeout,
+        CancellationToken cancellationToken = default)
+    {
+        await using var connection = new NpgsqlConnection(_postgresConnectionString);
+        await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
+
+        try
+        {
+            await WaitForResultAsync(
+                    async () =>
+                    {
+                        await using var command = connection.CreateCommand();
+                        command.CommandText =
+                            """
+                            SELECT COUNT(*)
+                            FROM "TodoLists"
+                            WHERE "CreatedBy" = @owner AND "IsDeleted" = FALSE
+                            """;
+                        command.Parameters.AddWithValue("owner", owner);
+
+                        var count = Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false), CultureInfo.InvariantCulture);
+                        return (count == expected, count);
+                    },
+                    timeout,
+                    $"{expected} live todo lists owned by {owner}",
+                    cancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch (TimeoutException exception)
+        {
+            // The work happens in other processes; their output is what explains a timeout.
+            throw new TimeoutException($"{exception.Message}{Environment.NewLine}{GetServiceLogs()}", exception);
+        }
     }
 
     public async Task<IReadOnlyCollection<string>> WaitForAccountEventsInEventStoreAsync(
@@ -493,6 +533,7 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
                 ["EmailSettings__SmtpPassword"] = string.Empty,
                 ["EmailSettings:SmtpPassword"] = string.Empty,
                 ["PhoneVerification__FixedCode"] = "123456",
+                ["IntegrationEvents__Transport"] = "Kafka",
                 ["EventSourcing__EnableConsumer"] = "false",
                 ["Jwt__Issuer"] = JwtIssuer,
                 ["Jwt__Audience"] = JwtAudience,
@@ -517,6 +558,8 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
                 ["DOTNET_ENVIRONMENT"] = "Development",
                 ["DataProtection__KeysPath"] = Path.Combine(_artifactsRoot, "todo-dp"),
                 ["ConnectionStrings__PGSQLConnection"] = _postgresConnectionString!,
+                ["ConnectionStrings__kafka"] = _kafkaBootstrapServers!,
+                ["IntegrationEvents__Transport"] = "Kafka",
                 ["Jwt__Issuer"] = JwtIssuer,
                 ["Jwt__Audience"] = JwtAudience,
                 ["Jwt__Access__Key256Bit"] = JwtAccessKey256,
@@ -712,14 +755,14 @@ internal sealed partial class AccountIntegrationEnvironment : IAsyncDisposable
         string assemblyName,
         CancellationToken cancellationToken)
     {
-        var outputPath = GetProjectOutputPath(relativeProjectDirectory, assemblyName);
-        if (File.Exists(outputPath))
-        {
-            Log($"build: reusing existing output for {relativeProjectPath} at '{outputPath}'");
-            return;
-        }
-
+        // Always build: reusing whatever output already exists ran stale service code whenever the
+        // last Release build predated the change under test. The build is incremental, so an
+        // up-to-date project costs a few seconds.
         await BuildProjectAsync(relativeProjectPath, cancellationToken).ConfigureAwait(false);
+
+        var outputPath = GetProjectOutputPath(relativeProjectDirectory, assemblyName);
+        if (!File.Exists(outputPath))
+            throw new InvalidOperationException($"Building {relativeProjectPath} did not produce '{outputPath}'.");
     }
 
     private string GetProjectOutputPath(string relativeProjectDirectory, string assemblyName)

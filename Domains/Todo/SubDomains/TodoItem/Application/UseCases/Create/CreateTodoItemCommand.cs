@@ -26,11 +26,7 @@ internal sealed record CreateTodoItemCommand(int ListId, string Title) : Command
             CreateTodoItemCommand command,
             CancellationToken     cancellationToken)
         {
-            TodoItemEntity entity = new()
-            {
-                ListId = command.ListId,
-                Title  = command.Title
-            };
+            var entity = TodoItemEntity.Create(command.ListId, command.Title);
 
             await _todoItemWriteRepository.InsertAsync(entity, cancellationToken)
                .ConfigureAwait(false);

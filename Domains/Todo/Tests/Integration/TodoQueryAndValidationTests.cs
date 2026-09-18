@@ -10,6 +10,7 @@ using AwesomeAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Aviant.Application.Exceptions;
+using Aviant.Application.Identity;
 using Xunit;
 
 namespace CleanDDDArchitecture.Domains.Todo.Tests.Integration;
@@ -22,13 +23,29 @@ public sealed class TodoQueryAndValidationTests
         var cancellationToken = TestContext.Current.CancellationToken;
         await using var environment = await TodoTestEnvironment.CreateAsync(cancellationToken);
         var repository = new TodoListRepositoryRead(environment.ReadContext);
-        var validator = new CreateTodoListInput.CreateTodoListInputValidator(repository);
+        // The seeded "Shopping" list belongs to Guid.Empty.
+        var validator = new CreateTodoListInput.CreateTodoListInputValidator(repository, new CurrentUser(Guid.Empty));
 
         var result = await validator.ValidateAsync(new CreateTodoListInput("Shopping"), cancellationToken);
 
         result.IsValid.Should().BeFalse();
-        result.Errors.Should().ContainSingle(error => error.ErrorMessage == "The specified title already exists.");
+        result.Errors.Should().ContainSingle(error => error.ErrorMessage == "You already have a list with this title.");
     }
+
+    [Fact]
+    public async Task CreateTodoListValidatorShouldAllowATitleAnotherUserAlreadyUses()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        await using var environment = await TodoTestEnvironment.CreateAsync(cancellationToken);
+        var repository = new TodoListRepositoryRead(environment.ReadContext);
+        var validator = new CreateTodoListInput.CreateTodoListInputValidator(repository, new CurrentUser(Guid.NewGuid()));
+
+        var result = await validator.ValidateAsync(new CreateTodoListInput("Shopping"), cancellationToken);
+
+        result.IsValid.Should().BeTrue("list titles are unique per owner, not across all users");
+    }
+
+    private sealed record CurrentUser(Guid UserId) : ICurrentUserService;
 
     [Fact]
     public async Task GetTodoItemQueryHandlerShouldReturnSeededTodoTitle()
@@ -117,21 +134,15 @@ public sealed class TodoQueryAndValidationTests
 
             if (!await environment.WriteContext.TodoLists.AnyAsync(cancellationToken))
             {
-                environment.WriteContext.TodoLists.Add(
-                    new TodoListEntity
-                    {
-                        Id = -1,
-                        Title = "Shopping",
-                        Created = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                        CreatedBy = Guid.Empty
-                    });
-                environment.WriteContext.TodoItems.Add(
-                    new TodoItemEntity
-                    {
-                        Id = -1,
-                        ListId = -1,
-                        Title = "Apples"
-                    });
+                var shopping = TodoListEntity.Create("Shopping");
+                shopping.Id        = -1;
+                shopping.Created   = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                shopping.CreatedBy = Guid.Empty;
+                environment.WriteContext.TodoLists.Add(shopping);
+
+                var apples = TodoItemEntity.Create(listId: -1, title: "Apples");
+                apples.Id = -1;
+                environment.WriteContext.TodoItems.Add(apples);
                 await environment.WriteContext.SaveChangesAsync(cancellationToken);
             }
 

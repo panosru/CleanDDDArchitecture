@@ -1,0 +1,42 @@
+name: Template
+
+# Packs the repository as a dotnet new template, creates a solution from it under a
+# different name, and builds that solution, so the template cannot silently break.
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+concurrency:
+  group: template-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  template:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Pack the template
+        run: dotnet pack template/CleanDDDArchitecture.Templates.csproj -o artifacts/template
+
+      - name: Create a solution from it
+        run: |
+          dotnet new install artifacts/template/*.nupkg
+          dotnet new cleanddd -n Acme.Shop -o "$RUNNER_TEMP/acme"
+
+      - name: Build and test the generated solution
+        working-directory: ${{ runner.temp }}/acme
+        run: |
+          dotnet build Acme.Shop.sln
+          dotnet test Tests/Architecture/Architecture.csproj --no-build

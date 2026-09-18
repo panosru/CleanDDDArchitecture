@@ -9,6 +9,7 @@ using System.Globalization;
 using CleanDDDArchitecture.Domains.Account.Tests.Integration.Infrastructure;
 using AwesomeAssertions;
 using Xunit;
+using CleanDDDArchitecture.Domains.Account.Core.Events;
 
 namespace CleanDDDArchitecture.Domains.Account.Tests.Integration;
 
@@ -296,6 +297,15 @@ public sealed class AccountGatewayTodoFlowTests : IAsyncLifetime
         gatewayClient.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
 
+        // A list the account owns, which the Todo context must remove once the account is deleted.
+        var userId = await _environment.WaitForConfirmedUserAsync(email, TimeSpan.FromSeconds(30), cancellationToken);
+        var ownedListResponse = await gatewayClient.PostAsJsonAsync(
+            "/api/todo/list",
+            new { title = "Mine" },
+            cancellationToken);
+        ownedListResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        await _environment.WaitForActiveTodoListCountAsync(userId, 1, TimeSpan.FromSeconds(10), cancellationToken);
+
         var mfaSetupResponse = await gatewayClient.PostAsync("/api/identity/mfa/totp/setup", null, cancellationToken);
         mfaSetupResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         var mfaSetup = await mfaSetupResponse.Content.ReadFromJsonAsync<MfaSetupResponse>(_jsonOptions, cancellationToken);
@@ -509,6 +519,11 @@ public sealed class AccountGatewayTodoFlowTests : IAsyncLifetime
             },
             cancellationToken);
         deletedLoginResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+
+        // Account deletion reaches the Todo service as AccountDeletedIntegrationEvent: written to
+        // the account outbox in the deletion transaction, published to Kafka by the dispatcher,
+        // consumed by the Todo service, which removes the lists.
+        await _environment.WaitForActiveTodoListCountAsync(userId, 0, TimeSpan.FromSeconds(60), cancellationToken);
     }
 
     private async Task<AuthenticateResponse> CreateConfirmedUserAndAuthenticateAsync(

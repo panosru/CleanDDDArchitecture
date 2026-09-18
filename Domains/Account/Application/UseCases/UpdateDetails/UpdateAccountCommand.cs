@@ -1,7 +1,8 @@
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 using Ardalis.GuardClauses;
 using Aviant.Application.EventSourcing.Commands;
 using Aviant.Core.Messages;
+using CleanDDDArchitecture.Domains.Account.Core.ValueObjects;
 
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails;
 
@@ -42,7 +43,7 @@ internal sealed record UpdateAccountCommand(
                 return null!;
             }
 
-            account.ChangeDetails(command.FirstName, command.LastName, account.Email);
+            account.Rename(PersonName.From(command.FirstName, command.LastName));
 
             return account;
         }

@@ -1,7 +1,8 @@
 using Aviant.Application.EventSourcing.Commands;
 using Aviant.Application.Identity;
 using Aviant.Core.Messages;
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Core.ValueObjects;
 
 namespace CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangeEmailConfirm;
 
@@ -63,7 +64,7 @@ internal sealed record ChangeEmailConfirmCommand(string CurrentEmail, string New
                 return null!;
             }
 
-            account.ChangeEmail(command.NewEmail);
+            account.ConfirmEmailChange(EmailAddress.From(command.NewEmail));
 
             return account;
         }

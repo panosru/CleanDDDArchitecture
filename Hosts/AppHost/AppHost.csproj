@@ -7,13 +7,16 @@
     <AssemblyName>CleanDDDArchitecture.Hosts.AppHost</AssemblyName>
     <OutputType>Exe</OutputType>
     <IsAspireHost>true</IsAspireHost>
+    <!-- Aspire keeps generated secrets (e.g. the Postgres password) here, so they survive restarts
+         and still match the data volume. -->
+    <UserSecretsId>31258104-bee2-4c91-aff5-0676bf871e2b</UserSecretsId>
     <!-- AppHost needs net10.0 to match the rest of the solution -->
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" />
     <PackageReference Include="Aspire.Hosting.PostgreSQL" />
-    <PackageReference Include="Aspire.Hosting.Redis" />
+    <PackageReference Include="Aspire.Hosting.Kafka" />
   </ItemGroup>
   <ItemGroup>
     <!-- Microservices mode: each domain runs as an independent service -->
@@ -26,6 +29,12 @@
     <ProjectReference Include="..\Services\WeatherService\Presentation\Presentation.csproj"
                       IsAspireProjectResource="true"
                       AspireProjectMetadataTypeName="CleanDDDArchitecture_Hosts_Services_WeatherService_Presentation" />
+    <ProjectReference Include="..\Gateway\Presentation\Presentation.csproj"
+                      IsAspireProjectResource="true"
+                      AspireProjectMetadataTypeName="CleanDDDArchitecture_Hosts_Gateway_Presentation" />
+    <ProjectReference Include="..\Worker\Worker.csproj"
+                      IsAspireProjectResource="true"
+                      AspireProjectMetadataTypeName="CleanDDDArchitecture_Hosts_Worker" />
     <!-- Monolith mode: single RestApi host aggregating all domains -->
     <ProjectReference Include="..\RestApi\Presentation\Presentation.csproj"
                       IsAspireProjectResource="true"

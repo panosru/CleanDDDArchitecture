@@ -12,15 +12,24 @@ namespace CleanDDDArchitecture.Domains.Todo.Tests.Unit;
 
 public sealed class TodoMappingTests
 {
-    private static TodoItemEntity CompletedItem() => new()
+    private static TodoItemEntity CompletedItem()
     {
-        Id          = 7,
-        ListId      = 3,
-        Title       = "Pears",
-        IsCompleted = true,
-        Priority    = PriorityLevel.High,
-        Note        = "Conference pears"
-    };
+        var item = TodoItemEntity.Create(listId: 3, title: "Pears");
+        item.Id = 7;
+        item.Complete();
+        item.SetPriority(PriorityLevel.High);
+        item.SetNote("Conference pears");
+
+        return item;
+    }
+
+    private static TodoListEntity Groceries()
+    {
+        var list = TodoListEntity.Create("Groceries");
+        list.Id = 3;
+
+        return list;
+    }
 
     [Fact]
     public void TodoItemDtoProjectionShouldMapEveryField()
@@ -39,7 +48,7 @@ public sealed class TodoMappingTests
     public void TodoItemDtoProjectionShouldKeepAMissingNoteNull()
     {
         var item = CompletedItem();
-        item.Note = null;
+        item.SetNote(null);
 
         TodoItemDto.Projection.Compile()(item).Note.Should().BeNull();
     }
@@ -47,7 +56,7 @@ public sealed class TodoMappingTests
     [Fact]
     public void TodoListDtoProjectionShouldIncludeTheListItems()
     {
-        var list = new TodoListEntity { Id = 3, Title = "Groceries" };
+        var list = Groceries();
         ((List<TodoItemEntity>)list.Items).Add(CompletedItem());
 
         var dto = TodoListDto.Projection.Compile()(list);
@@ -79,7 +88,7 @@ public sealed class TodoMappingTests
         var updated = UpdatedTodoItemViewModel.From(item);
         updated.IsCompleted.Should().BeTrue();
 
-        var list = CreatedTodoListViewModel.From(new TodoListEntity { Id = 3, Title = "Groceries" });
+        var list = CreatedTodoListViewModel.From(Groceries());
         list.Id.Should().Be(3);
         list.Title.Should().Be("Groceries");
     }

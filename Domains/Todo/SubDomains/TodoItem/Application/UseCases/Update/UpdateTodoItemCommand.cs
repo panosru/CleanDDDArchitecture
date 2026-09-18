@@ -1,5 +1,6 @@
 ﻿using Aviant.Application.ApplicationEvents;
 using Aviant.Application.Commands;
+using Microsoft.Extensions.Logging;
 using Aviant.Application.Exceptions;
 using Aviant.Application.Processors;
 using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Core.Repositories;
@@ -8,7 +9,7 @@ using CleanDDDArchitecture.Domains.Todo.Core.Entities;
 
 namespace CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Application.UseCases.Update;
 
-internal sealed record UpdateTodoItemCommand(
+internal sealed partial record UpdateTodoItemCommand(
     int    Id,
     string Title,
     bool   Done) : Command<TodoItemViewModel>
@@ -46,8 +47,12 @@ internal sealed record UpdateTodoItemCommand(
             if (entity is null)
                 throw new NotFoundException(nameof(TodoItemEntity), command.Id);
 
-            entity.Title       = command.Title;
-            entity.IsCompleted = command.Done;
+            entity.Rename(command.Title);
+
+            if (command.Done)
+                entity.Complete();
+            else
+                entity.Reopen();
 
             await _todoItemWriteRepository.UpdateAsync(entity, cancellationToken)
                .ConfigureAwait(false);
@@ -76,7 +81,6 @@ internal sealed record UpdateTodoItemCommand(
             if (!response.IsCompleted)
                 return Task.CompletedTask;
 
-            Console.WriteLine($"{nameof(TodoCompletedApplicationEvent)} added");
             _applicationEventDispatcher.AddPostCommitEvent(new TodoCompletedApplicationEvent(response));
 
             return Task.CompletedTask;
@@ -87,16 +91,20 @@ internal sealed record UpdateTodoItemCommand(
 
     #region Nested type: UpdateTodoItemCommandPreProcessor
 
-    internal sealed class UpdateTodoItemCommandPreProcessor : RequestPreProcessor<UpdateTodoItemCommand>
+    internal sealed partial class UpdateTodoItemCommandPreProcessor(ILogger<UpdateTodoItemCommandPreProcessor> logger)
+        : RequestPreProcessor<UpdateTodoItemCommand>
     {
         public override Task Process(
             UpdateTodoItemCommand request,
             CancellationToken     cancellationToken)
         {
-            Console.WriteLine($"Pre handle {request.Title} {request.Done} with ID {request.Id}");
+            LogUpdating(request.Id, request.Done);
 
             return Task.CompletedTask;
         }
+
+        [LoggerMessage(Level = LogLevel.Debug, Message = "Updating todo {Id} (done: {Done})")]
+        private partial void LogUpdating(int id, bool done);
     }
 
     #endregion

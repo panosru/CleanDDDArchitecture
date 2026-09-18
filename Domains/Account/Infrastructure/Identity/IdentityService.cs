@@ -5,6 +5,8 @@ using CleanDDDArchitecture.Domains.Account.Core;
 using CleanDDDArchitecture.Domains.Account.Core.Identity.Dto;
 using CleanDDDArchitecture.Domains.Account.Infrastructure.Identity.Mechanism;
 using CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contexts;
+using CleanDDDArchitecture.Domains.Shared.Core.IntegrationEvents;
+using CleanDDDArchitecture.Domains.Shared.Infrastructure.Outbox;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -808,7 +810,17 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
         if (user.Status == AccountStatus.Deleted)
             return IdentityResult.Success();
 
-        return await ApplyStatusAsync(
+        // The deletion and the event telling other contexts about it commit together: if the
+        // account is deleted, AccountDeletedIntegrationEvent will be published; if the deletion
+        // fails, it never existed. The outbox dispatcher publishes it afterwards.
+        await using var transaction = await _accountDbContextWrite.Database
+            .BeginTransactionAsync(cancellationToken)
+            .ConfigureAwait(false);
+
+        var deleted = OutboxMessage.From(AccountDeletedIntegrationEvent.For(user.Id, DateTime.UtcNow));
+        _accountDbContextWrite.Outbox.Add(deleted);
+
+        var result = await ApplyStatusAsync(
                 user,
                 AccountStatus.Deleted,
                 "Deleted by owner.",
@@ -816,6 +828,17 @@ public sealed class IdentityService : IIdentityService, IAccountAuthenticationSe
                 actorUserId: user.Id,
                 cancellationToken)
             .ConfigureAwait(false);
+
+        if (!result.Succeeded)
+        {
+            _accountDbContextWrite.Entry(deleted).State = EntityState.Detached;
+
+            return result;
+        }
+
+        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+
+        return result;
     }
 
     public async Task<IdentityResult> RequestPhoneVerificationAsync(

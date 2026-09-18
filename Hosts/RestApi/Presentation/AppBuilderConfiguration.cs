@@ -1,6 +1,7 @@
 using Aviant.Core.Services;
 using CleanDDDArchitecture.Domains.Account.CrossCutting;
 using CleanDDDArchitecture.Hosts.RestApi.Presentation.AppBuilders;
+using CleanDDDArchitecture.Hosts.ServiceDefaults.Core.Errors;
 
 namespace CleanDDDArchitecture.Hosts.RestApi.Presentation;
 
@@ -22,11 +23,13 @@ public static class AppBuilderConfiguration
     {
         ServiceLocator.Initialise(serviceProvider);
 
+        // One error pipeline for every environment: problem details, with the exception
+        // message included only in Development.
+        app.UseApiErrorHandling();
         app.UseInDevelopmentBuilder(environment);
         app.UseNotInDevelopmentBuilder(environment);
         app.UseSerilogBuilder();
         app.UseHangfireBuilder();
-        app.UseHealthChecksBuilder();
         app.UseSwaggerBuilder();
         app.UseHttpsRedirection();
         app.UseStaticFilesBuilder();

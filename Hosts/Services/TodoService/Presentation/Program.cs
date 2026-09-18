@@ -1,3 +1,5 @@
+using CleanDDDArchitecture.Domains.Shared.Infrastructure.IntegrationEvents;
+using CleanDDDArchitecture.Hosts.ServiceDefaults.Core;
 using System.Globalization;
 using System.Text;
 using Aviant.Application.ApplicationEvents;
@@ -28,6 +30,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddServiceDefaults();
 
 builder.Configuration.AddYamlFile("appsettings.yaml", false, true)
     .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yaml", true, true)
@@ -90,6 +93,8 @@ builder.Services.AddApiVersioning(options =>
         options.SubstituteApiVersionInUrl = true;
     });
 builder.Services.AddOpenApi();
+builder.Services.AddApiErrorHandling();
+builder.Services.AddIntegrationEvents(builder.Configuration);
 builder.Services.AddControllers(options =>
     {
         options.Filters.Add(new AuthorizeFilter());
@@ -107,10 +112,10 @@ using (var scope = app.Services.CreateScope())
 
 ServiceLocator.Initialise(app.Services);
 
-app.UseApiExceptionHandling();
+app.UseApiErrorHandling();
 app.MapOpenApi();
 app.MapScalarApiReference();
-app.UseHealthChecks("/health");
+app.MapDefaultEndpoints();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

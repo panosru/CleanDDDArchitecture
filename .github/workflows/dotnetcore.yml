@@ -3,8 +3,12 @@ name: Build And Test
 on:
   push:
     branches: [ master ]
+  # Every pull request, including ones stacked on another branch.
   pull_request:
-    branches: [ master ]
+
+concurrency:
+  group: build-test-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   DOTNET_NOLOGO: true

@@ -3,7 +3,7 @@ using Aviant.Application.Jobs;
 using Aviant.Core.EventSourcing.Services;
 using Aviant.Core.Messages;
 using Aviant.Core.Services;
-using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
+using CleanDDDArchitecture.Domains.Account.Core.Aggregates;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangeEmail.Events;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangeEmailConfirm;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangeEmailRequest.Events;
@@ -15,6 +15,8 @@ using AwesomeAssertions;
 using Hangfire.States;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
+using CleanDDDArchitecture.Domains.Account.Core.Events;
+using CleanDDDArchitecture.Domains.Account.Core.ValueObjects;
 
 namespace CleanDDDArchitecture.Domains.Account.Tests.Unit;
 
@@ -65,10 +67,8 @@ public sealed class EmailLifecycleTests
         var aggregateId = Guid.Parse("a4ea848c-f45f-4b5d-b6f3-62215ab59c57");
         var aggregate = AccountAggregate.Create(
             aggregateId,
-            "user@example.com",
-            "Test",
-            "User",
-            "user@example.com",
+            EmailAddress.From("user@example.com"),
+            PersonName.From("Test", "User"),
             ["member"],
             true);
         InitialiseServiceLocator(new StubEventsService(aggregate));
@@ -93,10 +93,8 @@ public sealed class EmailLifecycleTests
         var aggregateId = Guid.Parse("a4ea848c-f45f-4b5d-b6f3-62215ab59c57");
         var aggregate = AccountAggregate.Create(
             aggregateId,
-            "user@example.com",
-            "Test",
-            "User",
-            "user@example.com",
+            EmailAddress.From("user@example.com"),
+            PersonName.From("Test", "User"),
             ["member"],
             true);
         InitialiseServiceLocator(new StubEventsService(aggregate));

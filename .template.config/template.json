@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Panagiotis Kosmidis",
+  "classifications": ["Web", "API", "DDD", "CQRS", "Event Sourcing", "Aspire", "Microservices"],
+  "identity": "CleanDDDArchitecture.Solution",
+  "name": "Clean DDD Architecture",
+  "description": "A .NET 10 solution with bounded contexts, CQRS, an event-sourced aggregate, a transactional outbox, architecture tests and an Aspire AppHost that runs it as a monolith or as microservices. Built on the Aviant library.",
+  "shortName": "cleanddd",
+  "sourceName": "CleanDDDArchitecture",
+  "preferNameDirectory": true,
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  },
+  "symbols": {
+    "identifierPrefix": {
+      "type": "derived",
+      "valueSource": "name",
+      "valueTransform": "identifierWithTrailingUnderscore",
+      "replaces": "CleanDDDArchitecture_",
+      "description": "The solution name as a C# identifier prefix (dots become underscores), used by the Aspire AppHost's generated project types."
+    }
+  },
+  "forms": {
+    "dotsToUnderscores": {
+      "identifier": "replace",
+      "pattern": "\\.",
+      "replacement": "_"
+    },
+    "trailingUnderscore": {
+      "identifier": "replace",
+      "pattern": "^(.*)$",
+      "replacement": "$1_"
+    },
+    "identifierWithTrailingUnderscore": {
+      "identifier": "chain",
+      "steps": ["dotsToUnderscores", "trailingUnderscore"]
+    }
+  },
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "exclude": [
+            ".git/**", "**/.git", "**/.git/**", ".gitmodules",
+            "**/bin/**", "**/obj/**", "**/bin-*/**", "**/DataProtection-Keys/**",
+            "artifacts/**", ".idea/**", ".vs/**", ".tools/**", ".claude/**", "CLAUDE.md", "AGENTS.md",
+            "template/**", "**/*.DotSettings.user", "**/node_modules/**",
+            "CONTRIBUTORS.md", "CHANGELOG.md", ".github/workflows/contributors.yml"
+          ]
+        }
+      ]
+    }
+  ],
+  "primaryOutputs": [
+    { "path": "CleanDDDArchitecture.sln" }
+  ],
+  "postActions": []
+}

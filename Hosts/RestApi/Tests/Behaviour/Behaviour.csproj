@@ -12,6 +12,7 @@
       </PackageReference>
       <PackageReference Include="AwesomeAssertions" />
       <PackageReference Include="Microsoft.NET.Test.Sdk" />
+      <PackageReference Include="Microsoft.AspNetCore.TestHost" />
       <PackageReference Include="xunit.v3" />
       <PackageReference Include="xunit.runner.visualstudio">
         <PrivateAssets>all</PrivateAssets>
@@ -20,6 +21,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Presentation\Presentation.csproj" />
+      <ProjectReference Include="..\..\..\ServiceDefaults\Core\Core.csproj" />
     </ItemGroup>
 
 </Project>
