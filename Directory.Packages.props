@@ -20,7 +20,7 @@
     <PackageVersion Include="EasyCaching.Core" Version="1.9.2" />
     <PackageVersion Include="EasyCaching.InMemory" Version="1.9.2" />
     <PackageVersion Include="EasyCaching.Redis" Version="1.9.2" />
-    <PackageVersion Include="StackExchange.Redis" Version="2.11.8" />
+    <PackageVersion Include="StackExchange.Redis" Version="2.13.17" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.3" />
 
     <!-- Background Jobs (PostgreSQL storage only - no SqlServer) -->
@@ -77,7 +77,9 @@
     <PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0" />
 
     <!-- .NET Aspire -->
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.2.0" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.5.4" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.5.4" />
+    <PackageVersion Include="Aspire.Hosting.Redis" Version="13.5.4" />
 
     <!-- Testing -->
     <PackageVersion Include="AwesomeAssertions" Version="9.6.0" />

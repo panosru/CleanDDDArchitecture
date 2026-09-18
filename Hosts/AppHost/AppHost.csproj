@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
+  <!-- Aspire ships as an MSBuild SDK, not a workload; version pinned in global.json -->
+  <Sdk Name="Aspire.AppHost.Sdk" />
   <PropertyGroup>
     <RootNamespace>CleanDDDArchitecture.Hosts.AppHost</RootNamespace>
     <AssemblyName>CleanDDDArchitecture.Hosts.AppHost</AssemblyName>
@@ -10,17 +12,23 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+    <PackageReference Include="Aspire.Hosting.Redis" />
   </ItemGroup>
   <ItemGroup>
     <!-- Microservices mode: each domain runs as an independent service -->
     <ProjectReference Include="..\Services\AccountService\Presentation\Presentation.csproj"
-                      IsAspireProjectResource="true" />
+                      IsAspireProjectResource="true"
+                      AspireProjectMetadataTypeName="CleanDDDArchitecture_Hosts_Services_AccountService_Presentation" />
     <ProjectReference Include="..\Services\TodoService\Presentation\Presentation.csproj"
-                      IsAspireProjectResource="true" />
+                      IsAspireProjectResource="true"
+                      AspireProjectMetadataTypeName="CleanDDDArchitecture_Hosts_Services_TodoService_Presentation" />
     <ProjectReference Include="..\Services\WeatherService\Presentation\Presentation.csproj"
-                      IsAspireProjectResource="true" />
+                      IsAspireProjectResource="true"
+                      AspireProjectMetadataTypeName="CleanDDDArchitecture_Hosts_Services_WeatherService_Presentation" />
     <!-- Monolith mode: single RestApi host aggregating all domains -->
     <ProjectReference Include="..\RestApi\Presentation\Presentation.csproj"
-                      IsAspireProjectResource="true" />
+                      IsAspireProjectResource="true"
+                      AspireProjectMetadataTypeName="CleanDDDArchitecture_Hosts_RestApi_Presentation" />
   </ItemGroup>
 </Project>
