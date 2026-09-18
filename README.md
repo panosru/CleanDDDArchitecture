@@ -107,7 +107,7 @@ dotnet test Domains/Account/Tests/Integration/Integration.csproj
 | Concern | Technology |
 |---|---|
 | Framework | .NET 10 / ASP.NET Core |
-| CQRS | MediatR 12 |
+| CQRS | MediatR 12.5 (pinned — last Apache-2.0 release) |
 | Validation | FluentValidation |
 | ORM | Entity Framework Core 10 + Npgsql |
 | Background Jobs | Hangfire (PostgreSQL storage) |
@@ -116,9 +116,11 @@ dotnet test Domains/Account/Tests/Integration/Integration.csproj
 | Auth | ASP.NET Core Identity + JWT Bearer |
 | Caching | EasyCaching (Redis / in-memory) |
 | Messaging | Confluent.Kafka |
-| Object Mapping | AutoMapper |
-| Dev Orchestration | .NET Aspire 9 |
-| Testing | xunit v3 + Testcontainers + FluentAssertions |
+| Object Mapping | Explicit — `From(entity)` factories and EF Core projection expressions |
+| Dev Orchestration | .NET Aspire 13 |
+| Testing | xunit v3 + Testcontainers + AwesomeAssertions |
+
+Every dependency is free for commercial use, and known-vulnerable packages fail the build. See [ADR 006](docs/adr/006-dependency-licensing.md).
 
 ## Contribution
 

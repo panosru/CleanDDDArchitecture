@@ -23,11 +23,11 @@
       "provider": "sqlserver",
       "driver": "microsoft",
       "name": "SQL Server@CleanDDDArchitecture",
-      "save-password": true,
+      "save-password": false,
       "configuration": {
         "host": "CleanDDDArchitecture-infra-mssql",
         "port": "1433",
-        "url": "jdbc:sqlserver://;serverName=CleanDDDArchitecture-infra-mssql;username=sa;password=REMOVED-SECRET",
+        "url": "jdbc:sqlserver://;serverName=CleanDDDArchitecture-infra-mssql;username=sa",
         "configurationType": "MANUAL",
         "type": "dev",
         "provider-properties": {

@@ -3,7 +3,7 @@ using CleanDDDArchitecture.Domains.Account.Application.Identity;
 using CleanDDDArchitecture.Domains.Account.Infrastructure;
 using CleanDDDArchitecture.Domains.Account.Infrastructure.Identity.Mechanism;
 using CleanDDDArchitecture.Domains.Account.Infrastructure.Persistence.Contexts;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;

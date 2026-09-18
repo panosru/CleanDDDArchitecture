@@ -11,7 +11,7 @@ using CleanDDDArchitecture.Domains.Account.Application.UseCases.ChangeEmailReque
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ResendConfirmation.Events;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ResendConfirmation.Jobs;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.UpdateDetails;
-using FluentAssertions;
+using AwesomeAssertions;
 using Hangfire.States;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;

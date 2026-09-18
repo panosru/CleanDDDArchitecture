@@ -237,8 +237,6 @@ public static class AccountDependencyInjectionRegistry
 
         services.AddEventsService<AccountAggregate, AccountAggregateId>();
 
-        services.AddScoped<ServiceFactory>(ctx => ctx.GetRequiredService);
-
         services.AddSingleton<IEventConsumerFactory, EventConsumerFactory>();
 
         if (Configuration.GetValue("EventSourcing:EnableConsumer", false))

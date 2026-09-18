@@ -8,7 +8,7 @@ using Confluent.Kafka;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
-using FluentAssertions;
+using AwesomeAssertions;
 using Npgsql;
 
 namespace CleanDDDArchitecture.Domains.Account.Tests.Integration.Infrastructure;

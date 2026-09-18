@@ -3,7 +3,6 @@ using CleanDDDArchitecture.Domains.Account.Application.Aggregates;
 using CleanDDDArchitecture.Domains.Account.Application.Identity;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create;
 using Ardalis.GuardClauses;
-using AutoMapper;
 using Aviant.Application.Orchestration;
 using Aviant.Application.EventSourcing.Orchestration;
 using Aviant.Core.Enum;
@@ -23,8 +22,6 @@ public static class AccountCrossCutting
     internal static readonly Assembly AccountApplicationAssembly = typeof(AccountCreateUseCase).Assembly;
 
     internal static readonly Assembly AccountInfrastructureAssembly = typeof(AccountDbContextWrite).Assembly;
-
-    public static IEnumerable<Profile> AutoMapperProfiles() => new List<Profile>();
 
     public static IEnumerable<Assembly> ValidatorAssemblies() => new List<Assembly>
     {

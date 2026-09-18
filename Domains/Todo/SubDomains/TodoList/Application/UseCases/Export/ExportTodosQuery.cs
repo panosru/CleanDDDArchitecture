@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Aviant.Application.Queries;
+﻿using Aviant.Application.Queries;
 using Aviant.Application.Services;
 using Microsoft.EntityFrameworkCore;
 using CleanDDDArchitecture.Domains.Todo.Application.Persistence;
@@ -19,15 +17,11 @@ internal sealed record ExportTodosQuery(int ListId) : Query<ExportTodosVm>
 
         private readonly ICsvFileBuilder<TodoItemRecord> _fileBuilder;
 
-        private readonly IMapper _mapper;
-
         public ExportTodosQueryHandler(
             ITodoDbContextWrite             context,
-            IMapper                         mapper,
             ICsvFileBuilder<TodoItemRecord> fileBuilder)
         {
             _context     = context;
-            _mapper      = mapper;
             _fileBuilder = fileBuilder;
         }
 
@@ -39,7 +33,7 @@ internal sealed record ExportTodosQuery(int ListId) : Query<ExportTodosVm>
 
             List<TodoItemRecord> records = await _context.TodoItems
                .Where(t => t.ListId == request.ListId)
-               .ProjectTo<TodoItemRecord>(_mapper.ConfigurationProvider)
+               .Select(TodoItemRecord.Projection)
                .ToListAsync(cancellationToken)
                .ConfigureAwait(false);
 

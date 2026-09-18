@@ -10,11 +10,8 @@
     <PackageVersion Include="NetEscapades.Configuration.Yaml" Version="3.1.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
 
-    <!-- AutoMapper -->
-    <PackageVersion Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-
     <!-- Cryptography -->
-    <PackageVersion Include="BouncyCastle.Cryptography" Version="2.6.2" />
+    <PackageVersion Include="BouncyCastle.Cryptography" Version="2.7.0" />
 
     <!-- Messaging / Eventing -->
     <PackageVersion Include="Confluent.Kafka" Version="2.12.0" />
@@ -23,7 +20,7 @@
     <PackageVersion Include="EasyCaching.Core" Version="1.9.2" />
     <PackageVersion Include="EasyCaching.InMemory" Version="1.9.2" />
     <PackageVersion Include="EasyCaching.Redis" Version="1.9.2" />
-    <PackageVersion Include="StackExchange.Redis" Version="2.11.8" />
+    <PackageVersion Include="StackExchange.Redis" Version="2.13.17" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.3" />
 
     <!-- Background Jobs (PostgreSQL storage only - no SqlServer) -->
@@ -35,8 +32,8 @@
     <PackageVersion Include="Lamar" Version="13.0.2" />
 
     <!-- Email -->
-    <PackageVersion Include="MailKit" Version="4.15.1" />
-    <PackageVersion Include="MimeKit" Version="4.15.1" />
+    <PackageVersion Include="MailKit" Version="4.18.0" />
+    <PackageVersion Include="MimeKit" Version="4.18.0" />
 
     <!-- ASP.NET Core / Authentication -->
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.3" />
@@ -49,6 +46,10 @@
 
     <!-- OpenAPI / API Documentation (replaces Swashbuckle) -->
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3" />
+    <!-- Microsoft.OpenApi arrives transitively at 2.0.0, which carries GHSA-v5pm-xwqc-g5wc (high).
+         Fixed on the 2.x line from 2.7.5. Stay on 2.x: 3.x breaks the ASP.NET Core 10
+         XML-comment source generator. -->
+    <PackageVersion Include="Microsoft.OpenApi" Version="2.12.2" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.6.0" />
 
     <!-- Security Headers -->
@@ -80,10 +81,14 @@
     <PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0" />
 
     <!-- .NET Aspire -->
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.2.0" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.5.4" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.5.4" />
+    <PackageVersion Include="Aspire.Hosting.Redis" Version="13.5.4" />
 
     <!-- Testing -->
-    <PackageVersion Include="FluentAssertions" Version="8.8.0" />
+    <PackageVersion Include="AwesomeAssertions" Version="9.6.0" />
+    <!-- SSH.NET arrives via Testcontainers; 2025.1.0 has GHSA-mggc-4xg6-vcxf and GHSA-q939-rpr3-3284 (high) -->
+    <PackageVersion Include="SSH.NET" Version="2026.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageVersion Include="Microsoft.Playwright" Version="1.58.0" />
     <PackageVersion Include="Testcontainers" Version="4.10.0" />

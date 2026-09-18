@@ -1,4 +1,3 @@
-using AutoMapper;
 using CleanDDDArchitecture.Domains.Todo.Core.Entities;
 using CleanDDDArchitecture.Domains.Todo.CrossCutting;
 using CleanDDDArchitecture.Domains.Todo.Infrastructure.Persistence.Contexts;
@@ -7,7 +6,7 @@ using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Infrastructure.Repos
 using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.Create;
 using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Application.UseCases.GetAll;
 using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoList.Infrastructure.Repositories;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Aviant.Application.Exceptions;
@@ -63,12 +62,27 @@ public sealed class TodoQueryAndValidationTests
     {
         var cancellationToken = TestContext.Current.CancellationToken;
         await using var environment = await TodoTestEnvironment.CreateAsync(cancellationToken);
-        var handler = new GetTodosQuery.GetTodosQueryHandler(environment.ReadContext, environment.Mapper);
+        var handler = new GetTodosQuery.GetTodosQueryHandler(environment.ReadContext);
 
         var response = await handler.Handle(new GetTodosQuery(), cancellationToken);
 
         response.Lists.Should().ContainSingle(list => list.Title == "Shopping");
         response.PriorityLevels.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public async Task GetTodosQueryHandlerShouldProjectListsWithTheirItems()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        await using var environment = await TodoTestEnvironment.CreateAsync(cancellationToken);
+        var handler = new GetTodosQuery.GetTodosQueryHandler(environment.ReadContext);
+
+        var response = await handler.Handle(new GetTodosQuery(), cancellationToken);
+
+        var shopping = response.Lists.Single(list => list.Title == "Shopping");
+        shopping.Id.Should().Be(-1);
+        shopping.Items.Should().HaveCount(8).And.OnlyContain(item => item.ListId == -1);
+        shopping.Items.Should().ContainSingle(item => item.Id == -1 && item.Title == "Apples");
     }
 
     private sealed class TodoTestEnvironment : IAsyncDisposable
@@ -90,22 +104,11 @@ public sealed class TodoQueryAndValidationTests
             WriteContext = new TodoDbContextWrite(_writeOptions);
             ReadContext = new TodoDbContextRead(_readOptions);
 
-            var mapperConfiguration = new MapperConfiguration(configuration =>
-            {
-                foreach (var profile in TodoCrossCutting.AutoMapperProfiles())
-                {
-                    configuration.AddProfile(profile);
-                }
-            });
-
-            Mapper = mapperConfiguration.CreateMapper();
         }
 
         public TodoDbContextWrite WriteContext { get; }
 
         public TodoDbContextRead ReadContext { get; }
-
-        public IMapper Mapper { get; }
 
         public static async Task<TodoTestEnvironment> CreateAsync(CancellationToken cancellationToken)
         {

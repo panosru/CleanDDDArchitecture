@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Aviant.Application.Commands;
+﻿using Aviant.Application.Commands;
 using CleanDDDArchitecture.Domains.Todo.SubDomains.TodoItem.Core.Repositories;
 using FluentValidation;
 using CleanDDDArchitecture.Domains.Todo.Core.Entities;
@@ -17,17 +16,11 @@ internal sealed record CreateTodoItemCommand(int ListId, string Title) : Command
     internal sealed class CreateTodoItemCommandHandler
         : CommandHandler<CreateTodoItemCommand, Lazy<TodoItemViewModel>>
     {
-        private readonly IMapper _mapper;
-
         private readonly ITodoItemRepositoryWrite _todoItemWriteRepository;
 
         public CreateTodoItemCommandHandler(
-            ITodoItemRepositoryWrite todoItemWriteRepository,
-            IMapper                  mapper)
-        {
+            ITodoItemRepositoryWrite todoItemWriteRepository) =>
             _todoItemWriteRepository = todoItemWriteRepository;
-            _mapper                  = mapper;
-        }
 
         public override async Task<Lazy<TodoItemViewModel>> Handle(
             CreateTodoItemCommand command,
@@ -42,7 +35,7 @@ internal sealed record CreateTodoItemCommand(int ListId, string Title) : Command
             await _todoItemWriteRepository.InsertAsync(entity, cancellationToken)
                .ConfigureAwait(false);
 
-            return new Lazy<TodoItemViewModel>(() => _mapper.Map<TodoItemViewModel>(entity));
+            return new Lazy<TodoItemViewModel>(() => TodoItemViewModel.From(entity));
         }
     }
 

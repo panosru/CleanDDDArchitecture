@@ -9,7 +9,7 @@ using CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ConfirmEmail.Events;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Events;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Create.Jobs;
-using FluentAssertions;
+using AwesomeAssertions;
 using Hangfire.States;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.WebUtilities;

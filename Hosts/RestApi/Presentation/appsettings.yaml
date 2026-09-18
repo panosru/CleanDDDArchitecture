@@ -39,23 +39,5 @@ SwaggerSettings:
 FeatureManagement:
   Metal: true
   
-# Use secrets.json for these:
-#  {
-#    // RestAPI Release
-#    "ConnectionStrings": {
-#      "MSSQLConnection": "Server=CleanDDDArchitecture-infra-mssql,1433;Database=CleanDDDArchitecture;User Id=sa;Password=REMOVED-SECRET;MultipleActiveResultSets=true;TrustServerCertificate=true;",
-#      "PGSQLConnection": "Server=CleanDDDArchitecture-infra-postgres;Port=5432;Database=CleanDDDArchitecture;User ID =panosru;Password=REMOVED-SECRET;Pooling=true;",
-#      "Hangfire": "Server=CleanDDDArchitecture-infra-mssql,11433;Database=Hangfire;User Id=sa;Password=REMOVED-SECRET;MultipleActiveResultSets=true;TrustServerCertificate=true;",
-#      "eventstore": "tcp://admin:changeit@CleanDDDArchitecture-infra-eventstore:1113",
-#      "kafka": "CleanDDDArchitecture-infra-kafka:9092",
-#      "loki": "http://CleanDDDArchitecture-infra-loki:3100",
-#      "mongo": "mongodb://CleanDDDArchitecture-infra-mongo:27017"
-#    },
-#    "EmailSettings": {
-#      "SmtpHost": "192.168.1.5",
-#      "SmtpPort": 1025,
-#      "EnableSsl": false,
-#      "SmtpUsername": "",
-#      "SmtpPassword": ""
-#    }
-#  }
+# Connection strings and credentials are not kept in this file. Supply them through
+# user secrets (dotnet user-secrets) or environment variables; see docker/.env.example.

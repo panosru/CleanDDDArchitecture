@@ -5,7 +5,7 @@ using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminSuspend;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminUnlock;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.AdminUnsuspend;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.Deactivate;
-using FluentAssertions;
+using AwesomeAssertions;
 using Xunit;
 
 namespace CleanDDDArchitecture.Domains.Account.Tests.Unit;

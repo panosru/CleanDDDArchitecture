@@ -76,13 +76,6 @@ builder.Services.AddTransient<Aviant.Application.Email.IEmailService, EmailServi
     return new EmailService(smtpClientFactory, builder.Configuration["AppSettings:Title"], builder.Configuration["AppSettings:Emails:NoReply"]);
 });
 
-builder.Services.AddAutoMapper(cfg =>
-{
-    foreach (var profile in AccountCrossCutting.AutoMapperProfiles())
-    {
-        cfg.AddProfile(profile);
-    }
-});
 builder.Services.AddValidatorsFromAssemblies(AccountCrossCutting.ValidatorAssemblies().ToArray());
 
 builder.Services.AddTransient<IMediator, MediatR.Mediator>();

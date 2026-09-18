@@ -71,16 +71,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 builder.Services.AddAuthorization();
 
-builder.Services.AddAutoMapper(cfg =>
-{
-    foreach (var profile in TodoCrossCutting.AutoMapperProfiles())
-    {
-        cfg.AddProfile(profile);
-    }
-});
 builder.Services.AddValidatorsFromAssemblies(TodoCrossCutting.ValidatorAssemblies().ToArray());
 
-builder.Services.AddScoped<ServiceFactory>(ctx => ctx.GetRequiredService);
 builder.Services.AddTransient<IMediator, MediatR.Mediator>();
 builder.Services.Scan(scan => scan.FromAssemblies(
         new[] { typeof(Program).Assembly, typeof(LoggerBehaviour<>).Assembly }

@@ -6,7 +6,7 @@ using CleanDDDArchitecture.Domains.Account.Application.UseCases.ExternalLogins;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ExternalProviders;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.ExternalUnlink;
 using CleanDDDArchitecture.Domains.Account.Core.Identity.Dto;
-using FluentAssertions;
+using AwesomeAssertions;
 using Xunit;
 
 namespace CleanDDDArchitecture.Domains.Account.Tests.Unit;

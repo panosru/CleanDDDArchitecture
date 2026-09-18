@@ -3,7 +3,7 @@ using CleanDDDArchitecture.Domains.Account.Application.UseCases.MfaDisable;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.MfaRecoveryCodes;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.MfaSetup;
 using CleanDDDArchitecture.Domains.Account.Application.UseCases.MfaVerify;
-using FluentAssertions;
+using AwesomeAssertions;
 using Xunit;
 
 namespace CleanDDDArchitecture.Domains.Account.Tests.Unit;

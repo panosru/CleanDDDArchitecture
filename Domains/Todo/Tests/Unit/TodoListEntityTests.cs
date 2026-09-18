@@ -1,5 +1,5 @@
 using CleanDDDArchitecture.Domains.Todo.Core.Entities;
-using FluentAssertions;
+using AwesomeAssertions;
 using Xunit;
 
 namespace CleanDDDArchitecture.Domains.Todo.Tests.Unit;
