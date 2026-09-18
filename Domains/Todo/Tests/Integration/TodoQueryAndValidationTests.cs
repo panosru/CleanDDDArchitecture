@@ -10,6 +10,7 @@ using AwesomeAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Aviant.Application.Exceptions;
+using Aviant.Application.Identity;
 using Xunit;
 
 namespace CleanDDDArchitecture.Domains.Todo.Tests.Integration;
@@ -22,13 +23,29 @@ public sealed class TodoQueryAndValidationTests
         var cancellationToken = TestContext.Current.CancellationToken;
         await using var environment = await TodoTestEnvironment.CreateAsync(cancellationToken);
         var repository = new TodoListRepositoryRead(environment.ReadContext);
-        var validator = new CreateTodoListInput.CreateTodoListInputValidator(repository);
+        // The seeded "Shopping" list belongs to Guid.Empty.
+        var validator = new CreateTodoListInput.CreateTodoListInputValidator(repository, new CurrentUser(Guid.Empty));
 
         var result = await validator.ValidateAsync(new CreateTodoListInput("Shopping"), cancellationToken);
 
         result.IsValid.Should().BeFalse();
-        result.Errors.Should().ContainSingle(error => error.ErrorMessage == "The specified title already exists.");
+        result.Errors.Should().ContainSingle(error => error.ErrorMessage == "You already have a list with this title.");
     }
+
+    [Fact]
+    public async Task CreateTodoListValidatorShouldAllowATitleAnotherUserAlreadyUses()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        await using var environment = await TodoTestEnvironment.CreateAsync(cancellationToken);
+        var repository = new TodoListRepositoryRead(environment.ReadContext);
+        var validator = new CreateTodoListInput.CreateTodoListInputValidator(repository, new CurrentUser(Guid.NewGuid()));
+
+        var result = await validator.ValidateAsync(new CreateTodoListInput("Shopping"), cancellationToken);
+
+        result.IsValid.Should().BeTrue("list titles are unique per owner, not across all users");
+    }
+
+    private sealed record CurrentUser(Guid UserId) : ICurrentUserService;
 
     [Fact]
     public async Task GetTodoItemQueryHandlerShouldReturnSeededTodoTitle()
