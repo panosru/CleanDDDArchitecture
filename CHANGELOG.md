@@ -18,6 +18,7 @@ Notable changes to this reference application. The format follows [Keep a Change
 ### Changed
 - **Aviant 2:** use cases are registered with `AddAviantUseCases` and no longer depend on a static service locator, repositories are async-only and validate entities, and the library logs through `ILogger<T>`.
 - **KurrentDB** (formerly EventStoreDB) 26 over gRPC replaces EventStoreDB 21.10 over TCP in Compose, Aspire and the end-to-end tests. The connection string is `ConnectionStrings:kurrentdb`.
+- Todo audit times are `DateTimeOffset`, stamped by Aviant's auditing interceptor, and stored as UTC.
 - Domain code logs through `ILogger<T>` instead of the static Serilog logger, so the services' logs reach OpenTelemetry. Serilog is configured only in the RestApi host.
 - The Account aggregate and its domain events moved from Application to Core.
 - One error pipeline (`IExceptionHandler` + RFC 9457 problem details) for every host, replacing three.
@@ -33,6 +34,7 @@ Notable changes to this reference application. The format follows [Keep a Change
 - The Aspire AppHost did not build or start the services it listed.
 - Logs written from domain code were lost in the microservices, which do not configure Serilog.
 - Security stamps were written to the log when an email change token was rejected.
+- Deleted todo lists and items were still returned by queries: Aviant's soft-delete filter was never applied.
 
 ### Removed
 - Ten empty test projects, the unused EasyCaching packages, and Redis from the AppHost.

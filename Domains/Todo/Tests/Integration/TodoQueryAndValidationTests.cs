@@ -102,6 +102,26 @@ public sealed class TodoQueryAndValidationTests
         shopping.Items.Should().ContainSingle(item => item.Id == -1 && item.Title == "Apples");
     }
 
+    [Fact]
+    public async Task ADeletedListIsKeptButNoLongerListed()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        await using var environment = await TodoTestEnvironment.CreateAsync(cancellationToken);
+        var shopping = await environment.WriteContext.TodoLists.SingleAsync(list => list.Id == -1, cancellationToken);
+
+        environment.WriteContext.TodoLists.Remove(shopping);
+        await environment.WriteContext.SaveChangesAsync(cancellationToken);
+
+        var response = await new GetTodosQuery.GetTodosQueryHandler(environment.ReadContext)
+           .Handle(new GetTodosQuery(), cancellationToken);
+        response.Lists.Should().BeEmpty();
+
+        var stored = await environment.ReadContext.TodoLists.IgnoreQueryFilters()
+           .SingleAsync(list => list.Id == -1, cancellationToken);
+        stored.IsDeleted.Should().BeTrue();
+        stored.Deleted.Should().NotBeNull();
+    }
+
     private sealed class TodoTestEnvironment : IAsyncDisposable
     {
         private readonly InMemoryDatabaseRoot _databaseRoot = new();

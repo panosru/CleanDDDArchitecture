@@ -11,5 +11,5 @@ public interface ITodoListOwnerCleanup
     ///     again for the same owner changes nothing.
     /// </summary>
     /// <returns>The number of lists removed.</returns>
-    public Task<int> SoftDeleteOwnedByAsync(Guid ownerId, DateTime deletedAtUtc, CancellationToken cancellationToken = default);
+    public Task<int> SoftDeleteOwnedByAsync(Guid ownerId, DateTimeOffset deletedAtUtc, CancellationToken cancellationToken = default);
 }
